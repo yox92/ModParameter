@@ -1,25 +1,45 @@
-import tkinter as tk
+import customtkinter as ctk  # Utiliser l'alias ctk pour customtkinter
 
 class SimpleGUI:
     def __init__(self, root):
         self.root = root
         self.root.title("Simple GUI")
-
-        # Définition de la taille de la fenêtre à la moitié de 1080p
+        self.root.rowconfigure(0, weight=1)
         self.root.geometry('960x540')
 
-        # Création d'un cadre pour contenir le champ de saisie et le centrer
-        frame = tk.Frame(self.root)
-        frame.pack(expand=True)
+        ctk.set_appearance_mode("System")  # Light/Dark/Blue/System
+        ctk.set_default_color_theme("blue")  # Plusieurs thèmes disponibles
 
-        # Création du champ de saisie de texte
-        self.entry = tk.Entry(frame, font=('Arial', 14), width=48)  # La largeur en caractères peut être ajustée
+        # Cadre pour la recherche
+        self.search_frame = ctk.CTkFrame(self.root)
+        self.search_frame.pack(expand=True, fill='both')
+
+        # Cadre pour les détails qui est initialement caché
+        self.detail_frame = ctk.CTkFrame(self.root)
+
+        # Widgets pour le cadre de recherche
+        self.entry = ctk.CTkEntry(self.search_frame, width=480, placeholder_text="Type here...")
         self.entry.pack(pady=20)
 
-        # Création d'un label qui affiche du texte
-        self.label = tk.Label(root, text="Hello, World!", font=("Arial", 14))
-        self.label.pack(pady=20)
+    def show_details(self):
+        # Cache le cadre de recherche et montre le cadre de détails
+        self.search_frame.pack_forget()
+        self.detail_frame.pack(expand=True, fill='both')
+        self.load_item_details()
 
-        # Création d'un bouton qui quitte l'application
-        self.quit_button = tk.Button(root, text="Quit", command=self.root.quit)
-        self.quit_button.pack(pady=20)
+    def show_search(self):
+        # Cache le cadre de détails et montre le cadre de recherche
+        self.detail_frame.pack_forget()
+        self.search_frame.pack(expand=True, fill='both')
+
+    def load_item_details(self):
+        # Nettoyons et mettons quelques détails
+        for widget in self.detail_frame.winfo_children():
+            widget.destroy()
+
+        label = ctk.CTkLabel(self.detail_frame, text="Here are item details!")
+        label.pack(pady=10)
+
+        # Bouton de retour à la recherche
+        back_button = ctk.CTkButton(self.detail_frame, text="Back to Search", command=self.show_search)
+        back_button.pack(pady=10)

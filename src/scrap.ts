@@ -31,11 +31,6 @@ async function fetchItemData(id: string): Promise<Item> {
 }
 
 function cleanFileName(filename: string): string {
-    // Retirer le préfixe 'weapon_' si présent
-    const prefix = 'weapon_';
-    if (filename.startsWith(prefix)) {
-        filename = filename.substring(prefix.length);
-    }
     // Remplace les caractères non alphanumériques par des underscores et convertit en minuscules
     return filename.replace(/[^a-z0-9]/gi, '_').toLowerCase();
 }
