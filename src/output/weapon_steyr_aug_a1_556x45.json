@@ -1,0 +1,17 @@
+{
+  "_id": "62e7c4fba689e8c9c50dfc38",
+  "_name": "weapon_steyr_aug_a1_556x45",
+  "_parent": "5447b5f14bdc2d61278b4567",
+  "_props": {
+    "CameraSnap": 3.5,
+    "AimSensitivity": 0.65,
+    "Ergonomics": 83,
+    "RecoilCamera": 0.048,
+    "RecoilForceBack": 258,
+    "RecoilForceUp": 87,
+    "Velocity": 0,
+    "Weight": 1.49,
+    "ammoCaliber": "Caliber556x45NATO",
+    "bFirerate": 715
+  }
+}

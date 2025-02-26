@@ -1,0 +1,17 @@
+{
+  "_id": "5a0ec13bfcdbcb00165aa685",
+  "_name": "weapon_izhmash_akmn_762x39",
+  "_parent": "5447b5f14bdc2d61278b4567",
+  "_props": {
+    "CameraSnap": 3.5,
+    "AimSensitivity": 0.65,
+    "Ergonomics": 26,
+    "RecoilCamera": 0.059,
+    "RecoilForceBack": 379,
+    "RecoilForceUp": 149,
+    "Velocity": 1.8,
+    "Weight": 2.152,
+    "ammoCaliber": "Caliber762x39",
+    "bFirerate": 600
+  }
+}

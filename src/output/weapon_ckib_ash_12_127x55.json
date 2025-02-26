@@ -1,0 +1,17 @@
+{
+  "_id": "5cadfbf7ae92152ac412eeef",
+  "_name": "weapon_ckib_ash_12_127x55",
+  "_parent": "5447b5f14bdc2d61278b4567",
+  "_props": {
+    "CameraSnap": 3.5,
+    "AimSensitivity": 0.65,
+    "Ergonomics": 55,
+    "RecoilCamera": 0.08,
+    "RecoilForceBack": 425,
+    "RecoilForceUp": 128,
+    "Velocity": 1.1,
+    "Weight": 5.1,
+    "ammoCaliber": "Caliber127x55",
+    "bFirerate": 650
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "_id": "57c44b372459772d2b39b8ce",
+  "_name": "weapon_tochmash_val_9x39",
+  "_parent": "5447b5fc4bdc2d87278b4567",
+  "_props": {
+    "CameraSnap": 3,
+    "AimSensitivity": 0.65,
+    "Ergonomics": 43,
+    "RecoilCamera": 0.05,
+    "RecoilForceBack": 270,
+    "RecoilForceUp": 80,
+    "Velocity": 0,
+    "Weight": 1.092,
+    "ammoCaliber": "Caliber9x39",
+    "bFirerate": 900
+  }
+}

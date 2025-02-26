@@ -1,0 +1,17 @@
+{
+  "_id": "5bb2475ed4351e00853264e3",
+  "_name": "weapon_hk_416a5_556x45",
+  "_parent": "5447b5f14bdc2d61278b4567",
+  "_props": {
+    "CameraSnap": 3,
+    "AimSensitivity": 0.65,
+    "Ergonomics": 51,
+    "RecoilCamera": 0.055,
+    "RecoilForceBack": 358,
+    "RecoilForceUp": 125,
+    "Velocity": 0,
+    "Weight": 0.52,
+    "ammoCaliber": "Caliber556x45NATO",
+    "bFirerate": 850
+  }
+}
