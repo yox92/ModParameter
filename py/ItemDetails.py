@@ -26,14 +26,6 @@ def determine_format_spec(adjusted_value):
         return ".0f"
     if abs_value == 0:
         return ".2f"
-    elif abs_value < 1e-9:
-        return ".10f"
-    elif abs_value < 1e-8:
-        return ".9f"
-    elif abs_value < 1e-7:
-        return ".8f"
-    elif abs_value < 1e-6:
-        return ".7f"
     elif abs_value < 1e-5:
         return ".6f"
     elif abs_value < 1e-4:
@@ -80,6 +72,11 @@ class ItemDetails:
                             slider.set(prop_value)
                             slider.grid(row=row, column=1, sticky=ctk.W)
                             percent_label = ctk.CTkLabel(self.master, text=f"{prop_value}")
+                            reset_button = ctk.CTkButton(self.master, text="Reset",
+                                                         command=lambda pname=prop_name:
+                                                         self.reset_slider(pname),
+                                                         width=10)
+                            reset_button.grid(row=row, column=3, sticky=ctk.W)
 
                         else:
                             scaled_int, scale_factor = float_to_scaled_int(prop_value)
@@ -90,16 +87,16 @@ class ItemDetails:
                                                    command=lambda lambda_value, pname=prop_name, sf=scale_factor:
                                                    self.update_prop_value_float(pname, lambda_value, sf))
                             slider.set(scaled_int)
+                            slider.scale_factor = scale_factor
 
                             slider.grid(row=row, column=1, sticky=ctk.W)
                             percent_label = ctk.CTkLabel(self.master, text=f"{prop_value:.2f}")
 
-                            self.original_props[prop_name] = (scaled_int, scale_factor)
-
-                            self.reset_button = ctk.CTkButton(self.master, text="Reset",
-                                                         command=lambda pname=prop_name: self.reset_slider(pname),
-                                                         width=50, fg_color="red", hover_color="darkred")
-                            self.reset_button.grid(row=row, column=3, sticky=ctk.W)
+                            reset_button = ctk.CTkButton(self.master, text="Reset",
+                                                              command=lambda pname=prop_name:
+                                                              self.reset_slider(pname),
+                                                              width=10)
+                            reset_button.grid(row=row, column=3, sticky=ctk.W)
 
                         percent_label.grid(row=row, column=2, sticky=ctk.W)
                         self.prop_widgets[prop_name] = (slider, percent_label)
@@ -133,38 +130,59 @@ class ItemDetails:
         self.reset_apply_button()
 
     def reset_slider(self, name):
-        """Remet le slider et le label à la valeur initiale correcte."""
-        scaled_int, scale_factor = self.original_props[name]  # ✅ Récupérer les valeurs originales
-
+        original_value = self.original_props[name]
         slider, label = self.prop_widgets[name]
-
-        # ✅ Appliquer scale_factor SEULEMENT si nécessaire
-        if scale_factor is not None:
-            reset_value = scaled_int / scale_factor
+        if isinstance(original_value, int):
+            slider.set(original_value)
+            label.configure(text=f"{original_value}")
         else:
-            reset_value = scaled_int  # ✅ Pour les entiers, pas de scale_factor
+            print(original_value)
+            format_spec = determine_format_spec(original_value)
+            print(format_spec)
+            label.configure(text=f"{original_value:{format_spec}}")
+            scaled_int, _ = float_to_scaled_int(original_value)
+            slider.set(scaled_int)
+        self.reset_apply_button()
+        self.verify_all_sliders_reset()
 
-        # ✅ Remettre le slider à la vraie valeur initiale
-        slider.set(reset_value)
+    def verify_all_sliders_reset(self):
+        all_reset = True
+        for name, (slider, label) in self.prop_widgets.items():
+            current_value = slider.get()
+            original_value = self.original_props[name]
 
-        # ✅ Mettre à jour le label avec le bon format
-        format_spec = determine_format_spec(reset_value)
-        label.configure(text=f"{reset_value:{format_spec}}")
+            if isinstance(original_value, int):
+                if current_value != original_value:
+                    all_reset = False
+                    break
+            else:
+                scaled_original_value, _ = float_to_scaled_int(original_value)
+                if abs(current_value - scaled_original_value) > 1e-2:
+                    all_reset = False
+                    break
 
-        # ✅ Désactiver le bouton Apply si tout est revenu à la normale
-        self.apply_button.configure(state="disabled")
-        self.status_label.configure(text="")
+        if all_reset:
+            self.apply_button.configure(state="disabled", fg_color="white")
+            self.status_label.configure(text="")
 
     def apply_changes(self):
         new_file_path = self.file_path.replace('.json', '_mod.json')
         with open(self.file_path, 'r', encoding='utf-8') as file:
             data = json.load(file)
-        for prop_name in self.original_props.keys():
+
+        for prop_name, original_value in self.original_props.items():
             slider, _ = self.prop_widgets[prop_name]
             new_value = slider.get()
+
+            if isinstance(original_value, int):
+                new_value = int(new_value)
+            elif isinstance(original_value, float):
+                new_value = new_value / slider.scale_factor
             data['_props'][prop_name] = new_value
+
         with open(new_file_path, 'w', encoding='utf-8') as file:
             json.dump(data, file, indent=4)
+
         self.check_for_file(new_file_path)
 
     def check_for_file(self, file_path):
