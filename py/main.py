@@ -3,12 +3,24 @@ from CustomWeapon.py.GUI import SimpleGUI
 from CustomWeapon.py.NameSearcher import NameSearcher
 
 
+class MainWindow:
+    def __init__(self):
+        # Création de la fenêtre principale
+        self.root = ctk.CTk()
+        self.setup_ui()
+
+    def setup_ui(self):
+        self.app = SimpleGUI(self.root)  # Fenêtre principale
+
+    def run(self):
+        self.root.mainloop()
+
+
 def main():
-    root = ctk.CTk()  # Utilise CTk au lieu de tk.Tk pour l'intégration complète de customtkinter
-    app = SimpleGUI(root)
-    # Assurez-vous que NameSearcher est également mis à jour pour utiliser customtkinter si nécessaire
-    searcher = NameSearcher(root, app.entry)  # Utilise l'entry de SimpleGUI
-    root.mainloop()
+    main_window = MainWindow()
+    main_window.run()
+
 
 if __name__ == "__main__":
     main()
+

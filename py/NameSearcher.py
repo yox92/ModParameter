@@ -4,6 +4,7 @@ import tkinter as tk
 
 from CustomWeapon.py.ItemDetails import ItemDetails
 
+
 class NameSearcher:
     def __init__(self, master, entry_widget):
 
@@ -12,6 +13,10 @@ class NameSearcher:
 
         self.master = master
         self.entry_widget = entry_widget
+
+        # Configuration de la grille pour l'organisation des widgets
+        self.master.grid_rowconfigure(0, weight=1)
+        self.master.grid_columnconfigure(0, weight=1)
 
         self.canvas = tk.Canvas(master)
         self.scrollbar = tk.Scrollbar(master, orient="vertical", command=self.canvas.yview)
@@ -25,8 +30,9 @@ class NameSearcher:
         self.canvas.create_window((0, 0), window=self.scrollable_frame, anchor="nw")
         self.canvas.configure(yscrollcommand=self.scrollbar.set)
 
-        self.canvas.pack(side="left", fill="both", expand=True)
-        self.scrollbar.pack(side="right", fill="y")
+        # Remplacement de `pack` par `grid` pour organiser les widgets
+        self.canvas.grid(row=0, column=0, sticky="nsew")  # Canvas s'étend dans toutes les directions
+        self.scrollbar.grid(row=0, column=1, sticky="ns")  # Scrollbar à la droite du canvas
 
         self.entry_widget.bind("<KeyRelease>", self.search_name)  # Lier l'événement de relâchement de touche
 
@@ -39,18 +45,18 @@ class NameSearcher:
         if len(name_to_search) >= 3:
             results = self.find_name_in_files(name_to_search)
             if results:
-                for result in results:
+                for row, result in enumerate(results):
                     file_path = os.path.join(self.directory_path, result + '.json')
                     button = tk.Button(self.scrollable_frame, text=result,
                                        command=lambda r=result, fp=file_path: self.on_click_result(fp))
-                    button.pack(pady=10, fill='x')
-
+                    # Utilisation de `grid` au lieu de `pack`
+                    button.grid(row=row, column=0, pady=5, sticky="ew")
             else:
                 label = tk.Label(self.scrollable_frame, text="Aucun nom correspondant trouvé.")
-                label.pack(pady=10)
+                label.grid(row=0, column=0, pady=10)
         else:
             label = tk.Label(self.scrollable_frame, text="")
-            label.pack(pady=10)
+            label.grid(row=0, column=0, pady=10)
 
     def find_name_in_files(self, name):
         matches = []
