@@ -1,5 +1,5 @@
 import os
-import customtkinter as ctk  # Utiliser l'alias ctk pour customtkinter
+import customtkinter as ctk
 import json
 
 from CustomWeapon.py.Entity.Item import Item
@@ -38,8 +38,9 @@ def determine_format_spec(adjusted_value):
         return ".2f"
 
 class ItemDetails:
-    def __init__(self, master, file_path):
+    def __init__(self, master, file_path, main_instance):
         self.master = master
+        self.main_instance = main_instance
         self.file_path = file_path
         self.item = self.load_item()
         self.original_props = {k: v for k, v in vars(self.item._props).items()}
@@ -54,7 +55,6 @@ class ItemDetails:
 
     def display_details(self):
         row = 0
-        resolution = 1
         for attr, value in vars(self.item).items():
             if isinstance(value, ItemProps):
                 for prop_name, prop_value in vars(value).items():
@@ -189,11 +189,16 @@ class ItemDetails:
         if os.path.exists(file_path):
             self.apply_button.configure(fg_color="green", hover_color="green")
             self.status_label.configure(text="Changes applied successfully.")
+            self.master.after(1500, self.master.destroy)
+            self.main_instance.root.attributes('-disabled', False)
+
         else:
             self.master.after(1000, lambda: self.check_for_file(file_path))
 
     def reset_apply_button(self):
         self.apply_button.configure(fg_color="blue", hover_color="lightblue", border_color="red", state="enable")  # Remettre la couleur d'origine
         self.status_label.configure(text="")
+
+
 
 

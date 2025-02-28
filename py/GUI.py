@@ -1,13 +1,15 @@
 import json
 import os
-from distutils.dist import command_re
+import re
+from tkinter import Canvas
+
+import customtkinter as ctk
 
 from PIL import Image
 
-import customtkinter as ctk
-import tkinter as tk
-
-from py.Entity.Caliber import Caliber
+from CustomWeapon.py.Entity.AllWeaponsDetails import AllWeaponsDetails
+from CustomWeapon.py.Entity.Caliber import Caliber
+from CustomWeapon.py.ItemDetails import ItemDetails
 
 
 class SimpleGUI:
@@ -61,20 +63,70 @@ class SimpleGUI:
 
     def populate_buttons(self, results):
         max_items = 9
-        for idx, result in enumerate(results[:max_items]):k
-            frame_recherche_m = ctk.CTkFrame(self.frame_bot_right, fg_color="red")
+        for idx, result in enumerate(results[:max_items]):
+            frame_recherche_m = ctk.CTkFrame(self.frame_bot_right)
             row, col = divmod(idx, 3)  # Calculate row and column for a maximum of 3x3 grid
             frame_recherche_m.grid(row=row, column=col, padx=5, pady=5)
             self.framesBotRecherche.append(frame_recherche_m)
-            button = ctk.CTkButton(frame_recherche_m, text=result)
+
+            button = ctk.CTkButton(
+                frame_recherche_m,
+                text=result,
+                command=lambda r=result:
+                self.on_click_result(r), font=("Arial", 20, "bold"))
             button.grid(row=0, column=0, sticky="nsew")
             self.framesButtonRecherche.append(button)
 
-    def on_click_result(self, file_path):
-        # Action pour le clic sur un bouton
-        print(f"Button clicked! File path: {file_path}")
+    def on_click_result(self, result):
+        files = os.listdir(self.directory_path)
+        pattern = re.compile(re.escape(result), re.IGNORECASE)
+        possible_matches = [
+            file for file in files
+            if pattern.search(file) and not file.endswith("_mod.json") and file.endswith(".json")
+        ]
+        if possible_matches:
+            file_path = os.path.join(self.directory_path, possible_matches[0])
+            self.open_detail_window(file_path, True)
+        else:
+            print(f"Fichier ignoré : {result}")
 
+    def open_detail_window(self, file_path, ony_weapon):
+        detail_window = ctk.CTkToplevel(self.root)
+        detail_window.title("Fenêtre Détails")
 
+        window_width = 800
+        window_height = 600
+
+        root_x = self.root.winfo_x()
+        root_y = self.root.winfo_y()
+        root_width = self.root.winfo_width()
+        root_height = self.root.winfo_height()
+
+        position_x = root_x + root_width + 10  # Ajouter un espace de 10 pixels à droite
+        position_y = root_y + (root_height // 2) - (
+                window_height // 2)  # Centrer verticalement par rapport à la fenêtre principale
+
+        detail_window.geometry(f"{window_width}x{window_height}+{position_x}+{position_y}")
+        detail_window.grab_set()
+        detail_window.focus_force()
+        self.root.attributes('-disabled', True)
+
+        detail_window.protocol("WM_DELETE_WINDOW", lambda: self.close_detail_window(detail_window))
+
+        label = ctk.CTkLabel(detail_window, text="Fenêtre de détails !")
+        label.grid(pady=20)
+        close_button = ctk.CTkButton(detail_window, text="Fermer",
+                                     command=lambda: self.close_detail_window(detail_window))
+        close_button.grid(pady=20)
+        if ony_weapon:
+            ItemDetails(detail_window, file_path, self)
+        else:
+            AllWeaponsDetails(detail_window, file_path, self)
+
+    def close_detail_window(self, detail_window):
+        detail_window.grab_release()
+        detail_window.destroy()
+        self.root.attributes('-disabled', False)
 
     def create_image_var(self):
         script_dir = os.path.dirname(os.path.abspath(__file__))  # Répertoire où se trouve ce script
@@ -84,7 +136,6 @@ class SimpleGUI:
                                          "weapon.jpg")  # Générer le chemin absolu pour ammo.jpg
         self.ammo_image = ctk.CTkImage(Image.open(image_path_caliber), size=(150, 150))
         self.weapon_image = ctk.CTkImage(Image.open(image_path_weapon), size=(150, 150))
-
 
     def create_frame_row_root(self):
         self.root.grid_rowconfigure(0, weight=1)
@@ -123,18 +174,9 @@ class SimpleGUI:
         frame1.clear()
         for i in range(4):
             for y in range(5):
-                button = ctk.CTkFrame(frame2, fg_color="red")
+                button = ctk.CTkFrame(frame2)
                 button.grid(row=i, column=y, padx=5, pady=5)
                 frame1.append(button)
-
-  #  def creat_3x3_bottom(self, frame1, frame2):
-  #      frame1.clear()
-  #      for i in range(3):
-  #          for y in range(3):
-  #              frame_recherche_m = ctk.CTkFrame(frame2, fg_color="red")
-  #              frame_recherche_m.grid(row=i, column=y, padx=5, pady=5)
-  #              frame1.append(frame_recherche_m)
-
 
     def show_search(self):
         self.buttonWeapon.configure(state="disabled")
@@ -181,23 +223,28 @@ class SimpleGUI:
                 text=str(caliber.value),  # Utiliser la valeur du calibre comme texte du bouton
                 width=150,
                 text_color="black",
-                fg_color=color)
+                fg_color=color,
+                font=("Arial", 23, "bold"),
+                command=lambda r=caliber.value: self.open_detail_window(r, False))
             button.pack(side="top", anchor="center")
+
             # Organiser les boutons en colonnes et lignes pour une meilleure disposition
             column += 1
             if column > 4:  # Passer à la ligne suivante après 6 colonnes
                 column = 0
                 row += 1
 
+
     def create_buttons_for_choice(self):
         self.buttonWeapon = ctk.CTkButton(
             self.frame_top_left,
             image=self.weapon_image,
-            text="Specific Weapon",
+            text="One Specific Weapon",
             compound="bottom",
             fg_color="transparent",
             text_color="green",
             hover_color="whitesmoke",
+            font = ("Arial", 23, "bold"),
             command=self.show_search
         )
         self.buttonWeapon.pack(side="top", anchor="center",
@@ -206,11 +253,12 @@ class SimpleGUI:
         self.buttonCaliber = ctk.CTkButton(
             self.frame_top_right,
             image=self.ammo_image,
-            text="Caliber Weapons",
+            text="Weapons by Ballistics",
             compound="bottom",
             fg_color="transparent",
             text_color="red",
             hover_color="lightcoral",
+            font=("Arial", 23, "bold"),
             command=self.hide_search
         )
         self.buttonCaliber.pack(side="top", anchor="center",
@@ -236,7 +284,7 @@ class SimpleGUI:
     def load_json_files(self):
         data_list = []
         for filename in os.listdir(self.directory_path):
-            if filename.endswith('.json'):
+            if filename.endswith('.json') and not filename.endswith('_mod.json'):
                 file_path = os.path.join(self.directory_path, filename)
                 try:
                     with open(file_path, 'r', encoding='utf-8') as file:
@@ -246,5 +294,3 @@ class SimpleGUI:
                 except Exception as e:
                     print(f"Erreur lors du chargement {filename}: {e}")
         return data_list
-
-

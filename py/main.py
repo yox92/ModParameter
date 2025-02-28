@@ -1,6 +1,5 @@
 import customtkinter as ctk
 from CustomWeapon.py.GUI import SimpleGUI
-from CustomWeapon.py.NameSearcher import NameSearcher
 
 
 class MainWindow:
