@@ -98,7 +98,6 @@ export class WeaponList {
             "55801eed4bdc2d89578b4588",
             "5df24cf80dee1b22f862e9bc",
             "5de652c31b7e3716273428be",
-
         ];
     }
 

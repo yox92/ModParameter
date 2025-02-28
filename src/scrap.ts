@@ -4,7 +4,7 @@ import {ItemProps} from 'Entity/ItemProps';
 import {Locale} from 'Entity/Locale';
 import fs from 'fs';
 import path from 'path';
-import {WeaponJson} from "Entity/WeaponJson";
+import {Root} from "Entity/Root";
 import {WeaponList} from "Id/WeaponList";
 
 const baseURL = 'https://db.sp-tarkov.com/api/item';
@@ -15,16 +15,16 @@ const __dirname = path.resolve();
  * Récupère les données d'un objet WeaponJson depuis l'API.
  *
  * @param id - L'identifiant de l'objet à récupérer depuis l'API.
- * @returns {Promise<WeaponJson>} - Un objet WeaponJson avec des propriétés formatées.
+ * @returns {Promise<Root>} - Un objet WeaponJson avec des propriétés formatées.
  */
 
-async function fetchItemData(id: string): Promise<WeaponJson> {
+async function fetchItemData(id: string): Promise<Root> {
     const url = `${baseURL}?id=${id}&locale=en`;
     const response = await axios.get(url);
 
-    const weaponData = response.data as WeaponJson;
-    const itemData = weaponData.Item;
-    const localeData = weaponData.Locale;
+    const rootData = response.data as Root;
+    const itemData = rootData.item;
+    const localeData = rootData.locale;
 
 
     const itemProps = new ItemProps({
@@ -49,12 +49,11 @@ async function fetchItemData(id: string): Promise<WeaponJson> {
     const item = new Item(itemData._id, itemData._name, itemProps);
 
     return {
-        Item: item,
-        Locale: locale,
+        item: item,
+        locale: locale,
     };
 
 }
-
 
 async function main() {
     const weaponList = new (WeaponList);
@@ -66,10 +65,12 @@ async function main() {
 
     for (const id of weaponList.getIds()) {
         try {
-            const weaponData = await fetchItemData(id);
-            const cleanName = weaponData.Locale.ShortName;
+            const root = await fetchItemData(id);
+            const cleanName = root.locale.ShortName
+                .replace(/\s+/g, '_')
+                .replace(/[\/\\?%*:|"<>]/g, '');
             const filePath = path.join(basePath, `${cleanName}.json`); // Construis le chemin du fichier
-            fs.writeFileSync(filePath, JSON.stringify(weaponData, null, 2), 'utf-8'); // Écrit l'objet dans un fichier JSON
+            fs.writeFileSync(filePath, JSON.stringify(root, null, 2), 'utf-8'); // Écrit l'objet dans un fichier JSON
             console.log(`Saved item to ${filePath}`);
         } catch (error) {
             console.error(`Failed to fetch data for ID: ${id}`, error);
