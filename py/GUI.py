@@ -224,7 +224,7 @@ class SimpleGUI:
                 width=150,
                 text_color="black",
                 fg_color=color,
-                font=("Arial", 23, "bold"),
+                font=("Arial", 15, "bold"),
                 command=lambda r=caliber.value: self.open_detail_window(r, False))
             button.pack(side="top", anchor="center")
 

@@ -3,15 +3,15 @@
     "_name": "weapon_fn_mk16_556x45",
     "_parent": "5447b5f14bdc2d61278b4567",
     "_props": {
-        "CameraSnap": 7000.0,
-        "AimSensitivity": 1300000.0,
-        "Ergonomics": 90,
-        "RecoilCamera": 112000000.0,
-        "RecoilForceBack": 624.0,
-        "RecoilForceUp": 200.0,
+        "CameraSnap": 3.5,
+        "AimSensitivity": 0.65,
+        "Ergonomics": 45,
+        "RecoilCamera": 0.056,
+        "RecoilForceBack": 3,
+        "RecoilForceUp": 100,
         "Velocity": 0,
-        "Weight": 1400.0,
+        "Weight": 0.7,
         "ammoCaliber": "Caliber556x45NATO",
-        "bFirerate": 1300.0
+        "bFirerate": 650
     }
 }
