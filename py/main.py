@@ -1,5 +1,6 @@
 import customtkinter as ctk
-from CustomWeapon.py.GUI import SimpleGUI
+
+from py.GUI import SimpleGUI
 
 
 class MainWindow:

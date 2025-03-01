@@ -1,15 +1,13 @@
 import json
 import os
-import re
-from tkinter import Canvas
 
 import customtkinter as ctk
 
 from PIL import Image
 
-from CustomWeapon.py.Entity.AllWeaponsDetails import AllWeaponsDetails
-from CustomWeapon.py.Entity.Caliber import Caliber
-from CustomWeapon.py.ItemDetails import ItemDetails
+from py.Entity.AllWeaponsDetails import AllWeaponsDetails
+from py.Entity.Caliber import Caliber
+from py.ItemDetails import ItemDetails
 
 
 class SimpleGUI:
@@ -228,20 +226,23 @@ class SimpleGUI:
         column = 0
         colors = ["dodgerblue", "peru", "mediumseagreen", "khaki"]
 
-        if len(self.framesBotCaliber) < len(Caliber):
+        if len(self.framesBotCaliber) < Caliber.count():
             print("Erreur : 'framesBotCaliber' no enought frames")
             return
 
-        for idx, caliber in enumerate(Caliber):
+        for idx, caliber in Caliber.enumerate_calibers():
+            idx: int
+            caliber: Caliber
+
             color = colors[idx % 4]
             button = ctk.CTkButton(
                 self.framesBotCaliber[idx],
-                text=caliber.get_label(),
+                text=caliber.label,
                 width=150,
                 text_color="black",
                 fg_color=color,
                 font=("Arial", 15, "bold"),
-                command=lambda r=caliber.get_code(): self.open_detail_window(r, False))
+                command=lambda r=caliber.code: self.open_detail_window(r, False))
             button.pack(side="top", anchor="center")
 
             column += 1

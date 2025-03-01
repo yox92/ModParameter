@@ -1,89 +1,75 @@
 class ItemProps:
     def __init__(self, **props):
-        self.CameraSnap = props.get('CameraSnap', None)
-        self.AimSensitivity = props.get('AimSensitivity', None)
-        self.Ergonomics = props.get('Ergonomics', None)
-        self.RecoilCamera = props.get('RecoilCamera', None)
-        self.RecoilForceBack = props.get('RecoilForceBack', None)
-        self.RecoilForceUp = props.get('RecoilForceUp', None)
-        self.Weight = props.get('Weight', None)
-        self.bFirerate = props.get('bFirerate', None)
+        self._CameraSnap = props.get('CameraSnap', None)
+        self._AimSensitivity = props.get('AimSensitivity', None)
+        self._Ergonomics = props.get('Ergonomics', None)
+        self._RecoilCamera = props.get('RecoilCamera', None)
+        self._RecoilForceBack = props.get('RecoilForceBack', None)
+        self._RecoilForceUp = props.get('RecoilForceUp', None)
+        self._Velocity = props.get('Velocity', None)
+        self._Weight = props.get('Weight', None)
+        self._ammoCaliber = props.get('ammoCaliber', None)
+        self._bFirerate = props.get('bFirerate', None)
 
-    def get_property(self, name):
-        if hasattr(self, name):
-            return getattr(self, name)
-        else:
-            raise AttributeError(f"Property '{name}' does not exist in ItemProps")
+    @property
+    def CameraSnap(self):
+        return self._CameraSnap
 
-    def set_property(self, name, value):
-        if hasattr(self, name):
-            setattr(self, name, value)
-        else:
-            raise AttributeError(f"Property '{name}' does not exist in ItemProps")
-
-    def get_CameraSnap(self):
-        return self.CameraSnap
-
-    def set_CameraSnap(self, CameraSnap):
-        self.CameraSnap = CameraSnap
-
-    def get_AimSensitivity(self):
+    @property
+    def AimSensitivity(self):
         return self.AimSensitivity
 
-    def set_AimSensitivity(self, AimSensitivity):
-        self.AimSensitivity = AimSensitivity
-
-    def get_Ergonomics(self):
+    @property
+    def Ergonomics(self):
         return self.Ergonomics
 
-    def set_Ergonomics(self, Ergonomics):
-        self.Ergonomics = Ergonomics
-
-    def get_RecoilCamera(self):
+    @property
+    def RecoilCamera(self):
         return self.RecoilCamera
 
-    def set_RecoilCamera(self, RecoilCamera):
-        self.RecoilCamera = RecoilCamera
-
-    def get_RecoilForceBack(self):
+    @property
+    def RecoilForceBack(self):
         return self.RecoilForceBack
 
-    def set_RecoilForceBack(self, RecoilForceBack):
-        self.RecoilForceBack = RecoilForceBack
-
-    def get_RecoilForceUp(self):
+    @property
+    def RecoilForceUp(self):
         return self.RecoilForceUp
 
-    def set_RecoilForceUp(self, RecoilForceUp):
-        self.RecoilForceUp = RecoilForceUp
+    @property
+    def Velocity(self):
+        return self.Velocity
 
-    def get_Weight(self):
+    @property
+    def Weight(self):
         return self.Weight
 
-    def set_Weight(self, Weight):
-        self.Weight = Weight
+    @property
+    def ammoCaliber(self):
+        return self.Weight
 
-    def get_bFirerate(self):
+    @property
+    def bFirerate(self):
         return self.bFirerate
-
-    def set_bFirerate(self, bFirerate):
-        self.bFirerate = bFirerate
-
-    def __repr__(self):
-        return (f"ItemProps(CameraSnap={self.CameraSnap}, AimSensitivity={self.AimSensitivity}, "
-                f"Ergonomics={self.Ergonomics}, RecoilCamera={self.RecoilCamera}, "
-                f"RecoilForceBack={self.RecoilForceBack}, RecoilForceUp={self.RecoilForceUp}, "
-                f"Weight={self.Weight}, bFirerate={self.bFirerate})")
 
     @classmethod
     def from_data(cls, data: dict):
-        return cls(
-            CameraSnap=data.get("CameraSnap"),
-            AimSensitivity=data.get("AimSensitivity"),
-            Ergonomics=data.get("Ergonomics"),
-            RecoilCamera=data.get("RecoilCamera"),
-            RecoilForceBack=data.get("RecoilForceBack"),
-            RecoilForceUp=data.get("RecoilForceUp"),
-            Weight=data.get("Weight"),
-            bFirerate=data.get("bFirerate")
-        )
+        return cls(**data)
+
+    def __repr__(self):
+        return (f"ItemProps("
+                f"CameraSnap={self.CameraSnap}, "
+                f"AimSensitivity={self.AimSensitivity}, "
+                f"Ergonomics={self.Ergonomics}, "
+                f"RecoilCamera={self.CameraSnap}, "
+                f"RecoilForceBack={self.RecoilForceBack}, "
+                f"RecoilForceUp={self.RecoilForceBack}, "
+                f"Velocity={self.Velocity}, "
+                f"Weight={self.Weight}, "
+                f"ammoCaliber={self.ammoCaliber}, "
+                f"bFirerate={self.bFirerate})")
+
+    def __iter__(self):
+        """Permet d'itérer sur les noms des attributs."""
+        return (key for key in self.__dict__.keys())
+
+

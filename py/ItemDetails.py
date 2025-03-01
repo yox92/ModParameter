@@ -3,11 +3,11 @@ from typing import TextIO
 
 import customtkinter as ctk
 import json
+
+from py.Entity.ItemProps import ItemProps
+from py.Entity.Root import Root
+
 file: TextIO
-
-from CustomWeapon.py.Entity.ItemProps import ItemProps
-from CustomWeapon.py.Entity.Root import Root
-
 
 def float_to_scaled_int(value: float):
     if isinstance(value, int):  # Si c'est déjà un entier, aucun ajustement

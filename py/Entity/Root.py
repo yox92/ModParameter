@@ -1,23 +1,27 @@
-from CustomWeapon.py.Entity.Item import Item
-from CustomWeapon.py.Entity.Locale import Locale
+from py.Entity.Item import Item
+from py.Entity.Locale import Locale
 
 
 class Root:
     def __init__(self, locale: Locale, item: Item):
-        self.locale = locale
-        self.item = item
+        self.Locale = locale
+        self.Item = item
 
-    def get_locale(self) -> Locale:
-        return self.locale
+    @property
+    def locale(self) -> Locale:
+        return self.Locale
 
-    def set_locale(self, locale: Locale):
-        self.locale = locale
+    @locale.setter
+    def locale(self, locale: Locale):
+        self.Locale = locale
 
-    def get_item(self) -> Item:
-        return self.item
+    @property
+    def item(self) -> Item:
+        return self.Item
 
-    def set_item(self, item: Item):
-        self.item = item
+    @item.setter
+    def item(self, item: Item):
+        self.Item = item
 
     @staticmethod
     def from_data(data: dict):
@@ -28,4 +32,3 @@ class Root:
 
     def __repr__(self):
         return f"Root(locale={self.locale}, item={self.item})"
-

@@ -3,16 +3,20 @@ class Locale:
         self.Name = name
         self.ShortName = short_name
 
-    def get_name(self) -> str:
+    @property
+    def name(self) -> str:
         return self.Name
 
-    def set_name(self, name: str):
+    @name.setter
+    def name(self, name: str):
         self.Name = name
 
-    def get_short_name(self) -> str:
+    @property
+    def short_name(self) -> str:
         return self.ShortName
 
-    def set_short_name(self, short_name: str):
+    @short_name.setter
+    def short_name(self, short_name: str):
         self.ShortName = short_name
 
     @classmethod

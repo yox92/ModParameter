@@ -23,8 +23,22 @@ class Caliber(Enum):
     RUSSIAN_127x55 = "12.7x55mm", "Caliber127x55"
     SHOTGUN_12_70 = "12x70mm", "Caliber12g"
 
-    def get_label(self):
+    @property
+    def label(self):
         return self.value[0]
 
-    def get_code(self):
+    @property
+    def code(self):
         return self.value[1]
+
+    @classmethod
+    def count(cls):
+        return len(cls)
+
+    @classmethod
+    def enumerate_calibers(cls):
+        # Retourne un itérable avec des paires d'indice et d'élément
+        return ((idx, caliber)
+                for idx, caliber in enumerate(list(cls)))
+
+

@@ -1,11 +1,11 @@
 import json
 import os
-import re
 
 import customtkinter as ctk
 
-from CustomWeapon.py.Entity.ItemProps import ItemProps
-from CustomWeapon.py.Utils.ItemManager import ItemManager
+from py.Entity.ItemProps import ItemProps
+from py.Utils.ItemManager import ItemManager
+from py.Utils.JsonUtils import JsonUtils
 
 
 class AllWeaponsDetails:
@@ -127,7 +127,7 @@ class AllWeaponsDetails:
     def update_prop_value_int(self, name, value):
         slider, label = self.prop_widgets[name]
         label.configure(text=f"({value:+.0f}%)")
-        self.manager.set_value(name, slider.get())
+        self.manager.set_value_and_transform_like_multi(name, slider.get())
         self.reset_apply_button()
 
     def reset_apply_button(self):
@@ -135,20 +135,28 @@ class AllWeaponsDetails:
         self.status_label.configure(text="Ready to apply changes")
 
     def apply_changes_to_all(self):
-        for file_path in self.all_path.items():
+        for file_path in self.all_path:
             try:
-                with open(file_path, 'r', encoding='utf-8') as fileReadable:
-                    data = json.load(fileReadable)
-                    for key, value in self.manager.key_value.items():
-                # if value != 0:
+                data = JsonUtils.load_json(file_path)
+                for key, value in self.manager.iterate_key_values_where_key_ve_change():
+                    self.update_json_in_new_file(file_path, key, value)
 
+            except Exception as e:
+                print(f"An error occurred while processing {file_path}: {e}")
 
+    def update_json_in_new_file(self, file_path, key, new_value):
+        try:
+            data = JsonUtils.load_json(file_path)
 
-            except FileNotFoundError:
-                print(f"Erreur : fichier introuvable au chemin {file_path}.")
-            except json.JSONDecodeError:
-                print(f"Erreur de décodage JSON pour le fichier : {file_path}.")
+            path_props_json = ["item", "_props", key]
 
+            updated_data = JsonUtils.update_json_value(data, path_props_json, new_value)
+
+            new_file_path = JsonUtils.save_json_as_new_file(updated_data, file_path)
+
+            print(f"value modify and save into file : {new_file_path}")
+        except Exception as e:
+            print(f"Erreur : {e}")
 
 
 

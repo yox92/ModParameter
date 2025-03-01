@@ -1,4 +1,4 @@
-from CustomWeapon.py.Entity.ItemProps import ItemProps
+from py.Entity.ItemProps import ItemProps
 
 
 class Item:
@@ -7,22 +7,28 @@ class Item:
         self._name = name
         self._props = props
 
-    def get_id(self) -> str:
+    @property
+    def id(self) -> str:
         return self._id
 
-    def set_id(self, id: str):
+    @id.setter
+    def id(self, id: str):
         self._id = id
 
-    def get_name(self) -> str:
+    @property
+    def name(self) -> str:
         return self._name
 
-    def set_name(self, name: str):
+    @name.setter
+    def name(self, name: str):
         self._name = name
 
-    def get_props(self) -> ItemProps:
+    @property
+    def props(self) -> ItemProps:
         return self._props
 
-    def set_props(self, props: ItemProps):
+    @props.setter
+    def props(self, props: ItemProps):
         self._props = props
 
     @staticmethod
@@ -35,4 +41,3 @@ class Item:
 
     def __repr__(self):
         return f"Item(_id={self._id}, _name={self._name}, _props={self._props})"
-
