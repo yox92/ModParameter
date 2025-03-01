@@ -1,9 +1,13 @@
 import os
+from typing import TextIO
+
 import customtkinter as ctk
 import json
+file: TextIO
 
-from CustomWeapon.py.Entity.Item import Item
-from CustomWeapon.py.Entity.ItemProps import create_item_props, ItemProps
+from CustomWeapon.py.Entity.ItemProps import ItemProps
+from CustomWeapon.py.Entity.Root import Root
+
 
 def float_to_scaled_int(value: float):
     if isinstance(value, int):  # Si c'est déjà un entier, aucun ajustement
@@ -42,37 +46,77 @@ class ItemDetails:
         self.master = master
         self.main_instance = main_instance
         self.file_path = file_path
-        self.item = self.load_item()
-        self.original_props = {k: v for k, v in vars(self.item._props).items()}
+        self.jsonFile = {}
+        self.rootJSON = self.load_root()
+
+        self.param_main_root()
+        self.create_frame_left()
+        self.create_frame_right()
         self.prop_widgets = {}
+
+        self.original_props = {k: v for k, v in vars(self.rootJSON.get_item().get_props()).items()}
         self.display_details()
 
-    def load_item(self):
-        with open(self.file_path, 'r', encoding='utf-8') as file:
-            data = json.load(file)
-            props = create_item_props(data['_props'])
-            return Item(id=data['_id'], name=data['_name'], parent=data['_parent'], props=props)
+    def param_main_root(self):
+        self.master.grid_columnconfigure(0, weight=0)
+        self.master.grid_columnconfigure(1, weight=8)
+        self.master.grid_rowconfigure(0, weight=1)
+
+    def create_frame_left(self):
+        self.left_main = ctk.CTkFrame(self.master)
+        self.left_main.grid(row=0, column=0, sticky="nsew")
+
+    def create_frame_right(self):
+        self.right_main = ctk.CTkFrame(self.master)
+        self.right_main.grid(row=0, column=1, sticky="nsew")
+        self.right_main.grid_columnconfigure(0, weight=1)
+        self.right_main.grid_columnconfigure(1, weight=1)
+        self.right_main.grid_columnconfigure(2, weight=1)
+
+    def load_root(self):
+        with open(self.file_path, 'r', encoding='utf-8') as fileReadable:
+            data = json.load(fileReadable)
+            self.jsonFile = data
+            return Root.from_data(data)
+
+    def locale_informations(self):
+        title_label = ctk.CTkLabel(self.left_main,
+                                   text="You have chosen :",
+                                   font=("Arial", 18, "bold"))
+        title_label.pack(side="top",
+                         anchor="center")
+        name = ctk.CTkButton(self.left_main, text=self.rootJSON.locale.Name, font=("Arial", 14, "bold"))
+        name.pack(side="top",anchor="center")
+        id_label = ctk.CTkLabel(self.left_main,
+                                   text="ID:",
+                                   font=("Arial", 18, "bold"))
+        id_label.pack(side="top",
+                         anchor="center")
+        id_button = ctk.CTkButton(self.left_main, text=self.rootJSON.get_item().get_id())
+        id_button.pack(side="top",anchor="center")
+
 
     def display_details(self):
+        self.locale_informations()
         row = 0
-        for attr, value in vars(self.item).items():
+        for attr, value in vars(self.rootJSON.get_item()).items():
             if isinstance(value, ItemProps):
                 for prop_name, prop_value in vars(value).items():
                     if isinstance(prop_value, (int, float)) and prop_value != 0:
-                        label = ctk.CTkLabel(self.master, text=f"{prop_name}:")
+                        label = ctk.CTkLabel(self.right_main, text=f"{prop_name}:")
                         label.grid(row=row, column=0, sticky=ctk.W)
 
                         if isinstance(prop_value, int):
                             one_percent = max(prop_value * 0.01, 1)
                             hundredth_percent = max(prop_value * 2, one_percent + 1)
 
-                            slider = ctk.CTkSlider(self.master, from_=one_percent, to=hundredth_percent,
+                            slider = ctk.CTkSlider(self.right_main, from_=one_percent, to=hundredth_percent,
                                                    command=lambda lambda_value, pname=prop_name:
                                                    self.update_prop_value_int(pname, int(lambda_value)))
                             slider.set(prop_value)
                             slider.grid(row=row, column=1, sticky=ctk.W)
-                            percent_label = ctk.CTkLabel(self.master, text=f"{prop_value}")
-                            reset_button = ctk.CTkButton(self.master, text="Reset",
+                            percent_label = ctk.CTkLabel(self.right_main, text=f"{prop_value}")
+                            reset_button = ctk.CTkButton(self.right_main, text="Reset",
                                                          command=lambda pname=prop_name:
                                                          self.reset_slider(pname),
                                                          width=10)
@@ -83,33 +127,33 @@ class ItemDetails:
                             one_percent = scaled_int * 0.01
                             hundredth_percent = scaled_int * 2
 
-                            slider = ctk.CTkSlider(self.master, from_=one_percent, to=hundredth_percent,
+                            slider = ctk.CTkSlider(self.right_main, from_=one_percent, to=hundredth_percent,
                                                    command=lambda lambda_value, pname=prop_name, sf=scale_factor:
                                                    self.update_prop_value_float(pname, lambda_value, sf))
                             slider.set(scaled_int)
                             slider.scale_factor = scale_factor
 
                             slider.grid(row=row, column=1, sticky=ctk.W)
-                            percent_label = ctk.CTkLabel(self.master, text=f"{prop_value:.2f}")
+                            percent_label = ctk.CTkLabel(self.right_main, text=f"{prop_value:.2f}")
 
-                            reset_button = ctk.CTkButton(self.master, text="Reset",
-                                                              command=lambda pname=prop_name:
-                                                              self.reset_slider(pname),
-                                                              width=10)
+                            reset_button = ctk.CTkButton(self.right_main, text="Reset",
+                                                         command=lambda pname=prop_name:
+                                                         self.reset_slider(pname),
+                                                         width=10)
                             reset_button.grid(row=row, column=3, sticky=ctk.W)
 
                         percent_label.grid(row=row, column=2, sticky=ctk.W)
                         self.prop_widgets[prop_name] = (slider, percent_label)
                         row += 1
             else:
-                label = ctk.CTkLabel(self.master, text=f"{attr}: {value}")
+                label = ctk.CTkLabel(self.right_main, text=f"{attr}: {value}")
                 label.grid(row=row, column=0, columnspan=3, sticky=ctk.W)
                 row += 1
 
-        self.apply_button = ctk.CTkButton(self.master, text="Apply", command=self.apply_changes, state="disabled", fg_color="white")
-        self.apply_button.grid(row=row, column=4)
-        self.status_label = ctk.CTkLabel(self.master, text="")
-        self.status_label.grid(row=row, column=5)
+        self.apply_button = ctk.CTkButton(self.right_main, text="Apply", command=self.apply_changes, state="disabled", fg_color="white")
+        self.apply_button.grid(row=row, column=1, sticky="nsew")
+        self.status_label = ctk.CTkLabel(self.right_main, text="" )
+        self.status_label.grid(row=row+1, column=1, sticky="nsew")
 
     def update_prop_value_int(self, name, value):
         original_value = self.original_props[name]
@@ -167,8 +211,6 @@ class ItemDetails:
 
     def apply_changes(self):
         new_file_path = self.file_path.replace('.json', '_mod.json')
-        with open(self.file_path, 'r', encoding='utf-8') as file:
-            data = json.load(file)
 
         for prop_name, original_value in self.original_props.items():
             slider, _ = self.prop_widgets[prop_name]
@@ -178,10 +220,17 @@ class ItemDetails:
                 new_value = int(new_value)
             elif isinstance(original_value, float):
                 new_value = new_value / slider.scale_factor
-            data['_props'][prop_name] = new_value
+
+            if ('item' in self.jsonFile
+                    and '_props' in self.jsonFile['item']
+                    and prop_name in self.jsonFile['item']['_props']):
+                self.jsonFile['item']['_props'][prop_name] = new_value
+
+            else:
+                print(f"Warning: '{prop_name}' not found in '_props'. Skipping update.")
 
         with open(new_file_path, 'w', encoding='utf-8') as file:
-            json.dump(data, file, indent=4)
+            json.dump(self.jsonFile, file, indent=4)
 
         self.check_for_file(new_file_path)
 
@@ -197,7 +246,7 @@ class ItemDetails:
 
     def reset_apply_button(self):
         self.apply_button.configure(fg_color="blue", hover_color="lightblue", border_color="red", state="enable")  # Remettre la couleur d'origine
-        self.status_label.configure(text="")
+        self.status_label.configure(text="Ready to apply changes")
 
 
 

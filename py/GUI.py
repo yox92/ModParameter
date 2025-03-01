@@ -36,7 +36,7 @@ class SimpleGUI:
 
     def search_name(self, event=None):
         name_to_search = self.entry.get()
-        if len(name_to_search) >= 3:
+        if len(name_to_search) >= 2:
             self.clear_recherche_frame()
             results = self.find_name_in_loaded_data(name_to_search)
             if results:
@@ -51,46 +51,51 @@ class SimpleGUI:
     def find_name_in_loaded_data(self, name):
         matches = []
         for data in self.loaded_data:
-            if name.lower() in data.get("_name", "").lower():
-                cleaned_name = (
-                    data['_name']
-                    .replace('.json', '')
-                    .replace('weapon_', '')
-                    .replace('izhmash_', '')
-                )
+            name_field = data.get("locale", {}).get("Name")
+            if isinstance(name_field, str) and name.lower() in name_field.lower():
+                cleaned_name = (data.get("locale", {}).get("ShortName"))
                 matches.append(cleaned_name)
         return matches
 
     def populate_buttons(self, results):
-        max_items = 9
+        max_items = 20
+        items_per_row = 5
+        total_rows = (max_items + items_per_row - 1) // items_per_row
+
+        for i in range(total_rows):
+            self.frame_bot_right.grid_rowconfigure(i, weight=1)
+        for i in range(items_per_row):
+            self.frame_bot_right.grid_columnconfigure(i, weight=1)
+
         for idx, result in enumerate(results[:max_items]):
             frame_recherche_m = ctk.CTkFrame(self.frame_bot_right)
-            row, col = divmod(idx, 3)  # Calculate row and column for a maximum of 3x3 grid
-            frame_recherche_m.grid(row=row, column=col, padx=5, pady=5)
+            row, col = divmod(idx, items_per_row)
+            frame_recherche_m.grid(row=row,
+                                   column=col,
+                                   padx=5,
+                                   pady=5,
+                                   sticky="nsew")
             self.framesBotRecherche.append(frame_recherche_m)
 
-            button = ctk.CTkButton(
-                frame_recherche_m,
-                text=result,
-                command=lambda r=result:
-                self.on_click_result(r), font=("Arial", 20, "bold"))
-            button.grid(row=0, column=0, sticky="nsew")
+            button = ctk.CTkButton(frame_recherche_m,
+                                   text=result,
+                                   command=lambda r=result: self.on_click_result(r),
+                                   font=("Arial", 20, "bold"),
+                                   text_color="black",)
+            button.pack(expand=True)
             self.framesButtonRecherche.append(button)
 
     def on_click_result(self, result):
-        files = os.listdir(self.directory_path)
-        pattern = re.compile(re.escape(result), re.IGNORECASE)
-        possible_matches = [
-            file for file in files
-            if pattern.search(file) and not file.endswith("_mod.json") and file.endswith(".json")
-        ]
-        if possible_matches:
-            file_path = os.path.join(self.directory_path, possible_matches[0])
-            self.open_detail_window(file_path, True)
+        # Recherche le chemin en utilisant le nom stocké lors du chargement initial
+        for data in self.loaded_data:
+            if data['locale']['ShortName'] == result:
+                file_path = data['file_path']  # Récupère directement le chemin stocké
+                self.open_detail_window(file_path, True)
+                break
         else:
             print(f"Fichier ignoré : {result}")
 
-    def open_detail_window(self, file_path, ony_weapon):
+    def open_detail_window(self, send_value, ony_weapon):
         detail_window = ctk.CTkToplevel(self.root)
         detail_window.title("Fenêtre Détails")
 
@@ -119,14 +124,16 @@ class SimpleGUI:
                                      command=lambda: self.close_detail_window(detail_window))
         close_button.grid(pady=20)
         if ony_weapon:
-            ItemDetails(detail_window, file_path, self)
+            ItemDetails(detail_window, send_value, self)
         else:
-            AllWeaponsDetails(detail_window, file_path, self)
+            AllWeaponsDetails(detail_window, send_value, self)
+
 
     def close_detail_window(self, detail_window):
         detail_window.grab_release()
         detail_window.destroy()
         self.root.attributes('-disabled', False)
+
 
     def create_image_var(self):
         script_dir = os.path.dirname(os.path.abspath(__file__))  # Répertoire où se trouve ce script
@@ -136,6 +143,7 @@ class SimpleGUI:
                                          "weapon.jpg")  # Générer le chemin absolu pour ammo.jpg
         self.ammo_image = ctk.CTkImage(Image.open(image_path_caliber), size=(150, 150))
         self.weapon_image = ctk.CTkImage(Image.open(image_path_weapon), size=(150, 150))
+
 
     def create_frame_row_root(self):
         self.root.grid_rowconfigure(0, weight=1)
@@ -151,6 +159,7 @@ class SimpleGUI:
         self.frames.append(fram1)
         self.frames.append(fram2)
 
+
     def create_frame_top(self):
         self.frames[0].grid_columnconfigure(0, weight=1)
         self.frames[0].grid_columnconfigure(1, weight=1)
@@ -159,6 +168,7 @@ class SimpleGUI:
         self.frame_top_right = ctk.CTkFrame(self.frames[0])
         self.frame_top_left.grid(row=0, column=0, sticky="nsew")
         self.frame_top_right.grid(row=0, column=1, sticky="nsew")
+
 
     def create_frame_bot_for_reseach(self):
         self.frames[1].grid_columnconfigure(0, weight=1)
@@ -178,13 +188,14 @@ class SimpleGUI:
                 button.grid(row=i, column=y, padx=5, pady=5)
                 frame1.append(button)
 
+
     def show_search(self):
         self.buttonWeapon.configure(state="disabled")
         self.buttonCaliber.configure(state="normal")
         self.reset_and_impl_frame(self.frames[1])
         self.create_frame_bot_for_reseach()
-        self.create_grid_row_col_config(self.frame_bot_left, 1,1)
-        self.create_grid_row_col_config(self.frame_bot_right, 3,3)
+        self.create_grid_row_col_config(self.frame_bot_left, 1, 1)
+        self.create_grid_row_col_config(self.frame_bot_right, 3, 3)
         self.creat_bind_entry_bar(self.frame_bot_left)
         self.entry.bind("<KeyRelease>", self.search_name)
 
@@ -195,11 +206,13 @@ class SimpleGUI:
         self.reset_and_impl_frame(self.frames[1])
         self.create_grid_row_col_config(self.frames[1], 4, 5)
         self.creat_5x4_bottom(self.framesBotCaliber, self.frames[1])
-        self.create_buttons_for_calibers(enumerate(Caliber))
+        self.create_buttons_for_calibers()
+
 
     def creat_bind_entry_bar(self, frame):
         self.entry = ctk.CTkEntry(frame, placeholder_text="Weapons text ...", width=400)
         self.entry.pack(side="top", anchor="center")
+
 
     def reset_and_impl_frame(self, frame):
         for child in frame.winfo_children():
@@ -209,28 +222,30 @@ class SimpleGUI:
         for i in range(frame.grid_size()[1]):
             frame.grid_rowconfigure(i, weight=1)
 
-    def create_buttons_for_calibers(self, param1):
-        list = param1
-        print(list)
+
+    def create_buttons_for_calibers(self):
         row = 1
         column = 0
         colors = ["dodgerblue", "peru", "mediumseagreen", "khaki"]
-        for idx, caliber in list:
+
+        if len(self.framesBotCaliber) < len(Caliber):
+            print("Erreur : 'framesBotCaliber' no enought frames")
+            return
+
+        for idx, caliber in enumerate(Caliber):
             color = colors[idx % 4]
-            # Créer un bouton pour chaque calibre
             button = ctk.CTkButton(
                 self.framesBotCaliber[idx],
-                text=str(caliber.value),  # Utiliser la valeur du calibre comme texte du bouton
+                text=caliber.get_label(),
                 width=150,
                 text_color="black",
                 fg_color=color,
                 font=("Arial", 15, "bold"),
-                command=lambda r=caliber.value: self.open_detail_window(r, False))
+                command=lambda r=caliber.get_code(): self.open_detail_window(r, False))
             button.pack(side="top", anchor="center")
 
-            # Organiser les boutons en colonnes et lignes pour une meilleure disposition
             column += 1
-            if column > 4:  # Passer à la ligne suivante après 6 colonnes
+            if column > 4:
                 column = 0
                 row += 1
 
@@ -244,7 +259,7 @@ class SimpleGUI:
             fg_color="transparent",
             text_color="green",
             hover_color="whitesmoke",
-            font = ("Arial", 23, "bold"),
+            font=("Arial", 23, "bold"),
             command=self.show_search
         )
         self.buttonWeapon.pack(side="top", anchor="center",
@@ -264,11 +279,13 @@ class SimpleGUI:
         self.buttonCaliber.pack(side="top", anchor="center",
                                 expand=True, fill="both")
 
+
     def create_grid_row_col_config(self, frames, number_row, number_column):
         for i in range(number_row):
             frames.grid_rowconfigure(i, weight=1)
         for j in range(number_column):
             frames.grid_columnconfigure(j, weight=1)
+
 
     def clear_recherche_frame(self):
         for frame in self.framesBotRecherche:
@@ -281,6 +298,7 @@ class SimpleGUI:
         self.framesButtonRecherche.clear()
         self.message_not_find.clear()
 
+
     def load_json_files(self):
         data_list = []
         for filename in os.listdir(self.directory_path):
@@ -289,7 +307,8 @@ class SimpleGUI:
                 try:
                     with open(file_path, 'r', encoding='utf-8') as file:
                         data = json.load(file)
-                        if "_name" in data:
+                        if "locale" in data and "Name" in data["locale"]:
+                            data['file_path'] = file_path
                             data_list.append(data)
                 except Exception as e:
                     print(f"Erreur lors du chargement {filename}: {e}")
