@@ -1,24 +1,35 @@
-from py.Entity.ItemProps import ItemProps
+from CustomWeapon.py.Entity.EnumProps import EnumProps
 
 
 class ItemManager:
     def __init__(self):
-        self.key_value = {key: 0 for key in vars(ItemProps()).keys()}
+        self.key_value = {prop.label: 0 for prop in EnumProps}
 
     def get_value(self, key):
+        print(key)
         if key in self.key_value:
             return self.key_value[key]
         else:
             raise KeyError(f"La clé '{key}' n'existe pas dans KeyValue.")
 
+    def get_key(self, value):
+        print(value)
+        if value in self.key_value:
+            return self.key_value[value]
+        else:
+            raise KeyError(f"La clé '{value}' n'existe pas dans KeyValue.")
+
     def set_value_and_transform_like_multi(self, key, value):
-        print(key, value)
         if key in self.key_value:
             self.key_value[key] = 1 + (value / 100)
         else:
             raise KeyError(f"La clé '{key}' n'existe pas dans KeyValue.")
 
-    def iterate_key_values(self):
+    def iterate_key(self):
+        for key, value in self.key_value.items():
+            yield key
+
+    def iterate_key_and_values(self):
         for key, value in self.key_value.items():
             yield key, value
 
@@ -26,6 +37,11 @@ class ItemManager:
         for key, value in self.key_value.items():
             if value != 0:
                 yield key, value
+
+    def update_from_props_json(self, key, value):
+        if key in self.key_value:
+            self.key_value[key] = value
+
 
     def __repr__(self):
         return f"KeyValue({self.key_value})"

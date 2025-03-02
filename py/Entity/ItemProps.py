@@ -1,15 +1,48 @@
+from CustomWeapon.py.Entity.EnumProps import EnumProps
+
+
 class ItemProps:
     def __init__(self, **props):
-        self._CameraSnap = props.get('CameraSnap', None)
-        self._AimSensitivity = props.get('AimSensitivity', None)
-        self._Ergonomics = props.get('Ergonomics', None)
-        self._RecoilCamera = props.get('RecoilCamera', None)
-        self._RecoilForceBack = props.get('RecoilForceBack', None)
-        self._RecoilForceUp = props.get('RecoilForceUp', None)
-        self._Velocity = props.get('Velocity', None)
-        self._Weight = props.get('Weight', None)
-        self._ammoCaliber = props.get('ammoCaliber', None)
-        self._bFirerate = props.get('bFirerate', None)
+        self._CameraSnap = (
+            props.get(EnumProps.CAMERA_SNAP.label, None),
+            EnumProps.CAMERA_SNAP.label
+        )
+        self._AimSensitivity = (
+            props.get(EnumProps.AIM_SENSITIVITY.label, None),
+            EnumProps.AIM_SENSITIVITY.label
+        )
+        self._Ergonomics = (
+            props.get(EnumProps.ERGONOMICS.label, None),
+            EnumProps.ERGONOMICS.label
+        )
+        self._RecoilCamera = (
+            props.get(EnumProps.RECOIL_CAMERA.label, None),
+            EnumProps.RECOIL_CAMERA.label
+        )
+        self._RecoilForceBack = (
+            props.get(EnumProps.RECOIL_FORCE_BACK.label, None),
+            EnumProps.RECOIL_FORCE_BACK.label
+        )
+        self._RecoilForceUp = (
+            props.get(EnumProps.RECOIL_FORCE_UP.label, None),
+            EnumProps.RECOIL_FORCE_UP.label
+        )
+        self._Velocity = (
+            props.get(EnumProps.VELOCITY.label, None),
+            EnumProps.VELOCITY.label
+        )
+        self._Weight = (
+            props.get(EnumProps.WEIGHT.label, None),
+            EnumProps.WEIGHT.label
+        )
+        self._ammoCaliber = (
+            props.get(EnumProps.AMMO_CALIBER.label, None),
+            EnumProps.AMMO_CALIBER.label
+        )
+        self._bFirerate = (
+            props.get(EnumProps.FIRE_RATE.label, None),
+            EnumProps.FIRE_RATE.label
+        )
 
     @property
     def CameraSnap(self):
@@ -17,11 +50,11 @@ class ItemProps:
 
     @property
     def AimSensitivity(self):
-        return self.AimSensitivity
+        return self._AimSensitivity
 
     @property
     def Ergonomics(self):
-        return self.Ergonomics
+        return self._Ergonomics
 
     @property
     def RecoilCamera(self):
@@ -29,31 +62,38 @@ class ItemProps:
 
     @property
     def RecoilForceBack(self):
-        return self.RecoilForceBack
+        return self._RecoilForceBack
 
     @property
     def RecoilForceUp(self):
-        return self.RecoilForceUp
+        return self._RecoilForceUp
 
     @property
     def Velocity(self):
-        return self.Velocity
+        return self._Velocity
 
     @property
     def Weight(self):
-        return self.Weight
+        return self._Weight
 
     @property
     def ammoCaliber(self):
-        return self.Weight
+        return self._Weight
 
     @property
     def bFirerate(self):
-        return self.bFirerate
+        return self._bFirerate
 
     @classmethod
     def from_data(cls, data: dict):
         return cls(**data)
+
+    @classmethod
+    def get_value_by_label(self, label):
+        for key, (numeric_value, attr_label) in vars(self).items():
+            if attr_label == label:  # Comparaison avec le label
+                return numeric_value
+        return None
 
     def __repr__(self):
         return (f"ItemProps("
@@ -69,7 +109,6 @@ class ItemProps:
                 f"bFirerate={self.bFirerate})")
 
     def __iter__(self):
-        """Permet d'itérer sur les noms des attributs."""
         return (key for key in self.__dict__.keys())
 
 

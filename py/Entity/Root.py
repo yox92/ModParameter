@@ -1,5 +1,5 @@
-from py.Entity.Item import Item
-from py.Entity.Locale import Locale
+from CustomWeapon.py.Entity.Item import Item
+from CustomWeapon.py.Entity.Locale import Locale
 
 
 class Root:
@@ -11,17 +11,9 @@ class Root:
     def locale(self) -> Locale:
         return self.Locale
 
-    @locale.setter
-    def locale(self, locale: Locale):
-        self.Locale = locale
-
     @property
     def item(self) -> Item:
         return self.Item
-
-    @item.setter
-    def item(self, item: Item):
-        self.Item = item
 
     @staticmethod
     def from_data(data: dict):

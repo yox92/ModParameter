@@ -3,9 +3,9 @@ import os
 
 import customtkinter as ctk
 
-from py.Entity.ItemProps import ItemProps
-from py.Utils.ItemManager import ItemManager
-from py.Utils.JsonUtils import JsonUtils
+from CustomWeapon.py.Entity.EnumProps import EnumProps
+from CustomWeapon.py.Utils.ItemManager import ItemManager
+from CustomWeapon.py.Utils.JsonUtils import JsonUtils
 
 
 class AllWeaponsDetails:
@@ -93,17 +93,17 @@ class AllWeaponsDetails:
 
     def display_details(self):
         row = 0
-        props = vars(ItemProps())
-        for row, prop_name in enumerate(props):
+        for row, props in enumerate(EnumProps):
+            props: EnumProps
             self.right_main.grid_rowconfigure(row, weight=1)
 
-            label = ctk.CTkLabel(self.right_main, text=f"{prop_name}:")
+            label = ctk.CTkLabel(self.right_main, text=f"{props.code}:")
             label.grid(row=row, column=0, sticky=ctk.W, padx=10)
             slider = ctk.CTkSlider(
                 self.right_main,
                 from_=-100,
                 to=+100,
-                command=lambda lambda_value, pname=prop_name:
+                command=lambda lambda_value, pname=props.label:
                 self.update_prop_value_int(pname, lambda_value)
             )
             slider.set(0)
@@ -112,7 +112,7 @@ class AllWeaponsDetails:
             percent_label = ctk.CTkLabel(self.right_main, text=f"{0:.2f}%")
             percent_label.grid(row=row, column=2, sticky=ctk.W, padx=10)
 
-            self.prop_widgets[prop_name] = (slider, percent_label)
+            self.prop_widgets[props.label] = (slider, percent_label)
 
             row += 1
 
@@ -136,14 +136,8 @@ class AllWeaponsDetails:
 
     def apply_changes_to_all(self):
         for file_path in self.all_path:
-            try:
-                data = JsonUtils.load_json(file_path)
                 for key, value in self.manager.iterate_key_values_where_key_ve_change():
                     self.update_json_in_new_file(file_path, key, value)
-
-            except Exception as e:
-                print(f"An error occurred while processing {file_path}: {e}")
-
     def update_json_in_new_file(self, file_path, key, new_value):
         try:
             data = JsonUtils.load_json(file_path)

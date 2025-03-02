@@ -5,9 +5,9 @@ import customtkinter as ctk
 
 from PIL import Image
 
-from py.Entity.AllWeaponsDetails import AllWeaponsDetails
-from py.Entity.Caliber import Caliber
-from py.ItemDetails import ItemDetails
+from CustomWeapon.py.Entity.AllWeaponsDetails import AllWeaponsDetails
+from CustomWeapon.py.Entity.Caliber import Caliber
+from CustomWeapon.py.ItemDetails import ItemDetails
 
 
 class SimpleGUI:
