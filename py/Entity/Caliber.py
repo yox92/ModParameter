@@ -1,6 +1,5 @@
 from enum import Enum
 
-
 class Caliber(Enum):
     MAKAROV_9x18 = "9x18mm Makarov", "Caliber9x18PM"
     PARABELLUM_9x19 = "9x19mm Para", "Caliber9x19PARA"

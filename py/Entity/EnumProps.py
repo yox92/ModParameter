@@ -1,4 +1,5 @@
 from enum import Enum
+
 class EnumProps(Enum):
     CAMERA_SNAP = "CameraSnap", "Speed Camera Movement During Recoil"
     AIM_SENSITIVITY = "AimSensitivity", "Aiming Sensitivity"
@@ -28,3 +29,4 @@ class EnumProps(Enum):
 
     def __str__(self):
         return f"{self.label} ({self.code})"
+

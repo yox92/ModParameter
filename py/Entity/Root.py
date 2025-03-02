@@ -1,5 +1,4 @@
-from CustomWeapon.py.Entity.Item import Item
-from CustomWeapon.py.Entity.Locale import Locale
+from Entity import Locale, Item
 
 
 class Root:

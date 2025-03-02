@@ -1,7 +1,7 @@
 import customtkinter as ctk
 
-from CustomWeapon.py.GUI import SimpleGUI
-
+from GUI import SimpleGUI
+import config
 
 class MainWindow:
     def __init__(self):
@@ -18,6 +18,7 @@ class MainWindow:
 
 def main():
     main_window = MainWindow()
+
     main_window.run()
 
 

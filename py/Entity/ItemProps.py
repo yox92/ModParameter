@@ -1,5 +1,4 @@
-from CustomWeapon.py.Entity.EnumProps import EnumProps
-
+from Entity import EnumProps
 
 class ItemProps:
     def __init__(self, **props):

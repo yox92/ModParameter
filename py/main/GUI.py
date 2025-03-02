@@ -1,13 +1,10 @@
-import json
-import os
-
 import customtkinter as ctk
+from customtkinter import CTkImage
 
-from PIL import Image
-
-from CustomWeapon.py.Entity.AllWeaponsDetails import AllWeaponsDetails
-from CustomWeapon.py.Entity.Caliber import Caliber
-from CustomWeapon.py.ItemDetails import ItemDetails
+from Entity import Caliber
+import AllWeaponsDetails, ItemDetails
+from Utils.ImageUtils import ImageUtils
+from Utils.JsonUtils import JsonUtils
 
 
 class SimpleGUI:
@@ -17,8 +14,7 @@ class SimpleGUI:
         self.root.geometry("800x600")  # Définir la taille de la fenêtre
         ctk.set_appearance_mode("dark")
 
-        self.create_json_path()
-        self.loaded_data = self.load_json_files()
+        self.loaded_data = JsonUtils.load_all_json_files_without_mod()
         self.create_image_var()
         self.create_frame_row_root()
         self.create_frame_top()
@@ -27,10 +23,6 @@ class SimpleGUI:
         self.framesBotCaliber = []
         self.framesButtonRecherche = []
         self.message_not_find = []
-
-    def create_json_path(self):
-        self.directory_path = os.path.join(os.path.dirname(__file__), '..', 'src', 'output')
-        self.directory_path = os.path.normpath(self.directory_path)
 
     def search_name(self, event=None):
         name_to_search = self.entry.get()
@@ -134,13 +126,8 @@ class SimpleGUI:
 
 
     def create_image_var(self):
-        script_dir = os.path.dirname(os.path.abspath(__file__))  # Répertoire où se trouve ce script
-        image_path_caliber = os.path.join(script_dir, "..", "image",
-                                          "ammo.jpg")  # Générer le chemin absolu pour ammo.jpg
-        image_path_weapon = os.path.join(script_dir, "..", "image",
-                                         "weapon.jpg")  # Générer le chemin absolu pour ammo.jpg
-        self.ammo_image = ctk.CTkImage(Image.open(image_path_caliber), size=(150, 150))
-        self.weapon_image = ctk.CTkImage(Image.open(image_path_weapon), size=(150, 150))
+        self.ammo_image: CTkImage = ImageUtils.create_image_var("ammo")
+        self.weapon_image: CTkImage = ImageUtils.create_image_var("weapon")
 
 
     def create_frame_row_root(self):
@@ -300,17 +287,3 @@ class SimpleGUI:
         self.message_not_find.clear()
 
 
-    def load_json_files(self):
-        data_list = []
-        for filename in os.listdir(self.directory_path):
-            if filename.endswith('.json') and not filename.endswith('_mod.json'):
-                file_path = os.path.join(self.directory_path, filename)
-                try:
-                    with open(file_path, 'r', encoding='utf-8') as file:
-                        data = json.load(file)
-                        if "locale" in data and "Name" in data["locale"]:
-                            data['file_path'] = file_path
-                            data_list.append(data)
-                except Exception as e:
-                    print(f"Erreur lors du chargement {filename}: {e}")
-        return data_list

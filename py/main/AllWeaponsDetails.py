@@ -1,11 +1,8 @@
-import json
 import os
-
 import customtkinter as ctk
 
-from CustomWeapon.py.Entity.EnumProps import EnumProps
-from CustomWeapon.py.Utils.ItemManager import ItemManager
-from CustomWeapon.py.Utils.JsonUtils import JsonUtils
+from Utils import ItemManager, JsonUtils
+from Entity import EnumProps
 
 
 class AllWeaponsDetails:

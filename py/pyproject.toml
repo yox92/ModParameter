@@ -1,0 +1,6 @@
+[tool.poetry]
+name = "CustomWeapon"
+version = "1.0.0"
+description = "modify weapon from JSON"
+authors = ["Vivien HOYAUX"]
+packages = [{include = "main"}]

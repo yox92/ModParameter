@@ -1,4 +1,4 @@
-from CustomWeapon.py.Entity.ItemProps import ItemProps
+from Entity import ItemProps
 
 class Item:
     def __init__(self, id: str, name: str, props: ItemProps = None):

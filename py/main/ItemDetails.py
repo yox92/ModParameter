@@ -1,13 +1,7 @@
 import os
 from typing import TextIO
-
 import customtkinter as ctk
 import json
-
-from CustomWeapon.py.Entity.EnumProps import EnumProps
-from CustomWeapon.py.Entity.ItemProps import ItemProps
-from CustomWeapon.py.Entity.Root import Root
-from CustomWeapon.py.Utils.ItemManager import ItemManager
 
 file: TextIO
 

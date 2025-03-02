@@ -1,4 +1,4 @@
-from CustomWeapon.py.Entity.EnumProps import EnumProps
+from Entity import EnumProps
 
 
 class ItemManager:

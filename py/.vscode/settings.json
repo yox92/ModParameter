@@ -1,0 +1,11 @@
+{
+    "python.pythonPath": "python3",
+    "python.envFile": "${workspaceFolder}/.env",
+    "python.analysis.extraPaths": ["./py"],
+    "terminal.integrated.env.linux": {
+        "PYTHONPATH": "./py"
+    },
+    "terminal.integrated.env.windows": {
+        "PYTHONPATH": ".\\py"
+    }
+}

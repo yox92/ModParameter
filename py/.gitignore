@@ -1,0 +1,10 @@
+# Fichiers Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Config IDE
+.vscode/
+.idea/
+.env
