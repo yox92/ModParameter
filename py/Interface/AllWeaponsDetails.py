@@ -1,4 +1,3 @@
-import os
 import customtkinter as ctk
 
 from Utils import ItemManager, JsonUtils
