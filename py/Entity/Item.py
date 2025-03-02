@@ -1,4 +1,4 @@
-from Entity import ItemProps
+from Entity.ItemProps import ItemProps
 
 class Item:
     def __init__(self, id: str, name: str, props: ItemProps = None):

@@ -16,9 +16,8 @@ class AllWeaponsDetails:
         self.param_main_root()
         self.create_frame_left()
         self.create_frame_right()
-        self.directory_path = self.main_instance.directory_path
         self.list_of_weapons = self.get_weapons_by_calibre()
-        self.list_of_file_path_json = self.get_list_of_json_name()
+        self.list_of_file_path_json = JsonUtils.return_list_json_path(self.list_of_weapons)
         self.prop_widgets = {}
         self.add_left_frame()
         self.display_details()
@@ -62,15 +61,6 @@ class AllWeaponsDetails:
                 matching_names.append(data['locale']['ShortName'])
                 self.all_path.append(data['file_path'])
         return matching_names
-
-    def get_list_of_json_name(self):
-        list_of_json = []
-        for filename in os.listdir(self.directory_path):
-            if filename.endswith('.json') and not filename.endswith('_mod.json'):
-                base_name = filename.rsplit('.json', 1)[0]
-                if base_name in self.list_of_weapons:
-                    list_of_json.append(os.path.join(self.directory_path, filename))
-        return list_of_json
 
     def param_main_root(self):
         self.master.grid_columnconfigure(0, weight=0)
@@ -135,6 +125,7 @@ class AllWeaponsDetails:
         for file_path in self.all_path:
                 for key, value in self.manager.iterate_key_values_where_key_ve_change():
                     self.update_json_in_new_file(file_path, key, value)
+
     def update_json_in_new_file(self, file_path, key, new_value):
         try:
             data = JsonUtils.load_json(file_path)

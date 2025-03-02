@@ -1,10 +1,13 @@
+import copy
 import os
 from typing import TextIO
 import customtkinter as ctk
 import json
 
-file: TextIO
+from Entity import Root, ItemProps, EnumProps, Item
+from Utils import ItemManager
 
+file: TextIO
 
 def float_to_scaled_int(value: float):
     if isinstance(value, int):  # Si c'est déjà un entier, aucun ajustement
@@ -47,6 +50,7 @@ class ItemDetails:
         self.file_path = file_path
         self.jsonFile = {}
         self.manager = ItemManager()
+        self.original_value_before_change = copy.deepcopy(self.manager)
         self.rootJSON = self.load_root()
 
         self.param_main_root()
@@ -76,7 +80,8 @@ class ItemDetails:
             data = json.load(fileReadable)
             self.jsonFile = data
             root: Root = Root.from_data(data)
-            item_props: ItemProps = root.item.props
+            item: Item = root.item
+            item_props: ItemProps = item.props
             # modify
             for key, (numerical_value, code) in vars(item_props).items():
                 self.manager.update_from_props_json(code, numerical_value)
@@ -112,7 +117,7 @@ class ItemDetails:
                     hundredth_percent = max(number * 2, one_percent + 1)
 
                     slider = ctk.CTkSlider(self.right_main, from_=one_percent, to=hundredth_percent,
-                                           command=lambda lambda_value, pname=number:
+                                           command=lambda lambda_value, pname=prop_value:
                                            self.update_prop_value_int(pname, int(lambda_value)))
                     slider.set(number)
                     slider.grid(row=row, column=1, sticky=ctk.W)
@@ -156,35 +161,46 @@ class ItemDetails:
 
 
     def update_prop_value_int(self, name, value):
-        original_value = self.rootJSON.item.props[name]
+        props: ItemProps = self.rootJSON.item.props
+        original_value = props.get_value_by_label(name)
         adjusted_value = int(value)
         percentage_change = ((adjusted_value - original_value) / original_value) * 100
         slider, label = self.prop_widgets[name]
         label.configure(text=f"{adjusted_value} ({percentage_change:+.0f}%)")
+        self.manager.update_from_props_json(name, adjusted_value)
         self.reset_apply_button()
 
 
     def update_prop_value_float(self, name, value, scale_factor):
         adjusted_value = float(value) / float(scale_factor)
-        default_value = self.rootJSON.item.props[name]
-        percentage_change = ((adjusted_value - default_value) / default_value) * 100
+        props: ItemProps = self.rootJSON.item.props
+        originial_value = props.get_value_by_label(name)
+        if originial_value is None:
+            raise ValueError(f"No default value found for '{name}'.")
+        if isinstance(originial_value, int):
+            adjusted_value = int(adjusted_value)
+        else:
+            adjusted_value = float(
+                adjusted_value
+            )
+        percentage_change = ((adjusted_value - originial_value) / originial_value) * 100
         format_spec = determine_format_spec(adjusted_value)
         adjusted_value_str = f"{adjusted_value:{format_spec}}"
         slider, label = self.prop_widgets[name]
         label.configure(text=f"{adjusted_value_str} ({percentage_change:+.0f}%)")
+        self.manager.update_from_props_json(name, adjusted_value_str)
         self.reset_apply_button()
 
 
     def reset_slider(self, name):
-        original_value = self.original_props[name]
+        props: ItemProps = self.rootJSON.item.props
+        original_value = props.get_value_by_label(name)
         slider, label = self.prop_widgets[name]
         if isinstance(original_value, int):
             slider.set(original_value)
             label.configure(text=f"{original_value}")
         else:
-            print(original_value)
             format_spec = determine_format_spec(original_value)
-            print(format_spec)
             label.configure(text=f"{original_value:{format_spec}}")
             scaled_int, _ = float_to_scaled_int(original_value)
             slider.set(scaled_int)
@@ -192,51 +208,42 @@ class ItemDetails:
         self.verify_all_sliders_reset()
 
 
+    # def verify_all_sliders_reset(self):
+    #     all_reset = True
+    #     for name, (slider, label) in self.prop_widgets.items():
+    #         current_value = slider.get()
+    #         props: ItemProps = self.rootJSON.item.props
+    #         original_value = props.get_value_by_label(name)
+    #         if isinstance(original_value, int):
+    #             if current_value != original_value:
+    #                 all_reset = False
+    #                 break
+    #         else:
+    #             scaled_original_value, _ = float_to_scaled_int(original_value)
+    #             if abs(current_value - scaled_original_value) > 1e-2:
+    #                 all_reset = False
+    #                 break
+    #
+    #     if all_reset:
+    #         self.apply_button.configure(state="disabled", fg_color="white")
+    #         self.status_label.configure(text="")
+
     def verify_all_sliders_reset(self):
-        all_reset = True
-        for name, (slider, label) in self.prop_widgets.items():
-            current_value = slider.get()
-            original_value = self.original_props[name]
-
-            if isinstance(original_value, int):
-                if current_value != original_value:
-                    all_reset = False
-                    break
-            else:
-                scaled_original_value, _ = float_to_scaled_int(original_value)
-                if abs(current_value - scaled_original_value) > 1e-2:
-                    all_reset = False
-                    break
-
-        if all_reset:
+        if self.original_value_before_change == self.manager:
             self.apply_button.configure(state="disabled", fg_color="white")
             self.status_label.configure(text="")
 
 
     def apply_changes(self):
-        new_file_path = self.file_path.replace('.json', '_mod.json')
-
-        for prop_name, original_value in self.original_props.items():
-            slider, _ = self.prop_widgets[prop_name]
-            new_value = slider.get()
-
-            if isinstance(original_value, int):
-                new_value = int(new_value)
-            elif isinstance(original_value, float):
-                new_value = new_value / slider.scale_factor
-
-            if ('item' in self.jsonFile
-                    and '_props' in self.jsonFile['item']
-                    and prop_name in self.jsonFile['item']['_props']):
-                self.jsonFile['item']['_props'][prop_name] = new_value
-
-            else:
-                print(f"Warning: '{prop_name}' not found in '_props'. Skipping update.")
-
-        with open(new_file_path, 'w', encoding='utf-8') as file:
-            json.dump(self.jsonFile, file, indent=4)
-
-        self.check_for_file(new_file_path)
+        if self.original_value_before_change != self.manager:
+            new_file_path = self.file_path.replace('.json', '_mod.json')
+            for name, value_modify in self.manager.iterate_key_and_values():
+                if isinstance(name, int) and isinstance(value_modify, int):
+                    if name in self.jsonFile['item']['_props'][name]:
+                        self.jsonFile['item']['_props'][name] = value_modify
+            with open(new_file_path, 'w', encoding='utf-8') as fileOutPut:
+                json.dump(self.jsonFile, fileOutPut, indent=4)
+            self.check_for_file(new_file_path)
 
 
     def check_for_file(self, file_path):

@@ -1,4 +1,4 @@
-from Entity import EnumProps
+from Entity.EnumProps import EnumProps
 
 class ItemProps:
     def __init__(self, **props):
@@ -57,7 +57,7 @@ class ItemProps:
 
     @property
     def RecoilCamera(self):
-        return self.RecoilCamera
+        return self._RecoilCamera
 
     @property
     def RecoilForceBack(self):
@@ -87,12 +87,20 @@ class ItemProps:
     def from_data(cls, data: dict):
         return cls(**data)
 
-    @classmethod
+    def get_instance_attributes(self):
+        return vars(self)
+
+    def get_attribute_value(self, attr_name):
+        return getattr(self, attr_name, None)
+
     def get_value_by_label(self, label):
-        for key, (numeric_value, attr_label) in vars(self).items():
-            if attr_label == label:  # Comparaison avec le label
-                return numeric_value
-        return None
+        for attr_name in self.get_instance_attributes():
+            attr_value = self.get_attribute_value(attr_name)
+            if isinstance(attr_value, tuple) and len(attr_value) == 2:
+                numeric_value, attr_label = attr_value
+                if attr_label == label:
+                    return numeric_value
+        raise ValueError(f"Le label '{label}' n'a pas été trouvé dans ItemProps.")
 
     def __repr__(self):
         return (f"ItemProps("

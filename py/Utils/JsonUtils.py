@@ -17,6 +17,18 @@ class JsonUtils:
             raise ValueError(f"Le fichier '{file_path}' contient un JSON invalide.")
 
     @staticmethod
+    def load_json_and_add_path(file_path):
+        try:
+            with open(file_path, "r") as file:
+                data = json.load(file)
+                data['file_path'] = str(file_path.resolve())
+                return data
+        except FileNotFoundError:
+            raise FileNotFoundError(f"Le fichier '{file_path}' est introuvable.")
+        except json.JSONDecodeError:
+            raise ValueError(f"Le fichier '{file_path}' contient un JSON invalide.")
+
+    @staticmethod
     def update_json_value(data, path_for_attribut_json, new_value):
         current = data
         for key in path_for_attribut_json[:-1]:  # Parcourir jusqu'à l'avant-dernière clé
@@ -72,30 +84,25 @@ class JsonUtils:
         except json.JSONDecodeError:
             raise ValueError(f"Le fichier '{file_path}' contient un JSON invalide.")
 
-    @staticmethod
-    def load_json_and_add_result(file_path):
-        data_list = []
-        try:
-            with file_path.open('r', encoding='utf-8') as file:
-                data = json.load(file)
-                if "locale" in data and "Name" in data["locale"]:
-                    # Stocker le chemin absolu du fichier JSON
-                    data['file_path'] = str(file_path.resolve())
-                    data_list.append(data)
-            return data_list
-        except FileNotFoundError:
-            raise FileNotFoundError(f"Le fichier '{file_path}' est introuvable.")
-        except json.JSONDecodeError:
-            raise ValueError(f"Le fichier '{file_path}' contient un JSON invalide.")
 
     @staticmethod
     def load_all_json_files_without_mod():
         json_dir_path = JSON_FILES_DIR
-
+        data_list = []
         for filename in os.listdir(json_dir_path):
+
             if filename.endswith('.json') and not filename.endswith('_mod.json'):
                 file_path = json_dir_path / filename
-                return JsonUtils.load_json_and_add_result(file_path)
+                data_list.append(JsonUtils.load_json_and_add_path(file_path))
 
+        return data_list
 
-
+    @staticmethod
+    def return_list_json_path(name_json):
+        list_of_json = []
+        for filename in os.listdir(JSON_FILES_DIR):
+            if filename.endswith('.json') and not filename.endswith('_mod.json'):
+                base_name = filename.rsplit('.json', 1)[0]
+                if base_name in name_json:
+                    list_of_json.append(os.path.join(JSON_FILES_DIR, filename))
+        return list_of_json

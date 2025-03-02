@@ -1,5 +1,5 @@
-from Entity import Locale, Item
-
+from Entity.Locale import Locale
+from Entity.Item import Item
 
 class Root:
     def __init__(self, locale: Locale, item: Item):

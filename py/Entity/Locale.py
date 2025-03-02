@@ -1,3 +1,4 @@
+
 class Locale:
     def __init__(self, name: str = None, short_name: str = None):
         self.Name = name

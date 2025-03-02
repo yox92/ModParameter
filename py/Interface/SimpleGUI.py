@@ -2,15 +2,15 @@ import customtkinter as ctk
 from customtkinter import CTkImage
 
 from Entity import Caliber
-import AllWeaponsDetails, ItemDetails
 from Utils.ImageUtils import ImageUtils
 from Utils.JsonUtils import JsonUtils
+from Interface import ItemDetails, AllWeaponsDetails
 
 
 class SimpleGUI:
     def __init__(self, root):
         self.root = root
-        self.root.title("CustomWeapon App")  # Définir le titre
+        self.root.title("CustomWeapon App")  # Définir le tself.itre
         self.root.geometry("800x600")  # Définir la taille de la fenêtre
         ctk.set_appearance_mode("dark")
 

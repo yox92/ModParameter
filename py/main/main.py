@@ -1,8 +1,5 @@
 import customtkinter as ctk
 
-from GUI import SimpleGUI
-import config
-
 class MainWindow:
     def __init__(self):
         # Création de la fenêtre principale
@@ -10,6 +7,7 @@ class MainWindow:
         self.setup_ui()
 
     def setup_ui(self):
+        from Interface import SimpleGUI
         self.app = SimpleGUI(self.root)  # Fenêtre principale
 
     def run(self):

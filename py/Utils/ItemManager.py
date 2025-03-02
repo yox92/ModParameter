@@ -1,4 +1,4 @@
-from Entity import EnumProps
+from Entity.EnumProps import EnumProps
 
 
 class ItemManager:
@@ -51,4 +51,9 @@ class ItemManager:
 
     def __setitem__(self, key, value):
         self.set_value_and_transform_like_multi(key, value)
+
+    def __eq__(self, other):
+        if not isinstance(other, ItemManager):
+            return False
+        return self.key_value == other.key_value
 
