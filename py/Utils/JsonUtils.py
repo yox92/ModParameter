@@ -95,7 +95,7 @@ class JsonUtils:
         data_list = []
         for filename in os.listdir(json_dir_path):
 
-            if filename.endswith('.json') and not filename.endswith('_mod.json'):
+            if filename.endswith('.json') and not filename.endswith('mod.json'):
                 file_path = json_dir_path / filename
                 data_list.append(JsonUtils.load_json_and_add_path(file_path))
 
@@ -105,7 +105,7 @@ class JsonUtils:
     def return_list_json_path(name_json):
         list_of_json = []
         for filename in os.listdir(JSON_FILES_DIR):
-            if filename.endswith('.json') and not filename.endswith('_mod.json'):
+            if filename.endswith('.json') and not filename.endswith('mod.json'):
                 base_name = filename.rsplit('.json', 1)[0]
                 if base_name in name_json:
                     list_of_json.append(os.path.join(JSON_FILES_DIR, filename))
