@@ -5,7 +5,7 @@ class Utils:
         self.root = root
 
     @staticmethod
-    def configure_grid(frame, rows, cols, weight=1):
+    def configure_grid(frame, rows, cols, weight):
         for r in range(rows):
             frame.grid_rowconfigure(r, weight=weight)
         for c in range(cols):
@@ -30,12 +30,19 @@ class Utils:
             frame.grid_columnconfigure(j, weight=0)
 
     @staticmethod
-    def search_by_name(loaded_data, name):
-        matches = []
-        for data in loaded_data:
-            name_field = data.get("locale", {}).get("Name")
-            if isinstance(name_field, str) and name.lower() in name_field.lower():
-                cleaned_name = data.get("locale", {}).get("ShortName")
-                matches.append(cleaned_name)
-        return matches
+    def create_5x4_bottom(frame1, frame2):
+        frame1.clear()
+        for i in range(4):
+            for y in range(5):
+                button = ctk.CTkFrame(frame2)
+                button.grid(row=i, column=y, padx=5, pady=5)
+                frame1.append(button)
+
+    @staticmethod
+    def create_grid_row_col_config(frames, number_row, number_column):
+        for i in range(number_row):
+            frames.grid_rowconfigure(i, weight=1)
+        for j in range(number_column):
+            frames.grid_columnconfigure(j, weight=1)
+
 

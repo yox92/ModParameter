@@ -9,6 +9,7 @@ from Utils import ItemManager, JsonUtils
 
 file: TextIO
 
+
 def float_to_scaled_int(value: float):
     if isinstance(value, int):  # Si c'est déjà un entier, aucun ajustement
         return value, 1
@@ -45,6 +46,10 @@ def determine_format_spec(adjusted_value):
 
 class ItemDetails:
     def __init__(self, master, file_path, main_instance):
+        self.status_label = None
+        self.right_main = None
+        self.left_main = None
+        self.apply_button = None
         self.master = master
         self.main_instance = main_instance
         self.file_path = file_path
@@ -114,41 +119,10 @@ class ItemDetails:
                 label.grid(row=row, column=0, sticky=ctk.W, padx=10)
 
                 if isinstance(number, int):
-                    one_percent = max(number * 0.01, 1)
-                    hundredth_percent = max(number * 2, one_percent + 1)
-
-                    slider = ctk.CTkSlider(self.right_main, from_=one_percent, to=hundredth_percent,
-                                           command=lambda lambda_value, pname=prop_value:
-                                           self.update_prop_value_int(pname, int(lambda_value)))
-                    slider.set(number)
-                    slider.grid(row=row, column=1, sticky=ctk.W, padx=10)
-                    percent_label = ctk.CTkLabel(self.right_main, text=f"{number}", font=("Arial", 15, "bold"))
-                    reset_button = ctk.CTkButton(self.right_main, text="Reset",
-                                                 command=lambda pname=prop_value:
-                                                 self.reset_slider(pname),
-                                                 width=10)
-                    reset_button.grid(row=row, column=3, sticky=ctk.W, padx=10)
+                    percent_label, slider = self.slider_integer(number, row, prop_value)
 
                 else:
-                    scaled_int, scale_factor = float_to_scaled_int(number)
-                    one_percent = scaled_int * 0.01
-                    hundredth_percent = scaled_int * 2
-
-                    slider = ctk.CTkSlider(self.right_main, from_=one_percent, to=hundredth_percent,
-                                           command=lambda lambda_value, pname=prop_value, sf=scale_factor:
-                                           self.update_prop_value_float(pname, lambda_value, sf))
-                    slider.set(scaled_int)
-                    slider.scale_factor = scale_factor
-
-                    slider.grid(row=row, column=1, sticky=ctk.W, padx=10)
-                    percent_label = ctk.CTkLabel(self.right_main, text=f"{number:.2f}",
-                                                 font=("Arial", 15, "bold"))
-
-                    reset_button = ctk.CTkButton(self.right_main, text="Reset",
-                                                 command=lambda pname=prop_value:
-                                                 self.reset_slider(pname),
-                                                 width=10)
-                    reset_button.grid(row=row, column=3, sticky=ctk.W, padx=10)
+                    percent_label, slider = self.slider_float(number, row, prop_value)
 
                 percent_label.grid(row=row, column=2, sticky=ctk.W, padx=10)
                 self.prop_widgets[prop_value] = (slider, percent_label)
@@ -161,6 +135,44 @@ class ItemDetails:
         self.status_label = ctk.CTkLabel(self.right_main, text="")
         self.status_label.grid(row=row + 1, column=1, sticky="nsew")
 
+    def slider_integer(self, number, row, prop_value: EnumProps):
+        one_percent = max(number * 0.01, 1)
+        hundredth_percent = max(number * 2, one_percent + 1)
+
+        slider = ctk.CTkSlider(self.right_main, from_=one_percent, to=hundredth_percent,
+                               command=lambda lambda_value, pname=prop_value:
+                               self.update_prop_value_int(pname, int(lambda_value)))
+        slider.set(number)
+        slider.grid(row=row, column=1, sticky=ctk.W, padx=10)
+        percent_label = ctk.CTkLabel(self.right_main, text=f"{number}", font=("Arial", 15, "bold"))
+        reset_button = ctk.CTkButton(self.right_main, text="Reset",
+                                     command=lambda pname=prop_value:
+                                     self.reset_slider(pname),
+                                     width=10)
+        reset_button.grid(row=row, column=3, sticky=ctk.W, padx=10)
+        return percent_label, slider
+
+    def slider_float(self, number, row, prop_value: EnumProps):
+        scaled_int, scale_factor = float_to_scaled_int(number)
+        one_percent = scaled_int * 0.01
+        hundredth_percent = scaled_int * 2
+
+        slider = ctk.CTkSlider(self.right_main, from_=one_percent, to=hundredth_percent,
+                               command=lambda lambda_value, pname=prop_value, sf=scale_factor:
+                               self.update_prop_value_float(pname, lambda_value, sf))
+        slider.set(scaled_int)
+        slider.scale_factor = scale_factor
+
+        slider.grid(row=row, column=1, sticky=ctk.W, padx=10)
+        percent_label = ctk.CTkLabel(self.right_main, text=f"{number:.2f}",
+                                     font=("Arial", 15, "bold"))
+
+        reset_button = ctk.CTkButton(self.right_main, text="Reset",
+                                     command=lambda pname=prop_value:
+                                     self.reset_slider(pname),
+                                     width=10)
+        reset_button.grid(row=row, column=3, sticky=ctk.W, padx=10)
+        return percent_label, slider
 
     def update_prop_value_int(self, name, value):
         props: ItemProps = self.rootJSON.item.props
@@ -171,7 +183,6 @@ class ItemDetails:
         label.configure(text=f"{adjusted_value} ({percentage_change:+.0f}%)")
         self.manager.update_from_props_json(name, adjusted_value)
         self.reset_apply_button()
-
 
     def update_prop_value_float(self, name, value, scale_factor):
         adjusted_value = float(value) / float(scale_factor)
@@ -195,7 +206,6 @@ class ItemDetails:
 
         self.manager.update_from_props_json(name, float(adjusted_value_str))
         self.reset_apply_button()
-
 
     def reset_slider(self, name):
         props: ItemProps = self.rootJSON.item.props
@@ -221,18 +231,17 @@ class ItemDetails:
             self.apply_button.configure(state="disabled", fg_color="white")
             self.status_label.configure(text="")
 
-
     def apply_changes(self):
         if self.original_value_before_change != self.manager:
             new_file_path = self.file_path.replace('.json', '_mod.json')
             data_json_to_update = JsonUtils.load_json(self.file_path)
 
             for name_props_to_modify, value_modify in self.manager.iterate_key_and_values():
-                data_json_to_update = JsonUtils.update_json_in_new_file(name_props_to_modify, value_modify, data_json_to_update, False)
+                data_json_to_update = JsonUtils.update_json_in_new_file(name_props_to_modify, value_modify,
+                                                                        data_json_to_update, False)
 
             new_file_path = JsonUtils.save_json_as_new_file(data_json_to_update, new_file_path)
             self.check_for_file(new_file_path)
-
 
     def check_for_file(self, new_file_path):
         if JsonUtils.file_exist(new_file_path):
@@ -244,8 +253,7 @@ class ItemDetails:
         else:
             self.master.after(1000, lambda: self.check_for_file(new_file_path))
 
-
     def reset_apply_button(self):
         self.apply_button.configure(fg_color="blue", hover_color="lightblue", border_color="red",
-                                    state="enable")  # Remettre la couleur d'origine
+                                    state="enable")
         self.status_label.configure(text="Ready to apply changes")

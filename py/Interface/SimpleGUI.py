@@ -9,7 +9,10 @@ from Interface import ItemDetails, AllWeaponsDetails
 WINDOW_TITLE = "CustomWeapon App"
 WINDOW_GEOMETRY = "800x600"
 APPEARANCE_MODE = "dark"
-
+DETAIL_WINDOW_TITLE = "Detail windows"
+DETAIL_WINDOW_WIDTH = 850
+DETAIL_WINDOW_HEIGHT = 500
+WINDOW_OFFSET = 10
 
 class SimpleGUI:
     def __init__(self, root):
@@ -24,6 +27,10 @@ class SimpleGUI:
         self.ammo_image = None
         self.buttonWeapon = None
         self.buttonCaliber = None
+        self.framesBotRecherche = []
+        self.framesBotCaliber = []
+        self.framesButtonRecherche = []
+        self.message_not_find = []
 
         self.root = root
         self.root.title(WINDOW_TITLE)
@@ -31,15 +38,14 @@ class SimpleGUI:
 
         ctk.set_appearance_mode(APPEARANCE_MODE)
 
+        self.run()
+
+    def run(self):
         self.loaded_data = JsonUtils.load_all_json_files_without_mod()
         self.create_frame_main()
         self.create_image_var()
         self.create_frame_top()
         self.create_buttons_for_choice()
-        self.framesBotRecherche = []
-        self.framesBotCaliber = []
-        self.framesButtonRecherche = []
-        self.message_not_find = []
 
     def create_image_var(self):
         self.ammo_image: CTkImage = ImageUtils.create_image_var("ammo")
@@ -51,7 +57,7 @@ class SimpleGUI:
         self.root.grid_columnconfigure(0, weight=1)
 
         self.main_frame_top = ctk.CTkFrame(self.root)
-        self.main_frame_bot = ctk.CTkFrame(self.root, fg_color="red")
+        self.main_frame_bot = ctk.CTkFrame(self.root)
         self.main_frame_top.grid(row=0, column=0, sticky="nsew")
         self.main_frame_bot.grid(row=1, column=0, sticky="nsew")
 
@@ -95,47 +101,44 @@ class SimpleGUI:
                                 expand=True, fill="both")
 
     def on_click_result(self, result):
-        # Recherche le chemin en utilisant le nom stocké lors du chargement initial
         for data in self.loaded_data:
             if data['locale']['ShortName'] == result:
-                file_path = data['file_path']  # Récupère directement le chemin stocké
+                file_path = data['file_path']
                 self.open_detail_window(file_path, True)
                 break
         else:
-            print(f"Fichier ignoré : {result}")
+            print(f"File ignore : {result}")
 
-    def open_detail_window(self, send_value, ony_weapon):
+    def open_detail_window(self, send_value, only_weapon):
         detail_window = ctk.CTkToplevel(self.root)
-        detail_window.title("Fenêtre Détails")
+        detail_window.title(DETAIL_WINDOW_TITLE)
 
-        window_width = 850
-        window_height = 500
+        position_x, position_y = self.calculate_window_position(DETAIL_WINDOW_WIDTH, DETAIL_WINDOW_HEIGHT)
+        detail_window.geometry(f"{DETAIL_WINDOW_WIDTH}x{DETAIL_WINDOW_HEIGHT}+{position_x}+{position_y}")
 
+        detail_window.grab_set()
+        detail_window.focus_force()
+        self.root.attributes('-disabled', True)
+        detail_window.protocol("WM_DELETE_WINDOW", lambda: self.close_detail_window(detail_window))
+
+        ctk.CTkLabel(detail_window, text="Detail window !").grid(pady=20)
+        ctk.CTkButton(detail_window, text="Close", command=lambda: self.close_detail_window(detail_window)).grid(
+            pady=20)
+
+        if only_weapon:
+            ItemDetails(detail_window, send_value, self)
+        else:
+            AllWeaponsDetails(detail_window, send_value, self)
+
+    def calculate_window_position(self, window_width, window_height):
         root_x = self.root.winfo_x()
         root_y = self.root.winfo_y()
         root_width = self.root.winfo_width()
         root_height = self.root.winfo_height()
 
-        position_x = root_x + root_width + 10  # Ajouter un espace de 10 pixels à droite
-        position_y = root_y + (root_height // 2) - (
-                window_height // 2)  # Centrer verticalement par rapport à la fenêtre principale
-
-        detail_window.geometry(f"{window_width}x{window_height}+{position_x}+{position_y}")
-        detail_window.grab_set()
-        detail_window.focus_force()
-        self.root.attributes('-disabled', True)
-
-        detail_window.protocol("WM_DELETE_WINDOW", lambda: self.close_detail_window(detail_window))
-
-        label = ctk.CTkLabel(detail_window, text="Fenêtre de détails !")
-        label.grid(pady=20)
-        close_button = ctk.CTkButton(detail_window, text="Fermer",
-                                     command=lambda: self.close_detail_window(detail_window))
-        close_button.grid(pady=20)
-        if ony_weapon:
-            ItemDetails(detail_window, send_value, self)
-        else:
-            AllWeaponsDetails(detail_window, send_value, self)
+        position_x = root_x + root_width + WINDOW_OFFSET
+        position_y = root_y + (root_height // 2) - (window_height // 2)
+        return position_x, position_y
 
     def close_detail_window(self, detail_window):
         detail_window.grab_release()
@@ -154,22 +157,14 @@ class SimpleGUI:
         self.frame_bot_left.grid(row=0, column=0, sticky="nsew")
         self.frame_bot_right.grid(row=1, column=0, sticky="nsew")
 
-    def creat_5x4_bottom(self, frame1, frame2):
-        frame1.clear()
-        for i in range(4):
-            for y in range(5):
-                button = ctk.CTkFrame(frame2)
-                button.grid(row=i, column=y, padx=5, pady=5)
-                frame1.append(button)
-
     def case_specific_weapon(self):
         self.buttonWeapon.configure(state="disabled")
         self.buttonCaliber.configure(state="normal")
 
         self.create_frame_bot_find_weapon()
 
-        self.create_grid_row_col_config(self.frame_bot_left, 1, 1)
-        self.create_grid_row_col_config(self.frame_bot_right, 3, 3)
+        Utils.create_grid_row_col_config(self.frame_bot_left, 1, 1)
+        Utils.create_grid_row_col_config(self.frame_bot_right, 3, 3)
 
         self.creat_bind_entry_bar(self.frame_bot_left)
         self.entry.bind("<KeyRelease>", self.search_name)
@@ -178,9 +173,10 @@ class SimpleGUI:
         self.buttonCaliber.configure(state="disabled")
         self.buttonWeapon.configure(state="normal")
         Utils.clear_frame(self.main_frame_bot)
-        self.create_grid_row_col_config(self.main_frame_bot, 4, 5)
-        self.creat_5x4_bottom(self.framesBotCaliber, self.main_frame_bot)
+        Utils.create_grid_row_col_config(self.main_frame_bot, 4, 5)
+        Utils.create_5x4_bottom(self.framesBotCaliber, self.main_frame_bot)
         self.create_buttons_for_calibers()
+
 
     def search_name(self, event=None):
         name_to_search = self.entry.get()
@@ -267,12 +263,6 @@ class SimpleGUI:
                 column = 0
                 row += 1
 
-    def create_grid_row_col_config(self, frames, number_row, number_column):
-        for i in range(number_row):
-            frames.grid_rowconfigure(i, weight=1)
-        for j in range(number_column):
-            frames.grid_columnconfigure(j, weight=1)
-
     def clear_recherche_frame(self):
         for frame in self.framesBotRecherche:
             frame.destroy()
@@ -283,11 +273,3 @@ class SimpleGUI:
         self.framesBotRecherche.clear()
         self.framesButtonRecherche.clear()
         self.message_not_find.clear()
-
-    def reset_and_impl_frame(self, frame):
-        for child in frame.winfo_children():
-            child.destroy()
-        for i in range(frame.grid_size()[0]):
-            frame.grid_columnconfigure(i, weight=1)
-        for i in range(frame.grid_size()[1]):
-            frame.grid_rowconfigure(i, weight=1)
