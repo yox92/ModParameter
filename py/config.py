@@ -1,20 +1,16 @@
 from pathlib import Path
 import sys
 
-#  Automatically find the path of the folder containing `main.py`
 MAIN_DIR = Path(__file__).resolve().parent / "main"
 
-#  Define the project's root directory
-BASE_DIR = MAIN_DIR.parent  # `py/` directory, project root
+BASE_DIR = MAIN_DIR.parent
 
-#  Add BASE_DIR to sys.path to avoid import issues
 sys.path.append(str(BASE_DIR))
 
 JSON_FILES_DIR = BASE_DIR / "JsonFiles"
 IMAGES_DIR = BASE_DIR / "Images"
 
 
-#  List of required directories
 REQUIRED_DIRS = [MAIN_DIR, JSON_FILES_DIR]
 
 def relatif_path(path):
