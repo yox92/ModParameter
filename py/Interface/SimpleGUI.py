@@ -89,8 +89,8 @@ class SimpleGUI:
         detail_window = ctk.CTkToplevel(self.root)
         detail_window.title("Fenêtre Détails")
 
-        window_width = 800
-        window_height = 600
+        window_width = 850
+        window_height = 500
 
         root_x = self.root.winfo_x()
         root_y = self.root.winfo_y()

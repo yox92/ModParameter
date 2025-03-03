@@ -93,7 +93,7 @@ class ItemDetails:
                                    font=("Arial", 18, "bold"))
         title_label.pack(side="top",
                          anchor="center")
-        name = ctk.CTkButton(self.left_main, text=self.rootJSON.locale.Name, font=("Arial", 14, "bold"))
+        name = ctk.CTkButton(self.left_main, text=self.rootJSON.locale.ShortName, font=("Arial", 16, "bold"))
         name.pack(side="top", anchor="center")
         id_label = ctk.CTkLabel(self.left_main,
                                 text="ID:",
@@ -109,8 +109,9 @@ class ItemDetails:
         for prop_value, number in self.manager.iterate_key_and_values():
             prop_value: EnumProps
             if isinstance(number, (int, float)) and number != 0:
+                self.right_main.grid_rowconfigure(row, weight=1)
                 label = ctk.CTkLabel(self.right_main, text=f"{EnumProps.get_code_by_label(prop_value)}:")
-                label.grid(row=row, column=0, sticky=ctk.W)
+                label.grid(row=row, column=0, sticky=ctk.W, padx=10)
 
                 if isinstance(number, int):
                     one_percent = max(number * 0.01, 1)
@@ -120,13 +121,13 @@ class ItemDetails:
                                            command=lambda lambda_value, pname=prop_value:
                                            self.update_prop_value_int(pname, int(lambda_value)))
                     slider.set(number)
-                    slider.grid(row=row, column=1, sticky=ctk.W)
-                    percent_label = ctk.CTkLabel(self.right_main, text=f"{number}")
+                    slider.grid(row=row, column=1, sticky=ctk.W, padx=10)
+                    percent_label = ctk.CTkLabel(self.right_main, text=f"{number}", font=("Arial", 15, "bold"))
                     reset_button = ctk.CTkButton(self.right_main, text="Reset",
                                                  command=lambda pname=prop_value:
                                                  self.reset_slider(pname),
                                                  width=10)
-                    reset_button.grid(row=row, column=3, sticky=ctk.W)
+                    reset_button.grid(row=row, column=3, sticky=ctk.W, padx=10)
 
                 else:
                     scaled_int, scale_factor = float_to_scaled_int(number)
@@ -139,16 +140,17 @@ class ItemDetails:
                     slider.set(scaled_int)
                     slider.scale_factor = scale_factor
 
-                    slider.grid(row=row, column=1, sticky=ctk.W)
-                    percent_label = ctk.CTkLabel(self.right_main, text=f"{number:.2f}")
+                    slider.grid(row=row, column=1, sticky=ctk.W, padx=10)
+                    percent_label = ctk.CTkLabel(self.right_main, text=f"{number:.2f}",
+                                                 font=("Arial", 15, "bold"))
 
                     reset_button = ctk.CTkButton(self.right_main, text="Reset",
                                                  command=lambda pname=prop_value:
                                                  self.reset_slider(pname),
                                                  width=10)
-                    reset_button.grid(row=row, column=3, sticky=ctk.W)
+                    reset_button.grid(row=row, column=3, sticky=ctk.W, padx=10)
 
-                percent_label.grid(row=row, column=2, sticky=ctk.W)
+                percent_label.grid(row=row, column=2, sticky=ctk.W, padx=10)
                 self.prop_widgets[prop_value] = (slider, percent_label)
                 row += 1
             row += 1
