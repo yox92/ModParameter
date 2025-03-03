@@ -1,4 +1,5 @@
 import customtkinter as ctk
+from pkg_resources import empty_provider
 
 from Utils import ItemManager, JsonUtils
 from Entity import EnumProps
@@ -79,28 +80,32 @@ class AllWeaponsDetails:
 
     def display_details(self):
         row = 0
-        for row, props in enumerate(EnumProps):
+        filtered_props = filter(lambda x: x != EnumProps.AMMO_CALIBER, EnumProps)
+
+        for row, props in enumerate(filtered_props):
             props: EnumProps
-            self.right_main.grid_rowconfigure(row, weight=1)
+            if props != EnumProps.AMMO_CALIBER:
+                props: EnumProps
+                self.right_main.grid_rowconfigure(row, weight=1)
 
-            label = ctk.CTkLabel(self.right_main, text=f"{props.code}:")
-            label.grid(row=row, column=0, sticky=ctk.W, padx=10)
-            slider = ctk.CTkSlider(
-                self.right_main,
-                from_=-100,
-                to=+100,
-                command=lambda lambda_value, pname=props.label:
-                self.update_prop_value_int(pname, lambda_value)
-            )
-            slider.set(0)
-            slider.grid(row=row, column=1, sticky=ctk.W, padx=10)
+                label = ctk.CTkLabel(self.right_main, text=f"{props.code}:")
+                label.grid(row=row, column=0, sticky=ctk.W, padx=10)
+                slider = ctk.CTkSlider(
+                    self.right_main,
+                    from_=-100,
+                    to=+100,
+                    command=lambda lambda_value, pname=props.label:
+                    self.update_props_value(pname, lambda_value)
+                )
+                slider.set(0)
+                slider.grid(row=row, column=1, sticky=ctk.W, padx=10)
 
-            percent_label = ctk.CTkLabel(self.right_main, text=f"{0:.2f}%")
-            percent_label.grid(row=row, column=2, sticky=ctk.W, padx=10)
+                percent_label = ctk.CTkLabel(self.right_main, text=f"{0:.2f}%")
+                percent_label.grid(row=row, column=2, sticky=ctk.W, padx=10)
 
-            self.prop_widgets[props.label] = (slider, percent_label)
+                self.prop_widgets[props.label] = (slider, percent_label)
 
-            row += 1
+                row += 1
 
         self.apply_button = ctk.CTkButton(self.right_main, text="Apply",
                                           command=self.apply_changes_to_all,
@@ -110,7 +115,7 @@ class AllWeaponsDetails:
         self.status_label = ctk.CTkLabel(self.right_main, text="" )
         self.status_label.grid(row=row+1, column=1, sticky="nsew")
 
-    def update_prop_value_int(self, name, value):
+    def update_props_value(self, name, value):
         slider, label = self.prop_widgets[name]
         label.configure(text=f"({value:+.0f}%)")
         self.manager.set_value_and_transform_like_multi(name, slider.get())
@@ -121,23 +126,28 @@ class AllWeaponsDetails:
         self.status_label.configure(text="Ready to apply changes")
 
     def apply_changes_to_all(self):
+        list_path_new_json = []
         for file_path in self.all_path:
-                for key, value in self.manager.iterate_key_values_where_key_ve_change():
-                    self.update_json_in_new_file(file_path, key, value)
+            data_json_to_update = JsonUtils.load_json(file_path)
+            new_file_path = file_path.replace('.json', '_mod.json')
 
-    def update_json_in_new_file(self, file_path, key, new_value):
-        try:
-            data = JsonUtils.load_json(file_path)
+            for key, value in self.manager.iterate_key_values_where_key_ve_change():
+                data_json_to_update = JsonUtils.update_json_in_new_file(key, value, data_json_to_update, True)
+            JsonUtils.save_json_as_new_file(data_json_to_update, new_file_path)
+            list_path_new_json.append(new_file_path)
+            self.check_for_all_files(list_path_new_json)
 
-            path_props_json = ["item", "_props", key]
-
-            updated_data = JsonUtils.update_json_value(data, path_props_json, new_value)
-
-            new_file_path = JsonUtils.save_json_as_new_file(updated_data, file_path)
-
-            print(f"value modify and save into file : {new_file_path}")
-        except Exception as e:
-            print(f"Erreur : {e}")
+    def check_for_all_files(self, list_path_new_json):
+        if list_path_new_json and not JsonUtils.all_file_exist(list_path_new_json):
+            self.apply_button.configure(fg_color="green", hover_color="green")
+            self.status_label.configure(text="Changes applied successfully.")
+            self.master.after(1500, self.master.destroy)
+            self.main_instance.root.attributes('-disabled', False)
+        else:
+            self.status_label.configure(text="Error: One or more JSON files are missing.", fg="red")
+            self.apply_button.configure(fg_color="red", hover_color="red")
+            self.master.after(3000, self.master.destroy)
+            self.main_instance.root.attributes('-disabled', False)
 
 
 

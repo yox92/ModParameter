@@ -5,7 +5,7 @@ import customtkinter as ctk
 import json
 
 from Entity import Root, ItemProps, EnumProps, Item
-from Utils import ItemManager
+from Utils import ItemManager, JsonUtils
 
 file: TextIO
 
@@ -50,8 +50,8 @@ class ItemDetails:
         self.file_path = file_path
         self.jsonFile = {}
         self.manager = ItemManager()
-        self.original_value_before_change = copy.deepcopy(self.manager)
         self.rootJSON = self.load_root()
+        self.original_value_before_change = copy.deepcopy(self.manager)
 
         self.param_main_root()
         self.create_frame_left()
@@ -175,6 +175,7 @@ class ItemDetails:
         adjusted_value = float(value) / float(scale_factor)
         props: ItemProps = self.rootJSON.item.props
         originial_value = props.get_value_by_label(name)
+
         if originial_value is None:
             raise ValueError(f"No default value found for '{name}'.")
         if isinstance(originial_value, int):
@@ -187,8 +188,10 @@ class ItemDetails:
         format_spec = determine_format_spec(adjusted_value)
         adjusted_value_str = f"{adjusted_value:{format_spec}}"
         slider, label = self.prop_widgets[name]
+
         label.configure(text=f"{adjusted_value_str} ({percentage_change:+.0f}%)")
-        self.manager.update_from_props_json(name, adjusted_value_str)
+
+        self.manager.update_from_props_json(name, float(adjusted_value_str))
         self.reset_apply_button()
 
 
@@ -196,37 +199,20 @@ class ItemDetails:
         props: ItemProps = self.rootJSON.item.props
         original_value = props.get_value_by_label(name)
         slider, label = self.prop_widgets[name]
+
         if isinstance(original_value, int):
             slider.set(original_value)
             label.configure(text=f"{original_value}")
+            self.manager.update_from_props_json(name, original_value)
         else:
             format_spec = determine_format_spec(original_value)
             label.configure(text=f"{original_value:{format_spec}}")
+            self.manager.update_from_props_json(name, original_value)
             scaled_int, _ = float_to_scaled_int(original_value)
             slider.set(scaled_int)
+
         self.reset_apply_button()
         self.verify_all_sliders_reset()
-
-
-    # def verify_all_sliders_reset(self):
-    #     all_reset = True
-    #     for name, (slider, label) in self.prop_widgets.items():
-    #         current_value = slider.get()
-    #         props: ItemProps = self.rootJSON.item.props
-    #         original_value = props.get_value_by_label(name)
-    #         if isinstance(original_value, int):
-    #             if current_value != original_value:
-    #                 all_reset = False
-    #                 break
-    #         else:
-    #             scaled_original_value, _ = float_to_scaled_int(original_value)
-    #             if abs(current_value - scaled_original_value) > 1e-2:
-    #                 all_reset = False
-    #                 break
-    #
-    #     if all_reset:
-    #         self.apply_button.configure(state="disabled", fg_color="white")
-    #         self.status_label.configure(text="")
 
     def verify_all_sliders_reset(self):
         if self.original_value_before_change == self.manager:
@@ -237,24 +223,24 @@ class ItemDetails:
     def apply_changes(self):
         if self.original_value_before_change != self.manager:
             new_file_path = self.file_path.replace('.json', '_mod.json')
-            for name, value_modify in self.manager.iterate_key_and_values():
-                if isinstance(name, int) and isinstance(value_modify, int):
-                    if name in self.jsonFile['item']['_props'][name]:
-                        self.jsonFile['item']['_props'][name] = value_modify
-            with open(new_file_path, 'w', encoding='utf-8') as fileOutPut:
-                json.dump(self.jsonFile, fileOutPut, indent=4)
+            data_json_to_update = JsonUtils.load_json(self.file_path)
+
+            for name_props_to_modify, value_modify in self.manager.iterate_key_and_values():
+                data_json_to_update = JsonUtils.update_json_in_new_file(name_props_to_modify, value_modify, data_json_to_update, False)
+
+            new_file_path = JsonUtils.save_json_as_new_file(data_json_to_update, new_file_path)
             self.check_for_file(new_file_path)
 
 
-    def check_for_file(self, file_path):
-        if os.path.exists(file_path):
+    def check_for_file(self, new_file_path):
+        if JsonUtils.file_exist(new_file_path):
             self.apply_button.configure(fg_color="green", hover_color="green")
             self.status_label.configure(text="Changes applied successfully.")
             self.master.after(1500, self.master.destroy)
             self.main_instance.root.attributes('-disabled', False)
 
         else:
-            self.master.after(1000, lambda: self.check_for_file(file_path))
+            self.master.after(1000, lambda: self.check_for_file(new_file_path))
 
 
     def reset_apply_button(self):
