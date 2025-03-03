@@ -10,13 +10,14 @@ WINDOW_TITLE = "CustomWeapon App"
 WINDOW_GEOMETRY = "800x600"
 APPEARANCE_MODE = "dark"
 DETAIL_WINDOW_TITLE = "Detail windows"
-DETAIL_WINDOW_WIDTH = 850
+DETAIL_WINDOW_WIDTH = 900
 DETAIL_WINDOW_HEIGHT = 500
 WINDOW_OFFSET = 10
 
 class SimpleGUI:
     def __init__(self, root):
 
+        self.loaded_data = None
         self.frame_top_right = None
         self.main_frame_top = None
         self.main_frame_bot = None
@@ -109,51 +110,18 @@ class SimpleGUI:
         else:
             print(f"File ignore : {result}")
 
-    def open_detail_window(self, send_value, only_weapon):
-        detail_window = ctk.CTkToplevel(self.root)
-        detail_window.title(DETAIL_WINDOW_TITLE)
-
-        position_x, position_y = self.calculate_window_position(DETAIL_WINDOW_WIDTH, DETAIL_WINDOW_HEIGHT)
-        detail_window.geometry(f"{DETAIL_WINDOW_WIDTH}x{DETAIL_WINDOW_HEIGHT}+{position_x}+{position_y}")
-
-        detail_window.grab_set()
-        detail_window.focus_force()
-        self.root.attributes('-disabled', True)
-        detail_window.protocol("WM_DELETE_WINDOW", lambda: self.close_detail_window(detail_window))
-
-        ctk.CTkLabel(detail_window, text="Detail window !").grid(pady=20)
-        ctk.CTkButton(detail_window, text="Close", command=lambda: self.close_detail_window(detail_window)).grid(
-            pady=20)
-
-        if only_weapon:
-            ItemDetails(detail_window, send_value, self)
-        else:
-            AllWeaponsDetails(detail_window, send_value, self)
-
-    def calculate_window_position(self, window_width, window_height):
-        root_x = self.root.winfo_x()
-        root_y = self.root.winfo_y()
-        root_width = self.root.winfo_width()
-        root_height = self.root.winfo_height()
-
-        position_x = root_x + root_width + WINDOW_OFFSET
-        position_y = root_y + (root_height // 2) - (window_height // 2)
-        return position_x, position_y
-
-    def close_detail_window(self, detail_window):
-        detail_window.grab_release()
-        detail_window.destroy()
-        self.root.attributes('-disabled', False)
-
     def create_frame_bot_find_weapon(self):
         Utils.clear_frame(self.main_frame_bot)
         Utils.clear_config_row_col(self.main_frame_bot)
+
         self.main_frame_bot.grid_columnconfigure(0, weight=1)
         self.main_frame_bot.grid_columnconfigure(1, weight=0)
         self.main_frame_bot.grid_rowconfigure(0, weight=1)
         self.main_frame_bot.grid_rowconfigure(1, weight=10)
+
         self.frame_bot_left = ctk.CTkFrame(self.main_frame_bot)
         self.frame_bot_right = ctk.CTkFrame(self.main_frame_bot)
+
         self.frame_bot_left.grid(row=0, column=0, sticky="nsew")
         self.frame_bot_right.grid(row=1, column=0, sticky="nsew")
 
@@ -166,17 +134,18 @@ class SimpleGUI:
         Utils.create_grid_row_col_config(self.frame_bot_left, 1, 1)
         Utils.create_grid_row_col_config(self.frame_bot_right, 3, 3)
 
-        self.creat_bind_entry_bar(self.frame_bot_left)
+        self.create_bind_entry_bar(self.frame_bot_left)
         self.entry.bind("<KeyRelease>", self.search_name)
 
     def case_caliber_weapon(self):
         self.buttonCaliber.configure(state="disabled")
         self.buttonWeapon.configure(state="normal")
+
         Utils.clear_frame(self.main_frame_bot)
         Utils.create_grid_row_col_config(self.main_frame_bot, 4, 5)
         Utils.create_5x4_bottom(self.framesBotCaliber, self.main_frame_bot)
-        self.create_buttons_for_calibers()
 
+        self.create_buttons_for_calibers()
 
     def search_name(self, event=None):
         name_to_search = self.entry.get()
@@ -186,11 +155,12 @@ class SimpleGUI:
             if results:
                 self.populate_buttons(results)
             else:
-                label = ctk.CTkLabel(self.frame_bot_right, text="Aucun nom correspondant trouvé.")
+                label = ctk.CTkLabel(self.frame_bot_right, text="No matching name found.")
                 label.grid(row=0, column=0, sticky="nsew")
                 self.message_not_find.append(label)
         else:
             self.clear_recherche_frame()
+
 
     def populate_buttons(self, results):
         max_items = 20
@@ -204,7 +174,7 @@ class SimpleGUI:
             weight=1)
 
         for idx, result in enumerate(results[:max_items]):
-            frame_recherche_m = ctk.CTkFrame(self.frame_bot_right)
+            frame_recherche_m = ctk.CTkFrame(self.frame_bot_right, fg_color="transparent")
             row, col = divmod(idx, items_per_row)
             frame_recherche_m.grid(row=row,
                                    column=col,
@@ -230,7 +200,7 @@ class SimpleGUI:
                 matches.append(cleaned_name)
         return matches
 
-    def creat_bind_entry_bar(self, frame):
+    def create_bind_entry_bar(self, frame):
         self.entry = ctk.CTkEntry(frame, placeholder_text="Weapons text ...", width=400)
         self.entry.pack(side="top", anchor="center")
 
@@ -273,3 +243,42 @@ class SimpleGUI:
         self.framesBotRecherche.clear()
         self.framesButtonRecherche.clear()
         self.message_not_find.clear()
+
+    def open_detail_window(self, send_value, only_weapon):
+        detail_window = ctk.CTkToplevel(self.root)
+        detail_window.title(DETAIL_WINDOW_TITLE)
+
+        position_x, position_y = self.calculate_window_position(DETAIL_WINDOW_WIDTH, DETAIL_WINDOW_HEIGHT)
+        detail_window.geometry(f"{DETAIL_WINDOW_WIDTH}x{DETAIL_WINDOW_HEIGHT}+{position_x}+{position_y}")
+
+        detail_window.grab_set()
+        detail_window.focus_force()
+        self.root.attributes('-disabled', True)
+        detail_window.protocol("WM_DELETE_WINDOW", lambda: self.close_detail_window(detail_window))
+
+        ctk.CTkLabel(detail_window, text="Detail window !").grid(pady=20)
+        ctk.CTkButton(detail_window, text="Close", command=lambda: self.close_detail_window(detail_window)).grid(
+            pady=20)
+
+        if only_weapon:
+            ItemDetails(detail_window, send_value, self)
+        else:
+            AllWeaponsDetails(detail_window, send_value, self)
+
+    def calculate_window_position(self, window_width, window_height):
+        root_x = self.root.winfo_x()
+        root_y = self.root.winfo_y()
+        root_width = self.root.winfo_width()
+        root_height = self.root.winfo_height()
+
+        position_x = root_x + root_width + WINDOW_OFFSET
+        position_y = root_y + (root_height // 2) - (window_height // 2)
+
+        return position_x, position_y
+
+    def close_detail_window(self, detail_window):
+        detail_window.grab_release()
+        detail_window.destroy()
+        self.root.attributes('-disabled', False)
+
+

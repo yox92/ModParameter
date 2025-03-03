@@ -1,7 +1,6 @@
 import customtkinter as ctk
-from pkg_resources import empty_provider
 
-from Utils import ItemManager, JsonUtils
+from Utils import ItemManager, JsonUtils, Utils
 from Entity import EnumProps
 
 
@@ -9,15 +8,24 @@ class AllWeaponsDetails:
     def __init__(self, master, calibre, main_instance):
         self.master = master
         self.main_instance = main_instance
+        self.master.title(calibre + ' Weapons')
         self.calibre = calibre
+
+        self.status_label = None
+        self.apply_button = None
+        self.left_main = None
+        self.right_main = None
+
         self.all_path = []
         self.manager = ItemManager()
-        self.master.title(calibre + ' Weapons')
+        self.list_buttons_weapons = []
+
         self.param_main_root()
         self.create_frame_left()
         self.create_frame_right()
         self.list_of_weapons = self.get_weapons_by_calibre()
         self.list_of_file_path_json = JsonUtils.return_list_json_path(self.list_of_weapons)
+        self.list_of_file_path_json_remove = []
         self.prop_widgets = {}
         self.add_left_frame()
         self.display_details()
@@ -28,31 +36,73 @@ class AllWeaponsDetails:
             self.add_weapons_list(idx, result)
 
     def add_title(self):
-            self.left_main.grid_columnconfigure(0, weight=1)
-            title_label = ctk.CTkLabel(self.left_main,
-                                       text="List of Weapons",
-                                       font=("Arial", 20, "bold"),
-                                       text_color="tomato")
-            title_label.grid(row=0, column=0, pady=2, sticky="n")
-            title_label2 = ctk.CTkLabel(self.left_main,
-                                       text="That Will Be Modified",
-                                       font=("Arial", 18, "bold"),
-                                        text_color="tomato")
-            title_label2.grid(row=1, column=0, pady=2, sticky="n")
-
+        self.left_main.grid_columnconfigure(0, weight=1)
+        title_label1 = ctk.CTkLabel(self.left_main,
+                                   text="Weapons Will Be Modified :",
+                                   font=("Arial", 20, "bold"),
+                                   text_color="tomato")
+        title_label1.grid(row=0, column=0, pady=2, sticky="n")
+        title_label2 = ctk.CTkLabel(self.left_main,
+                                    text="Click to :",
+                                    font=("Arial", 18, "bold"),
+                                    text_color="tomato")
+        title_label2.grid(row=1, column=0, pady=0, sticky="n")
+        title_label3 = ctk.CTkLabel(self.left_main,
+                                    text="REMOVE(red)",
+                                    font=("Arial", 15, "bold"),
+                                    text_color="red")
+        title_label3.grid(row=2, column=0, pady=0, sticky="n")
+        title_label4 = ctk.CTkLabel(self.left_main,
+                                    text="ADD(blue)",
+                                    font=("Arial", 15, "bold"),
+                                    text_color="blue")
+        title_label4.grid(row=3, column=0, pady=0, sticky="n")
 
     def add_weapons_list(self, idx, result):
-        self.left_main.grid_rowconfigure(idx + 1, weight=1)
-        self.left_main.grid_rowconfigure(idx + 2, weight=1)
+        self.left_main.grid_rowconfigure(idx + 3, weight=1)
+        self.left_main.grid_rowconfigure(idx + 4, weight=1)
 
         button = ctk.CTkButton(
             self.left_main,
             text=result,
             height=10,
             width=10,
-            font=("Arial", 18, "bold"), text_color="black")
-        button.grid(row=idx + 2, column=0, pady=10, sticky="n")
+            font=("Arial", 18, "bold"),
+            text_color="black",
+            fg_color="blue",
+            command=lambda index=idx: self.delete_add_weapons_to_list(idx, result))
+        button.grid(row=idx + 4, column=0, pady=10, sticky="n")
+
         self.left_main.grid_rowconfigure(len(self.list_of_weapons) + 1, weight=1)
+        self.list_buttons_weapons.append(button)
+        button.state = True
+
+    def delete_add_weapons_to_list(self, idx, name_weapon):
+        button = self.list_buttons_weapons[idx]
+        if button.state:
+            Utils.transfer_file_between_lists(name_weapon,
+                                              self.all_path,
+                                              self.list_of_file_path_json_remove)
+
+            button.configure(fg_color="red", font=("Arial", 18, "underline"))
+            button.state = False
+        else:
+            Utils.transfer_file_between_lists(name_weapon,
+                                              self.list_of_file_path_json_remove,
+                                              self.all_path)
+            button.configure(fg_color="blue")
+            button.configure(font=("Arial", 18, "bold"))
+            button.state = True
+
+        if not self.all_path:
+            self.no_weapon_no_mod()
+
+
+    def no_weapon_no_mod(self):
+        self.apply_button.configure(fg_color="red", hover_color="red")
+        self.status_label.configure(text="No Weapons Select")
+        self.master.after(1500, self.master.destroy)
+        self.main_instance.root.attributes('-disabled', False)
 
     def get_weapons_by_calibre(self):
         matching_names = []
@@ -100,11 +150,16 @@ class AllWeaponsDetails:
                 slider.set(0)
                 slider.grid(row=row, column=1, sticky=ctk.W, padx=10)
 
-                percent_label = ctk.CTkLabel(self.right_main, text=f"{0:.2f}%")
+                percent_label = ctk.CTkLabel(self.right_main, text=f"{0}%", font=("Arial", 15, "bold"))
                 percent_label.grid(row=row, column=2, sticky=ctk.W, padx=10)
 
                 self.prop_widgets[props.label] = (slider, percent_label)
 
+                reset_button = ctk.CTkButton(self.right_main, text="Reset",
+                                             command=lambda pname=props.label:
+                                             self.reset_slider(pname),
+                                             width=10)
+                reset_button.grid(row=row, column=3, sticky=ctk.W, padx=10)
                 row += 1
 
         self.apply_button = ctk.CTkButton(self.right_main, text="Apply",
@@ -112,17 +167,42 @@ class AllWeaponsDetails:
                                           state="disabled",
                                           fg_color="white")
         self.apply_button.grid(row=row, column=1, sticky="nsew")
-        self.status_label = ctk.CTkLabel(self.right_main, text="" )
-        self.status_label.grid(row=row+1, column=1, sticky="nsew")
+        self.status_label = ctk.CTkLabel(self.right_main, text="")
+        self.status_label.grid(row=row + 1, column=1, sticky="nsew")
 
     def update_props_value(self, name, value):
+        name: EnumProps
         slider, label = self.prop_widgets[name]
+        if Utils.is_value_outside_limits(name, value):
+            label.configure(text_color="red")
+        else:
+            label.configure(text_color="white")
+
         label.configure(text=f"({value:+.0f}%)")
         self.manager.set_value_and_transform_like_multi(name, slider.get())
         self.reset_apply_button()
 
+    def reset_slider(self, name):
+        name: EnumProps
+        slider, label = self.prop_widgets[name]
+        slider.set(0)
+        label.configure(text=f"{0:+.0f}%")
+        label.configure(text_color="white")
+        self.manager.update_from_props_json(
+            name,
+            0)
+        self.reset_apply_button()
+        self.verify_all_sliders_reset()
+
+    def verify_all_sliders_reset(self):
+        if self.manager.all_values_are_zero():
+            self.apply_button.configure(state="disabled", fg_color="white")
+            self.status_label.configure(text="")
+
+
     def reset_apply_button(self):
-        self.apply_button.configure(fg_color="blue", hover_color="lightblue", border_color="red", state="enable")  # Remettre la couleur d'origine
+        self.apply_button.configure(fg_color="blue", hover_color="lightblue", border_color="red",
+                                    state="enable")  # Remettre la couleur d'origine
         self.status_label.configure(text="Ready to apply changes")
 
     def apply_changes_to_all(self):
@@ -148,6 +228,3 @@ class AllWeaponsDetails:
             self.apply_button.configure(fg_color="red", hover_color="red")
             self.master.after(3000, self.master.destroy)
             self.main_instance.root.attributes('-disabled', False)
-
-
-

@@ -1,7 +1,11 @@
 import json
 import os
 
+from pipreqs.pipreqs import clean
+
+import Utils
 from config import JSON_FILES_DIR
+from Utils.Utils import Utils
 
 
 class JsonUtils:
@@ -59,17 +63,6 @@ class JsonUtils:
                 raise KeyError(f"Chemin invalide : la clé '{key}' n'existe pas.")
         return current
 
-
-
-
-
-
-
-
-
-
-
-
     @staticmethod
     def delete_file_if_exists(file_path):
         if os.path.exists(file_path):
@@ -104,10 +97,11 @@ class JsonUtils:
     @staticmethod
     def return_list_json_path(name_json):
         list_of_json = []
+        clean_name_json = Utils.transform_list_of_strings(name_json)
         for filename in os.listdir(JSON_FILES_DIR):
             if filename.endswith('.json') and not filename.endswith('mod.json'):
-                base_name = filename.rsplit('.json', 1)[0]
-                if base_name in name_json:
+                base_name = Utils.remove_jon_extension(filename)
+                if base_name in clean_name_json:
                     list_of_json.append(os.path.join(JSON_FILES_DIR, filename))
         return list_of_json
 
@@ -123,9 +117,3 @@ class JsonUtils:
     @staticmethod
     def all_file_exist(all_file_path):
         return all(os.path.exists(file) for file in all_file_path)
-
-
-
-
-
-

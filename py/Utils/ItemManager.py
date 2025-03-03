@@ -42,6 +42,9 @@ class ItemManager:
         if key in self.key_value:
             self.key_value[key] = value
 
+    def all_values_are_zero(self):
+        return all(self.key_value[key] == 0
+                   for key in self.iterate_key())
 
     def __repr__(self):
         return f"KeyValue({self.key_value})"

@@ -1,48 +1,12 @@
 import copy
-import os
 from typing import TextIO
 import customtkinter as ctk
 import json
 
 from Entity import Root, ItemProps, EnumProps, Item
-from Utils import ItemManager, JsonUtils
+from Utils import ItemManager, JsonUtils, Utils
 
 file: TextIO
-
-
-def float_to_scaled_int(value: float):
-    if isinstance(value, int):  # Si c'est déjà un entier, aucun ajustement
-        return value, 1
-
-    str_value = f"{value:.10f}".rstrip('0')
-    if '.' in str_value:
-        decimal_places = len(str_value.split('.')[1])
-        scale_factor = 1000 ** decimal_places
-    else:
-        decimal_places = 0
-        scale_factor = 1
-
-    scaled_int = int(value * scale_factor)
-    return scaled_int, scale_factor
-
-
-def determine_format_spec(adjusted_value):
-    abs_value = abs(adjusted_value)
-    if adjusted_value == int(adjusted_value):
-        return ".0f"
-    if abs_value == 0:
-        return ".2f"
-    elif abs_value < 1e-5:
-        return ".6f"
-    elif abs_value < 1e-4:
-        return ".5f"
-    elif abs_value < 1e-3:
-        return ".4f"
-    elif abs_value < 1e-2:
-        return ".3f"
-    else:
-        return ".2f"
-
 
 class ItemDetails:
     def __init__(self, master, file_path, main_instance):
@@ -153,7 +117,7 @@ class ItemDetails:
         return percent_label, slider
 
     def slider_float(self, number, row, prop_value: EnumProps):
-        scaled_int, scale_factor = float_to_scaled_int(number)
+        scaled_int, scale_factor = Utils.float_to_scaled_int(number)
         one_percent = scaled_int * 0.01
         hundredth_percent = scaled_int * 2
 
@@ -180,6 +144,11 @@ class ItemDetails:
         adjusted_value = int(value)
         percentage_change = ((adjusted_value - original_value) / original_value) * 100
         slider, label = self.prop_widgets[name]
+        if Utils.is_value_outside_limits(name, percentage_change):
+            label.configure(text_color="red")
+        else:
+            label.configure(text_color="white")
+
         label.configure(text=f"{adjusted_value} ({percentage_change:+.0f}%)")
         self.manager.update_from_props_json(name, adjusted_value)
         self.reset_apply_button()
@@ -198,9 +167,14 @@ class ItemDetails:
                 adjusted_value
             )
         percentage_change = ((adjusted_value - originial_value) / originial_value) * 100
-        format_spec = determine_format_spec(adjusted_value)
+        format_spec = Utils.determine_format_spec(adjusted_value)
         adjusted_value_str = f"{adjusted_value:{format_spec}}"
         slider, label = self.prop_widgets[name]
+
+        if Utils.is_value_outside_limits(name, percentage_change):
+            label.configure(text_color="red")
+        else:
+            label.configure(text_color="white")
 
         label.configure(text=f"{adjusted_value_str} ({percentage_change:+.0f}%)")
 
@@ -216,11 +190,13 @@ class ItemDetails:
             slider.set(original_value)
             label.configure(text=f"{original_value}")
             self.manager.update_from_props_json(name, original_value)
+            label.configure(text_color="white")
         else:
-            format_spec = determine_format_spec(original_value)
+            format_spec = Utils.determine_format_spec(original_value)
             label.configure(text=f"{original_value:{format_spec}}")
             self.manager.update_from_props_json(name, original_value)
-            scaled_int, _ = float_to_scaled_int(original_value)
+            scaled_int, _ = Utils.float_to_scaled_int(original_value)
+            label.configure(text_color="white")
             slider.set(scaled_int)
 
         self.reset_apply_button()
