@@ -1,10 +1,8 @@
 import json
 import os
 
-from pipreqs.pipreqs import clean
-
 import Utils
-from config import JSON_FILES_DIR
+from config import JSON_FILES_DIR_WEAPONS, JSON_FILES_DIR_CALIBER
 from Utils.Utils import Utils
 
 
@@ -34,6 +32,30 @@ class JsonUtils:
             raise ValueError(f"Le fichier '{file_path}' contient un JSON invalide.")
 
     @staticmethod
+    def find_caliber_json_config(caliber_name):
+        data = []
+        for filename in os.listdir(JSON_FILES_DIR_CALIBER):
+            if filename.endswith('.json') and caliber_name in filename:
+                file_path = os.path.join(JSON_FILES_DIR_CALIBER, filename)
+                data = JsonUtils.load_json(file_path)
+                return data, file_path
+        if not data:
+            raise FileNotFoundError(f"Config caliber json file '{caliber_name}' not find.")
+        return None, None
+
+    @staticmethod
+    def load_all_json_files_without_mod():
+        json_dir_path = JSON_FILES_DIR_WEAPONS
+        data_list = []
+        for filename in os.listdir(json_dir_path):
+
+            if filename.endswith('.json') and not filename.endswith('mod.json'):
+                file_path = json_dir_path / filename
+                data_list.append(JsonUtils.load_json_and_add_path(file_path))
+
+        return data_list
+
+    @staticmethod
     def update_json_value(data, path_for_attribut_json, new_value, from_all_weapons):
         if isinstance(new_value, (int, float)):
             current = JsonUtils.get_nested_value(data, path_for_attribut_json)
@@ -47,7 +69,7 @@ class JsonUtils:
     def update_or_multiply_final_key(current, final_key, new_value, from_all_weapons):
         if final_key in current:
             if from_all_weapons:
-                current[final_key] *= int(new_value)  # Multiply (all weapons)
+                current[final_key] *= int(new_value)  # Multiply (all Weapons)
             else:
                 current[final_key] = new_value  # Remplace (one weapon specific)
         else:
@@ -83,26 +105,14 @@ class JsonUtils:
         return new_file_path
 
     @staticmethod
-    def load_all_json_files_without_mod():
-        json_dir_path = JSON_FILES_DIR
-        data_list = []
-        for filename in os.listdir(json_dir_path):
-
-            if filename.endswith('.json') and not filename.endswith('mod.json'):
-                file_path = json_dir_path / filename
-                data_list.append(JsonUtils.load_json_and_add_path(file_path))
-
-        return data_list
-
-    @staticmethod
     def return_list_json_path(name_json):
         list_of_json = []
         clean_name_json = Utils.transform_list_of_strings(name_json)
-        for filename in os.listdir(JSON_FILES_DIR):
+        for filename in os.listdir(JSON_FILES_DIR_WEAPONS):
             if filename.endswith('.json') and not filename.endswith('mod.json'):
                 base_name = Utils.remove_jon_extension(filename)
                 if base_name in clean_name_json:
-                    list_of_json.append(os.path.join(JSON_FILES_DIR, filename))
+                    list_of_json.append(os.path.join(JSON_FILES_DIR_WEAPONS, filename))
         return list_of_json
 
     @staticmethod

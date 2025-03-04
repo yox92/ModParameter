@@ -1,10 +1,10 @@
 import copy
 from typing import TextIO
 import customtkinter as ctk
-import json
 
 from Entity import Root, ItemProps, EnumProps, Item
-from Utils import ItemManager, JsonUtils, Utils
+from Entity.ItemManager import ItemManager
+from Utils import JsonUtils, Utils
 
 file: TextIO
 
@@ -45,15 +45,17 @@ class ItemDetails:
         self.right_main.grid_columnconfigure(2, weight=1)
 
     def load_root(self):
-        with open(self.file_path, 'r', encoding='utf-8') as fileReadable:
-            data = json.load(fileReadable)
-            self.jsonFile = data
-            root: Root = Root.from_data(data)
-            item: Item = root.item
-            item_props: ItemProps = item.props
-            # modify
-            for key, (numerical_value, code) in vars(item_props).items():
-                self.manager.update_from_props_json(code, numerical_value)
+        data = JsonUtils.load_json(self.file_path)
+        self.jsonFile = data
+        self.jsonFile = data
+
+        root: Root = Root.from_data(data)
+        item: Item = root.item
+        item_props: ItemProps = item.props
+
+        for key, (numerical_value, code) in vars(item_props).items():
+            self.manager.update_from_props_json(code, numerical_value)
+
         return root
 
     def locale_informations(self):

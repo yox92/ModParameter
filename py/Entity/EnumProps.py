@@ -9,7 +9,7 @@ class EnumProps(Enum):
     RECOIL_FORCE_UP = "RecoilForceUp", "Vertical recoil"
     VELOCITY = "Velocity", "Bullet Velocity"
     WEIGHT = "Weight", "Weapon Weight"
-    AMMO_CALIBER = "ammoCaliber", "Caliber of Ammo"
+    AMMO_CALIBER = "ammoCaliber", "Calibers of Ammo"
     FIRE_RATE = "bFirerate", "Rate of Fire"
 
     @property
@@ -25,6 +25,13 @@ class EnumProps(Enum):
         for prop in cls:
             if prop.label == label:
                 return prop.code
+        raise ValueError(f"Aucun 'code' trouvé pour le label : {label}")
+
+    @classmethod
+    def get_label_by_code(cls, code):
+        for prop in cls:
+            if prop.code == code:
+                return prop.label
         raise ValueError(f"Aucun 'code' trouvé pour le label : {label}")
 
     def __str__(self):

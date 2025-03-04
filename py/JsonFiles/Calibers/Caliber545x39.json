@@ -1,0 +1,12 @@
+{
+  "CameraSnap": 100,
+  "AimSensitivity": 100,
+  "Ergonomics": 100,
+  "RecoilCamera": 100,
+  "RecoilForceBack": 100,
+  "RecoilForceUp": 100,
+  "Velocity": 100,
+  "Weight": 100,
+  "ammoCaliber": "Caliber545x39",
+  "bFirerate": 100
+}

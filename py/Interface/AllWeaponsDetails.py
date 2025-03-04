@@ -1,15 +1,16 @@
 import customtkinter as ctk
 
-from Utils import ItemManager, JsonUtils, Utils
+from Utils import JsonUtils, Utils
+from Entity.ItemManager import ItemManager
 from Entity import EnumProps
 
 
 class AllWeaponsDetails:
-    def __init__(self, master, calibre, main_instance):
+    def __init__(self, master, caliber, main_instance):
         self.master = master
         self.main_instance = main_instance
-        self.master.title(calibre + ' Weapons')
-        self.calibre = calibre
+        self.master.title(caliber + ' Weapons')
+        self.caliber = caliber
 
         self.status_label = None
         self.apply_button = None
@@ -18,6 +19,8 @@ class AllWeaponsDetails:
 
         self.all_path = []
         self.manager = ItemManager()
+        self.json_caliber_path = ''
+        self.load_data_save_json()
         self.list_buttons_weapons = []
 
         self.param_main_root()
@@ -29,6 +32,11 @@ class AllWeaponsDetails:
         self.prop_widgets = {}
         self.add_left_frame()
         self.display_details()
+
+    def load_data_save_json(self):
+        data, self.json_caliber_path = JsonUtils.find_caliber_json_config(self.caliber)
+        self.manager.update_from_json(data)
+
 
     def add_left_frame(self):
         for idx, result in enumerate(self.list_of_weapons):
@@ -107,9 +115,29 @@ class AllWeaponsDetails:
     def get_weapons_by_calibre(self):
         matching_names = []
         for data in self.main_instance.loaded_data:
-            if self.calibre == data['item']['_props']['ammoCaliber']:
-                matching_names.append(data['locale']['ShortName'])
-                self.all_path.append(data['file_path'])
+            try:
+                if (
+                        isinstance(data, dict) and
+                        "item" in data and "_props" in data["item"] and
+                        "ammoCaliber" in data["item"]["_props"] and
+                        self.caliber == data["item"]["_props"]["ammoCaliber"]
+                ):
+                    try:
+                        if "locale" in data and "ShortName" in data["locale"]:
+                            matching_names.append(data["locale"]["ShortName"])
+                    except KeyError as e:
+                        print(f"KeyError about 'locale/ShortName' : {e}")
+
+                    try:
+                        if "file_path" in data:
+                            self.all_path.append(data["file_path"])
+                    except KeyError as e:
+                        print(f"KeyError about 'file_path' : {e}")
+
+            except KeyError as e:
+                print(f"KeyError detected for main key : {e}")
+            except Exception as e:
+                print(f"**An unexpected error occurred** : {e}")
         return matching_names
 
     def param_main_root(self):
@@ -130,33 +158,28 @@ class AllWeaponsDetails:
 
     def display_details(self):
         row = 0
-        filtered_props = filter(lambda x: x != EnumProps.AMMO_CALIBER, EnumProps)
-
-        for row, props in enumerate(filtered_props):
-            props: EnumProps
-            if props != EnumProps.AMMO_CALIBER:
-                props: EnumProps
+        for row, (props, number) in enumerate(self.manager.iterate_key_and_values()):
+            if props != EnumProps.AMMO_CALIBER.label:
                 self.right_main.grid_rowconfigure(row, weight=1)
 
-                label = ctk.CTkLabel(self.right_main, text=f"{props.code}:")
+                label = ctk.CTkLabel(self.right_main, text=f"{EnumProps.get_code_by_label(props)}:")
                 label.grid(row=row, column=0, sticky=ctk.W, padx=10)
                 slider = ctk.CTkSlider(
                     self.right_main,
                     from_=-100,
                     to=+100,
-                    command=lambda lambda_value, pname=props.label:
+                    command=lambda lambda_value, pname=props:
                     self.update_props_value(pname, lambda_value)
                 )
-                slider.set(0)
+                slider.set(number)
                 slider.grid(row=row, column=1, sticky=ctk.W, padx=10)
-
-                percent_label = ctk.CTkLabel(self.right_main, text=f"{0}%", font=("Arial", 15, "bold"))
+                percent_label = ctk.CTkLabel(self.right_main, text=f"{number}%", font=("Arial", 15, "bold"))
                 percent_label.grid(row=row, column=2, sticky=ctk.W, padx=10)
 
-                self.prop_widgets[props.label] = (slider, percent_label)
+                self.prop_widgets[props] = (slider, percent_label)
 
                 reset_button = ctk.CTkButton(self.right_main, text="Reset",
-                                             command=lambda pname=props.label:
+                                             command=lambda pname=props:
                                              self.reset_slider(pname),
                                              width=10)
                 reset_button.grid(row=row, column=3, sticky=ctk.W, padx=10)
@@ -171,7 +194,6 @@ class AllWeaponsDetails:
         self.status_label.grid(row=row + 1, column=1, sticky="nsew")
 
     def update_props_value(self, name, value):
-        name: EnumProps
         slider, label = self.prop_widgets[name]
         if Utils.is_value_outside_limits(name, value):
             label.configure(text_color="red")

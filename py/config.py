@@ -8,6 +8,8 @@ BASE_DIR = MAIN_DIR.parent
 sys.path.append(str(BASE_DIR))
 
 JSON_FILES_DIR = BASE_DIR / "JsonFiles"
+JSON_FILES_DIR_WEAPONS = JSON_FILES_DIR / "Weapons"
+JSON_FILES_DIR_CALIBER = JSON_FILES_DIR / "Calibers"
 IMAGES_DIR = BASE_DIR / "Images"
 
 
@@ -22,8 +24,6 @@ def check_empty_directories(directories):
         if not any(directory.iterdir()):
             empty_dirs.append(directory)
     return empty_dirs
-
-
 
 def check_project_structure():
     missing_dirs = [d for d in REQUIRED_DIRS if not d.exists()]
@@ -44,7 +44,8 @@ def check_project_structure():
         print("\n✅ Everything is in order! The project structure is correct 🎉")
         print("------------------------------------------------------------")
         print(f" Directory containing `main.py`: {relatif_path(MAIN_DIR)}")
-        print(f" JSON directory (JsonFiles): {relatif_path(JSON_FILES_DIR)}")
+        print(f" JSON directory (JsonFiles): {relatif_path(JSON_FILES_DIR_WEAPONS)}")
+        print(f" JSON directory (JsonFiles): {relatif_path(JSON_FILES_DIR_CALIBER)}")
         print(f" Image directory (JsonFiles): {relatif_path(IMAGES_DIR)}")
         print("------------------------------------------------------------\n")
 

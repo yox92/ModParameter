@@ -42,6 +42,11 @@ class ItemManager:
         if key in self.key_value:
             self.key_value[key] = value
 
+    def update_from_json(self, json_data):
+        for key, value in json_data.items():
+            if key in self.key_value:
+                self.key_value[key] = value
+
     def all_values_are_zero(self):
         return all(self.key_value[key] == 0
                    for key in self.iterate_key())
