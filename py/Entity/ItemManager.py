@@ -33,9 +33,12 @@ class ItemManager:
         for key, value in self.key_value.items():
             yield key, value
 
-    def iterate_key_values_where_key_ve_change(self):
-        for key, value in self.key_value.items():
-            if value != 0:
+    def iterate_key_values_where_key_ve_change(self, original_value):
+        if not isinstance(original_value, type(self)):
+            raise TypeError(f"need to be same class for comparing : {type(self).__name__}")
+        for key, value in self.iterate_key_and_values():
+            original_val = original_value.key_value.get(key, None)
+            if original_value.key_value.get(key, None) != value:
                 yield key, value
 
     def update_from_props_json(self, key, value):
@@ -50,6 +53,19 @@ class ItemManager:
     def all_values_are_zero(self):
         return all(self.key_value[key] == 0
                    for key in self.iterate_key())
+
+    def copy_to_with_inverted_values(self, target_manager):
+        if not isinstance(target_manager, ItemManager):
+            raise TypeError("Le gestionnaire cible doit être une instance de ItemManager.")
+
+        for key, value in self.iterate_key_and_values():
+            if isinstance(value, (int, float)):
+                if 0.01 <= value <= 2.0:
+                    target_manager.key_value[key] = int(100 * value - 100)
+                else:
+                    raise ValueError(
+                        f"La valeur '{value}' pour la clé '{key}' est hors des limites autorisées (0.01 à 2.0)."
+                    )
 
     def __repr__(self):
         return f"KeyValue({self.key_value})"

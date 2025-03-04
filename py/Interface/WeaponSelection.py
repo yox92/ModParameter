@@ -4,19 +4,20 @@ from customtkinter import CTkImage
 from Entity import Caliber
 from Utils.ImageUtils import ImageUtils
 from Utils import JsonUtils, Utils
-from Interface import ItemDetails, AllWeaponsDetails
+from Interface.CaliberWeaponsModWindow import CaliberWeaponsModWindow
+from Interface.SingleWeaponModWindow import SingleWeaponModWindow
 
 WINDOW_TITLE = "CustomWeapon App"
 WINDOW_GEOMETRY = "800x600"
 APPEARANCE_MODE = "dark"
 DETAIL_WINDOW_TITLE = "Detail windows"
 DETAIL_WINDOW_WIDTH = 900
-DETAIL_WINDOW_HEIGHT = 500
+DETAIL_WINDOW_HEIGHT = 600
 WINDOW_OFFSET = 10
 
-class SimpleGUI:
+class WeaponSelection:
     def __init__(self, root):
-
+        ctk.set_appearance_mode(APPEARANCE_MODE)
         self.loaded_data = None
         self.frame_top_right = None
         self.main_frame_top = None
@@ -28,6 +29,7 @@ class SimpleGUI:
         self.ammo_image = None
         self.buttonWeapon = None
         self.buttonCaliber = None
+        self.detail_window = None
         self.framesBotRecherche = []
         self.framesBotCaliber = []
         self.framesButtonRecherche = []
@@ -37,9 +39,10 @@ class SimpleGUI:
         self.root.title(WINDOW_TITLE)
         self.root.geometry(WINDOW_GEOMETRY)
 
-        ctk.set_appearance_mode(APPEARANCE_MODE)
+
 
         self.run()
+
 
     def run(self):
         self.loaded_data = JsonUtils.load_all_json_files_without_mod()
@@ -57,8 +60,8 @@ class SimpleGUI:
         self.root.grid_rowconfigure(1, weight=8)
         self.root.grid_columnconfigure(0, weight=1)
 
-        self.main_frame_top = ctk.CTkFrame(self.root)
-        self.main_frame_bot = ctk.CTkFrame(self.root)
+        self.main_frame_top = ctk.CTkFrame(self.root, fg_color="transparent")
+        self.main_frame_bot = ctk.CTkFrame(self.root, fg_color="transparent")
         self.main_frame_top.grid(row=0, column=0, sticky="nsew")
         self.main_frame_bot.grid(row=1, column=0, sticky="nsew")
 
@@ -67,8 +70,8 @@ class SimpleGUI:
         self.main_frame_top.grid_columnconfigure(1, weight=1)
         self.main_frame_top.grid_rowconfigure(0, weight=1)
 
-        self.frame_top_left = ctk.CTkFrame(self.main_frame_top)
-        self.frame_top_right = ctk.CTkFrame(self.main_frame_top)
+        self.frame_top_left = ctk.CTkFrame(self.main_frame_top, fg_color="transparent")
+        self.frame_top_right = ctk.CTkFrame(self.main_frame_top, fg_color="transparent")
         self.frame_top_left.grid(row=0, column=0, sticky="nsew")
         self.frame_top_right.grid(row=0, column=1, sticky="nsew")
 
@@ -119,8 +122,8 @@ class SimpleGUI:
         self.main_frame_bot.grid_rowconfigure(0, weight=1)
         self.main_frame_bot.grid_rowconfigure(1, weight=10)
 
-        self.frame_bot_left = ctk.CTkFrame(self.main_frame_bot)
-        self.frame_bot_right = ctk.CTkFrame(self.main_frame_bot)
+        self.frame_bot_left = ctk.CTkFrame(self.main_frame_bot, fg_color="transparent")
+        self.frame_bot_right = ctk.CTkFrame(self.main_frame_bot, fg_color="transparent")
 
         self.frame_bot_left.grid(row=0, column=0, sticky="nsew")
         self.frame_bot_right.grid(row=1, column=0, sticky="nsew")
@@ -245,25 +248,29 @@ class SimpleGUI:
         self.message_not_find.clear()
 
     def open_detail_window(self, send_value, only_weapon):
-        detail_window = ctk.CTkToplevel(self.root)
-        detail_window.title(DETAIL_WINDOW_TITLE)
+        self.detail_window = ctk.CTkToplevel(self.root)
+
+        self.detail_window.title(DETAIL_WINDOW_TITLE)
 
         position_x, position_y = self.calculate_window_position(DETAIL_WINDOW_WIDTH, DETAIL_WINDOW_HEIGHT)
-        detail_window.geometry(f"{DETAIL_WINDOW_WIDTH}x{DETAIL_WINDOW_HEIGHT}+{position_x}+{position_y}")
+        self.detail_window.geometry(f"{DETAIL_WINDOW_WIDTH}x{DETAIL_WINDOW_HEIGHT}+{position_x}+{position_y}")
 
-        detail_window.grab_set()
-        detail_window.focus_force()
+        self.detail_window.grab_set()
+        self.detail_window.focus_force()
         self.root.attributes('-disabled', True)
-        detail_window.protocol("WM_DELETE_WINDOW", lambda: self.close_detail_window(detail_window))
 
-        ctk.CTkLabel(detail_window, text="Detail window !").grid(pady=20)
-        ctk.CTkButton(detail_window, text="Close", command=lambda: self.close_detail_window(detail_window)).grid(
-            pady=20)
 
         if only_weapon:
-            ItemDetails(detail_window, send_value, self)
+            SingleWeaponModWindow(self.detail_window,
+                                  self.root,
+                                  send_value,
+                                  self)
         else:
-            AllWeaponsDetails(detail_window, send_value, self)
+            CaliberWeaponsModWindow(self.detail_window,
+                                    self.root,
+                                    self.detail_window,
+                                    send_value,
+                                    self)
 
     def calculate_window_position(self, window_width, window_height):
         root_x = self.root.winfo_x()
@@ -275,10 +282,5 @@ class SimpleGUI:
         position_y = root_y + (root_height // 2) - (window_height // 2)
 
         return position_x, position_y
-
-    def close_detail_window(self, detail_window):
-        detail_window.grab_release()
-        detail_window.destroy()
-        self.root.attributes('-disabled', False)
 
 

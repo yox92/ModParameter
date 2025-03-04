@@ -7,8 +7,8 @@ class MainWindow:
         self.setup_ui()
 
     def setup_ui(self):
-        from Interface import SimpleGUI
-        self.app = SimpleGUI(self.root)  # Fenêtre principale
+        from Interface import WeaponSelection
+        self.app = WeaponSelection(self.root)  # Fenêtre principale
 
     def run(self):
         self.root.mainloop()

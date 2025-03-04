@@ -1,12 +1,21 @@
 import json
 import os
 
+
 import Utils
 from config import JSON_FILES_DIR_WEAPONS, JSON_FILES_DIR_CALIBER
 from Utils.Utils import Utils
 
 
 class JsonUtils:
+
+    @staticmethod
+    def file_exist(file_path):
+        return os.path.exists(file_path)
+
+    @staticmethod
+    def all_file_exist(all_file_path):
+        return all(os.path.exists(file) for file in all_file_path)
 
     @staticmethod
     def load_json(file_path):
@@ -18,6 +27,12 @@ class JsonUtils:
             raise FileNotFoundError(f"Le fichier '{file_path}' est introuvable.")
         except json.JSONDecodeError:
             raise ValueError(f"Le fichier '{file_path}' contient un JSON invalide.")
+
+    @staticmethod
+    def write_json(data, file_path):
+        with open(file_path, "w") as json_file:
+            json.dump(data, json_file, indent=4)
+
 
     @staticmethod
     def load_json_and_add_path(file_path):
@@ -56,6 +71,14 @@ class JsonUtils:
         return data_list
 
     @staticmethod
+    def udate_json_caliber(path_to_json_calibber, new_value_change):
+        data = JsonUtils.load_json(path_to_json_calibber)
+        for key, value in new_value_change.items():
+            data[key] = value
+        JsonUtils.write_json(data, path_to_json_calibber)
+
+
+    @staticmethod
     def update_json_value(data, path_for_attribut_json, new_value, from_all_weapons):
         if isinstance(new_value, (int, float)):
             current = JsonUtils.get_nested_value(data, path_for_attribut_json)
@@ -67,18 +90,29 @@ class JsonUtils:
 
     @staticmethod
     def update_or_multiply_final_key(current, final_key, new_value, from_all_weapons):
-        if final_key in current:
-            if from_all_weapons:
-                current[final_key] *= int(new_value)  # Multiply (all Weapons)
-            else:
-                current[final_key] = new_value  # Remplace (one weapon specific)
+        if final_key not in current:
+            raise KeyError(f"Invalid path: the final key {final_key} does not exist")
+
+        if not isinstance(current[final_key], (int, float)):
+            raise TypeError(f"The value associated with {final_key} must be of type int or float")
+
+        if from_all_weapons:
+            current[final_key] = (
+                int(current[final_key] * new_value)
+                if isinstance(current[final_key], int)
+                else current[final_key] * new_value
+            )
         else:
-            raise KeyError(f"Chemin invalide : la clé finale '{final_key}' n'existe pas.")
+            current[final_key] = (
+                int(new_value)
+                if isinstance(current[final_key], int)
+                else new_value
+            )
 
     @staticmethod
     def get_nested_value(data, path_for_attribut_json):
         current = data
-        for key in path_for_attribut_json[:-1]:  # Parcourir jusqu'à l'avant-dernière clé
+        for key in path_for_attribut_json[:-1]:  # last key - 1
             if key in current:
                 current = current[key]
             else:
@@ -89,8 +123,6 @@ class JsonUtils:
     def delete_file_if_exists(file_path):
         if os.path.exists(file_path):
             os.remove(file_path)
-            return True
-        return False
 
     @staticmethod
     def save_json_as_new_file(data, file_path_new_json):
@@ -121,9 +153,5 @@ class JsonUtils:
         return JsonUtils.update_json_value(data, path_props_json, new_value, from_all_weapons)
 
     @staticmethod
-    def file_exist(file_path):
-        return os.path.exists(file_path)
-
-    @staticmethod
-    def all_file_exist(all_file_path):
-        return all(os.path.exists(file) for file in all_file_path)
+    def update_json_caliber_from_new_value_change(path_to_json_calibber, new_value_change):
+        JsonUtils.udate_json_caliber(path_to_json_calibber, new_value_change)

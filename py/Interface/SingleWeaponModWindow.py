@@ -8,14 +8,17 @@ from Utils import JsonUtils, Utils
 
 file: TextIO
 
-class ItemDetails:
-    def __init__(self, master, file_path, main_instance):
+class SingleWeaponModWindow:
+    def __init__(self, detail_window, root, file_path, main_instance):
+        self.close_button = None
         self.status_label = None
         self.right_main = None
         self.left_main = None
         self.apply_button = None
-        self.master = master
+        self.detail_window = detail_window
+        self.root = root
         self.main_instance = main_instance
+        self.detail_window.protocol("WM_DELETE_WINDOW", lambda: self.close_detail_window())
         self.file_path = file_path
         self.jsonFile = {}
         self.manager = ItemManager()
@@ -26,19 +29,24 @@ class ItemDetails:
         self.create_frame_left()
         self.create_frame_right()
         self.prop_widgets = {}
-        self.display_details()
+        self.run()
 
     def param_main_root(self):
-        self.master.grid_columnconfigure(0, weight=0)
-        self.master.grid_columnconfigure(1, weight=8)
-        self.master.grid_rowconfigure(0, weight=1)
+        self.detail_window.grid_columnconfigure(0, weight=0)
+        self.detail_window.grid_columnconfigure(1, weight=8)
+        self.detail_window.grid_rowconfigure(0, weight=1)
+        self.detail_window.grid_rowconfigure(1, weight=1)
+        self.close_button = ctk.CTkButton(self.detail_window,
+                                          text="Close",
+                                          command=lambda:
+                                          self.close_detail_window(self.detail_window))
 
     def create_frame_left(self):
-        self.left_main = ctk.CTkFrame(self.master)
+        self.left_main = ctk.CTkFrame(self.detail_window, fg_color="transparent")
         self.left_main.grid(row=0, column=0, sticky="nsew")
 
     def create_frame_right(self):
-        self.right_main = ctk.CTkFrame(self.master)
+        self.right_main = ctk.CTkFrame(self.detail_window, fg_color="transparent")
         self.right_main.grid(row=0, column=1, sticky="nsew")
         self.right_main.grid_columnconfigure(0, weight=1)
         self.right_main.grid_columnconfigure(1, weight=1)
@@ -74,7 +82,7 @@ class ItemDetails:
         id_button = ctk.CTkButton(self.left_main, text=self.rootJSON.item.id)
         id_button.pack(side="top", anchor="center")
 
-    def display_details(self):
+    def run(self):
         self.locale_informations()
         row = 0
         for prop_value, number in self.manager.iterate_key_and_values():
@@ -211,27 +219,31 @@ class ItemDetails:
 
     def apply_changes(self):
         if self.original_value_before_change != self.manager:
-            new_file_path = self.file_path.replace('.json', '_mod.json')
             data_json_to_update = JsonUtils.load_json(self.file_path)
 
             for name_props_to_modify, value_modify in self.manager.iterate_key_and_values():
                 data_json_to_update = JsonUtils.update_json_in_new_file(name_props_to_modify, value_modify,
                                                                         data_json_to_update, False)
 
-            new_file_path = JsonUtils.save_json_as_new_file(data_json_to_update, new_file_path)
-            self.check_for_file(new_file_path)
+            file_path_update = JsonUtils.save_json_as_new_file(data_json_to_update, self.file_path)
+            self.check_for_file(file_path_update)
 
     def check_for_file(self, new_file_path):
         if JsonUtils.file_exist(new_file_path):
             self.apply_button.configure(fg_color="green", hover_color="green")
             self.status_label.configure(text="Changes applied successfully.")
-            self.master.after(1500, self.master.destroy)
+            self.detail_window.after(1500, self.detail_window.destroy)
             self.main_instance.root.attributes('-disabled', False)
 
         else:
-            self.master.after(1000, lambda: self.check_for_file(new_file_path))
+            self.detail_window.after(1000, lambda: self.check_for_file(new_file_path))
 
     def reset_apply_button(self):
         self.apply_button.configure(fg_color="blue", hover_color="lightblue", border_color="red",
                                     state="enable")
         self.status_label.configure(text="Ready to apply changes")
+
+    def close_detail_window(self):
+        self.detail_window.grab_release()
+        self.detail_window.destroy()
+        self.root.attributes('-disabled', False)

@@ -1,12 +1,12 @@
 {
-  "CameraSnap": 0,
-  "AimSensitivity": 0,
-  "Ergonomics": 0,
-  "RecoilCamera": 0,
-  "RecoilForceBack": 0,
-  "RecoilForceUp": 0,
-  "Velocity": 0,
-  "Weight": 0,
+  "CameraSnap": 1.0,
+  "AimSensitivity": 1.0,
+  "Ergonomics": 1.0,
+  "RecoilCamera": 1.0,
+  "RecoilForceBack": 1.0,
+  "RecoilForceUp": 1.0,
+  "Velocity": 1.0,
+  "Weight": 1.0,
   "ammoCaliber": "Caliber86x70",
-  "bFirerate": 0
+  "bFirerate": 1.0
 }

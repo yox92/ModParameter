@@ -37,7 +37,7 @@ class Utils:
         frame1.clear()
         for i in range(4):
             for y in range(5):
-                button = ctk.CTkFrame(frame2)
+                button = ctk.CTkFrame(frame2, fg_color="transparent")
                 button.grid(row=i, column=y, padx=5, pady=5)
                 frame1.append(button)
 

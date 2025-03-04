@@ -1,3 +1,4 @@
-from .ItemDetails import ItemDetails
-from .AllWeaponsDetails import AllWeaponsDetails
-from .SimpleGUI import SimpleGUI
+from .SingleWeaponModWindow import SingleWeaponModWindow
+from .CaliberWeaponsModWindow import CaliberWeaponsModWindow
+from .WeaponSelection import WeaponSelection
+from .ProgressBar import ProgressBar
