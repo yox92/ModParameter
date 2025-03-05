@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "5d3eb3b0a4b93615055e84d2",
+    "_name": "weapon_fn_five_seven_57x28",
+    "_props": {
+      "CameraSnap": 7,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 86,
+      "RecoilCamera": 0.008,
+      "RecoilForceBack": 240,
+      "RecoilForceUp": 281,
+      "Velocity": 0,
+      "Weight": 0.23,
+      "ammoCaliber": "Caliber57x28",
+      "bFirerate": 30
+    }
+  },
+  "locale": {
+    "Name": "FN Five-seveN MK2 5.7x28 pistol",
+    "ShortName": "FN 5-7"
+  }
+}

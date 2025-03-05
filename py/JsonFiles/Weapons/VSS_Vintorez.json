@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "57838ad32459774a17445cd2",
+    "_name": "weapon_tochmash_vss_9x39",
+    "_props": {
+      "CameraSnap": 3.5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 43,
+      "RecoilCamera": 0.05,
+      "RecoilForceBack": 270,
+      "RecoilForceUp": 80,
+      "Velocity": 0,
+      "Weight": 1.088,
+      "ammoCaliber": "Caliber9x39",
+      "bFirerate": 900
+    }
+  },
+  "locale": {
+    "Name": "VSS Vintorez 9x39 special sniper rifle",
+    "ShortName": "VSS Vintorez"
+  }
+}

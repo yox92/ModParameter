@@ -1,0 +1,15 @@
+{
+  "item": {
+    "_id": "5ac66c5d5acfc4001718d314",
+    "_name": "mag_ak_izhmash_6L29_556x45_30",
+    "_props": {
+      "Ergonomics": -3,
+      "Velocity": 0,
+      "Weight": 0.215
+    }
+  },
+  "locale": {
+    "Name": "AK-101 5.56x45 6L29 30-round magazine",
+    "ShortName": "6L29"
+  }
+}

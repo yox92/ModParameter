@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "59984ab886f7743e98271174",
+    "_name": "weapon_izhmash_pp-19-01_9x19",
+    "_props": {
+      "CameraSnap": 3.5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 35,
+      "RecoilCamera": 0.03,
+      "RecoilForceBack": 270,
+      "RecoilForceUp": 58,
+      "Velocity": -17.9,
+      "Weight": 1.809,
+      "ammoCaliber": "Caliber9x19PARA",
+      "bFirerate": 700
+    }
+  },
+  "locale": {
+    "Name": "PP-19-01 Vityaz 9x19 submachine gun",
+    "ShortName": "PP-19-01"
+  }
+}

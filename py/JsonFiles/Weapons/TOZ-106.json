@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "5a38e6bac4a2826c6e06d79b",
+    "_name": "weapon_toz_toz-106_20g",
+    "_props": {
+      "CameraSnap": 2.3,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 60,
+      "RecoilCamera": 0.05,
+      "RecoilForceBack": 585,
+      "RecoilForceUp": 663,
+      "Velocity": 1.81,
+      "Weight": 1.3,
+      "ammoCaliber": "Caliber20g",
+      "bFirerate": 30
+    }
+  },
+  "locale": {
+    "Name": "TOZ-106 20ga bolt-action shotgun",
+    "ShortName": "TOZ-106"
+  }
+}

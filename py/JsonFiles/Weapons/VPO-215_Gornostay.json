@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "5de652c31b7e3716273428be",
+    "_name": "weapon_molot_vpo_215_366tkm",
+    "_props": {
+      "CameraSnap": 3.5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 41,
+      "RecoilCamera": 0.12,
+      "RecoilForceBack": 486,
+      "RecoilForceUp": 200,
+      "Velocity": 5.9,
+      "Weight": 0.55,
+      "ammoCaliber": "Caliber366TKM",
+      "bFirerate": 30
+    }
+  },
+  "locale": {
+    "Name": "Molot Arms VPO-215 Gornostay .366 TKM bolt-action rifle",
+    "ShortName": "VPO-215 Gornostay"
+  }
+}

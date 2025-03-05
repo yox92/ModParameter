@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "5de7bd7bfd6b4e6e2276dc25",
+    "_name": "weapon_bt_mp9n_9x19",
+    "_props": {
+      "CameraSnap": 3.5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 75,
+      "RecoilCamera": 0.03,
+      "RecoilForceBack": 254,
+      "RecoilForceUp": 51,
+      "Velocity": 13,
+      "Weight": 0.75,
+      "ammoCaliber": "Caliber9x19PARA",
+      "bFirerate": 1100
+    }
+  },
+  "locale": {
+    "Name": "B&T MP9-N 9x19 submachine gun",
+    "ShortName": "MP9-N"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "576a581d2459771e7b1bc4f1",
+    "_name": "weapon_izhmeh_mp443_9x19",
+    "_props": {
+      "CameraSnap": 5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 75,
+      "RecoilCamera": 0.007,
+      "RecoilForceBack": 310,
+      "RecoilForceUp": 425,
+      "Velocity": -1.74,
+      "Weight": 0.79,
+      "ammoCaliber": "Caliber9x19PARA",
+      "bFirerate": 30
+    }
+  },
+  "locale": {
+    "Name": "Yarygin MP-443 Grach 9x19 pistol",
+    "ShortName": "MP-443 Grach"
+  }
+}

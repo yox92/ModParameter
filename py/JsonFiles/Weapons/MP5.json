@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "5926bb2186f7744b1c6c6e60",
+    "_name": "weapon_hk_mp5_navy3_9x19",
+    "_props": {
+      "CameraSnap": 3.5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 50,
+      "RecoilCamera": 0.03,
+      "RecoilForceBack": 275,
+      "RecoilForceUp": 56,
+      "Velocity": 13,
+      "Weight": 0.74,
+      "ammoCaliber": "Caliber9x19PARA",
+      "bFirerate": 800
+    }
+  },
+  "locale": {
+    "Name": "HK MP5 9x19 submachine gun (Navy 3 Round Burst)",
+    "ShortName": "MP5"
+  }
+}

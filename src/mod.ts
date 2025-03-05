@@ -14,7 +14,7 @@ class CustomWeapon {
     private readonly modName: string;
 
     constructor() {
-        this.modName = "RecoilStandalone";
+        this.modName = "CustomWeapon";
     }
 
     // figures out if something's increased or decreased

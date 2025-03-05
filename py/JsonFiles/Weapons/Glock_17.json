@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "5a7ae0c351dfba0017554310",
+    "_name": "weapon_glock_glock_17_gen3_9x19",
+    "_props": {
+      "CameraSnap": 5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 90,
+      "RecoilCamera": 0.007,
+      "RecoilForceBack": 260,
+      "RecoilForceUp": 311,
+      "Velocity": 0,
+      "Weight": 0.231,
+      "ammoCaliber": "Caliber9x19PARA",
+      "bFirerate": 30
+    }
+  },
+  "locale": {
+    "Name": "Glock 17 9x19 pistol",
+    "ShortName": "Glock 17"
+  }
+}

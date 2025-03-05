@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "5c46fbd72e2216398b5a8c9c",
+    "_name": "weapon_izhmash_svd_s_762x54",
+    "_props": {
+      "CameraSnap": 3.5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 26,
+      "RecoilCamera": 0.09,
+      "RecoilForceBack": 675,
+      "RecoilForceUp": 216,
+      "Velocity": 0,
+      "Weight": 1.72,
+      "ammoCaliber": "Caliber762x54R",
+      "bFirerate": 700
+    }
+  },
+  "locale": {
+    "Name": "SVDS 7.62x54R sniper rifle",
+    "ShortName": "SVDS"
+  }
+}

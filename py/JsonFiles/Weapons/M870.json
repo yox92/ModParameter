@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "5a7828548dc32e5a9c28b516",
+    "_name": "weapon_remington_model_870_12g",
+    "_props": {
+      "CameraSnap": 2.6,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 45,
+      "RecoilCamera": 0.06,
+      "RecoilForceBack": 471,
+      "RecoilForceUp": 397,
+      "Velocity": 0,
+      "Weight": 1.1,
+      "ammoCaliber": "Caliber12g",
+      "bFirerate": 30
+    }
+  },
+  "locale": {
+    "Name": "Remington Model 870 12ga pump-action shotgun",
+    "ShortName": "M870"
+  }
+}

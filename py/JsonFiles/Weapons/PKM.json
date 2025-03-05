@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "64637076203536ad5600c990",
+    "_name": "weapon_zid_pkm_762x54r",
+    "_props": {
+      "CameraSnap": 3,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 35,
+      "RecoilCamera": 0.096,
+      "RecoilForceBack": 515,
+      "RecoilForceUp": 138,
+      "Velocity": 1.8,
+      "Weight": 3.852,
+      "ammoCaliber": "Caliber762x54R",
+      "bFirerate": 650
+    }
+  },
+  "locale": {
+    "Name": "Kalashnikov PKM 7.62x54R machine gun",
+    "ShortName": "PKM"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "628a60ae6b1d481ff772e9c8",
+    "_name": "weapon_rifle_dynamics_704_762x39",
+    "_props": {
+      "CameraSnap": 3.5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 41,
+      "RecoilCamera": 0.057,
+      "RecoilForceBack": 335,
+      "RecoilForceUp": 144,
+      "Velocity": 1.8,
+      "Weight": 2.1,
+      "ammoCaliber": "Caliber762x39",
+      "bFirerate": 600
+    }
+  },
+  "locale": {
+    "Name": "Rifle Dynamics RD-704 7.62x39 assault rifle",
+    "ShortName": "RD-704"
+  }
+}

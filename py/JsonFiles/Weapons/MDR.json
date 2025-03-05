@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "5dcbd56fdbd3d91b3e5468d5",
+    "_name": "weapon_dt_mdr_762x51",
+    "_props": {
+      "CameraSnap": 3.5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 72,
+      "RecoilCamera": 0.062,
+      "RecoilForceBack": 348,
+      "RecoilForceUp": 133,
+      "Velocity": 0,
+      "Weight": 2.95,
+      "ammoCaliber": "Caliber762x51",
+      "bFirerate": 650
+    }
+  },
+  "locale": {
+    "Name": "Desert Tech MDR 7.62x51 assault rifle",
+    "ShortName": "MDR"
+  }
+}

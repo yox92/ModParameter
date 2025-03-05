@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "5fc3e272f8b6a877a729eac5",
+    "_name": "weapon_hk_ump_1143x23",
+    "_props": {
+      "CameraSnap": 3.5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 62,
+      "RecoilCamera": 0.04,
+      "RecoilForceBack": 240,
+      "RecoilForceUp": 72,
+      "Velocity": 13,
+      "Weight": 1.22,
+      "ammoCaliber": "Caliber1143x23ACP",
+      "bFirerate": 600
+    }
+  },
+  "locale": {
+    "Name": "HK UMP .45 ACP submachine gun",
+    "ShortName": "UMP 45"
+  }
+}

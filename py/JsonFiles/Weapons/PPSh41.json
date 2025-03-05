@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "5ea03f7400685063ec28bfa8",
+    "_name": "weapon_zis_ppsh41_762x25",
+    "_props": {
+      "CameraSnap": 3.5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 16,
+      "RecoilCamera": 0.05,
+      "RecoilForceBack": 294,
+      "RecoilForceUp": 89,
+      "Velocity": -17.9,
+      "Weight": 1.01,
+      "ammoCaliber": "Caliber762x25TT",
+      "bFirerate": 1000
+    }
+  },
+  "locale": {
+    "Name": "PPSh-41 7.62x25 submachine gun",
+    "ShortName": "PPSh41"
+  }
+}

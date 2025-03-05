@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "61f7c9e189e6fb1a5e3ea78d",
+    "_name": "weapon_izhmash_mp18_multi",
+    "_props": {
+      "CameraSnap": 2.2,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 44,
+      "RecoilCamera": 0.06,
+      "RecoilForceBack": 753,
+      "RecoilForceUp": 295,
+      "Velocity": 0,
+      "Weight": 0.76,
+      "ammoCaliber": "Caliber762x54R",
+      "bFirerate": 10
+    }
+  },
+  "locale": {
+    "Name": "MP-18 7.62x54R single-shot rifle",
+    "ShortName": "MP-18"
+  }
+}

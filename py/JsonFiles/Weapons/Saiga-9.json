@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "59f9cabd86f7743a10721f46",
+    "_name": "weapon_izhmash_saiga_9_9x19",
+    "_props": {
+      "CameraSnap": 3.5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 32,
+      "RecoilCamera": 0.03,
+      "RecoilForceBack": 246,
+      "RecoilForceUp": 42,
+      "Velocity": -17.9,
+      "Weight": 1.962,
+      "ammoCaliber": "Caliber9x19PARA",
+      "bFirerate": 650
+    }
+  },
+  "locale": {
+    "Name": "Saiga-9 9x19 carbine",
+    "ShortName": "Saiga-9"
+  }
+}

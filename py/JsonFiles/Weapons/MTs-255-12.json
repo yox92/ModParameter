@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "60db29ce99594040e04c4a27",
+    "_name": "weapon_ckib_mc_255_12g",
+    "_props": {
+      "CameraSnap": 3.5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 50,
+      "RecoilCamera": 0.09,
+      "RecoilForceBack": 486,
+      "RecoilForceUp": 364,
+      "Velocity": 0,
+      "Weight": 1.1,
+      "ammoCaliber": "Caliber12g",
+      "bFirerate": 30
+    }
+  },
+  "locale": {
+    "Name": "MTs-255-12 12ga shotgun",
+    "ShortName": "MTs-255-12"
+  }
+}

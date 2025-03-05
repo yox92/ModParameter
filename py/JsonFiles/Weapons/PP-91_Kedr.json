@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "57d14d2524597714373db789",
+    "_name": "weapon_zmz_pp-91_9x18pm",
+    "_props": {
+      "CameraSnap": 3.5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 65,
+      "RecoilCamera": 0.03,
+      "RecoilForceBack": 211,
+      "RecoilForceUp": 50,
+      "Velocity": -6.06,
+      "Weight": 1.33,
+      "ammoCaliber": "Caliber9x18PM",
+      "bFirerate": 900
+    }
+  },
+  "locale": {
+    "Name": "PP-91 Kedr 9x18PM submachine gun",
+    "ShortName": "PP-91 Kedr"
+  }
+}
