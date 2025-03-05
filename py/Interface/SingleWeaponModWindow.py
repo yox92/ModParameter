@@ -16,24 +16,43 @@ class SingleWeaponModWindow:
         self.right_main = None
         self.left_main = None
         self.apply_button = None
-        self.data_load_from_mod = False
-        self.lambda_save_from_user_vs_originale = None
-        self.data_originale_json = ItemManager()
+        self.json_mod_user_save_exist = False
+        self.reset_after_load_save_and_value_reset = False
+
         self.detail_window = detail_window
         self.root = root
         self.main_instance = main_instance
         self.detail_window.protocol("WM_DELETE_WINDOW", lambda: self.close_detail_window())
         self.file_path = file_path
         self.jsonFile = {}
-        self.manager = ItemManager()
+        self.data_from_json_mod_save_user: ItemManager = ItemManager()
+        self.lambda_save_from_user_vs_originale: ItemManager = ItemManager()
+        self.data_from_json_no_save: ItemManager = ItemManager()
         self.rootJSON = self.load_root()
-        self.original_value_before_change = copy.deepcopy(self.manager)
+        self.original_value_before_change_by_slider_or_local_save = copy.deepcopy(self.data_from_json_no_save)
 
         self.param_main_root()
         self.create_frame_left()
         self.create_frame_right()
         self.prop_widgets = {}
-        self.run()
+        self.apply_json_data_to_slider()
+        if self.json_mod_user_save_exist:
+            self.apply_save_file_mod_user_change()
+
+    def apply_save_file_mod_user_change(self):
+        for key, value in self.data_from_json_mod_save_user.iterate_key_and_values():
+            if isinstance(value, (float, int)):
+                slider, label = self.prop_widgets[key]
+
+                if isinstance(value, int):
+                    self.update_prop_value_int(key, value)
+                    slider.set(value)
+
+                elif isinstance(value, float):
+                    scale_factor = getattr(slider, "scale_factor", 1)
+
+                    slider.set(value * scale_factor)
+                    self.update_prop_value_float(key, value * scale_factor, scale_factor)
 
     def param_main_root(self):
         self.detail_window.grid_columnconfigure(0, weight=0)
@@ -62,24 +81,25 @@ class SingleWeaponModWindow:
             self.load_old_modification_from_user()
 
         root: Root = self.load_originale_value()
-        self.lambda_save_from_user_vs_originale = self.data_originale_json.lambda_value(self.manager)
+        self.lambda_save_from_user_vs_originale = self.data_from_json_mod_save_user.lambda_value(
+            self.data_from_json_no_save)
 
         return root
 
     def load_old_modification_from_user(self):
-        self.data_load_from_mod = True
+        self.json_mod_user_save_exist = True
         root_mod: Root
 
         data_from_mod = JsonUtils.return_json_mod(self.file_path)
-        root_mod = self.create_item_manager_from_json(data_from_mod, self.data_originale_json)
+        root_mod = self.create_item_manager_from_json(data_from_mod, self.data_from_json_mod_save_user)
 
     def load_originale_value(self):
         data = JsonUtils.load_json(self.file_path)
-        root: Root = self.create_item_manager_from_json(data, self.manager)
+        root: Root = self.create_item_manager_from_json(data, self.data_from_json_no_save)
         self.jsonFile = data
         return root
 
-    def locale_informations(self):
+    def generate_information_from_weapon(self):
         title_label = ctk.CTkLabel(self.left_main,
                                    text="You have chosen :",
                                    font=("Arial", 18, "bold"))
@@ -96,15 +116,13 @@ class SingleWeaponModWindow:
         id_button.pack(side="top", anchor="center")
 
     def calcul_gap_originale_vs_mod(self):
-        self.lambda_save_from_user_vs_originale = ItemManager()
-        self.lambda_save_from_user_vs_originale = self.manager.lambda_value(self.data_originale_json)
+        self.lambda_save_from_user_vs_originale = self.data_from_json_no_save.lambda_value(
+            self.data_from_json_mod_save_user)
 
-
-
-    def run(self):
-        self.locale_informations()
+    def apply_json_data_to_slider(self):
+        self.generate_information_from_weapon()
         row = 0
-        for prop_value, number in self.manager.iterate_key_and_values():
+        for prop_value, number in self.data_from_json_no_save.iterate_key_and_values():
             prop_value: EnumProps
             if isinstance(number, (int, float)) and number != 0:
                 self.right_main.grid_rowconfigure(row, weight=1)
@@ -135,6 +153,7 @@ class SingleWeaponModWindow:
         slider = ctk.CTkSlider(self.right_main, from_=one_percent, to=hundredth_percent,
                                command=lambda lambda_value, pname=prop_value:
                                self.update_prop_value_int(pname, int(lambda_value)))
+
         slider.set(number)
         slider.grid(row=row, column=1, sticky=ctk.W, padx=10)
         percent_label = ctk.CTkLabel(self.right_main, text=f"{number}", font=("Arial", 15, "bold"))
@@ -179,7 +198,7 @@ class SingleWeaponModWindow:
             label.configure(text_color="white")
 
         label.configure(text=f"{adjusted_value} ({percentage_change:+.0f}%)")
-        self.manager.update_from_props_json(name, adjusted_value)
+        self.data_from_json_no_save.update_from_props_json(name, adjusted_value)
         self.reset_apply_button()
 
     def update_prop_value_float(self, name, value, scale_factor):
@@ -207,7 +226,7 @@ class SingleWeaponModWindow:
 
         label.configure(text=f"{adjusted_value_str} ({percentage_change:+.0f}%)")
 
-        self.manager.update_from_props_json(name, float(adjusted_value_str))
+        self.data_from_json_no_save.update_from_props_json(name, float(adjusted_value_str))
         self.reset_apply_button()
 
     def reset_slider(self, name):
@@ -218,12 +237,12 @@ class SingleWeaponModWindow:
         if isinstance(original_value, int):
             slider.set(original_value)
             label.configure(text=f"{original_value}")
-            self.manager.update_from_props_json(name, original_value)
+            self.data_from_json_no_save.update_from_props_json(name, original_value)
             label.configure(text_color="white")
         else:
             format_spec = Utils.determine_format_spec(original_value)
             label.configure(text=f"{original_value:{format_spec}}")
-            self.manager.update_from_props_json(name, original_value)
+            self.data_from_json_no_save.update_from_props_json(name, original_value)
             scaled_int, _ = Utils.float_to_scaled_int(original_value)
             label.configure(text_color="white")
             slider.set(scaled_int)
@@ -232,37 +251,51 @@ class SingleWeaponModWindow:
         self.verify_all_sliders_reset()
 
     def verify_all_sliders_reset(self):
-        if self.original_value_before_change == self.manager:
-            self.apply_button.configure(state="disabled", fg_color="white")
-            self.status_label.configure(text="")
+        if self.json_mod_user_save_exist:
+            if self.original_value_before_change_by_slider_or_local_save == self.data_from_json_no_save:
+                self.apply_button.configure(fg_color="#a569bd",
+                                            hover_color="lightblue",
+                                            border_color="blue",
+                                            state="enable")
+                self.status_label.configure(text="Same as the original values")
+                self.reset_after_load_save_and_value_reset = True
+        else:
+            if self.original_value_before_change_by_slider_or_local_save == self.data_from_json_no_save:
+                self.apply_button.configure(state="disabled", fg_color="white")
+                self.status_label.configure(text="")
 
     def apply_changes(self):
-        if self.original_value_before_change != self.manager:
+        if self.original_value_before_change_by_slider_or_local_save != self.data_from_json_no_save:
             data_json_to_update = JsonUtils.load_json(self.file_path)
 
-            for name_props_to_modify, value_modify in self.manager.iterate_key_and_values():
+            for name_props_to_modify, value_modify in self.data_from_json_no_save.iterate_key_and_values():
                 data_json_to_update = JsonUtils.update_json_in_new_file(name_props_to_modify, value_modify,
                                                                         data_json_to_update, False)
 
             file_path_update = JsonUtils.save_json_as_new_file(data_json_to_update, self.file_path)
             self.check_for_file(file_path_update)
 
+        else:
+            JsonUtils.delete_file_mod_if_exists(self.file_path)
+            self.apply_button.configure(fg_color="green", hover_color="green")
+            self.status_label.configure(text="All weapon modifications have been removed.")
+            self.detail_window.after(3000, self.close_detail_window)
+
     def check_for_file(self, new_file_path, attempts=0, max_attempts=10):
         Utils.disable_all_buttons_recursive(self.close_button, self.detail_window)
         if JsonUtils.file_exist(new_file_path):
             self.apply_button.configure(fg_color="green", hover_color="green")
             self.status_label.configure(text="Changes applied successfully.")
-            self.detail_window.after(1500, self.detail_window.destroy)
-            self.main_instance.root.attributes('-disabled', False)
+            self.detail_window.after(3000, self.close_detail_window)
 
         elif attempts < max_attempts:
             self.status_label.configure(text=f"Checking for file... Attempt {attempts + 1}/{max_attempts}")
-            self.detail_window.after(1000, lambda: self.check_for_file(new_file_path, attempts + 1, max_attempts))
+            self.detail_window.after(2000, lambda: self.check_for_file(new_file_path, attempts + 1, max_attempts))
         else:
             self.status_label.configure(text="Failed to detect the file. Please try again.", text_color="red")
             self.apply_button.configure(fg_color="red", hover_color="gray")
             self.main_instance.root.attributes('-disabled', False)
-            self.close_detail_window()
+            self.detail_window.after(3000, self.close_detail_window)
 
     def reset_apply_button(self):
         self.apply_button.configure(fg_color="blue", hover_color="lightblue", border_color="red",
@@ -270,9 +303,10 @@ class SingleWeaponModWindow:
         self.status_label.configure(text="Ready to apply changes")
 
     def close_detail_window(self):
+        print("close ! ")
         self.detail_window.grab_release()
-        self.detail_window.destroy()
         self.root.attributes('-disabled', False)
+        self.detail_window.destroy()
 
     @staticmethod
     def create_item_manager_from_json(data, item_manager: ItemManager):
@@ -284,5 +318,3 @@ class SingleWeaponModWindow:
             item_manager.update_from_props_json(code, numerical_value)
 
         return root
-
-

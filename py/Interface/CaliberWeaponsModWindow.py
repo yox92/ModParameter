@@ -18,8 +18,10 @@ class CaliberWeaponsModWindow:
         self.master.title(caliber + ' Weapons')
         self.caliber = caliber
         self.detail_window = detail_window
-        self.detail_window.protocol("WM_DELETE_WINDOW", lambda: self.close_detail_window(self.detail_window))
+        self.detail_window.protocol("WM_DELETE_WINDOW", lambda: self.close_detail_window())
         self.progress_bar = None
+        self.no_modification_weapon_from_json: bool = True
+        self.reset_after_load_save_and_value_reset: bool = True
         self.status_label = None
         self.apply_button = None
         self.left_main = None
@@ -44,7 +46,6 @@ class CaliberWeaponsModWindow:
         self.add_frame_left_title_and_weapons()
         self.run()
 
-
     def param_main_root(self):
         self.master.grid_columnconfigure(0, weight=0)
         self.master.grid_columnconfigure(1, weight=8)
@@ -53,38 +54,37 @@ class CaliberWeaponsModWindow:
         self.close_button = ctk.CTkButton(self.master,
                                           text="Close",
                                           command=lambda:
-                                          self.close_detail_window(self.master))
-        self.close_button.grid(row=1,column=0)
+                                          self.close_detail_window())
+        self.close_button.grid(row=1, column=0)
 
     def create_frame_right(self):
         self.right_main = ctk.CTkFrame(self.master, fg_color="transparent")
         self.right_main.grid(row=0, column=1, sticky="nsew")
-        self.right_main.grid_columnconfigure(0, weight=1) # props description
-        self.right_main.grid_columnconfigure(1, weight=1) # slider
-        self.right_main.grid_columnconfigure(2, weight=1) # value
-        self.right_main.grid_columnconfigure(3, weight=1) # reset button
+        self.right_main.grid_columnconfigure(0, weight=1)  # props description
+        self.right_main.grid_columnconfigure(1, weight=1)  # slider
+        self.right_main.grid_columnconfigure(2, weight=1)  # value
+        self.right_main.grid_columnconfigure(3, weight=1)  # reset button
 
     def create_frame_left(self):
         self.left_main = ctk.CTkFrame(self.master, fg_color="transparent")
         self.left_main.grid(row=0, column=0, sticky="nsew")
         self.left_main.grid_columnconfigure(0, weight=1)
-        self.left_main.grid_rowconfigure(0, weight=1) # title
-        self.left_main.grid_rowconfigure(1, weight=10) # weapons list
+        self.left_main.grid_rowconfigure(0, weight=1)  # title
+        self.left_main.grid_rowconfigure(1, weight=10)  # weapons list
 
     def create_left_top_frame_title(self):
         self.left_top_frame_title = ctk.CTkFrame(self.left_main, fg_color="transparent")
         self.left_top_frame_title.grid(row=0, column=0, sticky="nsew")
-        self.left_top_frame_title.grid_rowconfigure(0, weight=1) # title
-        self.left_top_frame_title.grid_rowconfigure(1, weight=1) # title
-        self.left_top_frame_title.grid_rowconfigure(2, weight=1) # title
-        self.left_top_frame_title.grid_rowconfigure(3, weight=1) # title
-        self.left_top_frame_title.grid_columnconfigure(0, weight=1) # title
+        self.left_top_frame_title.grid_rowconfigure(0, weight=1)  # title
+        self.left_top_frame_title.grid_rowconfigure(1, weight=1)  # title
+        self.left_top_frame_title.grid_rowconfigure(2, weight=1)  # title
+        self.left_top_frame_title.grid_rowconfigure(3, weight=1)  # title
+        self.left_top_frame_title.grid_columnconfigure(0, weight=1)  # title
 
     def create_left_bot_frame_list_weapons(self):
         self.left_bot_frame_list_weapons = ctk.CTkFrame(self.left_main, fg_color="transparent")
         self.left_bot_frame_list_weapons.grid(row=1, column=0, sticky="nsew")
         self.left_bot_frame_list_weapons.grid_columnconfigure(0, weight=1)
-
 
     def add_frame_left_title_and_weapons(self):
         self.add_title()
@@ -121,9 +121,9 @@ class CaliberWeaponsModWindow:
 
     def add_title(self):
         title_label1 = ctk.CTkLabel(self.left_top_frame_title,
-                                   text="Weapons Will Be Modified :",
-                                   font=("Arial", 20, "bold"),
-                                   text_color="tomato")
+                                    text="Weapons Will Be Modified :",
+                                    font=("Arial", 20, "bold"),
+                                    text_color="tomato")
         title_label1.grid(row=0, column=0, pady=0, sticky="n")
         title_label2 = ctk.CTkLabel(self.left_top_frame_title,
                                     text="Click to :",
@@ -140,7 +140,6 @@ class CaliberWeaponsModWindow:
                                     font=("Arial", 15, "bold"),
                                     text_color="blue")
         title_label4.grid(row=3, column=0, pady=0, sticky="n")
-
 
     def delete_add_weapons_to_list(self, idx, name_weapon):
         button = self.list_buttons_weapons[idx]
@@ -160,12 +159,13 @@ class CaliberWeaponsModWindow:
 
         if not self.all_path:
             self.no_weapon_no_mod()
+        self.verify_all_sliders_reset()
 
     def no_weapon_no_mod(self):
+        Utils.disable_all_buttons_recursive(self.close_button, self.master)
         self.apply_button.configure(fg_color="red", hover_color="red")
         self.status_label.configure(text="No Weapons Select")
-        self.master.after(1500, self.master.destroy)
-        self.main_instance.root.attributes('-disabled', False)
+        self.detail_window.after(2000, self.close_detail_window)
 
     def get_weapons_by_calibre(self):
         matching_names = []
@@ -199,6 +199,7 @@ class CaliberWeaponsModWindow:
         data, self.json_caliber_path = JsonUtils.find_caliber_json_config(self.caliber)
         self.originale_value_from_JSON.update_from_json(data)
         self.manager.update_from_json(data)
+        self.no_modification_weapon_from_json = self.originale_value_from_JSON.all_values_are_one()
 
     def run(self):
         row = 0
@@ -261,10 +262,28 @@ class CaliberWeaponsModWindow:
         self.verify_all_sliders_reset()
 
     def verify_all_sliders_reset(self):
-        if self.manager == self.originale_value_from_JSON:
-            self.apply_button.configure(state="disabled", fg_color="white")
-            self.status_label.configure(text="")
-
+        if self.manager.all_values_are_one():
+            if not self.no_modification_weapon_from_json:
+                if self.list_file_path_json_remove:
+                    self.apply_button.configure(fg_color="orange",
+                                                hover_color="lightblue",
+                                                border_color="blue",
+                                                state="enable")
+                    self.status_label.configure(text="Warning! \n"
+                                                     " Not all weapons are selected \n"
+                                                     " and they will not all \n"
+                                                     " be reset to their original values.")
+                    self.reset_after_load_save_and_value_reset = True
+                else:
+                    self.apply_button.configure(fg_color="#a569bd",
+                                                hover_color="lightblue",
+                                                border_color="blue",
+                                                state="enable")
+                    self.status_label.configure(text="Same as the original values")
+                    self.reset_after_load_save_and_value_reset = True
+            else:
+                self.apply_button.configure(state="disabled", fg_color="white")
+                self.status_label.configure(text="")
 
     def reset_apply_button(self):
         self.apply_button.configure(fg_color="blue", hover_color="lightblue", border_color="red",
@@ -272,18 +291,24 @@ class CaliberWeaponsModWindow:
         self.status_label.configure(text="Ready to apply changes")
 
     def apply_changes_to_all(self):
-        list_path_new_json = []
-        for file_path in self.all_path:
-            data_json_to_update = JsonUtils.load_json(file_path)
-            for key, value in self.manager.iterate_key_values_where_key_ve_change(self.originale_value_from_JSON):
-                data_json_to_update = JsonUtils.update_json_in_new_file(key, value, data_json_to_update, True)
+        if not self.no_modification_weapon_from_json and self.manager.all_values_are_one():
+            for file_path in self.all_path:
+                JsonUtils.delete_file_mod_if_exists(file_path)
+            self.modify_save_json_file_caliber()
+            self.wait_modify_json()
+            self.check_wait_delete_json()
+        else:
+            list_path_new_json = []
+            for file_path in self.all_path:
+                data_json_to_update = JsonUtils.load_json(file_path)
+                for key, value in self.manager.iterate_key_values_where_key_ve_change(self.originale_value_from_JSON):
+                    data_json_to_update = JsonUtils.update_json_in_new_file(key, value, data_json_to_update, True)
 
-            list_path_new_json.append(JsonUtils.save_json_as_new_file(data_json_to_update, file_path))
+                list_path_new_json.append(JsonUtils.save_json_as_new_file(data_json_to_update, file_path))
 
-        self.modify_save_json_file_caliber()
-        self.wait_modify_json()
-        self.check_wait_modify_json(list_path_new_json)
-
+            self.modify_save_json_file_caliber()
+            self.wait_modify_json()
+            self.check_wait_modify_json(list_path_new_json)
 
     def modify_save_json_file_caliber(self):
         data_json_to_update = dict(
@@ -303,6 +328,23 @@ class CaliberWeaponsModWindow:
             self.progress_bar.configure(progress_color="green")
             self.check_for_all_files(list_path_new_json)
 
+    def check_wait_delete_json(self, attempts=0, max_attempts=60):
+        if attempts >= max_attempts:
+            self.progress_bar.configure(progress_color="green")
+            self.apply_button.configure(fg_color="green", hover_color="green")
+            self.status_label.configure(text="All weapon modifications have been removed.")
+            self.detail_window.after(3000, self.close_detail_window)
+        if self.progress_bar.is_progress_running():
+            print("Progression en cours...")
+            self.root.after(1000, lambda: self.check_wait_delete_json( attempts + 1))
+        else:
+            print("Progression terminée.")
+            self.progress_bar.configure(progress_color="green")
+            self.apply_button.configure(fg_color="green", hover_color="green")
+            self.status_label.configure(text="All weapon modifications have been removed.")
+            self.detail_window.after(3000, self.close_detail_window)
+            self.progress_bar.configure(progress_color="green")
+
     def wait_modify_json(self):
         Utils.disable_all_buttons_recursive(self.close_button, self.master)
         self.progress_bar = ProgressBar(self.right_main)
@@ -312,13 +354,11 @@ class CaliberWeaponsModWindow:
         if list_path_new_json and JsonUtils.all_file_exist(list_path_new_json):
             self.apply_button.configure(fg_color="green", hover_color="green")
             self.status_label.configure(text="Changes applied successfully.")
-            self.master.after(1500, self.master.destroy)
-            self.main_instance.root.attributes('-disabled', False)
+            self.detail_window.after(2000, self.close_detail_window)
         else:
-            self.status_label.configure(text="Error: One or more JSON files are missing.", text_color="red")
+            self.status_label.configure(text="Error: \n One or more JSON \n files are missing.", text_color="red")
             self.apply_button.configure(fg_color="red", hover_color="red")
-            self.master.after(3000, self.master.destroy)
-            self.main_instance.root.attributes('-disabled', False)
+            self.detail_window.after(2000, self.close_detail_window)
 
     @staticmethod
     def color_risky_range(name, value, label):
@@ -327,7 +367,8 @@ class CaliberWeaponsModWindow:
         else:
             label.configure(text_color="white")
 
-    def close_detail_window(self, detail_window):
-        detail_window.grab_release()
-        detail_window.destroy()
+    def close_detail_window(self):
+        print("close ! ")
+        self.detail_window.grab_release()
         self.root.attributes('-disabled', False)
+        self.detail_window.destroy()

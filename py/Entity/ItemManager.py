@@ -6,14 +6,12 @@ class ItemManager:
         self.key_value = {prop.label: 0 for prop in EnumProps}
 
     def get_value(self, key):
-        print(key)
         if key in self.key_value:
             return self.key_value[key]
         else:
             raise KeyError(f"La clé '{key}' n'existe pas dans KeyValue.")
 
     def get_key(self, value):
-        print(value)
         if value in self.key_value:
             return self.key_value[value]
         else:
@@ -50,9 +48,12 @@ class ItemManager:
             if key in self.key_value:
                 self.key_value[key] = value
 
-    def all_values_are_zero(self):
-        return all(self.key_value[key] == 0
-                   for key in self.iterate_key())
+    def all_values_are_one(self):
+        return all(
+            value == 1.0
+            for key, value in self.key_value.items()
+            if isinstance(value, (int, float))
+        )
 
     def copy_to_with_inverted_values(self, target_manager):
         if not isinstance(target_manager, ItemManager):

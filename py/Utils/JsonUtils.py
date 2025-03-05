@@ -142,6 +142,12 @@ class JsonUtils:
             os.remove(file_path)
 
     @staticmethod
+    def delete_file_mod_if_exists(file_path):
+        json_file_path_mod = file_path.replace(".json", "_mod.json")
+        if os.path.exists(json_file_path_mod):
+            os.remove(json_file_path_mod)
+
+    @staticmethod
     def save_json_as_new_file(data, file_path_new_json):
         base_name, ext = os.path.splitext(file_path_new_json)
         new_file_path = f"{base_name}_mod{ext}"
