@@ -1,42 +1,62 @@
 import customtkinter
 
+PROGRESS_BAR_WIDTH = 200
+PROGRESS_BAR_HEIGHT = 30
+PROGRESS_BAR_CORNER_RADIUS = 20
+PROGRESS_BAR_BORDER_WIDTH = 2
+PROGRESS_BAR_COLOR = "blue"
+PROGRESS_BAR_FONT = ("Helvetica", 18)
+PROGRESS_INCREMENT_DELAY = 100
+PROGRESS_MAX = 50
+
 
 class ProgressBar:
+
     def __init__(self, parent):
-        # Barre de progression initiale
-        self.my_progressbar = customtkinter.CTkProgressBar(parent,
-                                                           orientation="horizontal",
-                                                           width=200,
-                                                           height=30,
-                                                           corner_radius=20,
-                                                           border_width=2,
-                                                           progress_color="green",
-                                                           mode="determinate",
-                                                           determinate_speed=5)
-        self.my_progressbar.grid(row=11, column=1, columnspan=1, padx=10, pady=10)
-        self.my_progressbar.set(0)
-
-        self.my_label = customtkinter.CTkLabel(parent, text="0%", font=("Helvetica", 18))
-
+        self.parent = parent
+        self.my_progressbar = self.configure_progress_bar()
+        self.my_label = customtkinter.CTkLabel(parent, text="0%", font=PROGRESS_BAR_FONT)
         self.current_value = 0
         self.is_running = False
+        self.is_finish = False
 
-    def statut_progress_bar(self):
-        return self.is_running
+    def configure_progress_bar(self):
+        progress_bar = customtkinter.CTkProgressBar(
+            self.parent,
+            orientation="horizontal",
+            width=PROGRESS_BAR_WIDTH,
+            height=PROGRESS_BAR_HEIGHT,
+            corner_radius=PROGRESS_BAR_CORNER_RADIUS,
+            border_width=PROGRESS_BAR_BORDER_WIDTH,
+            progress_color=PROGRESS_BAR_COLOR,
+            mode="determinate",
+            determinate_speed=5,
+        )
+        progress_bar.grid(row=11, column=1, columnspan=1, padx=10, pady=10)
+        progress_bar.set(0)
+        return progress_bar
+
+    def is_progress_running(self):
+        return not self.is_finish
 
     def start(self):
-        if not self.is_running:
-            self.is_running = True
-            self.current_value = 0
-            self.increment_progress()
-        else:
-            return False
+        self.is_running = True
+        self.is_finish = False
+        self.current_value = 0
+        self.increment_progress()
 
-    def increment_progress(self):
-        if self.current_value <= 100:
-            self.my_progressbar.set(self.current_value / 100)
-            self.my_label.configure(text=f"{self.current_value}%")
-            self.current_value += 1  # Incrémenter la valeur
-            self.my_progressbar.after(50, self.increment_progress)
+    def increment_progress(self, *args):
+        if self.current_value <= PROGRESS_MAX:
+            self.my_progressbar.set(self.current_value / PROGRESS_MAX)
+            self.current_value += 1
+            self.my_progressbar.after(PROGRESS_INCREMENT_DELAY, self.increment_progress)
         else:
             self.is_running = False
+            self.is_finish = True
+
+    def configure(self, progress_color=None, **kwargs):
+        if progress_color:
+            self.my_progressbar.configure(progress_color=progress_color)
+        for key, value in kwargs.items():
+            setattr(self.my_progressbar, key, value)
+

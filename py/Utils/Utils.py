@@ -152,3 +152,13 @@ class Utils:
             min_value, max_value = limits[name]
             return value < min_value or value > max_value
         return False
+
+    @staticmethod
+    def disable_all_buttons_recursive(frame, widget):
+        for child in widget.winfo_children():
+            if ((isinstance(child, ctk.CTkButton)
+                    or isinstance(child, ctk.CTkSlider))
+            and not frame == child):
+                child.configure(state="disabled", fg_color="white")
+            elif child.winfo_children():
+                Utils.disable_all_buttons_recursive(frame, child)

@@ -8,6 +8,7 @@ from Utils import JsonUtils, Utils
 
 file: TextIO
 
+
 class SingleWeaponModWindow:
     def __init__(self, detail_window, root, file_path, main_instance):
         self.close_button = None
@@ -15,6 +16,9 @@ class SingleWeaponModWindow:
         self.right_main = None
         self.left_main = None
         self.apply_button = None
+        self.data_load_from_mod = False
+        self.lambda_save_from_user_vs_originale = None
+        self.data_originale_json = ItemManager()
         self.detail_window = detail_window
         self.root = root
         self.main_instance = main_instance
@@ -39,7 +43,8 @@ class SingleWeaponModWindow:
         self.close_button = ctk.CTkButton(self.detail_window,
                                           text="Close",
                                           command=lambda:
-                                          self.close_detail_window(self.detail_window))
+                                          self.close_detail_window())
+        self.close_button.grid(row=1, column=0)
 
     def create_frame_left(self):
         self.left_main = ctk.CTkFrame(self.detail_window, fg_color="transparent")
@@ -53,17 +58,25 @@ class SingleWeaponModWindow:
         self.right_main.grid_columnconfigure(2, weight=1)
 
     def load_root(self):
+        if JsonUtils.file_mod_exist(self.file_path):
+            self.load_old_modification_from_user()
+
+        root: Root = self.load_originale_value()
+        self.lambda_save_from_user_vs_originale = self.data_originale_json.lambda_value(self.manager)
+
+        return root
+
+    def load_old_modification_from_user(self):
+        self.data_load_from_mod = True
+        root_mod: Root
+
+        data_from_mod = JsonUtils.return_json_mod(self.file_path)
+        root_mod = self.create_item_manager_from_json(data_from_mod, self.data_originale_json)
+
+    def load_originale_value(self):
         data = JsonUtils.load_json(self.file_path)
+        root: Root = self.create_item_manager_from_json(data, self.manager)
         self.jsonFile = data
-        self.jsonFile = data
-
-        root: Root = Root.from_data(data)
-        item: Item = root.item
-        item_props: ItemProps = item.props
-
-        for key, (numerical_value, code) in vars(item_props).items():
-            self.manager.update_from_props_json(code, numerical_value)
-
         return root
 
     def locale_informations(self):
@@ -81,6 +94,12 @@ class SingleWeaponModWindow:
                       anchor="center")
         id_button = ctk.CTkButton(self.left_main, text=self.rootJSON.item.id)
         id_button.pack(side="top", anchor="center")
+
+    def calcul_gap_originale_vs_mod(self):
+        self.lambda_save_from_user_vs_originale = ItemManager()
+        self.lambda_save_from_user_vs_originale = self.manager.lambda_value(self.data_originale_json)
+
+
 
     def run(self):
         self.locale_informations()
@@ -128,7 +147,7 @@ class SingleWeaponModWindow:
 
     def slider_float(self, number, row, prop_value: EnumProps):
         scaled_int, scale_factor = Utils.float_to_scaled_int(number)
-        one_percent = scaled_int * 0.01
+        one_percent = scaled_int * 0.1
         hundredth_percent = scaled_int * 2
 
         slider = ctk.CTkSlider(self.right_main, from_=one_percent, to=hundredth_percent,
@@ -228,15 +247,22 @@ class SingleWeaponModWindow:
             file_path_update = JsonUtils.save_json_as_new_file(data_json_to_update, self.file_path)
             self.check_for_file(file_path_update)
 
-    def check_for_file(self, new_file_path):
+    def check_for_file(self, new_file_path, attempts=0, max_attempts=10):
+        Utils.disable_all_buttons_recursive(self.close_button, self.detail_window)
         if JsonUtils.file_exist(new_file_path):
             self.apply_button.configure(fg_color="green", hover_color="green")
             self.status_label.configure(text="Changes applied successfully.")
             self.detail_window.after(1500, self.detail_window.destroy)
             self.main_instance.root.attributes('-disabled', False)
 
+        elif attempts < max_attempts:
+            self.status_label.configure(text=f"Checking for file... Attempt {attempts + 1}/{max_attempts}")
+            self.detail_window.after(1000, lambda: self.check_for_file(new_file_path, attempts + 1, max_attempts))
         else:
-            self.detail_window.after(1000, lambda: self.check_for_file(new_file_path))
+            self.status_label.configure(text="Failed to detect the file. Please try again.", text_color="red")
+            self.apply_button.configure(fg_color="red", hover_color="gray")
+            self.main_instance.root.attributes('-disabled', False)
+            self.close_detail_window()
 
     def reset_apply_button(self):
         self.apply_button.configure(fg_color="blue", hover_color="lightblue", border_color="red",
@@ -247,3 +273,16 @@ class SingleWeaponModWindow:
         self.detail_window.grab_release()
         self.detail_window.destroy()
         self.root.attributes('-disabled', False)
+
+    @staticmethod
+    def create_item_manager_from_json(data, item_manager: ItemManager):
+        root: Root = Root.from_data(data)
+        item: Item = root.item
+        item_props: ItemProps = item.props
+
+        for key, (numerical_value, code) in vars(item_props).items():
+            item_manager.update_from_props_json(code, numerical_value)
+
+        return root
+
+

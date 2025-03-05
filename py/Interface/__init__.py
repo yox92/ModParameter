@@ -2,3 +2,4 @@ from .SingleWeaponModWindow import SingleWeaponModWindow
 from .CaliberWeaponsModWindow import CaliberWeaponsModWindow
 from .WeaponSelection import WeaponSelection
 from .ProgressBar import ProgressBar
+from .ListWeponsAlreadyMod import ListWeponsAlreadyMod

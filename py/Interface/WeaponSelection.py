@@ -6,6 +6,7 @@ from Utils.ImageUtils import ImageUtils
 from Utils import JsonUtils, Utils
 from Interface.CaliberWeaponsModWindow import CaliberWeaponsModWindow
 from Interface.SingleWeaponModWindow import SingleWeaponModWindow
+from Interface.ListWeponsAlreadyMod import ListWeponsAlreadyMod
 
 WINDOW_TITLE = "CustomWeapon App"
 WINDOW_GEOMETRY = "800x600"
@@ -31,6 +32,7 @@ class WeaponSelection:
         self.buttonCaliber = None
         self.detail_window = None
         self.framesBotRecherche = []
+        self.list_json_name_mod = []
         self.framesBotCaliber = []
         self.framesButtonRecherche = []
         self.message_not_find = []
@@ -39,9 +41,23 @@ class WeaponSelection:
         self.root.title(WINDOW_TITLE)
         self.root.geometry(WINDOW_GEOMETRY)
 
-
-
         self.run()
+        self.show_all_weapons_mod()
+
+    def show_all_weapons_mod(self):
+
+        self.list_json_name_mod = JsonUtils.load_all_json_files_mod()
+        if self.list_json_name_mod:
+            self.detail_window = ctk.CTkToplevel(self.root)
+
+            self.detail_window.title("Weapons already mods")
+
+            ListWeponsAlreadyMod(self.detail_window,
+                                    self.root,
+                                    self.detail_window,
+                                    self.list_json_name_mod,
+                                    self)
+            print(self.list_json_name_mod)
 
 
     def run(self):
@@ -164,7 +180,6 @@ class WeaponSelection:
         else:
             self.clear_recherche_frame()
 
-
     def populate_buttons(self, results):
         max_items = 20
         items_per_row = 5
@@ -259,7 +274,6 @@ class WeaponSelection:
         self.detail_window.focus_force()
         self.root.attributes('-disabled', True)
 
-
         if only_weapon:
             SingleWeaponModWindow(self.detail_window,
                                   self.root,
@@ -282,5 +296,3 @@ class WeaponSelection:
         position_y = root_y + (root_height // 2) - (window_height // 2)
 
         return position_x, position_y
-
-

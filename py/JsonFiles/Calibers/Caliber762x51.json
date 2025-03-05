@@ -1,12 +1,12 @@
 {
-  "CameraSnap": 1.0,
-  "AimSensitivity": 1.0,
-  "Ergonomics": 1.0,
-  "RecoilCamera": 1.0,
-  "RecoilForceBack": 1.0,
-  "RecoilForceUp": 1.0,
-  "Velocity": 1.0,
-  "Weight": 1.0,
-  "ammoCaliber": "Caliber762x51",
-  "bFirerate": 1.0
+    "CameraSnap": 0.5314000000000001,
+    "AimSensitivity": 0.6172000000000001,
+    "Ergonomics": 0.6567999999999999,
+    "RecoilCamera": 0.5511999999999999,
+    "RecoilForceBack": 0.472,
+    "RecoilForceUp": 0.46540000000000004,
+    "Velocity": 0.4456,
+    "Weight": 0.48519999999999996,
+    "ammoCaliber": "Caliber762x51",
+    "bFirerate": 0.48519999999999996
 }

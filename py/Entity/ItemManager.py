@@ -67,6 +67,18 @@ class ItemManager:
                         f"La valeur '{value}' pour la clé '{key}' est hors des limites autorisées (0.01 à 2.0)."
                     )
 
+    def lambda_value(self, item_manager):
+        result_manager = ItemManager()
+
+        for key, value in self.iterate_key_and_values():
+            if isinstance(value, (float, int)):
+                old_value = item_manager.key_value.get(key)
+                if isinstance(old_value, (float, int)):
+                    if value != 0:
+                     result_manager.key_value[key] = int(((old_value - value) / value ) * 100)
+
+        return result_manager
+
     def __repr__(self):
         return f"KeyValue({self.key_value})"
 

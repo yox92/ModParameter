@@ -1,7 +1,6 @@
 import json
 import os
 
-
 import Utils
 from config import JSON_FILES_DIR_WEAPONS, JSON_FILES_DIR_CALIBER
 from Utils.Utils import Utils
@@ -12,6 +11,16 @@ class JsonUtils:
     @staticmethod
     def file_exist(file_path):
         return os.path.exists(file_path)
+
+    @staticmethod
+    def file_mod_exist(file_path):
+        json_file_path_mod = file_path.replace(".json", "_mod.json")
+        return JsonUtils.file_exist(json_file_path_mod)
+
+    @staticmethod
+    def return_json_mod(file_path):
+        json_file_path_mod = file_path.replace(".json", "_mod.json")
+        return JsonUtils.load_json(json_file_path_mod)
 
     @staticmethod
     def all_file_exist(all_file_path):
@@ -32,7 +41,6 @@ class JsonUtils:
     def write_json(data, file_path):
         with open(file_path, "w") as json_file:
             json.dump(data, json_file, indent=4)
-
 
     @staticmethod
     def load_json_and_add_path(file_path):
@@ -71,12 +79,21 @@ class JsonUtils:
         return data_list
 
     @staticmethod
+    def load_all_json_files_mod():
+        json_dir_path = JSON_FILES_DIR_WEAPONS
+        data_list = []
+        for filename in os.listdir(json_dir_path):
+
+            if filename.endswith('_mod.json'):
+                data_list.append(filename)
+        return data_list
+
+    @staticmethod
     def udate_json_caliber(path_to_json_calibber, new_value_change):
         data = JsonUtils.load_json(path_to_json_calibber)
         for key, value in new_value_change.items():
             data[key] = value
         JsonUtils.write_json(data, path_to_json_calibber)
-
 
     @staticmethod
     def update_json_value(data, path_for_attribut_json, new_value, from_all_weapons):

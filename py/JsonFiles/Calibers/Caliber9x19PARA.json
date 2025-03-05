@@ -1,12 +1,12 @@
 {
-  "CameraSnap": 1.0,
-  "AimSensitivity": 1.0,
-  "Ergonomics": 1.0,
-  "RecoilCamera": 1.0,
-  "RecoilForceBack": 1.0,
-  "RecoilForceUp": 1.0,
-  "Velocity": 1.0,
-  "Weight": 1.0,
-  "ammoCaliber": "Caliber9x19PARA",
-  "bFirerate": 1.0
+    "CameraSnap": 1.99,
+    "AimSensitivity": 1.99,
+    "Ergonomics": 1.99,
+    "RecoilCamera": 1.99,
+    "RecoilForceBack": 1.99,
+    "RecoilForceUp": 1.99,
+    "Velocity": 1.99,
+    "Weight": 1.99,
+    "ammoCaliber": "Caliber9x19PARA",
+    "bFirerate": 1.99
 }

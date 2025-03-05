@@ -273,54 +273,52 @@ class CaliberWeaponsModWindow:
 
     def apply_changes_to_all(self):
         list_path_new_json = []
-        # for file_path in self.all_path:
-        #     data_json_to_update = JsonUtils.load_json(file_path)
-        #     for key, value in self.manager.iterate_key_values_where_key_ve_change(self.originale_value_from_JSON):
-        #         data_json_to_update = JsonUtils.update_json_in_new_file(key, value, data_json_to_update, True)
-        #
-        #     list_path_new_json.append(JsonUtils.save_json_as_new_file(data_json_to_update, file_path))
+        for file_path in self.all_path:
+            data_json_to_update = JsonUtils.load_json(file_path)
+            for key, value in self.manager.iterate_key_values_where_key_ve_change(self.originale_value_from_JSON):
+                data_json_to_update = JsonUtils.update_json_in_new_file(key, value, data_json_to_update, True)
 
-        # self.modify_save_json_file_caliber()
-        # self.check_for_all_files(list_path_new_json)
+            list_path_new_json.append(JsonUtils.save_json_as_new_file(data_json_to_update, file_path))
+
+        self.modify_save_json_file_caliber()
         self.wait_modify_json()
+        self.check_wait_modify_json(list_path_new_json)
 
-    def check_wait_modify_json(self):
-        if not self.progress_bar.statut_progress_bar():
-            self.root.after(100, self.check_wait_modify_json)
 
-        # def modify_save_json_file_caliber(self):
-        # data_json_to_update = dict(
-        #     self.manager.iterate_key_values_where_key_ve_change(self.originale_value_from_JSON)
-        # )
-        # JsonUtils.update_json_caliber_from_new_value_change(self.json_caliber_path, data_json_to_update)
+    def modify_save_json_file_caliber(self):
+        data_json_to_update = dict(
+            self.manager.iterate_key_values_where_key_ve_change(self.originale_value_from_JSON)
+        )
+        JsonUtils.update_json_caliber_from_new_value_change(self.json_caliber_path, data_json_to_update)
 
-    def disable_all_buttons_recursive(self, widget):
-        for child in widget.winfo_children():
-            if ((isinstance(child, ctk.CTkButton)
-                    or isinstance(child, ctk.CTkSlider))
-            and not self.close_button == child):
-                child.configure(state="disabled", fg_color="white")
-            elif child.winfo_children():
-                self.disable_all_buttons_recursive(child)
+    def check_wait_modify_json(self, list_path_new_json, attempts=0, max_attempts=60):
+        if attempts >= max_attempts:
+            self.progress_bar.configure(progress_color="green")
+            self.check_for_all_files(list_path_new_json)
+        if self.progress_bar.is_progress_running():
+            print("Progression en cours...")
+            self.root.after(1000, lambda: self.check_wait_modify_json(list_path_new_json, attempts + 1))
+        else:
+            print("Progression terminée.")
+            self.progress_bar.configure(progress_color="green")
+            self.check_for_all_files(list_path_new_json)
 
     def wait_modify_json(self):
-        self.disable_all_buttons_recursive(self.master)
+        Utils.disable_all_buttons_recursive(self.close_button, self.master)
         self.progress_bar = ProgressBar(self.right_main)
-        return self.progress_bar.start()
+        self.progress_bar.start()
 
-
-    # def check_for_all_files(self, list_path_new_json):
-        # if list_path_new_json and JsonUtils.all_file_exist(list_path_new_json):
-
-            # self.apply_button.configure(fg_color="green", hover_color="green")
-            # self.status_label.configure(text="Changes applied successfully.")
-            # self.master.after(1500, self.master.destroy)
-            # self.main_instance.root.attributes('-disabled', False)
-        # else:
-        #     self.status_label.configure(text="Error: One or more JSON files are missing.", text_color="red")
-        #     self.apply_button.configure(fg_color="red", hover_color="red")
-        #     self.master.after(3000, self.master.destroy)
-        #     self.main_instance.root.attributes('-disabled', False)
+    def check_for_all_files(self, list_path_new_json):
+        if list_path_new_json and JsonUtils.all_file_exist(list_path_new_json):
+            self.apply_button.configure(fg_color="green", hover_color="green")
+            self.status_label.configure(text="Changes applied successfully.")
+            self.master.after(1500, self.master.destroy)
+            self.main_instance.root.attributes('-disabled', False)
+        else:
+            self.status_label.configure(text="Error: One or more JSON files are missing.", text_color="red")
+            self.apply_button.configure(fg_color="red", hover_color="red")
+            self.master.after(3000, self.master.destroy)
+            self.main_instance.root.attributes('-disabled', False)
 
     @staticmethod
     def color_risky_range(name, value, label):
