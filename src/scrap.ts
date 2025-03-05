@@ -1,11 +1,11 @@
 import axios from 'axios';
-import {Item} from 'Entity/Item';
-import {ItemProps} from 'Entity/ItemProps';
-import {Locale} from 'Entity/Locale';
+import {Item} from './Entity/Item';
+import {ItemProps} from './Entity/ItemProps';
+import {Locale} from './Entity/Locale';
 import fs from 'fs';
 import path from 'path';
-import {Root} from "Entity/Root";
-import {WeaponList} from "Id/WeaponList";
+import {Root} from "./Entity/Root";
+import {WeaponList} from "./ListIdItem/WeaponList";
 
 const baseURL = 'https://db.sp-tarkov.com/api/item';
 
@@ -57,10 +57,10 @@ async function fetchItemData(id: string): Promise<Root> {
 
 async function main() {
     const weaponList = new (WeaponList);
-    const basePath = path.join(__dirname, 'output'); // Définis un chemin de base pour les fichiers de sortie
+    const basePath = path.join(__dirname, 'InputJSONScrap');
 
     if (!fs.existsSync(basePath)) {
-        fs.mkdirSync(basePath, {recursive: true}); // Crée le répertoire s'il n'existe pas
+        fs.mkdirSync(basePath, {recursive: true});
     }
 
     for (const id of weaponList.getIds()) {
@@ -69,8 +69,8 @@ async function main() {
             const cleanName = root.locale.ShortName
                 .replace(/\s+/g, '_')
                 .replace(/[\/\\?%*:|"<>]/g, '');
-            const filePath = path.join(basePath, `${cleanName}.json`); // Construis le chemin du fichier
-            fs.writeFileSync(filePath, JSON.stringify(root, null, 2), 'utf-8'); // Écrit l'objet dans un fichier JSON
+            const filePath = path.join(basePath, `${cleanName}.json`);
+            fs.writeFileSync(filePath, JSON.stringify(root, null, 2), 'utf-8');
             console.log(`Saved item to ${filePath}`);
         } catch (error) {
             console.error(`Failed to fetch data for ID: ${id}`, error);

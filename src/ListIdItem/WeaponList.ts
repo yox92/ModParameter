@@ -142,7 +142,7 @@ export class WeaponList {
             "669fa3f88abd2662d80eee77",
             "669fa39b48fc9f8db6035a0c",
             "668fe5a998b5ad715703ddd6",
-            "64748cb8de82c85eaf0a273a",
+            "64748cb8de82c85eaf0a273a"
         ];
     }
 
@@ -151,6 +151,5 @@ export class WeaponList {
     }
 }
 
-// Usage
-const rifleList = new WeaponList();
-console.log(rifleList.getIds());
+const weaponList = new WeaponList();
+console.log(weaponList.getIds());

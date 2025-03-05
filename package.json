@@ -1,11 +1,10 @@
 {
   "name": "customweapon",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "A custom mod for weapons in SPT-AKI",
+  "main": "index.ts",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -14,7 +13,6 @@
   "private": true,
   "dependencies": {
     "axios": "^1.7.9",
-    "cheerio": "^1.0.0-rc.12",
     "puppeteer": "^24.3.0"
   }
 }
