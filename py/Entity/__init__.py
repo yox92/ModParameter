@@ -4,3 +4,4 @@ from .Item import Item
 from .EnumProps import EnumProps
 from .Locale import Locale
 from .Root import Root
+from .ItemManager import ItemManager

@@ -1,9 +1,6 @@
 import customtkinter as ctk
 import tkinter
 
-from Utils import Utils
-
-
 class ListWeponsAlreadyMod:
     def __init__(self, master, root, detail_window, weapon_list, main_instance):
         self.close_button = None
