@@ -5,3 +5,5 @@ from .EnumProps import EnumProps
 from .Locale import Locale
 from .Root import Root
 from .ItemManager import ItemManager
+from .EnumAiming import EnumAiming
+from .Aiming import Aiming

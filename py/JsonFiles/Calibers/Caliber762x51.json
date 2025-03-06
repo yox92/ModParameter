@@ -1,12 +1,12 @@
 {
-    "CameraSnap": 1.0,
+    "CameraSnap": 0.87,
     "AimSensitivity": 1.0,
-    "Ergonomics": 1.0,
-    "RecoilCamera": 1.0,
-    "RecoilForceBack": 0.472,
-    "RecoilForceUp": 1.0,
+    "Ergonomics": 1.99,
+    "RecoilCamera": 0.5,
+    "RecoilForceBack": 0.23,
+    "RecoilForceUp": 0.25,
     "Velocity": 0.4456,
-    "Weight": 1.0,
+    "Weight": 0.21,
     "ammoCaliber": "Caliber762x51",
-    "bFirerate": 1.0
+    "bFirerate": 1.99
 }

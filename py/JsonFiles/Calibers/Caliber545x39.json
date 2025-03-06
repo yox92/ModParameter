@@ -1,9 +1,9 @@
 {
-    "CameraSnap": 1.0,
+    "CameraSnap": 0.76,
     "AimSensitivity": 1.0,
     "Ergonomics": 1.99,
-    "RecoilCamera": 0.05,
-    "RecoilForceBack": 0.01,
+    "RecoilCamera": 0.51,
+    "RecoilForceBack": 0.19,
     "RecoilForceUp": 0.01,
     "Velocity": 1.29,
     "Weight": 0.01,

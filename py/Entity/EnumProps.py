@@ -5,6 +5,7 @@ class EnumProps(Enum):
     AIM_SENSITIVITY = "AimSensitivity", "Aiming Sensitivity"
     ERGONOMICS = "Ergonomics", "Ergonomics Value"
     RECOIL_CAMERA = "RecoilCamera", "Upward Camera Kick On Shoot"
+    RECOL_DISPERSION = "RecolDispersion", "Determines bullet spread when firing"
     RECOIL_FORCE_BACK = "RecoilForceBack", "Horizontal recoil"
     RECOIL_FORCE_UP = "RecoilForceUp", "Vertical recoil"
     WEIGHT = "Weight", "Weapon Weight"

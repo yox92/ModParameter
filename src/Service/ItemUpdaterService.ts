@@ -66,6 +66,7 @@ export class ItemUpdaterService {
             AimSensitivity: this.validateAndCastFloat(itemProps.AimSensitivity, 2),
             Ergonomics: this.validateAndCastInt(itemProps.Ergonomics),
             RecoilCamera: this.validateAndCastFloat(itemProps.RecoilCamera, 3),
+            RecolDispersion: this.validateAndCastInt(itemProps.RecolDispersion),
             RecoilForceBack: this.validateAndCastInt(itemProps.RecoilForceBack),
             RecoilForceUp: this.validateAndCastInt(itemProps.RecoilForceUp),
             Weight: this.validateAndCastFloat(itemProps.Weight, 2),

@@ -1,0 +1,15 @@
+{
+  "Aiming": {
+    "AimPunchMagnitude": 14.4,
+    "ProceduralIntensityByPoseStanding": 1.0,
+    "ProceduralIntensityByPoseCrouching":0.7,
+    "ProceduralIntensityByPoseProne": 0.6,
+    "RecoilConvergenceMult": 1,
+    "RecoilDamping": 0.7,
+    "RecoilHandDamping": 0.45,
+    "RecoilIntensityStanding": 1,
+    "RecoilIntensityCrouching": 0.7,
+    "RecoilIntensityProne": 0.6
+
+  }
+}

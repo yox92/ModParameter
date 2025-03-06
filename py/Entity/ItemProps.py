@@ -18,6 +18,10 @@ class ItemProps:
             props.get(EnumProps.RECOIL_CAMERA.label, None),
             EnumProps.RECOIL_CAMERA.label
         )
+        self._RecolDispersion = (
+            props.get(EnumProps.RECOL_DISPERSION.label, None),
+            EnumProps.RECOL_DISPERSION.label
+        )
         self._RecoilForceBack = (
             props.get(EnumProps.RECOIL_FORCE_BACK.label, None),
             EnumProps.RECOIL_FORCE_BACK.label
@@ -64,8 +68,8 @@ class ItemProps:
         return self._RecoilForceUp
 
     @property
-    def Velocity(self):
-        return self._Velocity
+    def RecolDispersion(self):
+        return self._RecolDispersion
 
     @property
     def Weight(self):
