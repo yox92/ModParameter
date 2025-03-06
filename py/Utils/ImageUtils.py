@@ -5,7 +5,6 @@ import customtkinter as ctk
 from config import IMAGES_DIR
 
 class ImageUtils:
-
     @staticmethod
     def create_image_var(image_name: str):
         size = (150, 150)

@@ -2,7 +2,10 @@ import copy
 from typing import TextIO
 import customtkinter as ctk
 
-from Entity import Root, ItemProps, EnumProps, Item
+from Entity.Root import Root
+from Entity.ItemProps import ItemProps
+from Entity.EnumProps import EnumProps
+from Entity.Item import Item
 from Entity.ItemManager import ItemManager
 from Utils import JsonUtils, Utils
 

@@ -1,9 +1,10 @@
 import customtkinter as ctk
 
 from Interface.ProgressBar import ProgressBar
-from Utils import JsonUtils, Utils
+from Utils.JsonUtils import JsonUtils
+from Utils.Utils import Utils
 from Entity.ItemManager import ItemManager
-from Entity import EnumProps
+from Entity.EnumProps import EnumProps
 
 
 class CaliberWeaponsModWindow:

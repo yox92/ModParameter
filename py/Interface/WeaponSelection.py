@@ -3,7 +3,8 @@ from customtkinter import CTkImage
 
 from Entity import Caliber
 from Utils.ImageUtils import ImageUtils
-from Utils import JsonUtils, Utils
+from Utils.JsonUtils import JsonUtils
+from Utils.Utils import Utils
 from Interface.CaliberWeaponsModWindow import CaliberWeaponsModWindow
 from Interface.SingleWeaponModWindow import SingleWeaponModWindow
 from Interface.ListWeponsAlreadyMod import ListWeponsAlreadyMod
