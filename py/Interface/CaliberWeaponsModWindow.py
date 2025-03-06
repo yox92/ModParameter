@@ -270,10 +270,11 @@ class CaliberWeaponsModWindow:
                                                 hover_color="lightblue",
                                                 border_color="blue",
                                                 state="enable")
-                    self.status_label.configure(text="Warning! \n"
-                                                     " Not all weapons are selected \n"
-                                                     " and they will not all \n"
-                                                     " be reset to their original values.")
+                    self.status_label.configure(text=f"Warning! \n"
+                                                     " Not all weapons are selected. \n"
+                                                     " Unselected weapons will not \n"
+                                                     " be reset to their original values.\n"
+                                                     f"( {len(self.list_file_path_json_remove)} Unselected )")
                     self.reset_after_load_save_and_value_reset = True
                 else:
                     self.apply_button.configure(fg_color="#a569bd",

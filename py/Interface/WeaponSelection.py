@@ -17,6 +17,7 @@ DETAIL_WINDOW_WIDTH = 900
 DETAIL_WINDOW_HEIGHT = 600
 WINDOW_OFFSET = 10
 
+
 class WeaponSelection:
     def __init__(self, root):
         ctk.set_appearance_mode(APPEARANCE_MODE)
@@ -43,23 +44,6 @@ class WeaponSelection:
         self.root.geometry(WINDOW_GEOMETRY)
 
         self.run()
-        self.show_all_weapons_mod()
-
-    def show_all_weapons_mod(self):
-
-        self.list_json_name_mod = JsonUtils.load_all_json_files_mod()
-        if self.list_json_name_mod:
-            self.detail_window = ctk.CTkToplevel(self.root)
-
-            self.detail_window.title("Weapons already mods")
-
-            ListWeponsAlreadyMod(self.detail_window,
-                                    self.root,
-                                    self.detail_window,
-                                    self.list_json_name_mod,
-                                    self)
-            print(self.list_json_name_mod)
-
 
     def run(self):
         self.loaded_data = JsonUtils.load_all_json_files_without_mod()
@@ -75,7 +59,24 @@ class WeaponSelection:
     def create_frame_main(self):
         self.root.grid_rowconfigure(0, weight=1)
         self.root.grid_rowconfigure(1, weight=8)
+        self.root.grid_rowconfigure(2, weight=1)
         self.root.grid_columnconfigure(0, weight=1)
+        self.active_window_list_weapons_already_mod()
+
+    def active_window_list_weapons_already_mod(self):
+        self.buttonWeapon = ctk.CTkButton(
+            self.root,
+            text="View All Saved Weapons Mod",
+            compound="top",
+            fg_color="red",
+            text_color="white",
+            hover_color="orange",
+            font=("Arial", 15, "bold"),
+            height=10,
+            width=10,
+            command=self.show_all_weapons_mod
+        )
+        self.buttonWeapon.grid(row=2, column=0)
 
         self.main_frame_top = ctk.CTkFrame(self.root, fg_color="transparent")
         self.main_frame_bot = ctk.CTkFrame(self.root, fg_color="transparent")
@@ -91,6 +92,21 @@ class WeaponSelection:
         self.frame_top_right = ctk.CTkFrame(self.main_frame_top, fg_color="transparent")
         self.frame_top_left.grid(row=0, column=0, sticky="nsew")
         self.frame_top_right.grid(row=0, column=1, sticky="nsew")
+
+    def show_all_weapons_mod(self):
+        self.list_json_name_mod = JsonUtils.load_all_json_files_mod()
+        if self.list_json_name_mod:
+            self.detail_window = ctk.CTkToplevel(self.root)
+
+            self.focus_new_window()
+
+            ListWeponsAlreadyMod(self.detail_window,
+                                 self.root,
+                                 self.detail_window,
+                                 self.list_json_name_mod,
+                                 self)
+            print(self.list_json_name_mod)
+
 
     def create_buttons_for_choice(self):
         self.buttonWeapon = ctk.CTkButton(
@@ -125,7 +141,7 @@ class WeaponSelection:
         for data in self.loaded_data:
             if data['locale']['ShortName'] == result:
                 file_path = data['file_path']
-                self.open_detail_window(file_path, True)
+                self.open_weapon_specific_window(file_path, True)
                 break
         else:
             print(f"File ignore : {result}")
@@ -244,7 +260,7 @@ class WeaponSelection:
                 text_color="black",
                 fg_color=color,
                 font=("Arial", 15, "bold"),
-                command=lambda r=caliber.code: self.open_detail_window(r, False))
+                command=lambda r=caliber.code: self.open_weapon_specific_window(r, False))
             button.pack(side="top", anchor="center")
 
             column += 1
@@ -263,7 +279,7 @@ class WeaponSelection:
         self.framesButtonRecherche.clear()
         self.message_not_find.clear()
 
-    def open_detail_window(self, send_value, only_weapon):
+    def open_weapon_specific_window(self, send_value, only_weapon):
         self.detail_window = ctk.CTkToplevel(self.root)
 
         self.detail_window.title(DETAIL_WINDOW_TITLE)
@@ -271,9 +287,7 @@ class WeaponSelection:
         position_x, position_y = self.calculate_window_position(DETAIL_WINDOW_WIDTH, DETAIL_WINDOW_HEIGHT)
         self.detail_window.geometry(f"{DETAIL_WINDOW_WIDTH}x{DETAIL_WINDOW_HEIGHT}+{position_x}+{position_y}")
 
-        self.detail_window.grab_set()
-        self.detail_window.focus_force()
-        self.root.attributes('-disabled', True)
+        self.focus_new_window()
 
         if only_weapon:
             SingleWeaponModWindow(self.detail_window,
@@ -287,6 +301,13 @@ class WeaponSelection:
                                     send_value,
                                     self)
 
+    def open_weapon_specific_window_from_list_weapon(self, weapon_name):
+        for data in self.loaded_data:
+            if data['locale']['ShortName'] == weapon_name:
+                file_path = data['file_path']
+                self.open_weapon_specific_window(file_path,
+                                                 True)
+
     def calculate_window_position(self, window_width, window_height):
         root_x = self.root.winfo_x()
         root_y = self.root.winfo_y()
@@ -297,3 +318,8 @@ class WeaponSelection:
         position_y = root_y + (root_height // 2) - (window_height // 2)
 
         return position_x, position_y
+
+    def focus_new_window(self):
+        self.detail_window.grab_set()
+        self.detail_window.focus_force()
+        self.root.attributes('-disabled', True)

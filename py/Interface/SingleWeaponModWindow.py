@@ -108,14 +108,17 @@ class SingleWeaponModWindow:
                                    font=("Arial", 18, "bold"))
         title_label.pack(side="top",
                          anchor="center")
-        name = ctk.CTkButton(self.left_main, text=self.rootJSON.locale.ShortName, font=("Arial", 16, "bold"))
+        name = ctk.CTkButton(self.left_main,
+                             text=self.rootJSON.locale.ShortName,
+                             font=("Arial", 16, "bold"))
         name.pack(side="top", anchor="center")
         id_label = ctk.CTkLabel(self.left_main,
                                 text="ID:",
                                 font=("Arial", 18, "bold"))
         id_label.pack(side="top",
                       anchor="center")
-        id_button = ctk.CTkButton(self.left_main, text=self.rootJSON.item.id)
+        id_button = ctk.CTkButton(self.left_main,
+                                  text=self.rootJSON.item.id)
         id_button.pack(side="top", anchor="center")
 
     def calcul_gap_originale_vs_mod(self):
@@ -143,7 +146,10 @@ class SingleWeaponModWindow:
                 row += 1
             row += 1
 
-        self.apply_button = ctk.CTkButton(self.right_main, text="Apply", command=self.apply_changes, state="disabled",
+        self.apply_button = ctk.CTkButton(self.right_main,
+                                          text="Apply",
+                                          command=self.apply_changes,
+                                          state="disabled",
                                           fg_color="white")
         self.apply_button.grid(row=row, column=1, sticky="nsew")
         self.status_label = ctk.CTkLabel(self.right_main, text="")
