@@ -6,6 +6,8 @@ import fs from 'fs';
 import path from 'path';
 import {Root} from "./Entity/Root";
 import {WeaponList} from "./ListIdItem/WeaponList";
+import PQueue from "p-queue";
+import {config} from "./config";
 
 const baseURL = 'https://db.sp-tarkov.com/api/item';
 
@@ -55,26 +57,52 @@ async function fetchItemData(id: string): Promise<Root> {
 }
 
 async function main() {
-    const weaponList = new (WeaponList);
-    const basePath = path.join(__dirname, 'InputJSONScrap');
+    const weaponList = new WeaponList();
+    const ids = weaponList.getIds();
+    const basePath = config.jsonWeaponFolderPath;
 
     if (!fs.existsSync(basePath)) {
-        fs.mkdirSync(basePath, {recursive: true});
+        fs.mkdirSync(basePath, { recursive: true });
+    } else {
+        fs.readdirSync(basePath).forEach(file => {
+            if (file.endsWith(".json")) {
+                fs.unlinkSync(path.join(basePath, file));
+            }
+        });
+        console.log(`🗑️ Deleted all existing JSON files in ${basePath}`);
     }
 
-    for (const id of weaponList.getIds()) {
+    const queue = new PQueue({ concurrency: 5 });
+    const createdFiles = new Set<string>();
+
+    const tasks = ids.map(id => queue.add(async () => {
         try {
             const root = await fetchItemData(id);
-            const cleanName = root.locale.ShortName
-                .replace(/\s+/g, '_')
-                .replace(/[\/\\?%*:|"<>]/g, '');
+            const cleanName = root.locale.ShortName.replace(/\s+/g, '_').replace(/[^\w.-]/g, '');
             const filePath = path.join(basePath, `${cleanName}.json`);
-            fs.writeFileSync(filePath, JSON.stringify(root, null, 2), 'utf-8');
-            console.log(`Saved item to ${filePath}`);
+
+            await fs.promises.writeFile(filePath, JSON.stringify(root, null, 2), 'utf-8');
+            createdFiles.add(filePath);
+
+            console.log(`✅ Saved item to ${filePath}`);
         } catch (error) {
-            console.error(`Failed to fetch data for ID: ${id}`, error);
+            console.error(`❌ Failed to fetch data for ID: ${id}`, error);
         }
+    }));
+
+    await Promise.all(tasks);
+
+    const filesInDirectory = fs.readdirSync(basePath).filter(file => file.endsWith(".json"));
+
+    console.log("\n=== 🔍 Vérification des fichiers créés ===");
+    console.log(`🎯 Total Weapons to Create: ${ids.length}`);
+    console.log(`📂 Files Created: ${filesInDirectory.length}`);
+
+    if (filesInDirectory.length !== ids.length) {
+        console.warn(`⚠️ Mismatch detected! Expected ${ids.length}, but found ${filesInDirectory.length}.`);
+    } else {
+        console.log("✅ All files were successfully created!");
     }
 }
 
-main();
+main().catch(console.error);

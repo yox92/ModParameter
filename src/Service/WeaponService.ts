@@ -23,7 +23,7 @@ export class WeaponService {
      */
     public updateWeapons(): void {
         const tables = this.database.getTables();
-        const jsonFiles = this.jsonFileService.loadJsonFiles();
+        const jsonFiles = this.jsonFileService.loadJsonWeaponsFiles();
         let countModified = 0;
 
         for (const {fileName, data} of jsonFiles) {

@@ -1,8 +1,15 @@
+import {Aiming} from "./Aiming";
+
 export interface IDatabaseServer {
     getTables(): {
         templates: {
             items: Record<string, any>;
-            name: string
+            name: string;
+        };
+        globals: {
+            config: {
+                Aiming: Aiming;
+            };
         };
     };
 }
@@ -13,6 +20,11 @@ export class DatabaseServer implements IDatabaseServer {
             items: Record<string, any>;
             name: string;
         };
+        globals: {
+            config: {
+                Aiming: Aiming;
+            };
+        };
     };
 
     constructor() {
@@ -21,6 +33,11 @@ export class DatabaseServer implements IDatabaseServer {
                 items: {},
                 name: ""
             },
+            globals: {
+                config: {
+                    Aiming: new Aiming({})
+                }
+            }
         };
     }
 
@@ -28,6 +45,11 @@ export class DatabaseServer implements IDatabaseServer {
         templates: {
             items: Record<string, any>;
             name: string;
+        };
+        globals: {
+            config: {
+                Aiming: Aiming;
+            };
         };
     } {
         return this.tables;
