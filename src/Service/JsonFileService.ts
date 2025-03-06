@@ -1,14 +1,15 @@
 import * as fs from "fs";
 import * as path from "path";
 import {ILogger} from "../Entity/Logger";
+import {config} from "../config";
 
 
 export class JsonFileService {
     private readonly folderPath: string;
     private readonly logger: ILogger;
 
-    constructor(folderPath: string, logger: ILogger) {
-        this.folderPath = folderPath;
+    constructor(logger: ILogger) {
+        this.folderPath = config.jsonFolderPath;
         this.logger = logger;
     }
 
@@ -39,7 +40,7 @@ export class JsonFileService {
             const filePath = path.join(this.folderPath, file);
             try {
                 const rawData = fs.readFileSync(filePath, "utf-8");
-                return { fileName: file, data: JSON.parse(rawData) };
+                return {fileName: file, data: JSON.parse(rawData)};
             } catch (error) {
                 this.logger.error(`[JsonFileService] Error reading file ${file}: ${error}`);
                 return null;

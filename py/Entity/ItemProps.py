@@ -26,10 +26,6 @@ class ItemProps:
             props.get(EnumProps.RECOIL_FORCE_UP.label, None),
             EnumProps.RECOIL_FORCE_UP.label
         )
-        self._Velocity = (
-            props.get(EnumProps.VELOCITY.label, None),
-            EnumProps.VELOCITY.label
-        )
         self._Weight = (
             props.get(EnumProps.WEIGHT.label, None),
             EnumProps.WEIGHT.label

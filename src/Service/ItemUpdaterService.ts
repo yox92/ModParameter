@@ -68,11 +68,16 @@ export class ItemUpdaterService {
             RecoilCamera: this.validateAndCastFloat(itemProps.RecoilCamera, 3),
             RecoilForceBack: this.validateAndCastInt(itemProps.RecoilForceBack),
             RecoilForceUp: this.validateAndCastInt(itemProps.RecoilForceUp),
-            Velocity: this.validateAndCastInt(itemProps.Velocity),
             Weight: this.validateAndCastFloat(itemProps.Weight, 2),
             bFirerate: this.validateAndCastInt(itemProps.bFirerate),
         };
 
+        const invalidProps = Object.entries(updatedProps).filter(([_, value]) => value === null);
+
+        if (invalidProps.length > 0) {
+            this.logger.warning(`[ItemUpdaterService] Skipping weapon: ${jsonItem.item._name} (ID: ${jsonItem.item._id}) due to invalid values: ${invalidProps.map(([key]) => key).join(", ")}`);
+            return false;
+        }
 
         if (Object.values(updatedProps).some(value => value === null)) {
             this.logger.warning(`[ItemUpdaterService] Skipping weapon id :  ${jsonItem.item._id} name : ${jsonItem.item._name} due to invalid values.`);

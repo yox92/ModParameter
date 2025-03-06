@@ -1,6 +1,5 @@
 import {ItemUpdaterService} from "./ItemUpdaterService";
 import {JsonFileService} from "./JsonFileService";
-import path from "path";
 import {IDatabaseServer} from "../Entity/DatabaseServer";
 import {ILogger} from "../Entity/Logger";
 
@@ -14,9 +13,8 @@ export class WeaponService {
     constructor(logger: ILogger, database: IDatabaseServer) {
         this.logger = logger;
         this.database = database;
-        const jsonFolderPath = path.join(__dirname, "..", "py", "JsonFiles");
 
-        this.jsonFileService = new JsonFileService(jsonFolderPath, logger);
+        this.jsonFileService = new JsonFileService(logger);
         this.itemUpdaterService = new ItemUpdaterService(logger);
     }
 

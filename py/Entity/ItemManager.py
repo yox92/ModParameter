@@ -19,7 +19,22 @@ class ItemManager:
 
     def set_value_and_transform_like_multi(self, key, value):
         if key in self.key_value:
-            self.key_value[key] = 1 + (value / 100)
+            if isinstance(value, (float, int)):
+                if isinstance(value, int):
+                    value_float = float(value)
+                else:
+                    value_float = value
+
+                transformed_value = 1 + (value_float / 100)
+
+                transformed_value = max(0.01, min(transformed_value, 1.99))
+
+                if 0.1 <= transformed_value <= 2.0:
+                    transformed_value = round(transformed_value, 2)
+                elif 0.01 <= transformed_value < 0.1:
+                    transformed_value = round(transformed_value, 3)
+
+                self.key_value[key] = transformed_value
         else:
             raise KeyError(f"La clé '{key}' n'existe pas dans KeyValue.")
 

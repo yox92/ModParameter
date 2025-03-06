@@ -34,7 +34,6 @@ async function fetchItemData(id: string): Promise<Root> {
         RecoilCamera: itemData._props.RecoilCamera,
         RecoilForceBack: itemData._props.RecoilForceBack,
         RecoilForceUp: itemData._props.RecoilForceUp,
-        Velocity: itemData._props.Velocity,
         Weight: itemData._props.Weight,
         ammoCaliber: itemData._props.ammoCaliber,
         bFirerate: itemData._props.bFirerate,

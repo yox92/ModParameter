@@ -5,7 +5,6 @@ export class ItemProps {
     RecoilCamera: number;
     RecoilForceBack: number;
     RecoilForceUp: number;
-    Velocity: number;
     Weight: number;
     ammoCaliber: string;
     bFirerate: number;
@@ -22,7 +21,6 @@ export function createItemProps(data: any): ItemProps {
         RecoilCamera: data.RecoilCamera,
         RecoilForceBack: data.RecoilForceBack,
         RecoilForceUp: data.RecoilForceUp,
-        Velocity: data.Velocity,
         Weight: data.Weight,
         ammoCaliber: data.ammoCaliber,
         bFirerate: data.bFirerate,

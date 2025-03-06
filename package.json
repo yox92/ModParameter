@@ -1,9 +1,12 @@
 {
-  "name": "customweapon",
+  "name": "spt-custom-weapon",
   "version": "1.0.0",
   "description": "A custom mod for weapons in SPT-AKI",
-  "main": "index.ts",
-  "type": "module",
+  "main": "src/mod.js",
+  "type": "commonjs",
+  "author": "netnikogoo",
+  "sptVersion": "3.10.*",
+  "license": "MIT",
   "scripts": {
   },
   "repository": {

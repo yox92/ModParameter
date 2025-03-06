@@ -7,7 +7,6 @@ class EnumProps(Enum):
     RECOIL_CAMERA = "RecoilCamera", "Upward Camera Kick On Shoot"
     RECOIL_FORCE_BACK = "RecoilForceBack", "Horizontal recoil"
     RECOIL_FORCE_UP = "RecoilForceUp", "Vertical recoil"
-    VELOCITY = "Velocity", "Bullet Velocity"
     WEIGHT = "Weight", "Weapon Weight"
     AMMO_CALIBER = "ammoCaliber", "Calibers of Ammo"
     FIRE_RATE = "bFirerate", "Rate of Fire"

@@ -1,4 +1,3 @@
-
 {
   "item": {
     "_id": "65fb023261d5829b2d090755",
@@ -10,7 +9,6 @@
       "RecoilCamera": 0.054,
       "RecoilForceBack": 502,
       "RecoilForceUp": 107,
-      "Velocity": 1.8,
       "Weight": 5.763,
       "ammoCaliber": "Caliber762x51",
       "bFirerate": 550

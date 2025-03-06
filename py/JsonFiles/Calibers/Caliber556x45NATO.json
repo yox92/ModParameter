@@ -1,12 +1,12 @@
 {
     "CameraSnap": 1.0,
-    "AimSensitivity": 1.0,
-    "Ergonomics": 1.0,
-    "RecoilCamera": 1.0,
-    "RecoilForceBack": 1.0,
-    "RecoilForceUp": 1.0,
+    "AimSensitivity": 1.99,
+    "Ergonomics": 1.99,
+    "RecoilCamera": 0.01,
+    "RecoilForceBack": 0.01,
+    "RecoilForceUp": 0.01,
     "Velocity": 1.0,
-    "Weight": 1.0,
+    "Weight": 0.01,
     "ammoCaliber": "Caliber556x45NATO",
-    "bFirerate": 1.0
+    "bFirerate": 1.99
 }
