@@ -143,7 +143,6 @@ class Utils:
     def is_value_outside_limits(name, value):
         limits = {
             EnumProps.FIRE_RATE.label: (-30, 50),
-            EnumProps.VELOCITY.label: (-30, 30),
             EnumProps.CAMERA_SNAP.label: (-30, 30),
             EnumProps.ERGONOMICS.label: (-80, 80),
         }
