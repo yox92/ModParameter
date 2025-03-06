@@ -2,7 +2,7 @@ import json
 import os
 
 import Utils
-from config import JSON_FILES_DIR_WEAPONS, JSON_FILES_DIR_CALIBER
+from config import JSON_FILES_DIR_WEAPONS, JSON_FILES_DIR_CALIBER, JSON_FILES_DIR_PMC
 from Utils.Utils import Utils
 
 
@@ -36,6 +36,22 @@ class JsonUtils:
             raise FileNotFoundError(f"Le fichier '{file_path}' est introuvable.")
         except json.JSONDecodeError:
             raise ValueError(f"Le fichier '{file_path}' contient un JSON invalide.")
+
+    @staticmethod
+    def get_file_path_json_pmc():
+        for filename in os.listdir(JSON_FILES_DIR_PMC):
+            if filename.endswith('.json') and not filename.endswith('mod.json'):
+                file_path = os.path.join(JSON_FILES_DIR_PMC, filename)
+                return file_path
+        return None
+
+    @staticmethod
+    def get_file_path_json_pmc_save():
+        for filename in os.listdir(JSON_FILES_DIR_PMC):
+            if filename.endswith('_mod.json'):
+                file_path = os.path.join(JSON_FILES_DIR_PMC, filename)
+                return file_path
+        return None
 
     @staticmethod
     def write_json(data, file_path):
@@ -171,8 +187,13 @@ class JsonUtils:
         return list_of_json
 
     @staticmethod
-    def update_json_in_new_file(key, new_value, data, from_all_weapons):
+    def update_json_in_new_file_weapon(key, new_value, data, from_all_weapons):
         path_props_json = ["item", "_props", key]
+        return JsonUtils.update_json_value(data, path_props_json, new_value, from_all_weapons)
+
+    @staticmethod
+    def update_json_in_new_file_aiming(key, new_value, data, from_all_weapons):
+        path_props_json = [key]
         return JsonUtils.update_json_value(data, path_props_json, new_value, from_all_weapons)
 
     @staticmethod

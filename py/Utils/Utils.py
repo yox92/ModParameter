@@ -1,6 +1,6 @@
 import customtkinter as ctk
 
-from Entity import EnumProps
+from Entity import EnumProps, EnumAiming
 
 
 class Utils:
@@ -140,11 +140,29 @@ class Utils:
                 i += 1
 
     @staticmethod
-    def is_value_outside_limits(name, value):
+    def is_value_outside_limits_weapons(name, value):
         limits = {
             EnumProps.FIRE_RATE.label: (-30, 50),
             EnumProps.CAMERA_SNAP.label: (-30, 30),
             EnumProps.ERGONOMICS.label: (-80, 80),
+        }
+
+        if name in limits:
+            min_value, max_value = limits[name]
+            return value < min_value or value > max_value
+        return False
+
+    @staticmethod
+    def is_value_outside_limits_aiming(name, value):
+        limits = {
+            EnumAiming.PROCEDURAL_INTENSITY_BY_POSE_STANDING.label: (0.15, 2.0),
+            EnumAiming.RECOIL_DAMPING.label: (0.1, 0.8),
+            EnumAiming.PROCEDURAL_INTENSITY_BY_POSE_CROUCHING.label: (0.1, 1.2),
+            EnumAiming.PROCEDURAL_INTENSITY_BY_POSE_PRONE.label: (0.1, 1.0),
+            EnumAiming.RECOIL_INTENSITY_BY_POSE_STANDING.label: (0.2, 2.0),
+            EnumAiming.RECOIL_INTENSITY_BY_POSE_CROUCHING.label: (0.1, 1.0),
+            EnumAiming.RECOIL_INTENSITY_BY_POSE_PRONE.label: (0.1, 1.0),
+            EnumAiming.RECOIL_HAND_DAMPING.label: (0.01, 0.90),
         }
 
         if name in limits:

@@ -10,6 +10,7 @@ sys.path.append(str(BASE_DIR))
 JSON_FILES_DIR = BASE_DIR / "JsonFiles"
 JSON_FILES_DIR_WEAPONS = JSON_FILES_DIR / "Weapons"
 JSON_FILES_DIR_CALIBER = JSON_FILES_DIR / "Calibers"
+JSON_FILES_DIR_PMC = JSON_FILES_DIR / "PMC"
 IMAGES_DIR = BASE_DIR / "Images"
 
 
@@ -46,6 +47,7 @@ def check_project_structure():
         print(f" Directory containing `main.py`: {relatif_path(MAIN_DIR)}")
         print(f" JSON directory (JsonFiles): {relatif_path(JSON_FILES_DIR_WEAPONS)}")
         print(f" JSON directory (JsonFiles): {relatif_path(JSON_FILES_DIR_CALIBER)}")
+        print(f" JSON directory (JsonFiles): {relatif_path(JSON_FILES_DIR_PMC)}")
         print(f" Image directory (JsonFiles): {relatif_path(IMAGES_DIR)}")
         print("------------------------------------------------------------\n")
 

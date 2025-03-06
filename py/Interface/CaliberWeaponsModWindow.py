@@ -304,7 +304,7 @@ class CaliberWeaponsModWindow:
             for file_path in self.all_path:
                 data_json_to_update = JsonUtils.load_json(file_path)
                 for key, value in self.manager.iterate_key_values_where_key_ve_change(self.originale_value_from_JSON):
-                    data_json_to_update = JsonUtils.update_json_in_new_file(key, value, data_json_to_update, True)
+                    data_json_to_update = JsonUtils.update_json_in_new_file_weapon(key, value, data_json_to_update, True)
 
                 list_path_new_json.append(JsonUtils.save_json_as_new_file(data_json_to_update, file_path))
 
@@ -364,7 +364,7 @@ class CaliberWeaponsModWindow:
 
     @staticmethod
     def color_risky_range(name, value, label):
-        if Utils.is_value_outside_limits(name, value):
+        if Utils.is_value_outside_limits_weapons(name, value):
             label.configure(text_color="red")
         else:
             label.configure(text_color="white")

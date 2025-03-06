@@ -1,19 +1,33 @@
 from enum import Enum
 
 class EnumAiming(Enum):
-    AIM_PUNCH_MAGNITUDE = "AimPunchMagnitude", "Higher value increases aim displacement when hit."
+    AIM_PUNCH_MAGNITUDE = "AimPunchMagnitude", "Lower value decrease aim displacement when hit."
 
-    PROCEDURAL_INTENSITY_BY_POSE_STANDING = "ProceduralIntensityByPoseStanding", "Lower value reduces weapon sway while aiming while standing"
-    PROCEDURAL_INTENSITY_BY_POSE_CROUCHING = "ProceduralIntensityByPoseCrouching", "Lower value reduces weapon sway while aiming while crouching"
-    PROCEDURAL_INTENSITY_BY_POSE_PRONE = "ProceduralIntensityByPoseProne", "Lower value reduces weapon sway while aiming while prone"
+    PROCEDURAL_INTENSITY_BY_POSE_STANDING = ("ProceduralIntensityByPoseStanding",
+                                             "Lower value reduces weapon sway when \n "
+                                             " aiming while standing")
 
-    RECOIL_CONVERGENCE_MULT = "RecoilConvergenceMult", "Higher value speeds up aim recentering and reduces visible recoil"
-    RECOIL_DAMPING = "RecoilDamping", "Lower value reduces vertical effect visual gun movement when firing."
-    RECOIL_HAND_DAMPING = "RecoilHandDamping", "Lower value reduces effect visual forward and backward gun movement when firing"
+    PROCEDURAL_INTENSITY_BY_POSE_CROUCHING = ("ProceduralIntensityByPoseCrouching",
+                                              "Lower value reduces weapon sway when "
+                                              "\n aiming while crouching")
 
-    RECOIL_INTENSITY_BY_POSE_STANDING = "RecoilIntensityStanding", "Lower value reduces recoil while standing"
-    RECOIL_INTENSITY_BY_POSE_CROUCHING = "RecoilIntensityCrouching", "Lower value reduces recoil while crouching"
-    RECOIL_INTENSITY_BY_POSE_PRONE = "RecoilIntensityProne", "Lower value reduces recoil while prone"
+    PROCEDURAL_INTENSITY_BY_POSE_PRONE = ("ProceduralIntensityByPoseProne",
+                                          ("Lower value reduces weapon sway "
+                                           "when \n aiming while prone"))
+
+    RECOIL_DAMPING = ("RecoilDamping",
+                      ("Lower value reduces vertical gun movement \n"
+                       "animation when firing"))
+    RECOIL_HAND_DAMPING = ("RecoilHandDamping",
+                           ("Lower value reduces effect visual forward and \n "
+                            "backward gun movement when firing"))
+
+    RECOIL_INTENSITY_BY_POSE_STANDING = ("RecoilIntensityStanding",
+                                         "Lower value reduces recoil while standing")
+    RECOIL_INTENSITY_BY_POSE_CROUCHING = ("RecoilIntensityCrouching",
+                                          "Lower value reduces recoil while crouching")
+    RECOIL_INTENSITY_BY_POSE_PRONE = ("RecoilIntensityProne",
+                                      "Lower value reduces recoil while prone")
 
     @property
     def label(self):

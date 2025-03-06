@@ -18,10 +18,6 @@ class Aiming:
             props.get(EnumAiming.PROCEDURAL_INTENSITY_BY_POSE_PRONE.label, None),
             EnumAiming.PROCEDURAL_INTENSITY_BY_POSE_PRONE.label
         )
-        self._RecoilConvergenceMult = (
-            props.get(EnumAiming.RECOIL_CONVERGENCE_MULT.label, None),
-            EnumAiming.RECOIL_CONVERGENCE_MULT.label
-        )
         self._RecoilDamping = (
             props.get(EnumAiming.RECOIL_DAMPING.label, None),
             EnumAiming.RECOIL_DAMPING.label
@@ -58,10 +54,6 @@ class Aiming:
     @property
     def ProceduralIntensityByPoseProne(self):
         return self._ProceduralIntensityByPoseProne
-
-    @property
-    def RecoilConvergenceMult(self):
-        return self._RecoilConvergenceMult
 
     @property
     def RecoilDamping(self):
@@ -108,7 +100,6 @@ class Aiming:
                 f"ProceduralIntensityByPoseStanding={self.ProceduralIntensityByPoseStanding}, "
                 f"ProceduralIntensityByPoseCrouching={self.ProceduralIntensityByPoseCrouching}, "
                 f"ProceduralIntensityByPoseProne={self.ProceduralIntensityByPoseProne}, "
-                f"RecoilConvergenceMult={self.RecoilConvergenceMult}, "
                 f"RecoilDamping={self.RecoilDamping}, "
                 f"RecoilHandDamping={self.RecoilHandDamping}, "
                 f"RecoilIntensityStanding={self.RecoilIntensityStanding}, "

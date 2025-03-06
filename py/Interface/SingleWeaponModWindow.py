@@ -201,7 +201,7 @@ class SingleWeaponModWindow:
         adjusted_value = int(value)
         percentage_change = ((adjusted_value - original_value) / original_value) * 100
         slider, label = self.prop_widgets[name]
-        if Utils.is_value_outside_limits(name, percentage_change):
+        if Utils.is_value_outside_limits_weapons(name, percentage_change):
             label.configure(text_color="red")
         else:
             label.configure(text_color="white")
@@ -228,7 +228,7 @@ class SingleWeaponModWindow:
         adjusted_value_str = f"{adjusted_value:{format_spec}}"
         slider, label = self.prop_widgets[name]
 
-        if Utils.is_value_outside_limits(name, percentage_change):
+        if Utils.is_value_outside_limits_weapons(name, percentage_change):
             label.configure(text_color="red")
         else:
             label.configure(text_color="white")
@@ -278,8 +278,8 @@ class SingleWeaponModWindow:
             data_json_to_update = JsonUtils.load_json(self.file_path)
 
             for name_props_to_modify, value_modify in self.data_from_json_no_save.iterate_key_and_values():
-                data_json_to_update = JsonUtils.update_json_in_new_file(name_props_to_modify, value_modify,
-                                                                        data_json_to_update, False)
+                data_json_to_update = JsonUtils.update_json_in_new_file_weapon(name_props_to_modify, value_modify,
+                                                                               data_json_to_update, False)
 
             file_path_update = JsonUtils.save_json_as_new_file(data_json_to_update, self.file_path)
             self.check_for_file(file_path_update)

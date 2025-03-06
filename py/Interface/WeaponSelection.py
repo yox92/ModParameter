@@ -5,6 +5,7 @@ from Entity import Caliber
 from Utils.ImageUtils import ImageUtils
 from Utils.JsonUtils import JsonUtils
 from Utils.Utils import Utils
+from Interface.PmcWindowMod import PmcWindowMod
 from Interface.CaliberWeaponsModWindow import CaliberWeaponsModWindow
 from Interface.SingleWeaponModWindow import SingleWeaponModWindow
 from Interface.ListWeponsAlreadyMod import ListWeponsAlreadyMod
@@ -20,7 +21,9 @@ WINDOW_OFFSET = 10
 
 class WeaponSelection:
     def __init__(self, root):
+        self.frame_top_middle = None
         ctk.set_appearance_mode(APPEARANCE_MODE)
+        self.buttonPmc = None
         self.loaded_data = None
         self.frame_top_right = None
         self.main_frame_top = None
@@ -30,6 +33,7 @@ class WeaponSelection:
         self.frame_top_left = None
         self.weapon_image = None
         self.ammo_image = None
+        self.pmc_image = None
         self.buttonWeapon = None
         self.buttonCaliber = None
         self.detail_window = None
@@ -55,6 +59,7 @@ class WeaponSelection:
     def create_image_var(self):
         self.ammo_image: CTkImage = ImageUtils.create_image_var("ammo")
         self.weapon_image: CTkImage = ImageUtils.create_image_var("weapon")
+        self.pmc_image: CTkImage = ImageUtils.create_image_var("pmc")
 
     def create_frame_main(self):
         self.root.grid_rowconfigure(0, weight=1)
@@ -86,12 +91,15 @@ class WeaponSelection:
     def create_frame_top(self):
         self.main_frame_top.grid_columnconfigure(0, weight=1)
         self.main_frame_top.grid_columnconfigure(1, weight=1)
+        self.main_frame_top.grid_columnconfigure(2, weight=1)
         self.main_frame_top.grid_rowconfigure(0, weight=1)
 
         self.frame_top_left = ctk.CTkFrame(self.main_frame_top, fg_color="transparent")
         self.frame_top_right = ctk.CTkFrame(self.main_frame_top, fg_color="transparent")
+        self.frame_top_middle = ctk.CTkFrame(self.main_frame_top, fg_color="transparent")
         self.frame_top_left.grid(row=0, column=0, sticky="nsew")
-        self.frame_top_right.grid(row=0, column=1, sticky="nsew")
+        self.frame_top_right.grid(row=0, column=2, sticky="nsew")
+        self.frame_top_middle.grid(row=0, column=1, sticky="nsew")
 
     def show_all_weapons_mod(self):
         self.list_json_name_mod = JsonUtils.load_all_json_files_mod()
@@ -136,6 +144,19 @@ class WeaponSelection:
         )
         self.buttonCaliber.pack(side="top", anchor="center",
                                 expand=True, fill="both")
+        self.buttonPmc = ctk.CTkButton(
+            self.frame_top_middle,
+            image=self.pmc_image,
+            text="PMC Modding",
+            compound="bottom",
+            fg_color="transparent",
+            text_color="blue",
+            hover_color="orange",
+            font=("Arial", 23, "bold"),
+            command=self.pmc_window
+        )
+        self.buttonPmc.pack(side="top", anchor="center",
+                                expand=True, fill="both")
 
     def on_click_result(self, result):
         for data in self.loaded_data:
@@ -164,6 +185,7 @@ class WeaponSelection:
     def case_specific_weapon(self):
         self.buttonWeapon.configure(state="disabled")
         self.buttonCaliber.configure(state="normal")
+        self.buttonPmc.configure(state="normal")
 
         self.create_frame_bot_find_weapon()
 
@@ -176,12 +198,30 @@ class WeaponSelection:
     def case_caliber_weapon(self):
         self.buttonCaliber.configure(state="disabled")
         self.buttonWeapon.configure(state="normal")
+        self.buttonPmc.configure(state="normal")
 
         Utils.clear_frame(self.main_frame_bot)
         Utils.create_grid_row_col_config(self.main_frame_bot, 4, 5)
         Utils.create_5x4_bottom(self.framesBotCaliber, self.main_frame_bot)
 
         self.create_buttons_for_calibers()
+
+    def pmc_window(self):
+        self.buttonCaliber.configure(state="normal")
+        self.buttonWeapon.configure(state="normal")
+        self.buttonPmc.configure(state="disabled")
+
+        Utils.clear_frame(self.main_frame_bot)
+        self.detail_window = ctk.CTkToplevel(self.root)
+
+        # self.focus_new_window()
+
+        PmcWindowMod(self.detail_window,
+                             self.root,
+                             self.detail_window,
+                             self)
+        print(self.list_json_name_mod)
+
 
     def search_name(self, event=None):
         name_to_search = self.entry.get()
