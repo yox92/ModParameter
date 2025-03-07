@@ -220,8 +220,6 @@ class WeaponSelection:
                              self.root,
                              self.detail_window,
                              self)
-        print(self.list_json_name_mod)
-
 
     def search_name(self, event=None):
         name_to_search = self.entry.get()

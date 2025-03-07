@@ -1,14 +1,14 @@
 import customtkinter as ctk
+from Interface import WeaponSelection
 
 class MainWindow:
     def __init__(self):
-        # Création de la fenêtre principale
         self.root = ctk.CTk()
         self.setup_ui()
 
     def setup_ui(self):
-        from Interface import WeaponSelection
-        self.app = WeaponSelection(self.root)  # Fenêtre principale
+
+        self.app = WeaponSelection(self.root)
 
     def run(self):
         self.root.mainloop()

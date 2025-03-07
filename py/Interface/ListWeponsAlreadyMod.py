@@ -87,7 +87,6 @@ class ListWeponsAlreadyMod:
         self.close_detail_window()
 
     def close_detail_window(self):
-        print("close ! ")
         self.detail_window.grab_release()
         self.root.attributes('-disabled', False)
         self.detail_window.destroy()

@@ -42,7 +42,7 @@ def check_project_structure():
         sys.exit(1)
 
     else:
-        print("\n✅ Everything is in order! The project structure is correct 🎉")
+        print("\n Everything is in order! The project structure is correct")
         print("------------------------------------------------------------")
         print(f" Directory containing `main.py`: {relatif_path(MAIN_DIR)}")
         print(f" JSON directory (JsonFiles): {relatif_path(JSON_FILES_DIR_WEAPONS)}")

@@ -21,7 +21,7 @@ class CaliberWeaponsModWindow:
         self.detail_window = detail_window
         self.detail_window.protocol("WM_DELETE_WINDOW", lambda: self.close_detail_window())
         self.progress_bar = None
-        self.no_modification_weapon_from_json: bool = True
+        self.no_save: bool = True
         self.reset_after_load_save_and_value_reset: bool = True
         self.status_label = None
         self.apply_button = None
@@ -200,7 +200,7 @@ class CaliberWeaponsModWindow:
         data, self.json_caliber_path = JsonUtils.find_caliber_json_config(self.caliber)
         self.originale_value_from_JSON.update_from_json(data)
         self.manager.update_from_json(data)
-        self.no_modification_weapon_from_json = self.originale_value_from_JSON.all_values_are_one()
+        self.no_save = self.originale_value_from_JSON.all_values_are_one()
 
     def run(self):
         row = 0
@@ -264,7 +264,7 @@ class CaliberWeaponsModWindow:
 
     def verify_all_sliders_reset(self):
         if self.manager.all_values_are_one():
-            if not self.no_modification_weapon_from_json:
+            if not self.no_save:
                 if self.list_file_path_json_remove:
                     self.apply_button.configure(fg_color="orange",
                                                 hover_color="lightblue",
@@ -293,7 +293,7 @@ class CaliberWeaponsModWindow:
         self.status_label.configure(text="Ready to apply changes")
 
     def apply_changes_to_all(self):
-        if not self.no_modification_weapon_from_json and self.manager.all_values_are_one():
+        if not self.no_save and self.manager.all_values_are_one():
             for file_path in self.all_path:
                 JsonUtils.delete_file_mod_if_exists(file_path)
             self.modify_save_json_file_caliber()
@@ -370,7 +370,6 @@ class CaliberWeaponsModWindow:
             label.configure(text_color="white")
 
     def close_detail_window(self):
-        print("close ! ")
         self.detail_window.grab_release()
         self.root.attributes('-disabled', False)
         self.detail_window.destroy()

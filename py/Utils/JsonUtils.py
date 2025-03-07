@@ -124,7 +124,7 @@ class JsonUtils:
     @staticmethod
     def update_or_multiply_final_key(current, final_key, new_value, from_all_weapons):
         if final_key not in current:
-            raise KeyError(f"Invalid path: the final key {final_key} does not exist")
+            raise KeyError(f"Invalid key: the final key {final_key} does not exist")
 
         if not isinstance(current[final_key], (int, float)):
             raise TypeError(f"The value associated with {final_key} must be of type int or float")

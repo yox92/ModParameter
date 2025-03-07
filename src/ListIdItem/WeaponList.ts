@@ -1,5 +1,5 @@
 export class WeaponList {
-    private ids: string[];
+    private readonly ids: string[];
 
     constructor() {
         this.ids = [
@@ -99,16 +99,12 @@ export class WeaponList {
             "5df24cf80dee1b22f862e9bc",
             "5de652c31b7e3716273428be",
             "5c07c60e0db834002330051f",
-            "5c07c60e0db834002330051f",
             "5d43021ca4b9362eab4b5e25",
             "574d967124597745970e7c94",
             "59e6152586f77473dc057aa1",
             "5c501a4d2e221602b412b540",
             "54491c4f4bdc2db1078b4568",
             "56dee2bdd2720bc8328b4567",
-            "56dee2bdd2720bc8328b4567",
-            "606dae0ab0e443224b421bb7",
-            "606dae0ab0e443224b421bb7",
             "606dae0ab0e443224b421bb7",
             "5a7828548dc32e5a9c28b516",
             "5e870397991fd70db46995c8",

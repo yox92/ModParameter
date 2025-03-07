@@ -11,15 +11,12 @@ import {config} from "./config";
 
 const baseURL = 'https://db.sp-tarkov.com/api/item';
 
-const __dirname = path.resolve();
-
 /**
  * Récupère les données d'un objet WeaponJson depuis l'API.
  *
  * @param id - L'identifiant de l'objet à récupérer depuis l'API.
- * @returns {Promise<Root>} - Un objet WeaponJson avec des propriétés formatées.
+ * @returns {Promise<Root>} - Un objet ItemProps avec des propriétés formatées.
  */
-
 async function fetchItemData(id: string): Promise<Root> {
     const url = `${baseURL}?id=${id}&locale=en`;
     const response = await axios.get(url);
@@ -36,6 +33,7 @@ async function fetchItemData(id: string): Promise<Root> {
         RecoilCamera: itemData._props.RecoilCamera,
         RecoilForceBack: itemData._props.RecoilForceBack,
         RecoilForceUp: itemData._props.RecoilForceUp,
+        RecolDispersion: itemData._props.RecolDispersion,
         Weight: itemData._props.Weight,
         ammoCaliber: itemData._props.ammoCaliber,
         bFirerate: itemData._props.bFirerate,
@@ -62,7 +60,7 @@ async function main() {
     const basePath = config.jsonWeaponFolderPath;
 
     if (!fs.existsSync(basePath)) {
-        fs.mkdirSync(basePath, { recursive: true });
+        fs.mkdirSync(basePath, {recursive: true});
     } else {
         fs.readdirSync(basePath).forEach(file => {
             if (file.endsWith(".json")) {
@@ -72,11 +70,12 @@ async function main() {
         console.log(`🗑️ Deleted all existing JSON files in ${basePath}`);
     }
 
-    const queue = new PQueue({ concurrency: 5 });
+    const queue = new PQueue({concurrency: 5});
     const createdFiles = new Set<string>();
 
     const tasks = ids.map(id => queue.add(async () => {
         try {
+            await delay(500)
             const root = await fetchItemData(id);
             const cleanName = root.locale.ShortName.replace(/\s+/g, '_').replace(/[^\w.-]/g, '');
             const filePath = path.join(basePath, `${cleanName}.json`);
@@ -91,18 +90,40 @@ async function main() {
     }));
 
     await Promise.all(tasks);
+    const filesInDirectory = new Set(
+        fs.readdirSync(basePath)
+            .filter(file => file.endsWith(".json"))
+            .map(file => file.replace(".json", "")) // Retirer l'extension pour comparer avec `cleanName`
+    );
 
-    const filesInDirectory = fs.readdirSync(basePath).filter(file => file.endsWith(".json"));
+    const missingIds: string[] = [];
+
+    for (const id of ids) {
+        try {
+            const root = await fetchItemData(id);
+            const expectedFileName = root.locale.ShortName
+                .replace(/\s+/g, '_')
+                .replace(/[^\w.-]/g, '');
+
+            if (!filesInDirectory.has(expectedFileName)) {
+                missingIds.push(id);
+            }
+        } catch (error) {
+            console.error(`❌ Error fetching data for ID: ${id}`, error);
+            missingIds.push(id);
+        }
+    }
 
     console.log("\n=== 🔍 Vérification des fichiers créés ===");
     console.log(`🎯 Total Weapons to Create: ${ids.length}`);
-    console.log(`📂 Files Created: ${filesInDirectory.length}`);
+    console.log(`📂 Files Created: ${filesInDirectory.size}`);
+}
 
-    if (filesInDirectory.length !== ids.length) {
-        console.warn(`⚠️ Mismatch detected! Expected ${ids.length}, but found ${filesInDirectory.length}.`);
-    } else {
-        console.log("✅ All files were successfully created!");
-    }
+/**
+ * Pour la surcharge de l'API
+ */
+function delay(ms: number) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 main().catch(console.error);

@@ -90,7 +90,6 @@ class PmcWindowMod:
             self.aiming_manager_pmc_save.update_from_props_json(code, numerical_value)
 
     def close_detail_window(self):
-        print("close ! ")
         self.detail_window.grab_release()
         self.root.attributes('-disabled', False)
         self.detail_window.destroy()
@@ -196,7 +195,6 @@ class PmcWindowMod:
 
     @staticmethod
     def color_risky_range(name, value, label):
-        print("test")
         if Utils.is_value_outside_limits_aiming(name, value):
             label.configure(text_color="red")
         else:

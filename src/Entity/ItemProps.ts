@@ -4,8 +4,8 @@ export class ItemProps {
     Ergonomics: number;
     RecoilCamera: number;
     RecoilForceBack: number;
-    RecolDispersion: number;
     RecoilForceUp: number;
+    RecolDispersion: number;
     Weight: number;
     ammoCaliber: string;
     bFirerate: number;
@@ -20,11 +20,11 @@ export function createItemProps(data: any): ItemProps {
         AimSensitivity: data.AimSensitivity,
         Ergonomics: data.Ergonomics,
         RecoilCamera: data.RecoilCamera,
-        RecolDispersion: data.RecolDispersion,
         RecoilForceBack: data.RecoilForceBack,
         RecoilForceUp: data.RecoilForceUp,
+        RecolDispersion: data.RecolDispersion,
         Weight: data.Weight,
         ammoCaliber: data.ammoCaliber,
-        bFirerate: data.bFirerate,
+        bFirerate: data.bFirerate
     });
 }

@@ -312,7 +312,6 @@ class SingleWeaponModWindow:
         self.status_label.configure(text="Ready to apply changes")
 
     def close_detail_window(self):
-        print("close ! ")
         self.detail_window.grab_release()
         self.root.attributes('-disabled', False)
         self.detail_window.destroy()
