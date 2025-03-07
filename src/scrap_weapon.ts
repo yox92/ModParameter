@@ -12,16 +12,16 @@ import {config} from "./config";
 const baseURL = 'https://db.sp-tarkov.com/api/item';
 
 /**
- * Récupère les données d'un objet WeaponJson depuis l'API.
+ * item from DB SP API.
  *
- * @param id - L'identifiant de l'objet à récupérer depuis l'API.
- * @returns {Promise<Root>} - Un objet ItemProps avec des propriétés formatées.
+ * @param id - ID use.
+ * @returns {Promise<Root>} - Object containing the formatted properties.
  */
-async function fetchItemData(id: string): Promise<Root> {
+async function fetchItemData(id: string): Promise<Root<any>> {
     const url = `${baseURL}?id=${id}&locale=en`;
     const response = await axios.get(url);
 
-    const rootData = response.data as Root;
+    const rootData = response.data as Root<any>;
     const itemData = rootData.item;
     const localeData = rootData.locale;
 
@@ -47,10 +47,7 @@ async function fetchItemData(id: string): Promise<Root> {
 
     const item = new Item(itemData._id, itemData._name, itemProps);
 
-    return {
-        item: item,
-        locale: locale,
-    };
+    return new Root<ItemProps>(locale, item);
 
 }
 
@@ -80,7 +77,12 @@ async function main() {
             const cleanName = root.locale.ShortName.replace(/\s+/g, '_').replace(/[^\w.-]/g, '');
             const filePath = path.join(basePath, `${cleanName}.json`);
 
-            await fs.promises.writeFile(filePath, JSON.stringify(root, null, 2), 'utf-8');
+            await fs.promises.writeFile(
+                filePath,
+                JSON.stringify({item: root.item, locale: root.locale}, null, 2),
+                'utf-8'
+            );
+
             createdFiles.add(filePath);
 
             console.log(`✅ Saved item to ${filePath}`);
@@ -114,13 +116,13 @@ async function main() {
         }
     }
 
-    console.log("\n=== 🔍 Vérification des fichiers créés ===");
+    console.log("\n=== 🔍 Verification of created files ===");
     console.log(`🎯 Total Weapons to Create: ${ids.length}`);
     console.log(`📂 Files Created: ${filesInDirectory.size}`);
 }
 
 /**
- * Pour la surcharge de l'API
+ * Add a delay to prevent API overload
  */
 function delay(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));

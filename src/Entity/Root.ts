@@ -1,11 +1,13 @@
-import {Locale} from "./Locale";
-import {Item} from "./Item";
+import { Locale } from "./Locale";
+import { Item } from "./Item";
+import { ItemProps } from "./ItemProps";
+import {Ammo} from "./Ammo";
 
-export class Root {
+export class Root<T extends ItemProps | Ammo> {
     locale: Locale;
-    item: Item;
+    item: Item<T>;
 
-    constructor(locale: Locale, item: Item) {
+    constructor(locale: Locale, item: Item<T>) {
         this.locale = locale;
         this.item = item;
     }

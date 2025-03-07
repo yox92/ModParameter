@@ -5,10 +5,10 @@ from Entity import Caliber
 from Utils.ImageUtils import ImageUtils
 from Utils.JsonUtils import JsonUtils
 from Utils.Utils import Utils
-from Interface.PmcWindowMod import PmcWindowMod
-from Interface.CaliberWeaponsModWindow import CaliberWeaponsModWindow
-from Interface.SingleWeaponModWindow import SingleWeaponModWindow
-from Interface.ListWeponsAlreadyMod import ListWeponsAlreadyMod
+from WindowComponent.PmcWindowMod import PmcWindowMod
+from WindowComponent.CaliberWeaponsModWindow import CaliberWeaponsModWindow
+from WindowComponent.SingleWeaponModWindow import SingleWeaponModWindow
+from WindowComponent.ListWeponsAlreadyMod import ListWeponsAlreadyMod
 
 WINDOW_TITLE = "CustomWeapon App"
 WINDOW_GEOMETRY = "800x600"
@@ -113,7 +113,6 @@ class WeaponSelection:
                                  self.detail_window,
                                  self.list_json_name_mod,
                                  self)
-            print(self.list_json_name_mod)
 
 
     def create_buttons_for_choice(self):

@@ -1,6 +1,7 @@
 import customtkinter as ctk
 
-from Interface.ProgressBar import ProgressBar
+from Utils import WindowManager
+from WindowComponent.ProgressBar import ProgressBar
 from Utils.JsonUtils import JsonUtils
 from Utils.Utils import Utils
 from Entity.ItemManager import ItemManager
@@ -19,7 +20,9 @@ class CaliberWeaponsModWindow:
         self.master.title(caliber + ' Weapons')
         self.caliber = caliber
         self.detail_window = detail_window
-        self.detail_window.protocol("WM_DELETE_WINDOW", lambda: self.close_detail_window())
+        self.window_protocol = WindowManager.window_protocol(self.detail_window,
+                                                             self.detail_window,
+                                                                self.root)
         self.progress_bar = None
         self.no_save: bool = True
         self.reset_after_load_save_and_value_reset: bool = True
@@ -55,7 +58,8 @@ class CaliberWeaponsModWindow:
         self.close_button = ctk.CTkButton(self.master,
                                           text="Close",
                                           command=lambda:
-                                          self.close_detail_window())
+                                          WindowManager.close_window(self.detail_window,
+                                                                     self.root))
         self.close_button.grid(row=1, column=0)
 
     def create_frame_right(self):
@@ -166,7 +170,8 @@ class CaliberWeaponsModWindow:
         Utils.disable_all_buttons_recursive(self.close_button, self.master)
         self.apply_button.configure(fg_color="red", hover_color="red")
         self.status_label.configure(text="No Weapons Select")
-        self.detail_window.after(2000, self.close_detail_window)
+        self.detail_window.after(2000,lambda:  WindowManager.close_window(self.detail_window,
+                                                                self.root))
 
     def get_weapons_by_calibre(self):
         matching_names = []
@@ -232,7 +237,7 @@ class CaliberWeaponsModWindow:
                                              width=10)
                 reset_button.grid(row=row, column=3, sticky=ctk.W, padx=10)
 
-                self.color_risky_range(props, number, percent_label)
+                WindowManager.frame_color_risky_range(props, number, percent_label)
                 row += 1
 
         self.apply_button = ctk.CTkButton(self.right_main, text="Apply",
@@ -245,7 +250,7 @@ class CaliberWeaponsModWindow:
 
     def update_props_value(self, name, value):
         slider, label = self.prop_widgets[name]
-        self.color_risky_range(name, value, label)
+        WindowManager.frame_color_risky_range(name, value, label)
         label.configure(text=f"({value:+.0f}%)")
         self.manager.set_value_and_transform_like_multi(name, slider.get())
         self.reset_apply_button()
@@ -323,10 +328,10 @@ class CaliberWeaponsModWindow:
             self.progress_bar.configure(progress_color="green")
             self.check_for_all_files(list_path_new_json)
         if self.progress_bar.is_progress_running():
-            print("Progression en cours...")
+            print("Progressing...")
             self.root.after(1000, lambda: self.check_wait_modify_json(list_path_new_json, attempts + 1))
         else:
-            print("Progression terminée.")
+            print("Done !")
             self.progress_bar.configure(progress_color="green")
             self.check_for_all_files(list_path_new_json)
 
@@ -335,16 +340,18 @@ class CaliberWeaponsModWindow:
             self.progress_bar.configure(progress_color="green")
             self.apply_button.configure(fg_color="green", hover_color="green")
             self.status_label.configure(text="All weapon modifications have been removed.")
-            self.detail_window.after(3000, self.close_detail_window)
+            self.detail_window.after(3000,lambda:  WindowManager.close_window(self.detail_window,
+                                                                self.root))
         if self.progress_bar.is_progress_running():
-            print("Progression en cours...")
+            print("Progressing...")
             self.root.after(1000, lambda: self.check_wait_delete_json( attempts + 1))
         else:
-            print("Progression terminée.")
+            print("Done !")
             self.progress_bar.configure(progress_color="green")
             self.apply_button.configure(fg_color="green", hover_color="green")
             self.status_label.configure(text="All weapon modifications have been removed.")
-            self.detail_window.after(3000, self.close_detail_window)
+            self.detail_window.after(3000, lambda: WindowManager.close_window(self.detail_window,
+                                                                self.root))
             self.progress_bar.configure(progress_color="green")
 
     def wait_modify_json(self):
@@ -356,20 +363,11 @@ class CaliberWeaponsModWindow:
         if list_path_new_json and JsonUtils.all_file_exist(list_path_new_json):
             self.apply_button.configure(fg_color="green", hover_color="green")
             self.status_label.configure(text="Changes applied successfully.")
-            self.detail_window.after(2000, self.close_detail_window)
+            self.detail_window.after(2000,lambda:  WindowManager.close_window(self.detail_window,
+                                                                self.root))
         else:
             self.status_label.configure(text="Error: \n One or more JSON \n files are missing.", text_color="red")
             self.apply_button.configure(fg_color="red", hover_color="red")
-            self.detail_window.after(2000, self.close_detail_window)
-
-    @staticmethod
-    def color_risky_range(name, value, label):
-        if Utils.is_value_outside_limits_weapons(name, value):
-            label.configure(text_color="red")
-        else:
-            label.configure(text_color="white")
-
-    def close_detail_window(self):
-        self.detail_window.grab_release()
-        self.root.attributes('-disabled', False)
-        self.detail_window.destroy()
+            self.detail_window.after(2000,lambda:
+                                     WindowManager.close_window(self.detail_window,
+                                                                self.root))

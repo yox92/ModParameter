@@ -4,7 +4,7 @@ from idlelib.browser import transform_children
 import customtkinter as ctk
 
 from Entity import Aiming
-from Utils import JsonUtils, Utils
+from Utils import JsonUtils, Utils, WindowManager
 from Entity.AimingManager import EnumAiming, AimingManager
 
 DETAIL_WINDOW = "800x500"
@@ -21,7 +21,9 @@ class PmcWindowMod:
         self.root = root
         self.detail_window = detail_window
         self.main_instance = main_instance
-        self.master.protocol("WM_DELETE_WINDOW", lambda: self.close_detail_window())
+        self.window_protocol = WindowManager.window_protocol(self.detail_window,
+                                                             self.detail_window,
+                                                             self.root)
         self.aiming_manager_pmc_save: None
         self.aiming_manager_pmc: AimingManager = AimingManager()
         self.json_save_pmc_file_path: str = ''
@@ -49,11 +51,12 @@ class PmcWindowMod:
     def param_main_root(self):
         self.master.grid_columnconfigure(0, weight=1)
         self.master.grid_rowconfigure(0, weight=1)
-        # self.close_button = ctk.CTkButton(self.master,
-        #                                   text="Close",
-        #                                   command=lambda:
-        #                                   self.close_detail_window())
-        # self.close_button.grid(row=0, column=0)
+        self.close_button = ctk.CTkButton(self.master,
+                                          text="Close",
+                                          command=lambda:
+                                          WindowManager.close_window(self.detail_window,
+                                                                     self.root))
+        self.close_button.grid(row=1, column=0)
 
     def create_frame_right(self):
         self.right_main = ctk.CTkFrame(self.master, fg_color="transparent")
@@ -89,11 +92,6 @@ class PmcWindowMod:
         for key, (numerical_value, code) in vars(aiming_save).items():
             self.aiming_manager_pmc_save.update_from_props_json(code, numerical_value)
 
-    def close_detail_window(self):
-        self.detail_window.grab_release()
-        self.root.attributes('-disabled', False)
-        self.detail_window.destroy()
-
     def run(self):
         row = 0
         for row, (props, number) in enumerate(self.aiming_manager_pmc.iterate_key_and_values()):
@@ -114,7 +112,7 @@ class PmcWindowMod:
 
             self.prop_widgets[props] = (slider, percent_label)
 
-            self.color_risky_range(props, number, percent_label)
+            WindowManager.frame_color_risky_range(props, number, percent_label)
             row += 1
 
         self.apply_button = ctk.CTkButton(self.right_main, text="Apply",
@@ -179,7 +177,7 @@ class PmcWindowMod:
 
     def update_props_value(self, pname, lambda_value, initial_value):
         slider, percent_label = self.prop_widgets[pname]
-        self.color_risky_range(pname, lambda_value, percent_label)
+        WindowManager.frame_color_risky_range(pname, lambda_value, percent_label)
 
         percentage_change = ((lambda_value / initial_value) - 1) * 100 if initial_value != 0 else 0
 
@@ -192,13 +190,6 @@ class PmcWindowMod:
 
         self.aiming_manager_pmc.update_from_props_json(pname, transforme_value)
         self.reset_apply_button()
-
-    @staticmethod
-    def color_risky_range(name, value, label):
-        if Utils.is_value_outside_limits_aiming(name, value):
-            label.configure(text_color="red")
-        else:
-            label.configure(text_color="white")
 
     def reset_slider(self, name):
         slider, label = self.prop_widgets[name]
@@ -242,7 +233,8 @@ class PmcWindowMod:
                 JsonUtils.delete_file_mod_if_exists(self.json_pmc_file_path)
             self.apply_button.configure(fg_color="green", hover_color="green")
             self.status_label.configure(text="All weapon modifications have been removed.")
-            self.detail_window.after(3000, self.close_detail_window)
+            self.detail_window.after(3000,lambda:  WindowManager.close_window(self.detail_window,
+                                                                self.root))
 
 
     def check_for_file(self, new_file_path, attempts=0, max_attempts=10):
@@ -250,7 +242,8 @@ class PmcWindowMod:
         if JsonUtils.file_exist(new_file_path):
             self.apply_button.configure(fg_color="green", hover_color="green")
             self.status_label.configure(text="Changes applied successfully.")
-            self.detail_window.after(3000, self.close_detail_window)
+            self.detail_window.after(3000, lambda: WindowManager.close_window(self.detail_window,
+                                                                self.root))
 
         elif attempts < max_attempts:
             self.status_label.configure(text=f"Checking for file... Attempt {attempts + 1}/{max_attempts}")
@@ -259,6 +252,7 @@ class PmcWindowMod:
             self.status_label.configure(text="Failed to detect the file. Please try again.", text_color="red")
             self.apply_button.configure(fg_color="red", hover_color="gray")
             self.main_instance.root.attributes('-disabled', False)
-            self.detail_window.after(3000, self.close_detail_window)
+            self.detail_window.after(3000,lambda:  WindowManager.close_window(self.detail_window,
+                                                                self.root))
 
 

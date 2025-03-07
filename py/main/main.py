@@ -1,5 +1,5 @@
 import customtkinter as ctk
-from Interface import WeaponSelection
+from WindowComponent import WeaponSelection
 
 class MainWindow:
     def __init__(self):
