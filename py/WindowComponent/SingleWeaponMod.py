@@ -27,7 +27,7 @@ class SingleWeaponMod:
         self.main_instance = main_instance
         self.window_protocol = WindowUtils.window_protocol(self.detail_window,
                                                            self.detail_window,
-                                                           self.root)
+                                                           self.root, self.main_instance)
         self.file_path = file_path
         self.jsonFile = {}
         self.data_from_json_mod_save_user: ItemManager = ItemManager()
@@ -68,7 +68,7 @@ class SingleWeaponMod:
                                           text="Close",
                                           command=lambda:
                                           WindowUtils.close_window(self.detail_window,
-                                                                   self.root))
+                                                                   self.root, self.main_instance))
         self.close_button.grid(row=1, column=0)
 
     def create_frame_left(self):
@@ -292,7 +292,7 @@ class SingleWeaponMod:
             self.apply_button.configure(fg_color="green", hover_color="green")
             self.status_label.configure(text="All weapon modifications have been removed.")
             self.detail_window.after(3000, lambda : WindowUtils.close_window(self.detail_window,
-                                                                             self.root))
+                                                                             self.root, self.main_instance))
 
     def check_for_file(self, new_file_path, attempts=0, max_attempts=10):
         Utils.disable_all_buttons_recursive(self.close_button, self.detail_window)
@@ -300,7 +300,7 @@ class SingleWeaponMod:
             self.apply_button.configure(fg_color="green", hover_color="green")
             self.status_label.configure(text="Changes applied successfully.")
             self.detail_window.after(3000, lambda:  WindowUtils.close_window(self.detail_window,
-                                                                             self.root))
+                                                                             self.root, self.main_instance))
 
         elif attempts < max_attempts:
             self.status_label.configure(text=f"Checking for file... Attempt {attempts + 1}/{max_attempts}")
@@ -310,7 +310,7 @@ class SingleWeaponMod:
             self.apply_button.configure(fg_color="red", hover_color="gray")
             self.main_instance.root.attributes('-disabled', False)
             self.detail_window.after(3000, lambda: WindowUtils.close_window(self.detail_window,
-                                                                            self.root))
+                                                                            self.root, self.main_instance))
 
     def reset_apply_button(self):
         self.apply_button.configure(fg_color="blue", hover_color="lightblue", border_color="red",

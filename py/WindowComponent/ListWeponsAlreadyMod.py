@@ -18,7 +18,7 @@ class ListWeponsAlreadyMod:
         self.master.configure(bg="#242424")
         self.window_protocol = WindowUtils.window_protocol(self.detail_window,
                                                            self.detail_window,
-                                                           self.root)
+                                                           self.root, self.main_instance)
 
         self.run()
 
@@ -30,7 +30,7 @@ class ListWeponsAlreadyMod:
                                           text="Close",
                                           command=lambda:
                                           WindowUtils.close_window(self.detail_window,
-                                                                   self.root))
+                                                                   self.root, self.main_instance))
         self.close_button.grid(row=1, column=0)
 
         self.frame = ctk.CTkFrame(self.master, fg_color="#242424")
@@ -90,4 +90,4 @@ class ListWeponsAlreadyMod:
     def open_weapon_specific_window(self, weapon):
         self.main_instance.open_weapon_specific_window_from_list_weapon(weapon)
         WindowUtils.close_window(self.detail_window,
-                                 self.root)
+                                 self.root, self.main_instance)

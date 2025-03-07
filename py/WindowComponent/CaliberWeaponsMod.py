@@ -12,17 +12,17 @@ class CaliberWeaponsMod:
     def __init__(self, master, root, detail_window, caliber, main_instance):
         self.close_button = None
         self.root = root
+        self.master = master
+        self.caliber = caliber
+        self.main_instance = main_instance
+        self.detail_window = detail_window
         self.left_bot_frame_list_weapons = None
         self.right_bot_frame = None
         self.left_top_frame_title = None
-        self.master = master
-        self.main_instance = main_instance
         self.master.title(caliber + ' Weapons')
-        self.caliber = caliber
-        self.detail_window = detail_window
         self.window_protocol = WindowUtils.window_protocol(self.detail_window,
                                                            self.detail_window,
-                                                           self.root)
+                                                           self.root, self.main_instance)
         self.progress_bar = None
         self.no_save: bool = True
         self.reset_after_load_save_and_value_reset: bool = True
@@ -59,7 +59,7 @@ class CaliberWeaponsMod:
                                           text="Close",
                                           command=lambda:
                                           WindowUtils.close_window(self.detail_window,
-                                                                   self.root))
+                                                                   self.root, self.main_instance))
         self.close_button.grid(row=1, column=0)
 
     def create_frame_right(self):
@@ -171,7 +171,7 @@ class CaliberWeaponsMod:
         self.apply_button.configure(fg_color="red", hover_color="red")
         self.status_label.configure(text="No Weapons Select")
         self.detail_window.after(2000,lambda:  WindowUtils.close_window(self.detail_window,
-                                                                        self.root))
+                                                                        self.root, self.main_instance))
 
     def get_weapons_by_calibre(self):
         matching_names = []
@@ -341,7 +341,7 @@ class CaliberWeaponsMod:
             self.apply_button.configure(fg_color="green", hover_color="green")
             self.status_label.configure(text="All weapon modifications have been removed.")
             self.detail_window.after(3000,lambda:  WindowUtils.close_window(self.detail_window,
-                                                                            self.root))
+                                                                            self.root, self.main_instance))
         if self.progress_bar.is_progress_running():
             print("Progressing...")
             self.root.after(1000, lambda: self.check_wait_delete_json( attempts + 1))
@@ -351,7 +351,7 @@ class CaliberWeaponsMod:
             self.apply_button.configure(fg_color="green", hover_color="green")
             self.status_label.configure(text="All weapon modifications have been removed.")
             self.detail_window.after(3000, lambda: WindowUtils.close_window(self.detail_window,
-                                                                            self.root))
+                                                                            self.root, self.main_instance))
             self.progress_bar.configure(progress_color="green")
 
     def wait_modify_json(self):
@@ -364,7 +364,7 @@ class CaliberWeaponsMod:
             self.apply_button.configure(fg_color="green", hover_color="green")
             self.status_label.configure(text="Changes applied successfully.")
             self.detail_window.after(2000,lambda:  WindowUtils.close_window(self.detail_window,
-                                                                            self.root))
+                                                                            self.root, self.main_instance))
         else:
             self.status_label.configure(text="Error: \n One or more JSON \n files are missing.", text_color="red")
             self.apply_button.configure(fg_color="red", hover_color="red")

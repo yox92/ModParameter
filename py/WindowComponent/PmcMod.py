@@ -23,7 +23,7 @@ class PmcMod:
         self.main_instance = main_instance
         self.window_protocol = WindowUtils.window_protocol(self.detail_window,
                                                            self.detail_window,
-                                                           self.root)
+                                                           self.root, self.main_instance)
         self.aiming_manager_pmc_save: None
         self.aiming_manager_pmc: AimingManager = AimingManager()
         self.json_save_pmc_file_path: str = ''
@@ -55,7 +55,7 @@ class PmcMod:
                                           text="Close",
                                           command=lambda:
                                           WindowUtils.close_window(self.detail_window,
-                                                                   self.root))
+                                                                   self.root, self.main_instance))
         self.close_button.grid(row=1, column=0)
 
     def create_frame_right(self):
@@ -234,7 +234,7 @@ class PmcMod:
             self.apply_button.configure(fg_color="green", hover_color="green")
             self.status_label.configure(text="All weapon modifications have been removed.")
             self.detail_window.after(3000,lambda:  WindowUtils.close_window(self.detail_window,
-                                                                            self.root))
+                                                                            self.root, self.main_instance))
 
 
     def check_for_file(self, new_file_path, attempts=0, max_attempts=10):
@@ -243,7 +243,7 @@ class PmcMod:
             self.apply_button.configure(fg_color="green", hover_color="green")
             self.status_label.configure(text="Changes applied successfully.")
             self.detail_window.after(3000, lambda: WindowUtils.close_window(self.detail_window,
-                                                                            self.root))
+                                                                            self.root, self.main_instance))
 
         elif attempts < max_attempts:
             self.status_label.configure(text=f"Checking for file... Attempt {attempts + 1}/{max_attempts}")
@@ -253,6 +253,6 @@ class PmcMod:
             self.apply_button.configure(fg_color="red", hover_color="gray")
             self.main_instance.root.attributes('-disabled', False)
             self.detail_window.after(3000,lambda:  WindowUtils.close_window(self.detail_window,
-                                                                            self.root))
+                                                                            self.root, self.main_instance))
 
 

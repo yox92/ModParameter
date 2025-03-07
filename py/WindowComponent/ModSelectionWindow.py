@@ -2,6 +2,7 @@ import customtkinter as ctk
 from customtkinter import CTkImage
 
 from Entity import Caliber
+from Utils import WindowUtils
 from Utils.ImageUtils import ImageUtils
 from Utils.JsonUtils import JsonUtils
 from Utils.Utils import Utils
@@ -21,18 +22,23 @@ WINDOW_OFFSET = 10
 
 class ModSelectionWindow:
     def __init__(self, root):
-        self.frame_top_middle = None
+        self.root = root
+        self.frame_top_2 = None
+        self.ammo_image = None
+        self.frames_buttons = None
+        self.buttonAmmo = None
+        self.frame_top_3 = None
         ctk.set_appearance_mode(APPEARANCE_MODE)
         self.buttonPmc = None
         self.loaded_data = None
-        self.frame_top_right = None
+        self.frame_top_4 = None
         self.main_frame_top = None
         self.main_frame_bot = None
         self.frame_bot_right = None
         self.frame_bot_left = None
-        self.frame_top_left = None
+        self.frame_top_1 = None
         self.weapon_image = None
-        self.ammo_image = None
+        self.caliber_image = None
         self.pmc_image = None
         self.buttonWeapon = None
         self.buttonCaliber = None
@@ -43,7 +49,7 @@ class ModSelectionWindow:
         self.framesButtonRecherche = []
         self.message_not_find = []
 
-        self.root = root
+
         self.root.title(WINDOW_TITLE)
         self.root.geometry(WINDOW_GEOMETRY)
 
@@ -57,9 +63,10 @@ class ModSelectionWindow:
         self.create_buttons_for_choice()
 
     def create_image_var(self):
-        self.ammo_image: CTkImage = ImageUtils.create_image_var("caliber")
+        self.caliber_image: CTkImage = ImageUtils.create_image_var("caliber")
         self.weapon_image: CTkImage = ImageUtils.create_image_var("weapon")
         self.pmc_image: CTkImage = ImageUtils.create_image_var("pmc")
+        self.ammo_image: CTkImage = ImageUtils.create_image_var("ammo")
 
     def create_frame_main(self):
         self.root.grid_rowconfigure(0, weight=1)
@@ -94,12 +101,14 @@ class ModSelectionWindow:
         self.main_frame_top.grid_columnconfigure(2, weight=1)
         self.main_frame_top.grid_rowconfigure(0, weight=1)
 
-        self.frame_top_left = ctk.CTkFrame(self.main_frame_top, fg_color="transparent")
-        self.frame_top_right = ctk.CTkFrame(self.main_frame_top, fg_color="transparent")
-        self.frame_top_middle = ctk.CTkFrame(self.main_frame_top, fg_color="transparent")
-        self.frame_top_left.grid(row=0, column=0, sticky="nsew")
-        self.frame_top_right.grid(row=0, column=2, sticky="nsew")
-        self.frame_top_middle.grid(row=0, column=1, sticky="nsew")
+        self.frame_top_1 = ctk.CTkFrame(self.main_frame_top, fg_color="transparent")
+        self.frame_top_2 = ctk.CTkFrame(self.main_frame_top, fg_color="transparent")
+        self.frame_top_3 = ctk.CTkFrame(self.main_frame_top, fg_color="transparent")
+        self.frame_top_4 = ctk.CTkFrame(self.main_frame_top, fg_color="transparent")
+        self.frame_top_1.grid(row=0, column=0, sticky="nsew")
+        self.frame_top_2.grid(row=0, column=1, sticky="nsew")
+        self.frame_top_3.grid(row=0, column=2, sticky="nsew")
+        self.frame_top_4.grid(row=0, column=3, sticky="nsew")
 
     def show_all_weapons_mod(self):
         self.list_json_name_mod = JsonUtils.load_all_json_files_mod()
@@ -114,48 +123,67 @@ class ModSelectionWindow:
                                  self.list_json_name_mod,
                                  self)
 
-
     def create_buttons_for_choice(self):
         self.buttonWeapon = ctk.CTkButton(
-            self.frame_top_left,
+            self.frame_top_1,
             image=self.weapon_image,
             text="One Specific Weapon",
             compound="bottom",
             fg_color="transparent",
-            text_color="green",
+            text_color="orange",
             hover_color="whitesmoke",
-            font=("Arial", 23, "bold"),
+            font=("Arial", 18, "bold"),
             command=self.case_specific_weapon
         )
         self.buttonWeapon.pack(side="top", anchor="center",
                                expand=True, fill="both")
 
         self.buttonCaliber = ctk.CTkButton(
-            self.frame_top_right,
-            image=self.ammo_image,
+            self.frame_top_2,
+            image=self.caliber_image,
             text="Weapons by Ballistics",
             compound="bottom",
             fg_color="transparent",
-            text_color="red",
-            hover_color="lightcoral",
-            font=("Arial", 23, "bold"),
+            text_color="Crimson",
+            hover_color="whitesmoke",
+            font=("Arial", 18, "bold"),
             command=self.case_caliber_weapon
         )
         self.buttonCaliber.pack(side="top", anchor="center",
                                 expand=True, fill="both")
-        self.buttonPmc = ctk.CTkButton(
-            self.frame_top_middle,
-            image=self.pmc_image,
-            text="PMC Modding",
+        self.buttonAmmo = ctk.CTkButton(
+            self.frame_top_3,
+            image=self.ammo_image,
+            text="Ammo Attributes",
             compound="bottom",
             fg_color="transparent",
-            text_color="blue",
-            hover_color="orange",
-            font=("Arial", 23, "bold"),
+            text_color="FireBrick",
+            hover_color="whitesmoke",
+            font=("Arial", 18, "bold"),
+            # command=self.pmc_window
+        )
+        self.buttonAmmo.pack(side="top", anchor="center",
+                             expand=True, fill="both")
+
+        self.buttonPmc = ctk.CTkButton(
+            self.frame_top_4,
+            image=self.pmc_image,
+            text="PMC Attributes",
+            compound="bottom",
+            fg_color="transparent",
+            text_color="green",
+            hover_color="whitesmoke",
+            font=("Arial", 18, "bold"),
             command=self.pmc_window
         )
         self.buttonPmc.pack(side="top", anchor="center",
-                                expand=True, fill="both")
+                            expand=True, fill="both")
+        self.frames_buttons = {
+            "weapon": self.buttonWeapon,
+            "caliber": self.buttonCaliber,
+            "pmc": self.buttonPmc,
+            "ammo": self.buttonAmmo
+        }
 
     def on_click_result(self, result):
         for data in self.loaded_data:
@@ -182,9 +210,7 @@ class ModSelectionWindow:
         self.frame_bot_right.grid(row=1, column=0, sticky="nsew")
 
     def case_specific_weapon(self):
-        self.buttonWeapon.configure(state="disabled")
-        self.buttonCaliber.configure(state="normal")
-        self.buttonPmc.configure(state="normal")
+        WindowUtils.lock_choice_frame("weapon", self.frames_buttons)
 
         self.create_frame_bot_find_weapon()
 
@@ -195,9 +221,7 @@ class ModSelectionWindow:
         self.entry.bind("<KeyRelease>", self.search_name)
 
     def case_caliber_weapon(self):
-        self.buttonCaliber.configure(state="disabled")
-        self.buttonWeapon.configure(state="normal")
-        self.buttonPmc.configure(state="normal")
+        WindowUtils.lock_choice_frame("caliber", self.frames_buttons)
 
         Utils.clear_frame(self.main_frame_bot)
         Utils.create_grid_row_col_config(self.main_frame_bot, 4, 5)
@@ -206,9 +230,7 @@ class ModSelectionWindow:
         self.create_buttons_for_calibers()
 
     def pmc_window(self):
-        self.buttonCaliber.configure(state="normal")
-        self.buttonWeapon.configure(state="normal")
-        self.buttonPmc.configure(state="disabled")
+        WindowUtils.lock_choice_frame("pmc", self.frames_buttons)
 
         Utils.clear_frame(self.main_frame_bot)
         self.detail_window = ctk.CTkToplevel(self.root)
