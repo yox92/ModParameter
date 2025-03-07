@@ -5,9 +5,9 @@ from Entity import Caliber
 from Utils.ImageUtils import ImageUtils
 from Utils.JsonUtils import JsonUtils
 from Utils.Utils import Utils
-from WindowComponent.PmcWindowMod import PmcWindowMod
-from WindowComponent.CaliberWeaponsModWindow import CaliberWeaponsModWindow
-from WindowComponent.SingleWeaponModWindow import SingleWeaponModWindow
+from WindowComponent.PmcMod import PmcMod
+from WindowComponent.CaliberWeaponsMod import CaliberWeaponsMod
+from WindowComponent.SingleWeaponMod import SingleWeaponMod
 from WindowComponent.ListWeponsAlreadyMod import ListWeponsAlreadyMod
 
 WINDOW_TITLE = "CustomWeapon App"
@@ -19,7 +19,7 @@ DETAIL_WINDOW_HEIGHT = 600
 WINDOW_OFFSET = 10
 
 
-class WeaponSelection:
+class ModSelectionWindow:
     def __init__(self, root):
         self.frame_top_middle = None
         ctk.set_appearance_mode(APPEARANCE_MODE)
@@ -215,10 +215,10 @@ class WeaponSelection:
 
         # self.focus_new_window()
 
-        PmcWindowMod(self.detail_window,
-                             self.root,
-                             self.detail_window,
-                             self)
+        PmcMod(self.detail_window,
+               self.root,
+               self.detail_window,
+               self)
 
     def search_name(self, event=None):
         name_to_search = self.entry.get()
@@ -327,16 +327,16 @@ class WeaponSelection:
         self.focus_new_window()
 
         if only_weapon:
-            SingleWeaponModWindow(self.detail_window,
-                                  self.root,
-                                  send_value,
-                                  self)
+            SingleWeaponMod(self.detail_window,
+                            self.root,
+                            send_value,
+                            self)
         else:
-            CaliberWeaponsModWindow(self.detail_window,
-                                    self.root,
-                                    self.detail_window,
-                                    send_value,
-                                    self)
+            CaliberWeaponsMod(self.detail_window,
+                              self.root,
+                              self.detail_window,
+                              send_value,
+                              self)
 
     def open_weapon_specific_window_from_list_weapon(self, weapon_name):
         for data in self.loaded_data:

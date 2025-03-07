@@ -12,7 +12,7 @@ from Utils import JsonUtils, Utils, WindowManager
 file: TextIO
 
 
-class SingleWeaponModWindow:
+class SingleWeaponMod:
     def __init__(self, detail_window, root, file_path, main_instance):
         self.close_button = None
         self.status_label = None

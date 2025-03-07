@@ -8,7 +8,7 @@ from Entity.ItemManager import ItemManager
 from Entity.EnumProps import EnumProps
 
 
-class CaliberWeaponsModWindow:
+class CaliberWeaponsMod:
     def __init__(self, master, root, detail_window, caliber, main_instance):
         self.close_button = None
         self.root = root

@@ -1,5 +1,5 @@
 import customtkinter as ctk
-from WindowComponent import WeaponSelection
+from WindowComponent import ModSelectionWindow
 
 class MainWindow:
     def __init__(self):
@@ -8,7 +8,7 @@ class MainWindow:
 
     def setup_ui(self):
 
-        self.app = WeaponSelection(self.root)
+        self.app = ModSelectionWindow(self.root)
 
     def run(self):
         self.root.mainloop()

@@ -10,7 +10,7 @@ from Entity.AimingManager import EnumAiming, AimingManager
 DETAIL_WINDOW = "800x500"
 
 
-class PmcWindowMod:
+class PmcMod:
     def __init__(self, master, root, detail_window, main_instance):
         self.status_label = None
         self.apply_button = None
