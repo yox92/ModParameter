@@ -7,7 +7,7 @@ from Entity.ItemProps import ItemProps
 from Entity.EnumProps import EnumProps
 from Entity.Item import Item
 from Entity.ItemManager import ItemManager
-from Utils import JsonUtils, Utils, WindowManager
+from Utils import JsonUtils, Utils, WindowUtils
 
 file: TextIO
 
@@ -25,9 +25,9 @@ class SingleWeaponMod:
         self.detail_window = detail_window
         self.root = root
         self.main_instance = main_instance
-        self.window_protocol = WindowManager.window_protocol(self.detail_window,
-                                                             self.detail_window,
-                                                             self.root)
+        self.window_protocol = WindowUtils.window_protocol(self.detail_window,
+                                                           self.detail_window,
+                                                           self.root)
         self.file_path = file_path
         self.jsonFile = {}
         self.data_from_json_mod_save_user: ItemManager = ItemManager()
@@ -67,8 +67,8 @@ class SingleWeaponMod:
         self.close_button = ctk.CTkButton(self.detail_window,
                                           text="Close",
                                           command=lambda:
-                                          WindowManager.close_window(self.detail_window,
-                                                                self.root))
+                                          WindowUtils.close_window(self.detail_window,
+                                                                   self.root))
         self.close_button.grid(row=1, column=0)
 
     def create_frame_left(self):
@@ -291,16 +291,16 @@ class SingleWeaponMod:
             JsonUtils.delete_file_mod_if_exists(self.file_path)
             self.apply_button.configure(fg_color="green", hover_color="green")
             self.status_label.configure(text="All weapon modifications have been removed.")
-            self.detail_window.after(3000, lambda : WindowManager.close_window(self.detail_window,
-                                                                self.root))
+            self.detail_window.after(3000, lambda : WindowUtils.close_window(self.detail_window,
+                                                                             self.root))
 
     def check_for_file(self, new_file_path, attempts=0, max_attempts=10):
         Utils.disable_all_buttons_recursive(self.close_button, self.detail_window)
         if JsonUtils.file_exist(new_file_path):
             self.apply_button.configure(fg_color="green", hover_color="green")
             self.status_label.configure(text="Changes applied successfully.")
-            self.detail_window.after(3000, lambda:  WindowManager.close_window(self.detail_window,
-                                                                self.root))
+            self.detail_window.after(3000, lambda:  WindowUtils.close_window(self.detail_window,
+                                                                             self.root))
 
         elif attempts < max_attempts:
             self.status_label.configure(text=f"Checking for file... Attempt {attempts + 1}/{max_attempts}")
@@ -309,8 +309,8 @@ class SingleWeaponMod:
             self.status_label.configure(text="Failed to detect the file. Please try again.", text_color="red")
             self.apply_button.configure(fg_color="red", hover_color="gray")
             self.main_instance.root.attributes('-disabled', False)
-            self.detail_window.after(3000, lambda: WindowManager.close_window(self.detail_window,
-                                                                self.root))
+            self.detail_window.after(3000, lambda: WindowUtils.close_window(self.detail_window,
+                                                                            self.root))
 
     def reset_apply_button(self):
         self.apply_button.configure(fg_color="blue", hover_color="lightblue", border_color="red",

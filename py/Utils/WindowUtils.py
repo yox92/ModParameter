@@ -1,12 +1,10 @@
-import customtkinter as ctk
-
 from Utils import Utils
 
 
-class WindowManager:
+class WindowUtils:
     @staticmethod
     def window_protocol(frame, detail_window, root):
-        frame.protocol("WM_DELETE_WINDOW", lambda: WindowManager.close_window(detail_window, root))
+        frame.protocol("WM_DELETE_WINDOW", lambda: WindowUtils.close_window(detail_window, root))
         return  frame
 
     @staticmethod

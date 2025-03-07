@@ -1,0 +1,92 @@
+from Entity.EnumAmmo import EnumAmmo
+
+class Ammo:
+    def __init__(self, **props):
+        self._ArmorDamage = (
+            props.get(EnumAmmo.ARMOR_DAMAGE.label, None),
+            EnumAmmo.ARMOR_DAMAGE.label
+        )
+        self._Caliber = (
+            props.get(EnumAmmo.CALIBER.label, None),
+            EnumAmmo.CALIBER.label
+        )
+        self._Damage = (
+            props.get(EnumAmmo.DAMAGE.label, None),
+            EnumAmmo.DAMAGE.label
+        )
+        self._InitialSpeed = (
+            props.get(EnumAmmo.INITIAL_SPEED.label, None),
+            EnumAmmo.INITIAL_SPEED.label
+        )
+        self._PenetrationPower = (
+            props.get(EnumAmmo.PENETRATION_POWER.label, None),
+            EnumAmmo.PENETRATION_POWER.label
+        )
+        self._StackMaxSize = (
+            props.get(EnumAmmo.STACK_MAX_SIZE.label, None),
+            EnumAmmo.STACK_MAX_SIZE.label
+        )
+        self._Tracer = (
+            props.get(EnumAmmo.TRACER.label, None),
+            EnumAmmo.TRACER.label
+        )
+
+    @property
+    def ArmorDamage(self):
+        return self._ArmorDamage
+
+    @property
+    def Caliber(self):
+        return self._Caliber
+
+    @property
+    def Damage(self):
+        return self._Damage
+
+    @property
+    def InitialSpeed(self):
+        return self._InitialSpeed
+
+    @property
+    def PenetrationPower(self):
+        return self._PenetrationPower
+
+    @property
+    def StackMaxSize(self):
+        return self._StackMaxSize
+
+    @property
+    def Tracer(self):
+        return self._Tracer
+
+    @classmethod
+    def from_data(cls, data: dict):
+        return cls(**data)
+
+    def get_instance_attributes(self):
+        return vars(self)
+
+    def get_attribute_value(self, attr_name):
+        return getattr(self, attr_name, None)
+
+    def get_value_by_label(self, label):
+        for attr_name in self.get_instance_attributes():
+            attr_value = self.get_attribute_value(attr_name)
+            if isinstance(attr_value, tuple) and len(attr_value) == 2:
+                numeric_value, attr_label = attr_value
+                if attr_label == label:
+                    return numeric_value
+        raise ValueError(f"Le label '{label}' n'a pas été trouvé dans Ammo.")
+
+    def __repr__(self):
+        return (f"Ammo("
+                f"ArmorDamage={self.ArmorDamage}, "
+                f"Caliber={self.Caliber}, "
+                f"Damage={self.Damage}, "
+                f"InitialSpeed={self.InitialSpeed}, "
+                f"PenetrationPower={self.PenetrationPower}, "
+                f"StackMaxSize={self.StackMaxSize}, "
+                f"Tracer={self.Tracer})")
+
+    def __iter__(self):
+        return (key for key in self.__dict__.keys())

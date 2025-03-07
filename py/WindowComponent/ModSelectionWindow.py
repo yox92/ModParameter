@@ -57,7 +57,7 @@ class ModSelectionWindow:
         self.create_buttons_for_choice()
 
     def create_image_var(self):
-        self.ammo_image: CTkImage = ImageUtils.create_image_var("ammo")
+        self.ammo_image: CTkImage = ImageUtils.create_image_var("caliber")
         self.weapon_image: CTkImage = ImageUtils.create_image_var("weapon")
         self.pmc_image: CTkImage = ImageUtils.create_image_var("pmc")
 

@@ -4,7 +4,7 @@ from idlelib.browser import transform_children
 import customtkinter as ctk
 
 from Entity import Aiming
-from Utils import JsonUtils, Utils, WindowManager
+from Utils import JsonUtils, Utils, WindowUtils
 from Entity.AimingManager import EnumAiming, AimingManager
 
 DETAIL_WINDOW = "800x500"
@@ -21,9 +21,9 @@ class PmcMod:
         self.root = root
         self.detail_window = detail_window
         self.main_instance = main_instance
-        self.window_protocol = WindowManager.window_protocol(self.detail_window,
-                                                             self.detail_window,
-                                                             self.root)
+        self.window_protocol = WindowUtils.window_protocol(self.detail_window,
+                                                           self.detail_window,
+                                                           self.root)
         self.aiming_manager_pmc_save: None
         self.aiming_manager_pmc: AimingManager = AimingManager()
         self.json_save_pmc_file_path: str = ''
@@ -54,8 +54,8 @@ class PmcMod:
         self.close_button = ctk.CTkButton(self.master,
                                           text="Close",
                                           command=lambda:
-                                          WindowManager.close_window(self.detail_window,
-                                                                     self.root))
+                                          WindowUtils.close_window(self.detail_window,
+                                                                   self.root))
         self.close_button.grid(row=1, column=0)
 
     def create_frame_right(self):
@@ -112,7 +112,7 @@ class PmcMod:
 
             self.prop_widgets[props] = (slider, percent_label)
 
-            WindowManager.frame_color_risky_range(props, number, percent_label)
+            WindowUtils.frame_color_risky_range(props, number, percent_label)
             row += 1
 
         self.apply_button = ctk.CTkButton(self.right_main, text="Apply",
@@ -177,7 +177,7 @@ class PmcMod:
 
     def update_props_value(self, pname, lambda_value, initial_value):
         slider, percent_label = self.prop_widgets[pname]
-        WindowManager.frame_color_risky_range(pname, lambda_value, percent_label)
+        WindowUtils.frame_color_risky_range(pname, lambda_value, percent_label)
 
         percentage_change = ((lambda_value / initial_value) - 1) * 100 if initial_value != 0 else 0
 
@@ -233,8 +233,8 @@ class PmcMod:
                 JsonUtils.delete_file_mod_if_exists(self.json_pmc_file_path)
             self.apply_button.configure(fg_color="green", hover_color="green")
             self.status_label.configure(text="All weapon modifications have been removed.")
-            self.detail_window.after(3000,lambda:  WindowManager.close_window(self.detail_window,
-                                                                self.root))
+            self.detail_window.after(3000,lambda:  WindowUtils.close_window(self.detail_window,
+                                                                            self.root))
 
 
     def check_for_file(self, new_file_path, attempts=0, max_attempts=10):
@@ -242,8 +242,8 @@ class PmcMod:
         if JsonUtils.file_exist(new_file_path):
             self.apply_button.configure(fg_color="green", hover_color="green")
             self.status_label.configure(text="Changes applied successfully.")
-            self.detail_window.after(3000, lambda: WindowManager.close_window(self.detail_window,
-                                                                self.root))
+            self.detail_window.after(3000, lambda: WindowUtils.close_window(self.detail_window,
+                                                                            self.root))
 
         elif attempts < max_attempts:
             self.status_label.configure(text=f"Checking for file... Attempt {attempts + 1}/{max_attempts}")
@@ -252,7 +252,7 @@ class PmcMod:
             self.status_label.configure(text="Failed to detect the file. Please try again.", text_color="red")
             self.apply_button.configure(fg_color="red", hover_color="gray")
             self.main_instance.root.attributes('-disabled', False)
-            self.detail_window.after(3000,lambda:  WindowManager.close_window(self.detail_window,
-                                                                self.root))
+            self.detail_window.after(3000,lambda:  WindowUtils.close_window(self.detail_window,
+                                                                            self.root))
 
 

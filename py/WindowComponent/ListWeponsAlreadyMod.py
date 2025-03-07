@@ -1,7 +1,7 @@
 import customtkinter as ctk
 import tkinter
 
-from Utils import WindowManager
+from Utils import WindowUtils
 
 DETAIL_WINDOW = "450x500"
 
@@ -16,9 +16,9 @@ class ListWeponsAlreadyMod:
         self.main_instance = main_instance
         self.master.geometry(DETAIL_WINDOW)
         self.master.configure(bg="#242424")
-        self.window_protocol = WindowManager.window_protocol(self.detail_window,
-                                                             self.detail_window,
-                                                             self.root)
+        self.window_protocol = WindowUtils.window_protocol(self.detail_window,
+                                                           self.detail_window,
+                                                           self.root)
 
         self.run()
 
@@ -29,8 +29,8 @@ class ListWeponsAlreadyMod:
         self.close_button = ctk.CTkButton(self.master,
                                           text="Close",
                                           command=lambda:
-                                          WindowManager.close_window(self.detail_window,
-                                                                     self.root))
+                                          WindowUtils.close_window(self.detail_window,
+                                                                   self.root))
         self.close_button.grid(row=1, column=0)
 
         self.frame = ctk.CTkFrame(self.master, fg_color="#242424")
@@ -89,5 +89,5 @@ class ListWeponsAlreadyMod:
 
     def open_weapon_specific_window(self, weapon):
         self.main_instance.open_weapon_specific_window_from_list_weapon(weapon)
-        WindowManager.close_window(self.detail_window,
-                                   self.root)
+        WindowUtils.close_window(self.detail_window,
+                                 self.root)

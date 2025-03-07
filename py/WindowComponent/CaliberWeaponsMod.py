@@ -1,6 +1,6 @@
 import customtkinter as ctk
 
-from Utils import WindowManager
+from Utils import WindowUtils
 from WindowComponent.ProgressBar import ProgressBar
 from Utils.JsonUtils import JsonUtils
 from Utils.Utils import Utils
@@ -20,9 +20,9 @@ class CaliberWeaponsMod:
         self.master.title(caliber + ' Weapons')
         self.caliber = caliber
         self.detail_window = detail_window
-        self.window_protocol = WindowManager.window_protocol(self.detail_window,
-                                                             self.detail_window,
-                                                                self.root)
+        self.window_protocol = WindowUtils.window_protocol(self.detail_window,
+                                                           self.detail_window,
+                                                           self.root)
         self.progress_bar = None
         self.no_save: bool = True
         self.reset_after_load_save_and_value_reset: bool = True
@@ -58,8 +58,8 @@ class CaliberWeaponsMod:
         self.close_button = ctk.CTkButton(self.master,
                                           text="Close",
                                           command=lambda:
-                                          WindowManager.close_window(self.detail_window,
-                                                                     self.root))
+                                          WindowUtils.close_window(self.detail_window,
+                                                                   self.root))
         self.close_button.grid(row=1, column=0)
 
     def create_frame_right(self):
@@ -170,8 +170,8 @@ class CaliberWeaponsMod:
         Utils.disable_all_buttons_recursive(self.close_button, self.master)
         self.apply_button.configure(fg_color="red", hover_color="red")
         self.status_label.configure(text="No Weapons Select")
-        self.detail_window.after(2000,lambda:  WindowManager.close_window(self.detail_window,
-                                                                self.root))
+        self.detail_window.after(2000,lambda:  WindowUtils.close_window(self.detail_window,
+                                                                        self.root))
 
     def get_weapons_by_calibre(self):
         matching_names = []
@@ -237,7 +237,7 @@ class CaliberWeaponsMod:
                                              width=10)
                 reset_button.grid(row=row, column=3, sticky=ctk.W, padx=10)
 
-                WindowManager.frame_color_risky_range(props, number, percent_label)
+                WindowUtils.frame_color_risky_range(props, number, percent_label)
                 row += 1
 
         self.apply_button = ctk.CTkButton(self.right_main, text="Apply",
@@ -250,7 +250,7 @@ class CaliberWeaponsMod:
 
     def update_props_value(self, name, value):
         slider, label = self.prop_widgets[name]
-        WindowManager.frame_color_risky_range(name, value, label)
+        WindowUtils.frame_color_risky_range(name, value, label)
         label.configure(text=f"({value:+.0f}%)")
         self.manager.set_value_and_transform_like_multi(name, slider.get())
         self.reset_apply_button()
@@ -340,8 +340,8 @@ class CaliberWeaponsMod:
             self.progress_bar.configure(progress_color="green")
             self.apply_button.configure(fg_color="green", hover_color="green")
             self.status_label.configure(text="All weapon modifications have been removed.")
-            self.detail_window.after(3000,lambda:  WindowManager.close_window(self.detail_window,
-                                                                self.root))
+            self.detail_window.after(3000,lambda:  WindowUtils.close_window(self.detail_window,
+                                                                            self.root))
         if self.progress_bar.is_progress_running():
             print("Progressing...")
             self.root.after(1000, lambda: self.check_wait_delete_json( attempts + 1))
@@ -350,8 +350,8 @@ class CaliberWeaponsMod:
             self.progress_bar.configure(progress_color="green")
             self.apply_button.configure(fg_color="green", hover_color="green")
             self.status_label.configure(text="All weapon modifications have been removed.")
-            self.detail_window.after(3000, lambda: WindowManager.close_window(self.detail_window,
-                                                                self.root))
+            self.detail_window.after(3000, lambda: WindowUtils.close_window(self.detail_window,
+                                                                            self.root))
             self.progress_bar.configure(progress_color="green")
 
     def wait_modify_json(self):
@@ -363,11 +363,11 @@ class CaliberWeaponsMod:
         if list_path_new_json and JsonUtils.all_file_exist(list_path_new_json):
             self.apply_button.configure(fg_color="green", hover_color="green")
             self.status_label.configure(text="Changes applied successfully.")
-            self.detail_window.after(2000,lambda:  WindowManager.close_window(self.detail_window,
-                                                                self.root))
+            self.detail_window.after(2000,lambda:  WindowUtils.close_window(self.detail_window,
+                                                                            self.root))
         else:
             self.status_label.configure(text="Error: \n One or more JSON \n files are missing.", text_color="red")
             self.apply_button.configure(fg_color="red", hover_color="red")
             self.detail_window.after(2000,lambda:
-                                     WindowManager.close_window(self.detail_window,
-                                                                self.root))
+                                     WindowUtils.close_window(self.detail_window,
+                                                              self.root))
