@@ -2,6 +2,8 @@ import json
 import os
 
 import Utils
+from Entity import EnumAmmo
+from Entity.WindowType import WindowType
 from config import JSON_FILES_DIR_WEAPONS, JSON_FILES_DIR_CALIBER, JSON_FILES_DIR_PMC, JSON_FILES_DIR_AMMO
 from Utils.Utils import Utils
 
@@ -129,35 +131,48 @@ class JsonUtils:
         JsonUtils.write_json(data, path_to_json_calibber)
 
     @staticmethod
-    def update_json_value(data, path_for_attribut_json, new_value, from_all_weapons):
-        if isinstance(new_value, (int, float)):
+    def update_json_value(data, path_for_attribut_json, new_value, window_type: WindowType):
+        if isinstance(new_value, (int, float, bool)):
             current = JsonUtils.get_nested_value(data, path_for_attribut_json)
 
             final_key = path_for_attribut_json[-1]
-            JsonUtils.update_or_multiply_final_key(current, final_key, new_value, from_all_weapons)
-
+            JsonUtils.update_or_multiply_final_key(current, final_key, new_value, window_type)
         return data
 
     @staticmethod
-    def update_or_multiply_final_key(current, final_key, new_value, from_all_weapons):
+    def update_or_multiply_final_key(current, final_key, new_value, window_type):
         if final_key not in current:
-            raise KeyError(f"Invalid key: the final key {final_key} does not exist")
+            raise KeyError(f"Error on apply value. : key : '{final_key}' value to update do not existe on target.")
 
-        if not isinstance(current[final_key], (int, float)):
-            raise TypeError(f"The value associated with {final_key} must be of type int or float")
+        if not isinstance(current[final_key], (int, float, bool)):
+            if not Utils.is_exception_for_string_to_boolean(current[final_key],new_value):
+                raise TypeError(f"The value associated with {final_key} must be of type int, float, bool")
 
-        if from_all_weapons:
+        if window_type == window_type.CALIBER:
             current[final_key] = (
                 int(current[final_key] * new_value)
                 if isinstance(current[final_key], int)
                 else current[final_key] * new_value
             )
-        else:
+        elif window_type == window_type.WEAPON:
             current[final_key] = (
                 int(new_value)
                 if isinstance(current[final_key], int)
                 else new_value
             )
+        elif window_type == window_type.AMMO:
+            if isinstance(new_value, bool):
+                if final_key == EnumAmmo.TRACERCOLOR.label:
+                    current[final_key] = Utils.case_on_app_bol_on_file_string_transform_bool(new_value)
+                else:
+                    current[final_key] = new_value
+            elif isinstance(new_value, int):
+                current[final_key] = new_value
+            elif isinstance(new_value, float):
+                current[final_key] = int(new_value)
+            else:
+                raise KeyError(f"Error on apply app. {new_value} need to be boolean or number to be update")
+
 
     @staticmethod
     def get_nested_value(data, path_for_attribut_json):
@@ -166,7 +181,7 @@ class JsonUtils:
             if key in current:
                 current = current[key]
             else:
-                raise KeyError(f"Chemin invalide : la clé '{key}' n'existe pas.")
+                raise KeyError(f"Error on apply value way. An attributs try to be find on original JSON file. But do not exist")
         return current
 
     @staticmethod
@@ -204,9 +219,9 @@ class JsonUtils:
         return list_of_json
 
     @staticmethod
-    def update_json_in_new_file_weapon(key, new_value, data, from_all_weapons):
+    def update_json_in_new_file_weapon(key, new_value, data, window_type: WindowType):
         path_props_json = ["item", "_props", key]
-        return JsonUtils.update_json_value(data, path_props_json, new_value, from_all_weapons)
+        return JsonUtils.update_json_value(data, path_props_json, new_value, window_type)
 
     @staticmethod
     def update_json_in_new_file_aiming(key, new_value, data, from_all_weapons):

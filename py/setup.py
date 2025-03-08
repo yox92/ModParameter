@@ -10,7 +10,7 @@ setup(
     ],
     entry_points={
         "console_scripts": [
-            "CustomWeapon = main.main:main"  # Permet de lancer avec "mon-projet"
+            "CustomWeapon = main.main:main"
         ]
     },
 )

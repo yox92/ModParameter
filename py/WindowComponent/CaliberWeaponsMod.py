@@ -1,5 +1,6 @@
 import customtkinter as ctk
 
+from Entity.WindowType import WindowType
 from Utils import WindowUtils
 from WindowComponent.ProgressBar import ProgressBar
 from Utils.JsonUtils import JsonUtils
@@ -310,7 +311,10 @@ class CaliberWeaponsMod:
             for file_path in self.all_path:
                 data_json_to_update = JsonUtils.load_json(file_path)
                 for key, value in self.manager.iterate_key_values_where_key_ve_change(self.originale_value_from_JSON):
-                    data_json_to_update = JsonUtils.update_json_in_new_file_weapon(key, value, data_json_to_update, True)
+                    data_json_to_update = JsonUtils.update_json_in_new_file_weapon(key,
+                                                                                   value,
+                                                                                   data_json_to_update,
+                                                                                   WindowType.CALIBER)
 
                 list_path_new_json.append(JsonUtils.save_json_as_new_file(data_json_to_update, file_path))
 

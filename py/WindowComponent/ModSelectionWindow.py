@@ -1,7 +1,5 @@
 import customtkinter as ctk
 from customtkinter import CTkImage
-from urllib3.util import ssl_wrap_socket
-from urllib3.util.wait import select_wait_for_socket
 
 from Entity import Caliber, Root
 from Entity.WindowType import WindowType

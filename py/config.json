@@ -1,6 +1,4 @@
 {
     "json_directory": "./",
-    "main.js": "py",
-    "log_directory": "./logs",
-    "data_directory": "./data"
+    "main.js": "py"
 }

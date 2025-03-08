@@ -287,7 +287,7 @@ class SingleWeaponMod:
 
             for name_props_to_modify, value_modify in self.data_from_json_no_save.iterate_key_and_values():
                 data_json_to_update = JsonUtils.update_json_in_new_file_weapon(name_props_to_modify, value_modify,
-                                                                               data_json_to_update, False)
+                                                                               data_json_to_update, WindowType.WEAPON)
 
             file_path_update = JsonUtils.save_json_as_new_file(data_json_to_update, self.file_path)
             self.check_for_file(file_path_update)

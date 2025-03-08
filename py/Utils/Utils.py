@@ -1,6 +1,9 @@
+from operator import truediv
+
 import customtkinter as ctk
 
 from Entity import EnumProps, EnumAiming, EnumAmmo, ItemManager
+from Entity.WindowType import WindowType
 
 
 class Utils:
@@ -173,10 +176,10 @@ class Utils:
     @staticmethod
     def is_value_outside_limits_ammo(name, value):
         limits = {
-            EnumAmmo.ARMOR_DAMAGE.label: (1, 100),
-            EnumAmmo.DAMAGE.label: (1, 200),
+            EnumAmmo.ARMOR_DAMAGE.label: (1, 70),
+            EnumAmmo.DAMAGE.label: (1, 450),
             EnumAmmo.PENETRATION_POWER.label: (1, 200),
-            EnumAmmo.INITIAL_SPEED.label: (50, 2000),
+            EnumAmmo.INITIAL_SPEED.label: (100, 2000),
             EnumAmmo.STACK_MAX_SIZE.label: (1, 999)
         }
         if name in limits:
@@ -196,15 +199,84 @@ class Utils:
         return name in int_to_input_text
 
     @staticmethod
-    def disable_all_buttons_recursive(frame, widget):
+    def disable_all_buttons_recursive(frame_to_not_block, main_frame):
+        for child in main_frame.winfo_children():
+            if ((isinstance(child, ctk.CTkButton)
+                    or isinstance(child, ctk.CTkSlider))
+            and not frame_to_not_block == child):
+                child.configure(state="disabled")
+            elif child.winfo_children():
+                Utils.disable_all_buttons_recursive(frame_to_not_block, child)
+
+    @staticmethod
+    def disable_all_widgets_recursive(frame_to_not_block, main_frame, frame_to_not_block_current_focus):
+        if main_frame == frame_to_not_block_current_focus:
+            return
+        for child in main_frame.winfo_children():
+            if child == frame_to_not_block or child == frame_to_not_block_current_focus:
+                continue
+            if isinstance(child, (ctk.CTkButton, ctk.CTkSlider, ctk.CTkSwitch, ctk.CTkEntry)):
+                child.configure(state="disabled")
+
+            if child.winfo_children():
+                Utils.disable_all_widgets_recursive(frame_to_not_block, child, frame_to_not_block_current_focus)
+
+    @staticmethod
+    def enable_all_widgets_recursive(main_frame, frame_to_not_unlock):
+        for child in main_frame.winfo_children():
+            if child == frame_to_not_unlock:
+                return
+            if isinstance(child, (ctk.CTkButton, ctk.CTkSlider, ctk.CTkSwitch, ctk.CTkEntry)):
+                child.configure(state="normal")
+
+            if child.winfo_children():
+
+                Utils.enable_all_widgets_recursive(child, frame_to_not_unlock)
+
+    @staticmethod
+    def unlock_all_buttons_recursive(frame, widget):
         for child in widget.winfo_children():
             if ((isinstance(child, ctk.CTkButton)
                     or isinstance(child, ctk.CTkSlider))
             and not frame == child):
-                child.configure(state="disabled", fg_color="white")
+                child.configure(state="normal")
             elif child.winfo_children():
                 Utils.disable_all_buttons_recursive(frame, child)
 
     @staticmethod
     def no_all_value_are_load_from_save(value_save: ItemManager, value_change_from_load_data:ItemManager):
         return value_save != value_change_from_load_data
+
+
+    @staticmethod
+    def case_on_app_bol_on_file_string_transform_bool(value: bool):
+        if isinstance(value, bool):
+            if value:
+                return  "green"
+            else: return "red"
+        else:
+            raise KeyError(f"value '{value}' must be boolean for apply app.")
+
+    @staticmethod
+    def block_all_input_before_correction(frame, widget, apply_button, current):
+        Utils.disable_all_widgets_recursive(frame, widget, current)
+        apply_button.configure(fg_color="red")
+
+    @staticmethod
+    def block_all_input_apply_setting(frame, widget, current):
+        Utils.disable_all_widgets_recursive(frame, widget, current)
+
+    @staticmethod
+    def unlock_all(main_frame, apply_button):
+        Utils.enable_all_widgets_recursive(main_frame, apply_button)
+
+    @staticmethod
+    def is_exception_for_string_to_boolean(from_json, from_app):
+        if isinstance(from_json, str) and isinstance(from_app, bool):
+            return True
+        else:
+            return False
+
+
+
+

@@ -39,7 +39,7 @@ class Ammo:
     def convert_to_boolean(self, value):
         if isinstance(value, str):
             value = value.strip().lower()
-            return value == "red"
+            return value == "green"
         return bool(value)
 
     @property

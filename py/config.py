@@ -3,9 +3,7 @@ from pathlib import Path
 import sys
 
 MAIN_DIR = Path(__file__).resolve().parent / "main"
-
 BASE_DIR = MAIN_DIR.parent
-
 sys.path.append(str(BASE_DIR))
 
 JSON_FILES_DIR = BASE_DIR / "JsonFiles"
@@ -15,8 +13,12 @@ JSON_FILES_DIR_PMC = JSON_FILES_DIR / "PMC"
 JSON_FILES_DIR_AMMO = JSON_FILES_DIR / "Ammo"
 IMAGES_DIR = BASE_DIR / "Images"
 
-REQUIRED_DIRS = [MAIN_DIR, JSON_FILES_DIR]
-
+REQUIRED_DIRS = [MAIN_DIR,
+                 JSON_FILES_DIR,
+                 JSON_FILES_DIR_WEAPONS,
+                 JSON_FILES_DIR_CALIBER,
+                 JSON_FILES_DIR_PMC, JSON_FILES_DIR_AMMO
+                 ]
 
 def relatif_path(path):
     return path.relative_to(BASE_DIR)
@@ -29,7 +31,6 @@ def check_empty_directories(directories):
             empty_dirs.append(directory)
     return empty_dirs
 
-
 def check_json_files(directory):
     invalid_files = []
     for json_file in directory.glob("*.json"):
@@ -40,7 +41,6 @@ def check_json_files(directory):
             invalid_files.append((json_file, str(e)))
 
     return invalid_files
-
 
 def check_and_fix_json_caliber_files():
     modified_files = []
@@ -86,7 +86,6 @@ def check_and_fix_json_caliber_files():
     else:
         print("All caliber JSON files are already valid.")
 
-
 def check_project_structure():
     missing_dirs = [d for d in REQUIRED_DIRS if not d.exists()]
     empty_dirs = check_empty_directories(REQUIRED_DIRS)
@@ -109,8 +108,6 @@ def check_project_structure():
             for file, error in invalid_json_files:
                 print(f"   - {file.name}: {error}")
             sys.exit(1)
-
-
     else:
         print("\n Everything is in order! The project structure is correct")
         print("------------------------------------------------------------")
@@ -121,7 +118,6 @@ def check_project_structure():
         print(f" JSON directory (JsonFiles): {relatif_path(JSON_FILES_DIR_AMMO)}")
         print(f" Image directory (JsonFiles): {relatif_path(IMAGES_DIR)}")
         print("------------------------------------------------------------\n")
-
 
 check_and_fix_json_caliber_files()
 check_project_structure()

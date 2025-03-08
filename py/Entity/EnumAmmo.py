@@ -1,12 +1,12 @@
 from enum import Enum
 
 class EnumAmmo(Enum):
-    ARMOR_DAMAGE = "ArmorDamage", "Armor damage inflicted 1-100"
+    ARMOR_DAMAGE = "ArmorDamage", "Armor damage inflicted 1-70"
     CALIBER = "Caliber", "Type of ammunition caliber"
-    DAMAGE = "Damage", "Damage dealt to target 1-200"
-    INITIAL_SPEED = "InitialSpeed", "Projectile speed at firing 50-2000"
+    DAMAGE = "Damage", "Damage dealt to target 1-450"
+    INITIAL_SPEED = "InitialSpeed", "Projectile speed at firing 100-2000"
     PENETRATION_POWER = "PenetrationPower", "Penetration power 1-200"
-    STACK_MAX_SIZE = "StackMaxSize", "Maximum stack size in inventory 1-999"
+    STACK_MAX_SIZE = "StackMaxSize", "Maximum stack size in inventory 1-9999"
     TRACER = "Tracer", "Indicates (true, false) if the bullet is a tracer round"
     TRACERCOLOR = "TracerColor", "Color about tracer Green / Red"
 
