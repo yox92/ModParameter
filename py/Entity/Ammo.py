@@ -1,5 +1,6 @@
 from Entity.EnumAmmo import EnumAmmo
 
+
 class Ammo:
     def __init__(self, **props):
         self._ArmorDamage = (
@@ -30,6 +31,16 @@ class Ammo:
             props.get(EnumAmmo.TRACER.label, None),
             EnumAmmo.TRACER.label
         )
+        self._TracerColor = (
+            self.convert_to_boolean(props.get(EnumAmmo.TRACERCOLOR.label, None)),
+            EnumAmmo.TRACERCOLOR.label
+        )
+
+    def convert_to_boolean(self, value):
+        if isinstance(value, str):
+            value = value.strip().lower()
+            return value == "red"
+        return bool(value)
 
     @property
     def ArmorDamage(self):
@@ -59,6 +70,10 @@ class Ammo:
     def Tracer(self):
         return self._Tracer
 
+    @property
+    def TracerColor(self):
+        return self._TracerColor
+
     @classmethod
     def from_data(cls, data: dict):
         return cls(**data)
@@ -86,7 +101,8 @@ class Ammo:
                 f"InitialSpeed={self.InitialSpeed}, "
                 f"PenetrationPower={self.PenetrationPower}, "
                 f"StackMaxSize={self.StackMaxSize}, "
-                f"Tracer={self.Tracer})")
+                f"Tracer={self.Tracer}), "
+                f"TracerColor={self.TracerColor})")
 
     def __iter__(self):
         return (key for key in self.__dict__.keys())

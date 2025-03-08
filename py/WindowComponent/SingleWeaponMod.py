@@ -7,6 +7,7 @@ from Entity.ItemProps import ItemProps
 from Entity.EnumProps import EnumProps
 from Entity.Item import Item
 from Entity.ItemManager import ItemManager
+from Entity.WindowType import WindowType
 from Utils import JsonUtils, Utils, WindowUtils
 
 file: TextIO
@@ -30,15 +31,18 @@ class SingleWeaponMod:
                                                            self.root, self.main_instance)
         self.file_path = file_path
         self.jsonFile = {}
-        self.data_from_json_mod_save_user: ItemManager = ItemManager()
-        self.lambda_save_from_user_vs_originale: ItemManager = ItemManager()
-        self.data_from_json_no_save: ItemManager = ItemManager()
+
+        self.data_from_json_mod_save_user: ItemManager = ItemManager(EnumProps)
+        self.lambda_save_from_user_vs_originale: ItemManager = ItemManager(EnumProps)
+        self.data_from_json_no_save: ItemManager = ItemManager(EnumProps)
+
         self.rootJSON = self.load_root()
         self.original_value_before_change_by_slider_or_local_save = copy.deepcopy(self.data_from_json_no_save)
 
         self.param_main_root()
         self.create_frame_left()
         self.create_frame_right()
+
         self.prop_widgets = {}
         self.apply_json_data_to_slider()
         if self.json_mod_user_save_exist:
@@ -97,11 +101,11 @@ class SingleWeaponMod:
         root_mod: Root
 
         data_from_mod = JsonUtils.return_json_mod(self.file_path)
-        root_mod = self.create_item_manager_from_json(data_from_mod, self.data_from_json_mod_save_user)
+        root_mod = self.create_item_manager_from_json(data_from_mod, self.data_from_json_mod_save_user, WindowType.WEAPON)
 
     def load_originale_value(self):
         data = JsonUtils.load_json(self.file_path)
-        root: Root = self.create_item_manager_from_json(data, self.data_from_json_no_save)
+        root: Root = self.create_item_manager_from_json(data, self.data_from_json_no_save, WindowType.WEAPON)
         self.jsonFile = data
         return root
 
@@ -269,7 +273,8 @@ class SingleWeaponMod:
                                             hover_color="lightblue",
                                             border_color="blue",
                                             state="enable")
-                self.status_label.configure(text="Same as the original values")
+                self.status_label.configure(text="Same as the original values \n You will get back the \n original values" ,
+                                            text_color="pink", font=("Arial", 13, "italic"))
                 self.reset_after_load_save_and_value_reset = True
         else:
             if self.original_value_before_change_by_slider_or_local_save == self.data_from_json_no_save:
@@ -318,8 +323,8 @@ class SingleWeaponMod:
         self.status_label.configure(text="Ready to apply changes")
 
     @staticmethod
-    def create_item_manager_from_json(data, item_manager: ItemManager):
-        root: Root = Root.from_data(data)
+    def create_item_manager_from_json(data, item_manager: ItemManager, wt: WindowType):
+        root: Root = Root.from_data(data, wt)
         item: Item = root.item
         item_props: ItemProps = item.props
 

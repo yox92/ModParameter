@@ -12,6 +12,7 @@ JSON_FILES_DIR = BASE_DIR / "JsonFiles"
 JSON_FILES_DIR_WEAPONS = JSON_FILES_DIR / "Weapons"
 JSON_FILES_DIR_CALIBER = JSON_FILES_DIR / "Calibers"
 JSON_FILES_DIR_PMC = JSON_FILES_DIR / "PMC"
+JSON_FILES_DIR_AMMO = JSON_FILES_DIR / "Ammo"
 IMAGES_DIR = BASE_DIR / "Images"
 
 REQUIRED_DIRS = [MAIN_DIR, JSON_FILES_DIR]
@@ -101,7 +102,7 @@ def check_project_structure():
             print(f"   - {d}")
         sys.exit(1)
 
-    for directory in [JSON_FILES_DIR_WEAPONS, JSON_FILES_DIR_CALIBER, JSON_FILES_DIR_PMC]:
+    for directory in [JSON_FILES_DIR_WEAPONS, JSON_FILES_DIR_CALIBER, JSON_FILES_DIR_PMC, JSON_FILES_DIR_AMMO]:
         invalid_json_files = check_json_files(directory)
         if invalid_json_files:
             print(f"❌ ERROR: Invalid JSON files found in {relatif_path(directory)}:")
@@ -117,6 +118,7 @@ def check_project_structure():
         print(f" JSON directory (JsonFiles): {relatif_path(JSON_FILES_DIR_WEAPONS)}")
         print(f" JSON directory (JsonFiles): {relatif_path(JSON_FILES_DIR_CALIBER)}")
         print(f" JSON directory (JsonFiles): {relatif_path(JSON_FILES_DIR_PMC)}")
+        print(f" JSON directory (JsonFiles): {relatif_path(JSON_FILES_DIR_AMMO)}")
         print(f" Image directory (JsonFiles): {relatif_path(IMAGES_DIR)}")
         print("------------------------------------------------------------\n")
 

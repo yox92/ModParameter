@@ -1,9 +1,17 @@
+from enum import Enum
+
+from Entity import EnumAmmo
 from Entity.EnumProps import EnumProps
+from typing import Union
 
 
 class ItemManager:
-    def __init__(self):
-        self.key_value = {prop.label: 0 for prop in EnumProps}
+    def __init__(self, enum_type: Union[type(EnumProps), type(EnumAmmo)]):
+        if not issubclass(enum_type, Enum):
+            raise TypeError("enum_type doit être soit EnumProps soit EnumAmmo.")
+
+        self.enum_type = enum_type
+        self.key_value = {prop.label: 0 for prop in self.enum_type}
 
     def get_value(self, key):
         if key in self.key_value:
@@ -84,14 +92,14 @@ class ItemManager:
                     )
 
     def lambda_value(self, item_manager):
-        result_manager = ItemManager()
+        result_manager = ItemManager(EnumProps)
 
         for key, value in self.iterate_key_and_values():
             if isinstance(value, (float, int)):
                 old_value = item_manager.key_value.get(key)
                 if isinstance(old_value, (float, int)):
                     if value != 0:
-                     result_manager.key_value[key] = int(((old_value - value) / value ) * 100)
+                        result_manager.key_value[key] = int(((old_value - value) / value) * 100)
 
         return result_manager
 
@@ -108,4 +116,3 @@ class ItemManager:
         if not isinstance(other, ItemManager):
             return False
         return self.key_value == other.key_value
-

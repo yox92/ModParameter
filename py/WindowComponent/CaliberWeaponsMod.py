@@ -32,8 +32,8 @@ class CaliberWeaponsMod:
         self.right_main = None
 
         self.all_path = []
-        self.manager = ItemManager()
-        self.originale_value_from_JSON = ItemManager()
+        self.manager = ItemManager(EnumProps)
+        self.originale_value_from_JSON = ItemManager(EnumProps)
         self.json_caliber_path = ''
         self.load_data_save_json()
         self.list_buttons_weapons = []
@@ -209,7 +209,7 @@ class CaliberWeaponsMod:
 
     def run(self):
         row = 0
-        manager_inverse_value: ItemManager = ItemManager()
+        manager_inverse_value: ItemManager = ItemManager(EnumProps)
         self.manager.copy_to_with_inverted_values(manager_inverse_value)
         for row, (props, number) in enumerate(manager_inverse_value.iterate_key_and_values()):
             if props != EnumProps.AMMO_CALIBER.label:
@@ -286,7 +286,8 @@ class CaliberWeaponsMod:
                                                 hover_color="lightblue",
                                                 border_color="blue",
                                                 state="enable")
-                    self.status_label.configure(text="Same as the original values")
+                    self.status_label.configure(text="Same as the original values \n You will get back the \n original values" ,
+                                            text_color="pink", font=("Arial", 13, "italic"))
                     self.reset_after_load_save_and_value_reset = True
             else:
                 self.apply_button.configure(state="disabled", fg_color="white")

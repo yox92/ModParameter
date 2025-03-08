@@ -2,7 +2,7 @@ import json
 import os
 
 import Utils
-from config import JSON_FILES_DIR_WEAPONS, JSON_FILES_DIR_CALIBER, JSON_FILES_DIR_PMC
+from config import JSON_FILES_DIR_WEAPONS, JSON_FILES_DIR_CALIBER, JSON_FILES_DIR_PMC, JSON_FILES_DIR_AMMO
 from Utils.Utils import Utils
 
 
@@ -103,6 +103,23 @@ class JsonUtils:
             if filename.endswith('_mod.json'):
                 data_list.append(filename)
         return data_list
+
+    @staticmethod
+    def load_all_json_ammo():
+        json_dir_path = JSON_FILES_DIR_AMMO
+        data: list[dict] = []
+        file_paths: list[str] = []
+
+        for filename in os.listdir(json_dir_path):
+            if filename.endswith('.json') and not filename.endswith('mod.json'):
+                file_path = os.path.join(json_dir_path, filename)
+                file_paths.append(file_path)
+                data.append(JsonUtils.load_json(file_path))
+
+        if not data:
+            raise FileNotFoundError(f"Ammo JSON files not found in '{json_dir_path}'.")
+
+        return data, file_paths
 
     @staticmethod
     def udate_json_caliber(path_to_json_calibber, new_value_change):

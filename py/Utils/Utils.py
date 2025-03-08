@@ -1,6 +1,6 @@
 import customtkinter as ctk
 
-from Entity import EnumProps, EnumAiming
+from Entity import EnumProps, EnumAiming, EnumAmmo, ItemManager
 
 
 class Utils:
@@ -171,6 +171,31 @@ class Utils:
         return False
 
     @staticmethod
+    def is_value_outside_limits_ammo(name, value):
+        limits = {
+            EnumAmmo.ARMOR_DAMAGE.label: (1, 100),
+            EnumAmmo.DAMAGE.label: (1, 200),
+            EnumAmmo.PENETRATION_POWER.label: (1, 200),
+            EnumAmmo.INITIAL_SPEED.label: (50, 2000),
+            EnumAmmo.STACK_MAX_SIZE.label: (1, 999)
+        }
+        if name in limits:
+            min_value, max_value = limits[name]
+            return value < min_value or value > max_value
+        return False
+
+    @staticmethod
+    def is_value_for_input_text(name):
+        int_to_input_text = {
+            EnumAmmo.ARMOR_DAMAGE.label,
+            EnumAmmo.DAMAGE.label,
+            EnumAmmo.PENETRATION_POWER.label,
+            EnumAmmo.STACK_MAX_SIZE.label,
+            EnumAmmo.INITIAL_SPEED.label,
+        }
+        return name in int_to_input_text
+
+    @staticmethod
     def disable_all_buttons_recursive(frame, widget):
         for child in widget.winfo_children():
             if ((isinstance(child, ctk.CTkButton)
@@ -179,3 +204,7 @@ class Utils:
                 child.configure(state="disabled", fg_color="white")
             elif child.winfo_children():
                 Utils.disable_all_buttons_recursive(frame, child)
+
+    @staticmethod
+    def no_all_value_are_load_from_save(value_save: ItemManager, value_change_from_load_data:ItemManager):
+        return value_save != value_change_from_load_data

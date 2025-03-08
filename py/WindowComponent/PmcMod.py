@@ -1,5 +1,4 @@
 import copy
-from idlelib.browser import transform_children
 
 import customtkinter as ctk
 
@@ -183,10 +182,10 @@ class PmcMod:
 
         if pname == EnumAiming.RECOIL_HAND_DAMPING.label:
             percent_label.configure(text=f"{lambda_value:.2f} ({percentage_change:+.0f}%)")
+            transforme_value = round(lambda_value, 2)
         else:
             percent_label.configure(text=f"{lambda_value:.1f} ({percentage_change:+.0f}%)")
-
-        transforme_value = round(lambda_value, 1)
+            transforme_value = round(lambda_value, 1)
 
         self.aiming_manager_pmc.update_from_props_json(pname, transforme_value)
         self.reset_apply_button()
@@ -212,7 +211,8 @@ class PmcMod:
                                             hover_color="lightblue",
                                             border_color="blue",
                                             state="enable")
-                self.status_label.configure(text="Same as the original values")
+                self.status_label.configure(text="Same as the original values \n You will get back the \n original values" ,
+                                            text_color="pink", font=("Arial", 13, "italic"))
                 self.reset_after_load_save_and_value_reset = True
         else:
             if self.aiming_manager_pmc_originale_value == self.aiming_manager_pmc:
@@ -232,7 +232,7 @@ class PmcMod:
             if self.save_pmc_exist:
                 JsonUtils.delete_file_mod_if_exists(self.json_pmc_file_path)
             self.apply_button.configure(fg_color="green", hover_color="green")
-            self.status_label.configure(text="All weapon modifications have been removed.")
+            self.status_label.configure(text="All PMC modifications have been removed.")
             self.detail_window.after(3000,lambda:  WindowUtils.close_window(self.detail_window,
                                                                             self.root, self.main_instance))
 

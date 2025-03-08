@@ -7,3 +7,5 @@ from .Root import Root
 from .ItemManager import ItemManager
 from .EnumAiming import EnumAiming
 from .Aiming import Aiming
+from .Ammo import Ammo
+from .EnumAmmo import EnumAmmo
