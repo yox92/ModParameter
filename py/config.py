@@ -20,6 +20,7 @@ REQUIRED_DIRS = [MAIN_DIR,
                  JSON_FILES_DIR_PMC, JSON_FILES_DIR_AMMO
                  ]
 
+
 def relatif_path(path):
     return path.relative_to(BASE_DIR)
 
@@ -31,6 +32,7 @@ def check_empty_directories(directories):
             empty_dirs.append(directory)
     return empty_dirs
 
+
 def check_json_files(directory):
     invalid_files = []
     for json_file in directory.glob("*.json"):
@@ -41,6 +43,7 @@ def check_json_files(directory):
             invalid_files.append((json_file, str(e)))
 
     return invalid_files
+
 
 def check_and_fix_json_caliber_files():
     modified_files = []
@@ -118,6 +121,7 @@ def check_project_structure():
         print(f" JSON directory (JsonFiles): {relatif_path(JSON_FILES_DIR_AMMO)}")
         print(f" Image directory (JsonFiles): {relatif_path(IMAGES_DIR)}")
         print("------------------------------------------------------------\n")
+
 
 check_and_fix_json_caliber_files()
 check_project_structure()

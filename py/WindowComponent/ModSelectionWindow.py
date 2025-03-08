@@ -13,7 +13,7 @@ from WindowComponent.AmmoMod import AmmoMod
 from WindowComponent.PmcMod import PmcMod
 from WindowComponent.CaliberWeaponsMod import CaliberWeaponsMod
 from WindowComponent.SingleWeaponMod import SingleWeaponMod
-from WindowComponent.ListWeponsAlreadyMod import ListWeponsAlreadyMod
+from WindowComponent.ListItemAlreadyMod import ListItemAlreadyMod
 
 WINDOW_TITLE = "CustomWeapon App"
 WINDOW_GEOMETRY = "800x600"
@@ -155,11 +155,11 @@ class ModSelectionWindow:
 
             self.focus_new_window()
 
-            ListWeponsAlreadyMod(self.detail_window,
-                                 self.root,
-                                 self.detail_window,
-                                 self.list_json_name_mod_weapons,
-                                 self, WindowType.WEAPON)
+            ListItemAlreadyMod(self.detail_window,
+                               self.root,
+                               self.detail_window,
+                               self.list_json_name_mod_weapons,
+                               self, WindowType.WEAPON)
         else:
             self.buttonWeapon.configure(text="No weapons mod find")
 
@@ -170,11 +170,11 @@ class ModSelectionWindow:
 
             self.focus_new_window()
 
-            ListWeponsAlreadyMod(self.detail_window,
-                                 self.root,
-                                 self.detail_window,
-                                 self.list_json_name_mod_ammo,
-                                 self, WindowType.AMMO)
+            ListItemAlreadyMod(self.detail_window,
+                               self.root,
+                               self.detail_window,
+                               self.list_json_name_mod_ammo,
+                               self, WindowType.AMMO)
         else:
             self.buttonWeapon.configure(text="No ammo mod find")
 

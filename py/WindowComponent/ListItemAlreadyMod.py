@@ -7,7 +7,7 @@ from Utils import WindowUtils
 DETAIL_WINDOW = "450x500"
 
 
-class ListWeponsAlreadyMod:
+class ListItemAlreadyMod:
     def __init__(self, master, root, detail_window, weapon_list, main_instance, windowType):
         self.close_button = None
         self.master = master
