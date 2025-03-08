@@ -101,7 +101,8 @@ class SingleWeaponMod:
         root_mod: Root
 
         data_from_mod = JsonUtils.return_json_mod(self.file_path)
-        root_mod = self.create_item_manager_from_json(data_from_mod, self.data_from_json_mod_save_user, WindowType.WEAPON)
+        root_mod = self.create_item_manager_from_json(data_from_mod, self.data_from_json_mod_save_user,
+                                                      WindowType.WEAPON)
 
     def load_originale_value(self):
         data = JsonUtils.load_json(self.file_path)
@@ -273,8 +274,9 @@ class SingleWeaponMod:
                                             hover_color="lightblue",
                                             border_color="blue",
                                             state="enable")
-                self.status_label.configure(text="Same as the original values \n You will get back the \n original values" ,
-                                            text_color="pink", font=("Arial", 13, "italic"))
+                self.status_label.configure(
+                    text="Same as the original values \n You will get back the \n original values",
+                    text_color="pink", font=("Arial", 13, "italic"))
                 self.reset_after_load_save_and_value_reset = True
         else:
             if self.original_value_before_change_by_slider_or_local_save == self.data_from_json_no_save:
@@ -294,18 +296,30 @@ class SingleWeaponMod:
 
         else:
             JsonUtils.delete_file_mod_if_exists(self.file_path)
+            self.main_instance.list_json_name_mod_weapons = JsonUtils.load_all_json_files_weapons_mod()
+            if self.main_instance.list_json_name_mod_weapons:
+                self.main_instance.button_view_all_weapons_mod.configure(text="View All Saved Weapons Mod")
+            else:
+                self.main_instance.button_view_all_weapons_mod.configure(text="No weapons mod find")
+
             self.apply_button.configure(fg_color="green", hover_color="green")
             self.status_label.configure(text="All weapon modifications have been removed.")
-            self.detail_window.after(3000, lambda : WindowUtils.close_window(self.detail_window,
-                                                                             self.root, self.main_instance))
+            self.detail_window.after(3000, lambda: WindowUtils.close_window(self.detail_window,
+                                                                            self.root, self.main_instance))
 
     def check_for_file(self, new_file_path, attempts=0, max_attempts=10):
+        self.main_instance.list_json_name_mod_weapons = JsonUtils.load_all_json_files_weapons_mod()
+        if self.main_instance.list_json_name_mod_weapons:
+            self.main_instance.button_view_all_weapons_mod.configure(text="View All Saved Weapons Mod")
+        else:
+            self.main_instance.button_view_all_weapons_mod.configure(text="No weapons mod find")
+
         Utils.disable_all_buttons_recursive(self.close_button, self.detail_window)
         if JsonUtils.file_exist(new_file_path):
             self.apply_button.configure(fg_color="green", hover_color="green")
             self.status_label.configure(text="Changes applied successfully.")
-            self.detail_window.after(3000, lambda:  WindowUtils.close_window(self.detail_window,
-                                                                             self.root, self.main_instance))
+            self.detail_window.after(3000, lambda: WindowUtils.close_window(self.detail_window,
+                                                                            self.root, self.main_instance))
 
         elif attempts < max_attempts:
             self.status_label.configure(text=f"Checking for file... Attempt {attempts + 1}/{max_attempts}")

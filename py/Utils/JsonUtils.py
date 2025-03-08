@@ -97,8 +97,40 @@ class JsonUtils:
         return data_list
 
     @staticmethod
-    def load_all_json_files_mod():
+    def load_all_json_files_without_mod_ammo():
+        json_dir_path = JSON_FILES_DIR_AMMO
+        data_list = []
+        for filename in os.listdir(json_dir_path):
+
+            if filename.endswith('.json') and not filename.endswith('mod.json'):
+                file_path = json_dir_path / filename
+                data_list.append(JsonUtils.load_json_and_add_path(file_path))
+
+        return data_list
+
+    @staticmethod
+    def load_all_json_files_weapons_mod():
         json_dir_path = JSON_FILES_DIR_WEAPONS
+        data_list = []
+        for filename in os.listdir(json_dir_path):
+
+            if filename.endswith('_mod.json'):
+                data_list.append(filename)
+        return data_list
+
+    @staticmethod
+    def load_all_json_files_ammo_mod():
+        json_dir_path = JSON_FILES_DIR_AMMO
+        data_list = []
+        for filename in os.listdir(json_dir_path):
+
+            if filename.endswith('_mod.json'):
+                data_list.append(filename)
+        return data_list
+
+    @staticmethod
+    def load_all_json_files_ammo_mod():
+        json_dir_path = JSON_FILES_DIR_AMMO
         data_list = []
         for filename in os.listdir(json_dir_path):
 
@@ -154,7 +186,7 @@ class JsonUtils:
                 if isinstance(current[final_key], int)
                 else current[final_key] * new_value
             )
-        elif window_type == window_type.WEAPON:
+        elif window_type == window_type.WEAPON or window_type == window_type.PMC:
             current[final_key] = (
                 int(new_value)
                 if isinstance(current[final_key], int)
@@ -224,9 +256,9 @@ class JsonUtils:
         return JsonUtils.update_json_value(data, path_props_json, new_value, window_type)
 
     @staticmethod
-    def update_json_in_new_file_aiming(key, new_value, data, from_all_weapons):
+    def update_json_in_new_file_aiming(key, new_value, data, window_type):
         path_props_json = [key]
-        return JsonUtils.update_json_value(data, path_props_json, new_value, from_all_weapons)
+        return JsonUtils.update_json_value(data, path_props_json, new_value, window_type)
 
     @staticmethod
     def update_json_caliber_from_new_value_change(path_to_json_calibber, new_value_change):

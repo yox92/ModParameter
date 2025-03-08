@@ -5,3 +5,4 @@ class WindowType(Enum):
     WEAPON = "weapon"
     CALIBER = "caliber"
     AMMO = "ammo"
+    PMC = "pmc"

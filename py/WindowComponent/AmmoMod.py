@@ -43,7 +43,7 @@ class AmmoMod:
     def apply_save_file_mod_user_change(self):
         for name, value in self.data_from_json_mod_save_user.iterate_key_and_values():
             if not name == EnumAmmo.CALIBER.label:
-                if name not in self.prop_widgets :
+                if name not in self.prop_widgets:
                     print(f"Avertissement : '{name}' n'existe pas dans prop_widgets.")
                     continue
                 widget_tuple = self.prop_widgets[name]
@@ -73,14 +73,15 @@ class AmmoMod:
                             entry.insert(0, str(original_value))
                             entry_label.configure(text=str(original_value))
 
+
         if Utils.no_all_value_are_load_from_save(self.data_from_json_no_save, self.data_from_json_mod_save_user):
             self.apply_button.configure(fg_color="blue", hover_color="lightblue", border_color="red",
-                                            state="enable")
+                                        state="enable")
             self.status_label.configure(text="Ready to apply changes")
         else:
             self.apply_button.configure(state="disabled", fg_color="white")
             self.status_label.configure(text="")
-
+        self.status_label.configure(text="Existing data has been found and loaded")
 
     def param_main_root(self):
         self.detail_window.grid_columnconfigure(0, weight=0)
@@ -150,7 +151,7 @@ class AmmoMod:
                     self.switch_button(value, row, prop_value)
 
                 elif isinstance(value, int):
-                    if Utils.is_value_for_input_text(prop_value) :
+                    if Utils.is_value_for_input_text(prop_value):
                         self.entry_input(value, row, prop_value)
 
                 elif isinstance(value, float):
@@ -178,8 +179,8 @@ class AmmoMod:
             width=50,
             command=lambda pname=prop_value: self.update_switch(pname, switch_var.get(), False)
         )
-        switch.grid(row=row, column=1, padx=5, pady=5,  sticky="nsew")
-        text_label:str
+        switch.grid(row=row, column=1, padx=5, pady=5, sticky="nsew")
+        text_label: str
         if not prop_value == EnumAmmo.TRACERCOLOR.label:
             text_label = "Yes" if value else "No"
         else:
@@ -187,7 +188,7 @@ class AmmoMod:
         switch_label = ctk.CTkLabel(
             self.right_main,
             text=text_label,
-            font=("Arial", 15, "bold"),)
+            font=("Arial", 15, "bold"), )
         switch_label.grid(row=row, column=2, padx=10, pady=5, sticky="w")
         self.prop_widgets[prop_value] = (switch, switch_var, switch_label)
         return switch, switch_label
@@ -217,17 +218,17 @@ class AmmoMod:
         entry.insert(0, str(value))
         entry.grid(row=row, column=1, padx=10, pady=5, sticky="ew")
         entry_label = ctk.CTkLabel(
-            self.right_main,text=f"{value}",font=("Arial", 15, "bold"))
+            self.right_main, text=f"{value}", font=("Arial", 15, "bold"))
         entry_label.grid(row=row, column=2, sticky=ctk.W, padx=10)
         reset_button = ctk.CTkButton(self.right_main,
-            text="Reset",command=lambda pname=prop_value: self.reset_entry(pname, entry),width=10)
+                                     text="Reset", command=lambda pname=prop_value: self.reset_entry(pname, entry),
+                                     width=10)
         reset_button.grid(row=row, column=2, padx=5, pady=5, sticky="w")
         self.prop_widgets[prop_value] = (entry, entry_label)
 
-
     def get_entry_value(self, event, prop_value):
         input_text = self.prop_widgets[prop_value][0].get()
-        int_input_text:int
+        int_input_text: int
         try:
             int_input_text = int(input_text)
         except ValueError:
@@ -235,12 +236,12 @@ class AmmoMod:
             print("Error : Valide nombre please.")
             self.block_system_error_detect = True
             Utils.block_all_input_before_correction(self.close_button,
-                                                        self.master,
-                                                        self.apply_button,
-                                                        self.prop_widgets[prop_value][0])
+                                                    self.master,
+                                                    self.apply_button,
+                                                    self.prop_widgets[prop_value][0])
             return
         if isinstance(int_input_text, int):
-            if not Utils.is_value_outside_limits_ammo(prop_value,int_input_text):
+            if not Utils.is_value_outside_limits_ammo(prop_value, int_input_text):
                 self.reset_apply_button()
                 self.data_from_json_no_save.update_from_props_json(prop_value, int_input_text)
                 if self.block_system_error_detect:
@@ -253,8 +254,6 @@ class AmmoMod:
                                                         self.master,
                                                         self.apply_button,
                                                         self.prop_widgets[prop_value][0])
-
-
 
     def reset_entry(self, pname, entry):
         original_value = self.rootJSON.item.props.get_value_by_label(pname)
@@ -278,8 +277,9 @@ class AmmoMod:
                                             hover_color="lightblue",
                                             border_color="blue",
                                             state="enable")
-                self.status_label.configure(text="Same as the original values \n You will get back the \n original values",
-                                            text_color="pink", font=("Arial", 13, "italic"))
+                self.status_label.configure(
+                    text="Same as the original values \n You will get back the \n original values",
+                    text_color="pink", font=("Arial", 13, "italic"))
                 self.reset_after_load_save_and_value_reset = True
         else:
             if self.original_value_before_change_by_frame_or_local_save == self.data_from_json_no_save:
@@ -320,7 +320,6 @@ class AmmoMod:
         else:
             self.status_label.configure(text="Error detect, \n can't Apply change ", text_color="red")
 
-
     def apply_save_data_from_change_by_user(self):
         if self.original_value_before_change_by_frame_or_local_save != self.data_from_json_no_save:
             data_json_to_update = JsonUtils.load_json(self.file_path)
@@ -355,8 +354,8 @@ class AmmoMod:
         if JsonUtils.file_exist(new_file_path):
             self.apply_button.configure(fg_color="green", hover_color="green")
             self.status_label.configure(text="Changes applied successfully.")
-            self.detail_window.after(3000, lambda:  WindowUtils.close_window(self.detail_window,
-                                                                             self.root, self.main_instance))
+            self.detail_window.after(3000, lambda: WindowUtils.close_window(self.detail_window,
+                                                                            self.root, self.main_instance))
         elif attempts < max_attempts:
             self.status_label.configure(text=f"Checking for file... Attempt {attempts + 1}/{max_attempts}")
             self.detail_window.after(2000, lambda: self.check_for_file(new_file_path, attempts + 1, max_attempts))
@@ -366,7 +365,6 @@ class AmmoMod:
             self.main_instance.root.attributes('-disabled', False)
             self.detail_window.after(3000, lambda: WindowUtils.close_window(self.detail_window,
                                                                             self.root, self.main_instance))
-
 
     def error_number_prompt(self):
         self.status_label.configure(text="Error ! : Valide number please ", text_color="red")

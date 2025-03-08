@@ -1,19 +1,21 @@
 import customtkinter as ctk
 import tkinter
 
+from Entity.WindowType import WindowType
 from Utils import WindowUtils
 
 DETAIL_WINDOW = "450x500"
 
 
 class ListWeponsAlreadyMod:
-    def __init__(self, master, root, detail_window, weapon_list, main_instance):
+    def __init__(self, master, root, detail_window, weapon_list, main_instance, windowType):
         self.close_button = None
         self.master = master
         self.root = root
         self.detail_window = detail_window
         self.weapon_list = weapon_list
         self.main_instance = main_instance
+        self.windowType : WindowType = windowType
         self.master.geometry(DETAIL_WINDOW)
         self.master.configure(bg="#242424")
         self.window_protocol = WindowUtils.window_protocol(self.detail_window,
@@ -53,19 +55,19 @@ class ListWeponsAlreadyMod:
         for i in range(3):
             self.inner_frame.grid_columnconfigure(i, weight=1)
 
-        def custom_sort(weapon):
-            name = weapon.replace("_mod.json", "")
+        def custom_sort(item):
+            name = item.replace("_mod.json", "")
             return (not name[0].isdigit(), name)
 
-        sorted_weapons = sorted(self.weapon_list, key=custom_sort)
+        sorted_item = sorted(self.weapon_list, key=custom_sort)
 
-        for idx, weapon in enumerate(sorted_weapons):
-            weapon = weapon.replace("_mod.json", "")[:10]
+        for idx, item in enumerate(sorted_item):
+            itm_short = item.replace("_mod.json", "")[:10]
 
             col = idx % 3
             buttonWeapon = ctk.CTkButton(
                 self.inner_frame,
-                text=weapon,
+                text=itm_short,
                 compound="top",
                 fg_color="#00fdff",
                 text_color="black",
@@ -74,7 +76,7 @@ class ListWeponsAlreadyMod:
                 height=10,
                 width=10,
                 command=lambda
-                    pname=weapon:
+                    pname=item:
                 self.open_weapon_specific_window(pname))
             buttonWeapon.grid(row=idx // 3,
                               column=col,
@@ -87,7 +89,9 @@ class ListWeponsAlreadyMod:
 
         self.frame.rowconfigure(0, weight=1)
 
-    def open_weapon_specific_window(self, weapon):
-        self.main_instance.open_weapon_specific_window_from_list_weapon(weapon)
+    def open_weapon_specific_window(self, pname):
+        self.main_instance.open_weapon_specific_window_from_list(pname, self.windowType)
         WindowUtils.close_window(self.detail_window,
-                                 self.root, self.main_instance)
+                                     self.root, self.main_instance)
+
+

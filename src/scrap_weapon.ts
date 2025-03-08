@@ -25,7 +25,6 @@ async function fetchItemData(id: string): Promise<Root<any>> {
     const itemData = rootData.item;
     const localeData = rootData.locale;
 
-
     const itemProps = new ItemProps({
         CameraSnap: itemData._props.CameraSnap,
         AimSensitivity: itemData._props.AimSensitivity,

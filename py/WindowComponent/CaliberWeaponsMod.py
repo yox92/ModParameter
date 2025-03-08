@@ -208,6 +208,8 @@ class CaliberWeaponsMod:
         self.manager.update_from_json(data)
         self.no_save = self.originale_value_from_JSON.all_values_are_one()
 
+
+
     def run(self):
         row = 0
         manager_inverse_value: ItemManager = ItemManager(EnumProps)
@@ -248,6 +250,8 @@ class CaliberWeaponsMod:
         self.apply_button.grid(row=row, column=1, sticky="nsew")
         self.status_label = ctk.CTkLabel(self.right_main, text="")
         self.status_label.grid(row=row + 1, column=1, sticky="nsew")
+        if not self.no_save:
+            self.status_label.configure(text="Existing data has been found and loaded")
 
     def update_props_value(self, name, value):
         slider, label = self.prop_widgets[name]
@@ -306,6 +310,13 @@ class CaliberWeaponsMod:
             self.modify_save_json_file_caliber()
             self.wait_modify_json()
             self.check_wait_delete_json()
+            self.main_instance.list_json_name_mod_weapons = JsonUtils.load_all_json_files_weapons_mod()
+            self.main_instance.list_json_name_mod_weapons = JsonUtils.load_all_json_files_weapons_mod()
+            if self.main_instance.list_json_name_mod_weapons:
+                self.main_instance.button_view_all_weapons_mod.configure(text="View All Saved Weapons Mod")
+            else:
+                self.main_instance.button_view_all_weapons_mod.configure(text="No weapons mod find")
+
         else:
             list_path_new_json = []
             for file_path in self.all_path:
@@ -321,6 +332,12 @@ class CaliberWeaponsMod:
             self.modify_save_json_file_caliber()
             self.wait_modify_json()
             self.check_wait_modify_json(list_path_new_json)
+            self.main_instance.list_json_name_mod_weapons = JsonUtils.load_all_json_files_weapons_mod()
+            self.main_instance.list_json_name_mod_weapons = JsonUtils.load_all_json_files_weapons_mod()
+            if self.main_instance.list_json_name_mod_weapons:
+                self.main_instance.button_view_all_weapons_mod.configure(text="View All Saved Weapons Mod")
+            else:
+                self.main_instance.button_view_all_weapons_mod.configure(text="No weapons mod find")
 
     def modify_save_json_file_caliber(self):
         data_json_to_update = dict(

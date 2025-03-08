@@ -3,6 +3,7 @@ import copy
 import customtkinter as ctk
 
 from Entity import Aiming
+from Entity.WindowType import WindowType
 from Utils import JsonUtils, Utils, WindowUtils
 from Entity.AimingManager import EnumAiming, AimingManager
 
@@ -46,6 +47,8 @@ class PmcMod:
 
             slider.set(value)
         self.aiming_manager_pmc = self.aiming_manager_pmc_save
+        self.status_label.configure(text="Existing data has been found and loaded")
+
 
     def param_main_root(self):
         self.master.grid_columnconfigure(0, weight=1)
@@ -225,7 +228,7 @@ class PmcMod:
 
             for name_props_to_modify, value_modify in self.aiming_manager_pmc.iterate_key_and_values():
                 data_json_to_update = JsonUtils.update_json_in_new_file_aiming(name_props_to_modify, value_modify,
-                                                                               data_json_to_update, False)
+                                                                               data_json_to_update, WindowType.PMC)
                 file_path_update = JsonUtils.save_json_as_new_file(data_json_to_update, self.json_pmc_file_path)
                 self.check_for_file(file_path_update)
         else:
