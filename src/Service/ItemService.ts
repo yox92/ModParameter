@@ -24,23 +24,7 @@ export class ItemService {
         this.itemUpdaterService = new ItemUpdaterService(logger);
     }
 
-    /**
-     * Load JSON and apply mod into SPT weapon in game
-     */
-    public updateItems(): void {
-        const jsonWeaponsFiles = this.jsonFileService.loadJsonFiles(ItemType.Weapon);
-        const jsonAmmoFiles = this.jsonFileService.loadJsonFiles(ItemType.Ammo);
-        let countModified = 0;
-
-
-        if (jsonWeaponsFiles.length === 0) {
-            this.logger.info("[AttributMod] No weapon mod found. Skipping weapon updates.");
-        }
-
-        if (jsonAmmoFiles.length === 0) {
-            this.logger.info("[AttributMod]  No ammo found. Skipping ammo updates.");
-        }
-
+    private caseWeapons(jsonWeaponsFiles): boolean {
         for (const {fileName, json} of jsonWeaponsFiles) {
             if (!json) {
                 this.logger.info(`[AttributMod] Skipping invalid or missing weapon JSON data: ${fileName}`);
@@ -49,7 +33,7 @@ export class ItemService {
 
             const templateJson: Templates<ItemProps> = json;
 
-             if (!templateJson.locale) {
+            if (!templateJson.locale) {
                 this.logger.info(`[AttributMod] Skipping invalid or missing template Weapon: ${fileName}`);
                 continue;
             }
@@ -80,10 +64,12 @@ export class ItemService {
                 itemsJson._id,
                 locale.Name,
                 this.iDatabaseTables)) {
-                countModified++;
+                return true
             }
         }
+    }
 
+    private caseAmmo(jsonAmmoFiles): boolean {
         for (const {fileName, json} of jsonAmmoFiles) {
             if (!json) {
                 this.logger.info(`[AttributMod] Skipping invalid or missing ammo JSON data: ${fileName}`);
@@ -97,7 +83,7 @@ export class ItemService {
                 continue;
             }
 
-             if (!templateJson.locale) {
+            if (!templateJson.locale) {
                 this.logger.info(`[AttributMod] Skipping invalid or missing template Weapon: ${fileName}`);
                 continue;
             }
@@ -122,8 +108,8 @@ export class ItemService {
             const ammoProps: Ammo = createItemAmmo(itemsPropsJson);
 
             if (!ammoProps) {
-                 this.logger.warning(`[AttributMod] [AimingService] Invalid Json PMC update.`);
-            return;
+                this.logger.warning(`[AttributMod] [AimingService] Invalid Json PMC update.`);
+                return;
             }
 
             if (this.itemUpdaterService.applyAmmoModifications(
@@ -131,9 +117,30 @@ export class ItemService {
                 itemsJson._id,
                 locale.Name,
                 this.iDatabaseTables)) {
-                countModified++;
+                return true
             }
         }
+    }
+
+    /**
+     * Load JSON and apply mod into SPT weapon in game
+     */
+    public updateItems(): void {
+        const jsonWeaponsFiles = this.jsonFileService.loadJsonFiles(ItemType.Weapon);
+        const jsonAmmoFiles = this.jsonFileService.loadJsonFiles(ItemType.Ammo);
+
+
+        if (jsonWeaponsFiles.length === 0) {
+            this.logger.info("[AttributMod] No weapon mod found. Skipping weapon updates.");
+        }
+
+        if (jsonAmmoFiles.length === 0) {
+            this.logger.info("[AttributMod]  No ammo found. Skipping ammo updates.");
+        }
+
+        this.caseWeapons(jsonWeaponsFiles);
+        this.caseAmmo(jsonAmmoFiles);
+
     }
 
 }
