@@ -1,8 +1,8 @@
 import {ILogger} from "@spt-server/models/spt/utils/ILogger";
 import {IDatabaseTables} from "@spt-server/models/spt/server/IDatabaseTables";
 import {IAiming, IConfig, IGlobals} from "@spt-server/models/eft/common/IGlobals";
-import {Aiming, createAiming} from "../Entity/Aiming";
-import {ValidateUtils} from "./ValidateUtils";
+import {Aiming} from "../Entity/Aiming";
+import {ValidateUtils} from "../Utils/ValidateUtils";
 
 export class AimingService {
     private readonly logger: ILogger;
@@ -20,14 +20,14 @@ export class AimingService {
      */
     public applyModifications(aimingJson: Aiming, iDatabaseTables: IDatabaseTables): boolean {
 
-        this.logger.info(`[AimingService] Starting Aiming modifications...`);
+        this.logger.info(`[AttributMod] Starting Aiming modifications...`);
 
         const globals: IGlobals | undefined = iDatabaseTables?.globals;
         const config: IConfig | undefined = globals?.config;
         const aimingSpt: IAiming | undefined = config?.Aiming;
 
         if (!globals || !config || !aimingSpt) {
-            this.logger.error(`[AimingService] Invalid iDatabaseTables structure. Modification aborted. Missing: ${
+            this.logger.error(`[AttributMod] Invalid iDatabaseTables structure. Modification aborted. Missing: ${
                 !globals ? "globals " : ""
             }${!config ? "config " : ""}${!aimingSpt ? "aiming " : ""}`.trim());
             return false;
@@ -35,7 +35,7 @@ export class AimingService {
 
        this.assigneAttributs(aimingJson, aimingSpt, config);
 
-        this.logger.info(`[AimingService] Successfully applied Aiming modifications.`);
+        this.logger.info(`[AttributMod] Successfully applied Aiming modifications.`);
         return true;
     }
 

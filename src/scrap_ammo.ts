@@ -3,7 +3,7 @@ import {Ammo} from './Entity/Ammo';
 import {Locale} from './Entity/Locale';
 import fs from 'fs';
 import path from 'path';
-import {Root} from "./Entity/Root";
+import {Templates} from "./Entity/Templates";
 import {AmmoList} from "./ListIdItem/AmmoList";
 import PQueue from "p-queue";
 import {config} from "./config";
@@ -17,11 +17,11 @@ const baseURL = 'https://db.sp-tarkov.com/api/item';
  * @param id - ID use.
  * @returns {Promise<{ ammo: Ammo, locale: Locale }>} - Object containing the formatted properties.
  */
-async function fetchAmmoData(id: string): Promise<Root<Ammo>> {
+async function fetchAmmoData(id: string): Promise<Templates<Ammo>> {
     const url = `${baseURL}?id=${id}&locale=en`;
     const response = await axios.get(url);
 
-    const rootData = response.data as Root<any>;
+    const rootData = response.data as Templates<any>;
     const itemData = rootData.item;
     const localeData = rootData.locale;
 
@@ -43,7 +43,7 @@ async function fetchAmmoData(id: string): Promise<Root<Ammo>> {
 
     const item = new Item<Ammo>(itemData._id, itemData._name, ammoProps);
 
-    return new Root<Ammo>(locale, item);
+    return new Templates<Ammo>(locale, item);
 }
 
 async function main() {

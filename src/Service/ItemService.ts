@@ -2,6 +2,12 @@ import {ItemUpdaterService} from "./ItemUpdaterService";
 import {JsonFileService} from "./JsonFileService";
 import {ILogger} from "@spt-server/models/spt/utils/ILogger";
 import {IDatabaseTables} from "@spt-server/models/spt/server/IDatabaseTables";
+import {Item} from "../Entity/Item";
+import {ItemProps} from "../Entity/ItemProps";
+import {Templates} from "../Entity/Templates";
+import {Ammo, createItemAmmo} from "../Entity/Ammo";
+import {ItemType} from "../Entity/Enum";
+import {Locale} from "../Entity/Locale";
 
 
 export class ItemService {
@@ -22,48 +28,112 @@ export class ItemService {
      * Load JSON and apply mod into SPT weapon in game
      */
     public updateItems(): void {
-        const jsonWeaponsFiles = this.jsonFileService.loadJsonWeaponsFiles();
-        const jsonAmmoFiles = this.jsonFileService.loadJsonAmmoFiles();
+        const jsonWeaponsFiles = this.jsonFileService.loadJsonFiles(ItemType.Weapon);
+        const jsonAmmoFiles = this.jsonFileService.loadJsonFiles(ItemType.Ammo);
         let countModified = 0;
 
 
         if (jsonWeaponsFiles.length === 0) {
-            this.logger.info("[WeaponService] No weapon mod found. Skipping weapon updates.");}
+            this.logger.info("[AttributMod] No weapon mod found. Skipping weapon updates.");
+        }
 
         if (jsonAmmoFiles.length === 0) {
-            this.logger.info("[ItemService] No ammo found. Skipping ammo updates.");}
+            this.logger.info("[AttributMod]  No ammo found. Skipping ammo updates.");
+        }
 
-        for (const {fileName, data} of jsonWeaponsFiles) {
-            const itemId = data.item._id;
-            if (!data || !data.item || !data.item._id) {
-                this.logger.info(`[WeaponService] Skipping invalid or missing weapon: ${fileName}`);
+        for (const {fileName, json} of jsonWeaponsFiles) {
+            if (!json) {
+                this.logger.info(`[AttributMod] Skipping invalid or missing weapon JSON data: ${fileName}`);
                 continue;
             }
 
-            if (this.itemUpdaterService.applyModifications(data, this.iDatabaseTables)) {
+            const templateJson: Templates<ItemProps> = json;
+
+             if (!templateJson.locale) {
+                this.logger.info(`[AttributMod] Skipping invalid or missing template Weapon: ${fileName}`);
+                continue;
+            }
+
+            const locale: Locale = templateJson.locale
+
+            if (!templateJson.item) {
+                this.logger.info(`[AttributMod] Skipping invalid or missing template Weapon: ${fileName}`);
+                continue;
+            }
+
+            const itemsJson: Item<ItemProps> = templateJson.item;
+
+            if (!itemsJson._props) {
+                this.logger.info(`[AttributMod] Skipping invalid or missing item Weapon: ${fileName}`);
+                continue;
+            }
+
+            const itemsPropsJson: ItemProps = itemsJson._props;
+
+            if (!itemsPropsJson) {
+                this.logger.info(`[AttributMod] Skipping invalid or missing ItemProps Weapon: ${fileName}`);
+                continue;
+            }
+
+            if (this.itemUpdaterService.applyWeaponsModifications(
+                itemsPropsJson,
+                itemsJson._id,
+                locale.Name,
+                this.iDatabaseTables)) {
                 countModified++;
             }
         }
 
-        for (const {fileName, data} of jsonAmmoFiles) {
-            const itemId = data.item._id;
-            if (!data || !data.item || !data.item._id) {
-                this.logger.warning(`[ItemService] Skipping invalid or missing ammo: ${fileName}`);
+        for (const {fileName, json} of jsonAmmoFiles) {
+            if (!json) {
+                this.logger.info(`[AttributMod] Skipping invalid or missing ammo JSON data: ${fileName}`);
                 continue;
             }
 
-            if (!tables.templates.items[itemId]) {
-                this.logger.warning(`[ItemService] No ammo found in DB for name: ${fileName}, ID: ${itemId}`);
+            const templateJson: Templates<Ammo> = json;
+
+            if (!templateJson.item) {
+                this.logger.info(`[AttributMod] Skipping invalid or missing template Ammo: ${fileName}`);
                 continue;
             }
 
-            const sptItem = tables.templates.items[itemId];
+             if (!templateJson.locale) {
+                this.logger.info(`[AttributMod] Skipping invalid or missing template Weapon: ${fileName}`);
+                continue;
+            }
 
-            if (this.itemUpdaterService.applyModifications(data, sptItem)) {
+            const locale: Locale = templateJson.locale
+
+
+            const itemsJson: Item<Ammo> = templateJson.item;
+
+            if (!itemsJson._props) {
+                this.logger.info(`[AttributMod] Skipping invalid or missing item Ammo: ${fileName}`);
+                continue;
+            }
+
+            const itemsPropsJson: Ammo = itemsJson._props;
+
+            if (!itemsPropsJson) {
+                this.logger.info(`[AttributMod] Skipping invalid or missing ItemProps Ammo: ${fileName}`);
+                continue;
+            }
+
+            const ammoProps: Ammo = createItemAmmo(itemsPropsJson);
+
+            if (!ammoProps) {
+                 this.logger.warning(`[AttributMod] [AimingService] Invalid Json PMC update.`);
+            return;
+            }
+
+            if (this.itemUpdaterService.applyAmmoModifications(
+                ammoProps,
+                itemsJson._id,
+                locale.Name,
+                this.iDatabaseTables)) {
                 countModified++;
             }
-
-            this.logger.info(`[WeaponService] Modifications applied to ${countModified} item(s).`);
         }
     }
+
 }

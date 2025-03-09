@@ -2,6 +2,7 @@ import * as fs from "fs";
 import * as path from "path";
 import {ILogger} from "@spt-server/models/spt/utils/ILogger";
 import {config} from "../config";
+import {ItemType} from "../Entity/Enum";
 
 
 export class JsonFileService {
@@ -21,40 +22,17 @@ export class JsonFileService {
      * Checks if the directory exists.
      * @returns `true` if the folder exists, `false` otherwise.
      */
-    private doesFolderExist(): boolean {
-        if (!fs.existsSync(this.jsonWeaponFolderPath)) {
-            this.logger.warning(`[JsonFileService] Folder not found: ${this.jsonWeaponFolderPath}`);
+    private doesFolderExist(folderPath:string): boolean {
+        if (!fs.existsSync(folderPath)) {
+            this.logger.warning(`[AttributMod] [JsonFileService] Folder not found: ${folderPath}`);
             return false;
         }
         return true;
     }
 
-    /**
-     * Loads all JSON files from the specified directory.
-     * @returns An array of objects containing file names and parsed JSON data.
-     */
-    public loadJsonWeaponsFiles(): { fileName: string; data: any }[] {
-        if (!this.doesFolderExist()) {
-            return [];
-        }
-
-        const jsonFiles = fs.readdirSync(this.jsonWeaponFolderPath).filter(file => file.endsWith("mod.json"));
-
-        return jsonFiles.map(file => {
-            const filePath = path.join(this.jsonWeaponFolderPath, file);
-            try {
-                const rawData = fs.readFileSync(filePath, "utf-8");
-                return {fileName: file, data: JSON.parse(rawData)};
-            } catch (error) {
-                this.logger.error(`[JsonFileService] Error reading file ${file}: ${error}`);
-                return null;
-            }
-        }).filter(Boolean) as { fileName: string; data: any }[];
-    }
-
     public loadJsonAimingFile(): { fileName: string; jsonData: any } | null {
-        if (!this.doesFolderExist()) {
-            this.logger.warning("[JsonFileService] PMC folder does not exist.");
+        if (!this.doesFolderExist(this.jsonAimingFolderPath)) {
+            this.logger.warning("[AttributMod] PMC folder does not exist.");
             return null;
         }
         let jsonFiles: string[];
@@ -63,12 +41,12 @@ export class JsonFileService {
             jsonFiles = fs.readdirSync(this.jsonAimingFolderPath)
                 .filter(file => file.endsWith("mod.json"));
         } catch (error) {
-            this.logger.warning(`[JsonFileService] Failed to read directory: ${error}`);
+            this.logger.warning(`[AttributMod] Failed to read directory: ${error}`);
             return null;
         }
 
         if (jsonFiles.length === 0) {
-            this.logger.warning("[JsonFileService] No JSON file found in the PMC folder.");
+            this.logger.warning("[AttributMod]  No JSON file found in the PMC folder.");
             return null;
         }
 
@@ -80,38 +58,59 @@ export class JsonFileService {
             const parsedData = JSON.parse(rawData);
 
             if (!parsedData || typeof parsedData !== "object") {
-                this.logger.warning(`[JsonFileService] Invalid JSON format in file: ${file}`);
+                this.logger.warning(`[AttributMod] Invalid JSON format in file: ${file}`);
                 return null;
             }
 
             return {fileName: file, jsonData: parsedData};
         } catch (error) {
-            this.logger.warning(`[JsonFileService] Error reading or parsing file ${file}: ${error}`);
+            this.logger.warning(`[AttributMod] Error reading or parsing file ${file}: ${error}`);
             return null;
         }
     }
 
-    /**
-     * Loads all JSON files from the specified directory.
-     * @returns An array of objects containing file names and parsed JSON data.
-     */
-    public loadJsonAmmoFiles(): { fileName: string; data: any }[] {
-        if (!this.doesFolderExist()) {
+    public loadJsonFiles(itemType: ItemType): { fileName: string; json: any }[] {
+        let folderPath: string;
+        if (itemType === ItemType.Ammo) {
+            folderPath = this.jsonAmmoFolderPath
+        }
+        else if (itemType === ItemType.Weapon) {
+            folderPath = this.jsonWeaponFolderPath
+        }
+        else {
             return [];
         }
 
-        const jsonFiles = fs.readdirSync(this.jsonAmmoFolderPath).filter(file => file.endsWith("mod.json"));
+        if (!this.doesFolderExist(folderPath)) {
+            this.logger.error(`[AttributMod] Folder does not exist`);
+            return [];
+        }
 
-        return jsonFiles.map(file => {
-            const filePath = path.join(this.jsonAmmoFolderPath, file);
-            try {
-                const rawData = fs.readFileSync(filePath, "utf-8");
-                return {fileName: file, data: JSON.parse(rawData)};
-            } catch (error) {
-                this.logger.error(`[JsonFileService] Error reading file ${file}: ${error}`);
-                return null;
+        try {
+            const files = fs.readdirSync(folderPath);
+            const jsonFiles = files.filter(file => file.endsWith("mod.json"));
+
+            if (jsonFiles.length === 0) {
+                this.logger.warning("[AttributMod] JSON files found");
+                return [];
             }
-        }).filter(Boolean) as { fileName: string; data: any }[];
-    }
 
+            const parsedFiles = jsonFiles.map(file => {
+                const filePath = path.join(folderPath, file);
+
+                try {
+                    const rawData = fs.readFileSync(filePath, "utf-8");
+                    return {fileName: file, json: JSON.parse(rawData)};
+                } catch (error) {
+                    this.logger.warning(`[AttributMod] Error parsing JSON file ${file}: ${error.message}`);
+                    return null;
+                }
+            });
+
+            return parsedFiles.filter(Boolean) as { fileName: string; json: any }[];
+        } catch (error) {
+            this.logger.warning(`[AttributMod] Error reading directory ${folderPath}: ${error.message}`);
+            return [];
+        }
+    }
 }

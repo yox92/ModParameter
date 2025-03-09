@@ -1,6 +1,10 @@
-import {ILogger} from "../Entity/Logger";
-import {createItemProps} from "../Entity/ItemProps";
-import {createItemAmmo} from "../Entity/Ammo";
+import {ItemProps} from "../Entity/ItemProps";
+import {ILogger} from "@spt-server/models/spt/utils/ILogger";
+import {Ammo} from "../Entity/Ammo";
+import {IDatabaseTables} from "@spt-server/models/spt/server/IDatabaseTables";
+import {ITemplates} from "@spt-server/models/spt/templates/ITemplates";
+import {IProps, ITemplateItem} from "@spt-server/models/eft/common/tables/ITemplateItem";
+import {ValidateUtils} from "../Utils/ValidateUtils";
 
 
 export class ItemUpdaterService {
@@ -11,130 +15,138 @@ export class ItemUpdaterService {
     }
 
     /**
-     * Validates and casts a value to an integer **only if it's not already an integer**.
-     * Returns null if the value is invalid or zero.
-     * @param value The value to check
-     * @returns The formatted integer or `null` if invalid
+     * Applies modifications from a JSON item to an SPT item.
+     * If any value is invalid, the modification is skipped for that item.
+     * @param ammoProps Ammo extract from JSON
+     * @param iDatabaseTables data from the SPT database
+     * @param id_item_to_modify id from the JSON
+     * @param name_item_to_modify name from the JSON
+     * @returns true if the item was modified, false if skipped
      */
-    private validateAndCastInt(value: any): number | null {
-        if (typeof value !== "number" || isNaN(value) || value === 0) {
-            return null; // Mark as invalid
+    public applyAmmoModifications(ammoProps: Ammo,
+                                  id_item_to_modify: string,
+                                  name_item_to_modify: string,
+                                  iDatabaseTables: IDatabaseTables): boolean {
+        const validateUtils = new ValidateUtils();
+
+        const templates: ITemplates | undefined = iDatabaseTables?.templates;
+        const items: Record<string, ITemplateItem> | undefined = templates?.items;
+
+        if (!templates || !items) {
+            this.logger.error("[AttributMod] Invalid iDatabaseTables structure. Modification aborted");
+            return false;
         }
 
-        if (Number.isInteger(value)) {
-            return value;
+        const sptItem: ITemplateItem | undefined = items[id_item_to_modify];
+
+        if (!sptItem) {
+            this.logger.warning(`[AttributMod] Item with ID '${id_item_to_modify}' not found in templates DB.`);
+            return false;
         }
 
-        return Math.floor(value);
-    }
+        const sptItemProps: IProps | undefined = sptItem._props;
 
-    private validateString(value: any, isTracerColor: boolean = false): string | null {
-        if (isTracerColor) {
-            if (typeof value === "boolean") {
-                return value ? "green" : "red";
-            }
+        if (!sptItemProps) {
+            this.logger.warning(`[AttributMod] Item with ID '${id_item_to_modify}' has no _props on DB`);
+            return false;
         }
 
-        if (typeof value !== "string") {
-            return null;
+
+        let updatedProps: Partial<Ammo> = {};
+
+        updatedProps.ArmorDamage = validateUtils.validateAndCastInt(ammoProps.ArmorDamage);
+        updatedProps.Damage = validateUtils.validateAndCastInt(ammoProps.Damage);
+        updatedProps.InitialSpeed = validateUtils.validateAndCastInt(ammoProps.InitialSpeed);
+        updatedProps.PenetrationPower = validateUtils.validateAndCastInt(ammoProps.PenetrationPower);
+        updatedProps.StackMaxSize = validateUtils.validateAndCastInt(ammoProps.StackMaxSize);
+        updatedProps.Tracer = validateUtils.validateBoolean(ammoProps.Tracer);
+        updatedProps.TracerColor = validateUtils.validateString(ammoProps.TracerColor, true);
+
+
+        const invalidProps = Object.entries(updatedProps).filter(([_, value]) => value === null);
+
+        // check value if not null before assignation
+        if (invalidProps.length > 0) {
+            this.logger.warning(`[AttributMod] Skipping ammo: ${name_item_to_modify} due to invalid values: ${invalidProps.map(([key]) => key).join(", ")}`);
+            return false;
         }
 
-        return value.trim() !== "" ? value : null;
-    }
-
-    private validateBoolean(value: any): boolean | null {
-        if (typeof value === "boolean") {
-            return value;
-        }
-        return null;
-    }
-
-    /**
-     * Validates and casts a value to a float (max 2 decimal places) **only if it's not already a float**.
-     * Returns `null` if the value is invalid or zero.
-     * @param value The value to check
-     * @param decimal decimal number
-     * @returns The formatted float or `null` if invalid
-     */
-    private validateAndCastFloat(value: any, decimal: number): number | null {
-        if (typeof value !== "number" || isNaN(value) || value === 0) {
-            return null;
+        // assignation
+        for (const key in updatedProps) {
+            sptItem._props[key] = updatedProps[key];
         }
 
-        if (!Number.isInteger(value)) {
-            return value;
-        }
+        this.logger.info(`[AttributMod] Successfully updated ${name_item_to_modify}`);
 
-        return parseFloat(value.toFixed(decimal));
+        return true;
     }
 
     /**
      * Applies modifications from a JSON item to an SPT item.
      * If any value is invalid, the modification is skipped for that item.
-     * @param jsonItem The item data from JSON
-     * @param sptItem The item data from the SPT database
+     * @param weaponItem Weapon extract from JSON
+     * @param iDatabaseTables data from the SPT database
+     * @param id_item_to_modify id from the JSON
+     * @param name_item_to_modify name from the JSON
      * @returns true if the item was modified, false if skipped
      */
-    public applyModifications(jsonItem: any, sptItem: any): boolean {
-        if (!(jsonItem.item._props && jsonItem.item._id && jsonItem.item)) {
-            this.logger.warning(`[ItemUpdaterService] Invalid JSON`);
+    public applyWeaponsModifications(weaponItem: ItemProps,
+                                     id_item_to_modify: string,
+                                     name_item_to_modify: string,
+                                     iDatabaseTables: IDatabaseTables): boolean {
+        const validateUtils = new ValidateUtils();
+
+        const templates: ITemplates | undefined = iDatabaseTables?.templates;
+        const itemsSpt: Record<string, ITemplateItem> | undefined = templates?.items;
+
+        if (!templates || !itemsSpt) {
+            this.logger.error("[AttributMod] Invalid iDatabaseTables structure. Modification aborted");
             return false;
         }
 
-        const isWeapon = jsonItem.item._props.bFirerate !== undefined;
-        const isAmmo = jsonItem.item._props.ArmorDamage !== undefined;
+        const sptItem: ITemplateItem | undefined = itemsSpt[id_item_to_modify];
 
-        if (!isWeapon && !isAmmo) {
-            this.logger.warning(`[ItemUpdaterService] Unknown item type, skipping: ${jsonItem.item._name} (ID: ${jsonItem.item._id})`);
+        if (!sptItem) {
+            this.logger.warning(`[AttributMod] Item with ID '${id_item_to_modify}' not found in templates DB.`);
             return false;
         }
 
-        let updatedProps: any = {};
+        const sptItemProps: IProps | undefined = sptItem._props;
 
-        if (isWeapon) {
-            const itemProps = createItemProps(jsonItem.item._props);
-            updatedProps = {
-                CameraSnap: this.validateAndCastFloat(itemProps.CameraSnap, 2),
-                AimSensitivity: this.validateAndCastFloat(itemProps.AimSensitivity, 2),
-                Ergonomics: this.validateAndCastInt(itemProps.Ergonomics),
-                RecoilCamera: this.validateAndCastFloat(itemProps.RecoilCamera, 3),
-                RecolDispersion: this.validateAndCastInt(itemProps.RecolDispersion),
-                RecoilForceBack: this.validateAndCastInt(itemProps.RecoilForceBack),
-                RecoilForceUp: this.validateAndCastInt(itemProps.RecoilForceUp),
-                Weight: this.validateAndCastFloat(itemProps.Weight, 2),
-                bFirerate: this.validateAndCastInt(itemProps.bFirerate),
-            };
-        } else if (isAmmo) {
-            const ammoProps = createItemAmmo(jsonItem.item._props);
-            updatedProps = {
-                ArmorDamage: this.validateAndCastInt(ammoProps.ArmorDamage),
-                Damage: this.validateAndCastInt(ammoProps.Damage),
-                InitialSpeed: this.validateAndCastInt(ammoProps.InitialSpeed),
-                PenetrationPower: this.validateAndCastInt(ammoProps.PenetrationPower),
-                StackMaxSize: this.validateAndCastInt(ammoProps.StackMaxSize),
-                Tracer: this.validateBoolean(ammoProps.Tracer),
-                TracerColor: this.validateString(ammoProps.TracerColor, true),
-            };
+        if (!sptItemProps) {
+            this.logger.warning(`[AttributMod] Item with ID '${id_item_to_modify}' has no _props on DB`);
+            return false;
         }
+
+
+        let updatedProps: Partial<ItemProps> = {};
+
+        updatedProps.CameraSnap = validateUtils.validateAndCastFloatItem(weaponItem.CameraSnap, 2);
+        updatedProps.AimSensitivity = validateUtils.validateAndCastFloatItem(weaponItem.AimSensitivity, 2);
+        updatedProps.Ergonomics = validateUtils.validateAndCastInt(weaponItem.Ergonomics);
+        updatedProps.RecoilCamera = validateUtils.validateAndCastFloatItem(weaponItem.RecoilCamera, 3);
+        updatedProps.RecolDispersion = validateUtils.validateAndCastInt(weaponItem.RecolDispersion);
+        updatedProps.RecoilForceBack = validateUtils.validateAndCastInt(weaponItem.RecoilForceBack);
+        updatedProps.RecoilForceUp = validateUtils.validateAndCastInt(weaponItem.RecoilForceUp);
+        updatedProps.Weight = validateUtils.validateAndCastFloatItem(weaponItem.Weight, 2);
+        updatedProps.bFirerate = validateUtils.validateAndCastInt(weaponItem.bFirerate);
 
         const invalidProps = Object.entries(updatedProps).filter(([_, value]) => value === null);
 
+        // check value if not null before assignation
         if (invalidProps.length > 0) {
-            this.logger.warning(`[ItemUpdaterService] Skipping ${isWeapon ? "weapon" : "ammo"}: ${jsonItem.item._name} (ID: ${jsonItem.item._id}) due to invalid values: ${invalidProps.map(([key]) => key).join(", ")}`);
+            this.logger.warning(`[AttributMod] Skipping ammo: ${name_item_to_modify} due to invalid values: ${invalidProps.map(([key]) => key).join(", ")}`);
             return false;
         }
 
-        if (Object.values(updatedProps).some(value => value === null)) {
-            this.logger.warning(`[ItemUpdaterService] Skipping item id :  ${jsonItem.item._id} name : ${jsonItem.item._name} due to invalid values.`);
-            return false;
-        }
-
+        // assignation
         for (const key in updatedProps) {
             sptItem._props[key] = updatedProps[key];
         }
 
-        this.logger.info(`[ItemUpdaterService] Successfully updated ${isWeapon ? "weapon" : "ammo"}: ${jsonItem.item._name} (ID: ${jsonItem.item._id}) with properties: ${Object.keys(updatedProps).join(", ")}`);
+        this.logger.info(`[AttributMod] [AttributMod] Successfully updated ${name_item_to_modify} ammo`);
 
         return true;
     }
+
 }

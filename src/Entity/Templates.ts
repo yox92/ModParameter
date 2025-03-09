@@ -3,7 +3,7 @@ import { Item } from "./Item";
 import { ItemProps } from "./ItemProps";
 import {Ammo} from "./Ammo";
 
-export class Root<T extends ItemProps | Ammo> {
+export class Templates<T extends ItemProps | Ammo> {
     locale: Locale;
     item: Item<T>;
 
