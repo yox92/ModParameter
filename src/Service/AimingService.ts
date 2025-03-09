@@ -1,5 +1,8 @@
-import {ILogger} from "../Entity/Logger";
-
+import {ILogger} from "@spt-server/models/spt/utils/ILogger";
+import {IDatabaseTables} from "@spt-server/models/spt/server/IDatabaseTables";
+import {IAiming, IConfig, IGlobals} from "@spt-server/models/eft/common/IGlobals";
+import {Aiming, createAiming} from "../Entity/Aiming";
+import {ValidateUtils} from "./ValidateUtils";
 
 export class AimingService {
     private readonly logger: ILogger;
@@ -9,95 +12,72 @@ export class AimingService {
     }
 
     /**
-     * Validates and casts a value to a float (max 2 decimal places) **only if it's not already a float**.
-     * Returns `null` if the value is invalid or zero.
-     * @param value The value to check
-     * @param decimal decimal number
-     * @returns The formatted float or `null` if invalid
-     */
-    private validateAndCastFloat(value: any, decimal: number): number | null {
-        if (typeof value !== "number" || isNaN(value) || value === 0) {
-            return null;
-        }
-
-        if (!Number.isInteger(value)) {
-            return value;
-        }
-
-        return parseFloat(value.toFixed(decimal));
-    }
-
-    /**
-     * Applies modifications from a JSON pmc attributs to an SPT attributs.
+     * Applies modifications from a JSON PMC attributes to an SPT attributes.
      * If any value is invalid, the modification is skipped for that item.
-     * @param jsonAiming The pmc attributs data from JSON
-     * @param sptAiming The pmc attributs data from the SPT database
-     * @returns true if the item was modified, false if skipped
+     * @param aimingJson The PMC attributes data from JSON
+     * @param iDatabaseTables data from the SPT database
+     * @returns true if the attributes were modified, false if skipped
      */
-    public applyModifications(jsonAiming: any, sptAiming: any): boolean {
-        if (!(sptAiming.globals.Aiming && jsonAiming)) {
-            this.logger.warning(`[AimingService] Invalid JSON`);
+    public applyModifications(aimingJson: Aiming, iDatabaseTables: IDatabaseTables): boolean {
+
+        this.logger.info(`[AimingService] Starting Aiming modifications...`);
+
+        const globals: IGlobals | undefined = iDatabaseTables?.globals;
+        const config: IConfig | undefined = globals?.config;
+        const aimingSpt: IAiming | undefined = config?.Aiming;
+
+        if (!globals || !config || !aimingSpt) {
+            this.logger.error(`[AimingService] Invalid iDatabaseTables structure. Modification aborted. Missing: ${
+                !globals ? "globals " : ""
+            }${!config ? "config " : ""}${!aimingSpt ? "aiming " : ""}`.trim());
             return false;
         }
 
-        const aiming = this.createAiming(jsonAiming);
-        const updateAiming = this.createAiming(aiming);
-        const updateAimingObjects = this.creatObjectAiming(aiming);
+       this.assigneAttributs(aimingJson, aimingSpt, config);
 
-        const invalidProps = Object.entries(updateAiming)
-            .filter(([_, value]) => value === null)
-            .map(([key]) => key);
-
-        Object.entries(updateAimingObjects).forEach(([key, obj]) => {
-            Object.entries(obj).forEach(([subKey, value]) => {
-                if (value === null) invalidProps.push(`${key}.${subKey}`);
-            });
-        });
-
-        if (invalidProps.length > 0) {
-            this.logger.warning(`[AimingService] Skipping aiming modifications due to invalid values: 
-        ${invalidProps.join(", ")}`);
-            return false;
-        }
-
-        Object.keys(updateAiming).forEach(key => {
-            sptAiming.globals.Aiming[key] = updateAiming[key];
-        });
-
-        Object.keys(updateAimingObjects).forEach(key => {
-            if (!sptAiming.globals.Aiming[key]) {
-                sptAiming.globals.Aiming[key] = {};  // Assurer que l'objet existe
-            }
-            Object.keys(updateAimingObjects[key]).forEach(subKey => {
-                sptAiming.globals.Aiming[key][subKey] = updateAimingObjects[key][subKey];
-            });
-        });
-
+        this.logger.info(`[AimingService] Successfully applied Aiming modifications.`);
         return true;
-
     }
 
-    private createAiming(aiming: any) {
-        return {
-            AimPunchMagnitude: this.validateAndCastFloat(aiming.AimPunchMagnitude, 1),
-            RecoilDamping: this.validateAndCastFloat(aiming.RecoilDamping, 1),
-            RecoilHandDamping: this.validateAndCastFloat(aiming.RecoilHandDamping, 2),
+    private assigneAttributs(aimingJson: Aiming, aimingSpt: IAiming, config: IConfig): void {
+        const validateUtils = new ValidateUtils();
 
-        };
+        config.AimPunchMagnitude = validateUtils.validateAndCastFloat(aimingJson.AimPunchMagnitude, 1)
+        aimingSpt.RecoilHandDamping = validateUtils.validateAndCastFloat(aimingJson.RecoilHandDamping, 2);
+        aimingSpt.RecoilDamping = validateUtils.validateAndCastFloat(aimingJson.RecoilDamping, 1);
+
+        if (aimingJson.AimPunchMagnitude !== undefined) {
+            config.AimPunchMagnitude = validateUtils.validateAndCastFloat(aimingJson.AimPunchMagnitude, 1);}
+
+        if (aimingJson.RecoilHandDamping !== undefined) {
+            aimingSpt.RecoilHandDamping = validateUtils.validateAndCastFloat(aimingJson.RecoilHandDamping, 2);}
+
+        if (aimingJson.RecoilDamping !== undefined) {
+            aimingSpt.RecoilDamping = validateUtils.validateAndCastFloat(aimingJson.RecoilDamping, 1);}
+
+        if (aimingJson.ProceduralIntensityByPoseStanding !== undefined) {
+            aimingSpt.ProceduralIntensityByPose.z = validateUtils.validateAndCastFloat(aimingJson.ProceduralIntensityByPoseStanding, 1);}
+
+        if (aimingJson.ProceduralIntensityByPoseCrouching !== undefined) {
+            aimingSpt.ProceduralIntensityByPose.y = validateUtils.validateAndCastFloat(aimingJson.ProceduralIntensityByPoseCrouching, 1);}
+
+        if (aimingJson.ProceduralIntensityByPoseProne !== undefined) {
+            aimingSpt.ProceduralIntensityByPose.x = validateUtils.validateAndCastFloat(aimingJson.ProceduralIntensityByPoseProne, 1);}
+
+        if (aimingJson.RecoilIntensityStanding !== undefined) {
+            aimingSpt.RecoilXIntensityByPose.z = validateUtils.validateAndCastFloat(aimingJson.RecoilIntensityStanding, 1);
+            aimingSpt.RecoilYIntensityByPose.z = validateUtils.validateAndCastFloat(aimingJson.RecoilIntensityStanding, 1);
+            aimingSpt.RecoilZIntensityByPose.z = validateUtils.validateAndCastFloat(aimingJson.RecoilIntensityStanding, 1);}
+
+        if (aimingJson.RecoilIntensityCrouching !== undefined) {
+            aimingSpt.RecoilXIntensityByPose.y = validateUtils.validateAndCastFloat(aimingJson.RecoilIntensityCrouching, 1);
+            aimingSpt.RecoilYIntensityByPose.y = validateUtils.validateAndCastFloat(aimingJson.RecoilIntensityCrouching, 1);
+            aimingSpt.RecoilZIntensityByPose.y = validateUtils.validateAndCastFloat(aimingJson.RecoilIntensityCrouching, 1);}
+
+        if (aimingJson.RecoilIntensityProne !== undefined) {
+            aimingSpt.RecoilXIntensityByPose.x = validateUtils.validateAndCastFloat(aimingJson.RecoilIntensityProne, 1);
+            aimingSpt.RecoilYIntensityByPose.x = validateUtils.validateAndCastFloat(aimingJson.RecoilIntensityProne, 1);
+            aimingSpt.RecoilZIntensityByPose.x = validateUtils.validateAndCastFloat(aimingJson.RecoilIntensityProne, 1);}
     }
 
-    private creatObjectAiming(aiming: any) {
-        return {
-            ProceduralIntensityByPose: {
-                x: this.validateAndCastFloat(aiming.ProceduralIntensityByPoseProne, 1),   // x ← Prone
-                y: this.validateAndCastFloat(aiming.ProceduralIntensityByPoseCrouching, 1), // y ← Crouching
-                z: this.validateAndCastFloat(aiming.ProceduralIntensityByPoseStanding, 1),  // z ← Standing
-            },
-            RecoilIntensityByPose: {
-                x: this.validateAndCastFloat(aiming.RecoilIntensityProne, 1),   // x ← Prone
-                y: this.validateAndCastFloat(aiming.RecoilIntensityCrouching, 1), // y ← Crouching
-                z: this.validateAndCastFloat(aiming.RecoilIntensityStanding, 1),  // z ← Standing
-            },
-        };
-    }
 }

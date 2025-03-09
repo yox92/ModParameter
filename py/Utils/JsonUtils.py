@@ -2,13 +2,14 @@ import json
 import os
 
 import Utils
-from Entity import EnumAmmo
+from Entity import EnumAmmo, Logger
 from Entity.WindowType import WindowType
 from config import JSON_FILES_DIR_WEAPONS, JSON_FILES_DIR_CALIBER, JSON_FILES_DIR_PMC, JSON_FILES_DIR_AMMO
 from Utils.Utils import Utils
 
 
 class JsonUtils:
+    logger = Logger()
 
     @staticmethod
     def file_exist(file_path):
@@ -177,15 +178,38 @@ class JsonUtils:
             raise KeyError(f"Error on apply value. : key : '{final_key}' value to update do not existe on target.")
 
         if not isinstance(current[final_key], (int, float, bool)):
-            if not Utils.is_exception_for_string_to_boolean(current[final_key],new_value):
+            if not Utils.is_exception_for_string_to_boolean(current[final_key], new_value):
                 raise TypeError(f"The value associated with {final_key} must be of type int, float, bool")
 
         if window_type == window_type.CALIBER:
-            current[final_key] = (
-                int(current[final_key] * new_value)
-                if isinstance(current[final_key], int)
-                else current[final_key] * new_value
-            )
+            original_value = current[final_key]
+
+            if isinstance(original_value, int):
+                min_value = 1
+                new_value_calculated = int(original_value * new_value)
+                if new_value_calculated < min_value:
+                    new_value_calculated = min_value
+                current[final_key] = new_value_calculated
+
+            elif isinstance(original_value, float):
+                if not (0.01 <= new_value <= 2.0):
+                    return
+
+                original_str = str(original_value).rstrip("0")
+                decimal_places = len(original_str.split(".")[1]) if "." in original_str else 2
+                decimal_places = max(decimal_places, 1)
+
+                min_value = round(10 ** -decimal_places, decimal_places)
+
+                new_value_calculated = original_value * new_value
+
+                if 0 < new_value_calculated < min_value:
+                    new_value_calculated = min_value
+
+                new_value_calculated = round(new_value_calculated, decimal_places)
+
+                current[final_key] = new_value_calculated
+
         elif window_type == window_type.WEAPON or window_type == window_type.PMC:
             current[final_key] = (
                 int(new_value)
@@ -205,7 +229,6 @@ class JsonUtils:
             else:
                 raise KeyError(f"Error on apply app. {new_value} need to be boolean or number to be update")
 
-
     @staticmethod
     def get_nested_value(data, path_for_attribut_json):
         current = data
@@ -213,7 +236,8 @@ class JsonUtils:
             if key in current:
                 current = current[key]
             else:
-                raise KeyError(f"Error on apply value way. An attributs try to be find on original JSON file. But do not exist")
+                raise KeyError(
+                    f"Error on apply value way. An attributs try to be find on original JSON file. But do not exist")
         return current
 
     @staticmethod

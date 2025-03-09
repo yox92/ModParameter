@@ -1,5 +1,7 @@
 import customtkinter
 
+from Entity import Logger
+
 PROGRESS_BAR_WIDTH = 200
 PROGRESS_BAR_HEIGHT = 30
 PROGRESS_BAR_CORNER_RADIUS = 20
@@ -13,6 +15,7 @@ PROGRESS_MAX = 50
 class ProgressBar:
 
     def __init__(self, parent):
+        self.logger = Logger()
         self.parent = parent
         self.my_progressbar = self.configure_progress_bar()
         self.my_label = customtkinter.CTkLabel(parent, text="0%", font=PROGRESS_BAR_FONT)

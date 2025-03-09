@@ -2,13 +2,14 @@ import copy
 
 import customtkinter as ctk
 
-from Entity import Root, Item, Ammo, ItemManager, EnumAmmo
+from Entity import Root, Item, Ammo, ItemManager, EnumAmmo, Logger
 from Entity.WindowType import WindowType
 from Utils import WindowUtils, JsonUtils, Utils
 
 
 class AmmoMod:
     def __init__(self, master, root, detail_window, file_path, main_instance):
+        self.logger = Logger()
         self.block_system_error_detect = False
         self.close_button = None
         self.master = master
@@ -35,7 +36,6 @@ class AmmoMod:
 
         self.prop_widgets = {}
         self.apply_json_data_to_slider()
-        print(self.rootJSON.item.props.TracerColor)
 
         if self.json_mod_user_save_exist:
             self.apply_save_file_mod_user_change()
@@ -44,7 +44,7 @@ class AmmoMod:
         for name, value in self.data_from_json_mod_save_user.iterate_key_and_values():
             if not name == EnumAmmo.CALIBER.label:
                 if name not in self.prop_widgets:
-                    print(f"Avertissement : '{name}' n'existe pas dans prop_widgets.")
+                    self.logger.log("info", f"Avertissement : '{name}' n'existe pas dans prop_widgets.")
                     continue
                 widget_tuple = self.prop_widgets[name]
                 # Switch
@@ -155,8 +155,7 @@ class AmmoMod:
                         self.entry_input(value, row, prop_value)
 
                 elif isinstance(value, float):
-                    print(" Aucun slider float implémenté.")
-
+                    self.logger.log("info", f" Aucun slider float implémenté.")
                 row += 1
 
         self.apply_button = ctk.CTkButton(
@@ -233,7 +232,7 @@ class AmmoMod:
             int_input_text = int(input_text)
         except ValueError:
             self.error_number_prompt()
-            print("Error : Valide nombre please.")
+            self.logger.log("warning", "Number please ...")
             self.block_system_error_detect = True
             Utils.block_all_input_before_correction(self.close_button,
                                                     self.master,
@@ -319,19 +318,21 @@ class AmmoMod:
                 self.apply_case_save_detect()
         else:
             self.status_label.configure(text="Error detect, \n can't Apply change ", text_color="red")
+            self.change_list_ammo_mod()
 
     def apply_save_data_from_change_by_user(self):
         if self.original_value_before_change_by_frame_or_local_save != self.data_from_json_no_save:
             data_json_to_update = JsonUtils.load_json(self.file_path)
 
             for name_props_to_modify, value_modify in self.data_from_json_no_save.iterate_key_and_values():
-                print(f"valeur a changer : {name_props_to_modify}, {value_modify}")
                 data_json_to_update = JsonUtils.update_json_in_new_file_weapon(name_props_to_modify, value_modify,
                                                                                data_json_to_update, WindowType.AMMO)
             file_path_update = JsonUtils.save_json_as_new_file(data_json_to_update, self.file_path)
             self.check_for_file(file_path_update)
+            self.change_list_ammo_mod()
         else:
             self.status_label.configure(text="Error ! : no change detect, \n can't Apply ", text_color="red")
+            self.change_list_ammo_mod()
 
     def apply_case_save_detect(self):
         if self.data_from_json_no_save != self.data_from_json_mod_save_user:
@@ -348,6 +349,7 @@ class AmmoMod:
         self.status_label.configure(text="All Statistics modifications have been removed.")
         self.detail_window.after(3000, lambda: WindowUtils.close_window(self.detail_window,
                                                                         self.root, self.main_instance))
+        self.change_list_ammo_mod()
 
     def check_for_file(self, new_file_path, attempts=0, max_attempts=10):
         Utils.block_all_input_apply_setting(self.close_button, self.master, None)
@@ -371,6 +373,12 @@ class AmmoMod:
         self.apply_button.configure(fg_color="red", state="disabled")
 
     def error_number_out_limit(self, name):
-        print(f"Error with one value load from save ('error_number_out_limit'), Originale value put for : {name}")
+        self.logger.log("error", f"Error with one value load from save ('error_number_out_limit'), Originale value put for : {name}")
         self.status_label.configure(text="Error ! This is the maximum/minimum \n value allowed", text_color="red")
         self.apply_button.configure(fg_color="red", state="disabled")
+
+    def change_list_ammo_mod(self):
+        if self.main_instance.list_json_name_mod_ammo:
+            self.main_instance.button_view_all_ammo_mod.configure(text="View All Saved Ammo Mod")
+        else:
+            self.main_instance.button_view_all_ammo_mod.configure(text="No ammo mod find")

@@ -2,7 +2,7 @@
   "compilerOptions": {
     "module": "commonjs",
     "outDir": "./dist",
-    "rootDir": "src",
+    "rootDir": "./",
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "allowJs": true,
@@ -11,8 +11,11 @@
     "esModuleInterop": true,
     "target": "es6",
     "paths": {
-      "*": ["src/*"]
+      "@spt-server/*": ["external/SPT-Server/project/src/*"]
     }
   },
-  "include": ["src/**/*"]
+  "include": [
+    "src",
+    "external/SPT-Server/project/src"
+  ]
 }

@@ -2,6 +2,7 @@ import copy
 from typing import TextIO
 import customtkinter as ctk
 
+from Entity import Logger
 from Entity.Root import Root
 from Entity.ItemProps import ItemProps
 from Entity.EnumProps import EnumProps
@@ -15,6 +16,7 @@ file: TextIO
 
 class SingleWeaponMod:
     def __init__(self, detail_window, root, file_path, main_instance):
+        self.logger = Logger()
         self.close_button = None
         self.status_label = None
         self.right_main = None

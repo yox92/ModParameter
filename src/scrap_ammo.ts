@@ -33,6 +33,7 @@ async function fetchAmmoData(id: string): Promise<Root<Ammo>> {
         PenetrationPower: itemData._props.PenetrationPower,
         StackMaxSize: itemData._props.StackMaxSize,
         Tracer: itemData._props.Tracer,
+        TracerColor: itemData._props.TracerColor,
     });
 
     const locale = new Locale({

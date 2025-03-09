@@ -1,6 +1,7 @@
 import customtkinter as ctk
 import tkinter
 
+from Entity import Logger
 from Entity.WindowType import WindowType
 from Utils import WindowUtils
 
@@ -9,6 +10,7 @@ DETAIL_WINDOW = "450x500"
 
 class ListItemAlreadyMod:
     def __init__(self, master, root, detail_window, weapon_list, main_instance, windowType):
+        self.logger = Logger()
         self.close_button = None
         self.master = master
         self.root = root

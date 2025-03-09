@@ -79,8 +79,7 @@ function generateAmmoCaliberFiles(ammoCalibers: Set<string>) {
                 continue;
             }
         }
-
-
+        
         const jsonData = {
             CameraSnap: 1.0,
             AimSensitivity: 1.0,

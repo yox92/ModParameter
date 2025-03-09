@@ -1,34 +1,41 @@
 import {JsonFileService} from "./JsonFileService";
-import {IDatabaseServer} from "../Entity/DatabaseServer";
-import {ILogger} from "../Entity/Logger";
 import {AimingService} from "./AimingService";
+import {ILogger} from "@spt-server/models/spt/utils/ILogger";
+import {IDatabaseTables} from "@spt-server/models/spt/server/IDatabaseTables";
+import {Aiming, createAiming} from "../Entity/Aiming";
 
 
 export class PmcService {
     private readonly logger: ILogger;
-    private readonly database: IDatabaseServer;
+    private readonly iDatabaseTables: IDatabaseTables;
     private readonly jsonFileService: JsonFileService;
     private readonly aimingService: AimingService;
 
-    constructor(logger: ILogger, database: IDatabaseServer) {
+    constructor(logger: ILogger, iDatabaseTables: IDatabaseTables) {
         this.logger = logger;
-        this.database = database;
+        this.iDatabaseTables = iDatabaseTables;
 
         this.jsonFileService = new JsonFileService(logger);
         this.aimingService = new AimingService(logger);
     }
 
-    /**
-     *
-     */
     public updatePmc(): void {
-        const tables = this.database.getTables();
-        const {data} = this.jsonFileService.loadJsonAimingFile();
+        const aimingFile = this.jsonFileService.loadJsonAimingFile();
 
-        const SptAiming = tables.globals.config.Aiming;
+        if (!aimingFile) {
+            this.logger.warning("[PmcService] No valid file found. Skipping PMC update.");
+            return;
+        }
 
-        this.aimingService.applyModifications(data, SptAiming)
+        const {jsonData} = aimingFile;
 
+        const aimingJson: Aiming = createAiming(jsonData);
+        if (!aimingJson) {
+            this.logger.warning(`[AimingService] Invalid Json PMC update.`);
+            return;
+        }
 
+        this.aimingService.applyModifications(aimingJson, this.iDatabaseTables);
     }
+
 }

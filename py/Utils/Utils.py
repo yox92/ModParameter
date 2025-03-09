@@ -176,15 +176,15 @@ class Utils:
     @staticmethod
     def is_value_outside_limits_ammo(name, value):
         limits = {
-            EnumAmmo.ARMOR_DAMAGE.label: (1, 70),
+            EnumAmmo.ARMOR_DAMAGE.label: (1, 500),
             EnumAmmo.DAMAGE.label: (1, 450),
-            EnumAmmo.PENETRATION_POWER.label: (1, 200),
+            EnumAmmo.PENETRATION_POWER.label: (1, 70),
             EnumAmmo.INITIAL_SPEED.label: (100, 2000),
-            EnumAmmo.STACK_MAX_SIZE.label: (1, 999)
+            EnumAmmo.STACK_MAX_SIZE.label: (1, 9999)
         }
         if name in limits:
             min_value, max_value = limits[name]
-            return value < min_value or value > max_value
+            return value <= min_value or value >= max_value
         return False
 
     @staticmethod

@@ -6,6 +6,7 @@ export class Ammo {
     PenetrationPower: number;
     StackMaxSize: number;
     Tracer: boolean;
+    TracerColor: string;
     constructor(props: Partial<Ammo>) {
         Object.assign(this, props);
     }
@@ -19,5 +20,6 @@ export function createItemAmmo(data: any): Ammo {
     PenetrationPower: data.PenetrationPower,
     StackMaxSize: data.StackMaxSize,
     Tracer: data.Tracer,
+    TracerColor: data.TracerColor,
     });
 }

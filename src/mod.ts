@@ -1,33 +1,40 @@
-import {IContainer} from "./Entity/Container";
-import {ILogger} from "./Entity/Logger";
-import {IDatabaseServer} from "./Entity/DatabaseServer";
-import {WeaponService} from "./Service/WeaponService";
-import {PmcService} from "./Service/PmcService";
+import { ItemService } from "./Service/ItemService";
+import { PmcService } from "./Service/PmcService";
+import { IPostDBLoadMod } from "@spt-server/models/external/IPostDBLoadMod";
+import { DependencyContainer } from "@spt-server/models/external/tsyringe";
+import { ILogger } from "@spt-server/models/spt/utils/ILogger";
+import { DependencyUtils } from "./Service/DependencyUtils";
+import { IDatabaseTables } from "@spt-server/models/spt/server/IDatabaseTables";
 
-class MyWeaponMod {
-    private readonly modName: string;
+class ModItemPmcStat implements IPostDBLoadMod {
+    private modName: string;
 
     constructor() {
-        this.modName = "MyWeaponMod";
+        this.modName = "ModItemPmcStat";
     }
 
-    public postDBLoad(container: IContainer): void {
-        const logger = container.resolve<ILogger>("WinstonLogger");
-        const databaseServer = container.resolve<IDatabaseServer>("DatabaseServer");
-        const weaponService = new WeaponService(logger, databaseServer);
-        const pmcService = new PmcService(logger, databaseServer);
+    /**
+     * Initializes the module and registers the dependency container.
+     * @param dependencyContainer The instance of the dependency container.
+     */
+    public postDBLoad(dependencyContainer: DependencyContainer): void {
+        DependencyUtils.initialize(dependencyContainer);
 
-        if (!logger) {
-            throw new Error("[MyWeaponMod] Logger service not found.");
+        const tableData: IDatabaseTables | null = DependencyUtils.getTableData();
+        const logger: ILogger | null = DependencyUtils.getLogger();
+
+        if (!tableData || !logger) {
+            console.error(`[${this.modName}] Critical error: Missing dependencies. Mod cannot function properly.`);
+            return;
         }
 
-        if (!databaseServer) {
-            throw new Error("[MyWeaponMod] DatabaseServer service not found.");
-        }
+        const itemService = new ItemService(logger, tableData);
+        const pmcService = new PmcService(logger, tableData);
 
-        weaponService.updateWeapons();
+        itemService.updateItems();
         pmcService.updatePmc();
+
     }
 }
 
-module.exports = {mod: new MyWeaponMod()};
+module.exports = { mod: new ModItemPmcStat() };

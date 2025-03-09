@@ -3,7 +3,7 @@ from idlelib.replace import replace
 import customtkinter as ctk
 from customtkinter import CTkImage
 
-from Entity import Caliber, Root
+from Entity import Caliber, Root, Logger
 from Entity.WindowType import WindowType
 from Utils import WindowUtils
 from Utils.ImageUtils import ImageUtils
@@ -15,7 +15,7 @@ from WindowComponent.CaliberWeaponsMod import CaliberWeaponsMod
 from WindowComponent.SingleWeaponMod import SingleWeaponMod
 from WindowComponent.ListItemAlreadyMod import ListItemAlreadyMod
 
-WINDOW_TITLE = "CustomWeapon App"
+WINDOW_TITLE = "ModParameter App"
 WINDOW_GEOMETRY = "800x600"
 APPEARANCE_MODE = "dark"
 DETAIL_WINDOW_TITLE = "Detail windows"
@@ -26,6 +26,7 @@ WINDOW_OFFSET = 10
 
 class ModSelectionWindow:
     def __init__(self, root):
+        self.logger = Logger()
         self.button_frame = None
         self.button_view_all_ammo_mod = None
         self.button_view_all_weapons_mod = None
@@ -362,7 +363,7 @@ class ModSelectionWindow:
                     self.open_weapon_specific_window(file_path, WindowType.WEAPON)
                     break
             else:
-                print(f"File ignore : {result}")
+                self.logger.log("info", f"File ignore : {result}")
         elif window_type == WindowType.AMMO:
             json_filename = f"{result.replace(' ', '_')}.json"
             matching_file = next(
@@ -392,7 +393,7 @@ class ModSelectionWindow:
         colors = ["dodgerblue", "peru", "mediumseagreen", "khaki"]
 
         if len(self.framesBotCaliber) < Caliber.count():
-            print("Erreur : 'framesBotCaliber' no enought frames")
+            self.logger.log("error", "Erreur : 'framesBotCaliber' no enought frames")
             return
 
         for idx, caliber in Caliber.enumerate_calibers():

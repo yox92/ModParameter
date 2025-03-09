@@ -1,5 +1,6 @@
 import customtkinter as ctk
 
+from Entity import Logger
 from Entity.WindowType import WindowType
 from Utils import WindowUtils
 from WindowComponent.ProgressBar import ProgressBar
@@ -11,6 +12,7 @@ from Entity.EnumProps import EnumProps
 
 class CaliberWeaponsMod:
     def __init__(self, master, root, detail_window, caliber, main_instance):
+        self.logger = Logger()
         self.close_button = None
         self.root = root
         self.master = master
@@ -188,18 +190,18 @@ class CaliberWeaponsMod:
                         if "locale" in data and "ShortName" in data["locale"]:
                             matching_names.append(data["locale"]["ShortName"])
                     except KeyError as e:
-                        print(f"KeyError about 'locale/ShortName' : {e}")
+                        self.logger.log("error", f"KeyError about 'locale/ShortName' : {e}")
 
                     try:
                         if "file_path" in data:
                             self.all_path.append(data["file_path"])
                     except KeyError as e:
-                        print(f"KeyError about 'file_path' : {e}")
+                        self.logger.log("error", "KeyError about 'file_path' : {e}")
 
             except KeyError as e:
-                print(f"KeyError detected for main key : {e}")
+                self.logger.log("error", f"KeyError detected for main key : {e}")
             except Exception as e:
-                print(f"**An unexpected error occurred** : {e}")
+                self.logger.log("error", f"Exception : {e}")
         return matching_names
 
     def load_data_save_json(self):
@@ -311,7 +313,6 @@ class CaliberWeaponsMod:
             self.wait_modify_json()
             self.check_wait_delete_json()
             self.main_instance.list_json_name_mod_weapons = JsonUtils.load_all_json_files_weapons_mod()
-            self.main_instance.list_json_name_mod_weapons = JsonUtils.load_all_json_files_weapons_mod()
             if self.main_instance.list_json_name_mod_weapons:
                 self.main_instance.button_view_all_weapons_mod.configure(text="View All Saved Weapons Mod")
             else:
@@ -333,7 +334,6 @@ class CaliberWeaponsMod:
             self.wait_modify_json()
             self.check_wait_modify_json(list_path_new_json)
             self.main_instance.list_json_name_mod_weapons = JsonUtils.load_all_json_files_weapons_mod()
-            self.main_instance.list_json_name_mod_weapons = JsonUtils.load_all_json_files_weapons_mod()
             if self.main_instance.list_json_name_mod_weapons:
                 self.main_instance.button_view_all_weapons_mod.configure(text="View All Saved Weapons Mod")
             else:
@@ -350,10 +350,10 @@ class CaliberWeaponsMod:
             self.progress_bar.configure(progress_color="green")
             self.check_for_all_files(list_path_new_json)
         if self.progress_bar.is_progress_running():
-            print("Progressing...")
+            self.logger.log("info", "Progressing...")
             self.root.after(1000, lambda: self.check_wait_modify_json(list_path_new_json, attempts + 1))
         else:
-            print("Done !")
+            self.logger.log("info", "Done !")
             self.progress_bar.configure(progress_color="green")
             self.check_for_all_files(list_path_new_json)
 
@@ -365,10 +365,10 @@ class CaliberWeaponsMod:
             self.detail_window.after(3000,lambda:  WindowUtils.close_window(self.detail_window,
                                                                             self.root, self.main_instance))
         if self.progress_bar.is_progress_running():
-            print("Progressing...")
+            self.logger.log("info", "Progressing...")
             self.root.after(1000, lambda: self.check_wait_delete_json( attempts + 1))
         else:
-            print("Done !")
+            self.logger.log("info", "Done !")
             self.progress_bar.configure(progress_color="green")
             self.apply_button.configure(fg_color="green", hover_color="green")
             self.status_label.configure(text="All weapon modifications have been removed.")

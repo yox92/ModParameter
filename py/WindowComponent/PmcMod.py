@@ -2,7 +2,7 @@ import copy
 
 import customtkinter as ctk
 
-from Entity import Aiming
+from Entity import Aiming, Logger
 from Entity.WindowType import WindowType
 from Utils import JsonUtils, Utils, WindowUtils
 from Entity.AimingManager import EnumAiming, AimingManager
@@ -12,6 +12,7 @@ DETAIL_WINDOW = "800x500"
 
 class PmcMod:
     def __init__(self, master, root, detail_window, main_instance):
+        self.logger = Logger()
         self.status_label = None
         self.apply_button = None
         self.save_pmc_exist: bool = False

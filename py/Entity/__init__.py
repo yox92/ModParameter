@@ -11,3 +11,4 @@ from .Ammo import Ammo
 from .EnumAmmo import EnumAmmo
 from .Aiming import Aiming
 from .WindowType import WindowType
+from .Logger import Logger

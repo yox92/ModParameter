@@ -6,13 +6,13 @@ MAIN_DIR = Path(__file__).resolve().parent / "main"
 BASE_DIR = MAIN_DIR.parent
 sys.path.append(str(BASE_DIR))
 
+LOG_FILE_PATH = BASE_DIR / "app.log"
 JSON_FILES_DIR = BASE_DIR / "JsonFiles"
 JSON_FILES_DIR_WEAPONS = JSON_FILES_DIR / "Weapons"
 JSON_FILES_DIR_CALIBER = JSON_FILES_DIR / "Calibers"
 JSON_FILES_DIR_PMC = JSON_FILES_DIR / "PMC"
 JSON_FILES_DIR_AMMO = JSON_FILES_DIR / "Ammo"
 IMAGES_DIR = BASE_DIR / "Images"
-
 REQUIRED_DIRS = [MAIN_DIR,
                  JSON_FILES_DIR,
                  JSON_FILES_DIR_WEAPONS,
