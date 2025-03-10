@@ -23,7 +23,7 @@ export class PmcService {
         const aimingFile = this.jsonFileService.loadJsonAimingFile();
 
         if (!aimingFile) {
-            this.logger.warning("[AttributMod] No valid file found. Skipping PMC update.");
+            this.logger.warning("[AttributMod] Skipping PMC update.");
             return;
         }
 

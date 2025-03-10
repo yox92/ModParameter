@@ -91,7 +91,7 @@ export class JsonFileService {
             const jsonFiles = files.filter(file => file.endsWith("mod.json"));
 
             if (jsonFiles.length === 0) {
-                this.logger.warning("[AttributMod] JSON files found");
+                this.logger.warning("[AttributMod] No JSON files found");
                 return [];
             }
 
