@@ -94,7 +94,7 @@ async function main() {
     const filesInDirectory = new Set(
         fs.readdirSync(basePath)
             .filter(file => file.endsWith(".json"))
-            .map(file => file.replace(".json", "")) // Retirer l'extension pour comparer avec `cleanName`
+            .map(file => file.replace(".json", ""))
     );
 
     const missingIds: string[] = [];

@@ -1,7 +1,7 @@
 {
-  "name": "spt-custom-weapon",
+  "name": "modparameters",
   "version": "1.0.0",
-  "description": "A custom mod for weapons in SPT-AKI",
+  "description": "A custom mod for weapons / ammo / PMC stats in SPT-AKI",
   "main": "src/mod.js",
   "type": "commonjs",
   "author": "netnikogo",
@@ -12,7 +12,7 @@
     "type": "git",
     "url": "https://github.com/vivienx53/CustomWeapon.git"
   },
-  "private": true,
+  "private": false,
   "dependencies": {
     "axios": "^1.7.9",
     "p-queue": "^8.1.0",
