@@ -144,7 +144,7 @@ export class ItemUpdaterService {
             sptItem._props[key] = updatedProps[key];
         }
 
-        this.logger.info(`[AttributMod] [AttributMod] Successfully updated ${name_item_to_modify} ammo`);
+        this.logger.info(`[AttributMod] Successfully updated ${name_item_to_modify} ammo`);
 
         return true;
     }

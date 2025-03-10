@@ -23,7 +23,7 @@ export class ItemService {
         this.itemUpdaterService = new ItemUpdaterService(logger);
     }
 
-    private caseWeapons(jsonWeaponsFiles): boolean {
+    private caseWeapons(jsonWeaponsFiles): void {
         for (const {fileName, json} of jsonWeaponsFiles) {
             if (!json) {
                 this.logger.warning(`[AttributMod] Skipping invalid or missing weapon JSON data: ${fileName}`);
@@ -58,17 +58,15 @@ export class ItemService {
                 continue;
             }
 
-            if (this.itemUpdaterService.applyWeaponsModifications(
+            this.itemUpdaterService.applyWeaponsModifications(
                 itemsPropsJson,
                 itemsJson._id,
                 locale.Name,
-                this.iDatabaseTables)) {
-                return true
-            }
+                this.iDatabaseTables)
         }
     }
 
-    private caseAmmo(jsonAmmoFiles): boolean {
+    private caseAmmo(jsonAmmoFiles) {
         for (const {fileName, json} of jsonAmmoFiles) {
             if (!json) {
                 this.logger.warning(`[AttributMod] Skipping invalid or missing ammo JSON data: ${fileName}`);
@@ -111,13 +109,11 @@ export class ItemService {
                 return;
             }
 
-            if (this.itemUpdaterService.applyAmmoModifications(
+            this.itemUpdaterService.applyAmmoModifications(
                 ammoProps,
                 itemsJson._id,
                 locale.Name,
-                this.iDatabaseTables)) {
-                return true
-            }
+                this.iDatabaseTables)
         }
     }
 
