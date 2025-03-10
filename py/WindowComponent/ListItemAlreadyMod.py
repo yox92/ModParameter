@@ -5,7 +5,8 @@ from Entity import Logger
 from Entity.WindowType import WindowType
 from Utils import WindowUtils, JsonUtils
 
-DETAIL_WINDOW = "1000x500"
+BIG_WINDOW = "1000x600"
+SMALL_WINDOW = "600x600"
 
 
 class ListItemAlreadyMod:
@@ -19,7 +20,10 @@ class ListItemAlreadyMod:
         self.main_instance = main_instance
         self.window_type : WindowType = window_type
         self.master.title('Select')
-        self.master.geometry(DETAIL_WINDOW)
+        if window_type != WindowType.WEAPON:
+            self.master.geometry(BIG_WINDOW)
+        else:
+            self.master.geometry(SMALL_WINDOW)
         self.master.configure(bg="#242424")
         self.window_protocol = WindowUtils.window_protocol(self.detail_window,
                                                            self.detail_window,
@@ -40,8 +44,8 @@ class ListItemAlreadyMod:
         if self.window_type == WindowType.DELETE:
             self.master.grid_rowconfigure(2, weight=1)
             title_label = ctk.CTkLabel(self.master,
-                                        text="CLICK on MOD to DELETE :",
-                                        font=("Arial", 25, "bold"),
+                                        text="Click on Ammo/Weapon to Delete :",
+                                        font=("Arial", 15, "bold"),
                                         text_color="red")
             title_label.grid(row=2, column=0, pady=0, sticky="n")
 
@@ -73,13 +77,19 @@ class ListItemAlreadyMod:
             name = item.replace("_mod.json", "")
             return (not name[0].isdigit(), name)
 
-        sorted_item = sorted(self.weapon_list, key=custom_sort)
+        if self.window_type == WindowType.DELETE:
+            sorted_item = sorted(self.weapon_list, key=lambda x: x[0]) # tuple from delete
+        else:
+            sorted_item = sorted(self.weapon_list, key=custom_sort) # list str
 
         for idx, item in enumerate(sorted_item):
-            if self.window_type != WindowType.WEAPON:
-                itm_short = item.replace("_mod.json", "")[:20]
+            file_name = item[0] if isinstance(item, tuple) else item
+            if self.window_type == WindowType.WEAPON:
+                itm_short = file_name.replace("_mod.json", "")[:10]
+            elif self.window_type == WindowType.AMMO:
+                itm_short = file_name.replace("_mod.json", "")[:20]
             else:
-                itm_short = item.replace("_mod.json", "")[:10]
+                itm_short = file_name.replace("_mod.json", "")[:20]
 
             col = idx % 3
             button_weapon = ctk.CTkButton(
@@ -89,7 +99,7 @@ class ListItemAlreadyMod:
                 fg_color="#00fdff",
                 text_color="black",
                 hover_color="yellow",
-                font=("Arial", 13, "bold"),
+                font=("Arial", 15, "bold"),
                 command=lambda
                     pname=item:
                 self.open_specific_window(pname))
@@ -98,10 +108,15 @@ class ListItemAlreadyMod:
                                padx=5,
                                pady=5,
                                sticky="ew")
-
+            if self.window_type != WindowType.WEAPON:
+                button_weapon.configure(font=("Arial", 11, "bold"))
             if self.window_type == WindowType.DELETE:
                 button_weapon.configure(command=lambda pname=item, short_name=itm_short:
                 self.delete_specific_mod(pname, short_name))
+                if item[1] == WindowType.AMMO:
+                    button_weapon.configure(fg_color="dodgerblue")
+                else:
+                    button_weapon.configure(fg_color="peru")
 
         self.inner_frame.update_idletasks()
         self.canvas.config(scrollregion=self.canvas.bbox("all"))
@@ -115,16 +130,15 @@ class ListItemAlreadyMod:
 
 
     def delete_specific_mod(self, pname, short_name):
-        file_path = JsonUtils.find_json_file_with_name(pname, self.window_type)
+        file_path = JsonUtils.find_json_file_with_name(pname[0], self.window_type)
         if not file_path:
-            print(f"No mod find about : {pname}")
+            print(f"No mod find about : {pname[0]}")
         else:
             JsonUtils.delete_file_if_exists(file_path)
             self.logger.log("info", f"{short_name} mod delete")
             if not JsonUtils.file_exist(file_path):
-                name_file_delete = pname
-                if name_file_delete in self.weapon_list:
-                    self.weapon_list.remove(name_file_delete)
+                if pname in self.weapon_list:
+                    self.weapon_list.remove(pname)
                 self.refresh_list_after_delete()
 
     def refresh_list_after_delete(self):

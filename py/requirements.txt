@@ -1,2 +1,4 @@
 customtkinter==5.2.2
 Pillow==11.1.0
+setuptools~=70.0.0
+CTkMessagebox~=2.7

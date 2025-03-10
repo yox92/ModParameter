@@ -2,7 +2,7 @@ import customtkinter as ctk
 from customtkinter import CTkImage
 from CTkMessagebox import CTkMessagebox
 
-from Entity import Caliber, Root, Logger, EnumAmmo
+from Entity import Caliber, Root, Logger
 from Entity.WindowType import WindowType
 from Utils import WindowUtils
 from Utils.ImageUtils import ImageUtils
@@ -25,6 +25,8 @@ WINDOW_OFFSET = 10
 
 class ModSelectionWindow:
     def __init__(self, root):
+        self.entry = None
+        self.loaded_data_ammo = None
         self.button_delete_mod = None
         self.button_all_ammo_tracer = None
         self.list_json_name_all_mod = None
@@ -40,10 +42,10 @@ class ModSelectionWindow:
         self.frame_top_2 = None
         self.ammo_image = None
         self.frames_buttons = None
-        self.buttonAmmo = None
+        self.button_ammo = None
         self.frame_top_3 = None
         ctk.set_appearance_mode(APPEARANCE_MODE)
-        self.buttonPmc = None
+        self.button_pmc = None
         self.loaded_data = None
         self.frame_top_4 = None
         self.main_frame_top = None
@@ -55,7 +57,7 @@ class ModSelectionWindow:
         self.caliber_image = None
         self.pmc_image = None
         self.buttonWeapon = None
-        self.buttonCaliber = None
+        self.button_caliber = None
         self.detail_window = None
         self.framesBotRecherche = []
         self.list_json_name_mod_weapons = []
@@ -194,15 +196,26 @@ class ModSelectionWindow:
             Utils.apply_tracer_to_ammo_with_mod_exist_already(color)
 
     def all_mod_to_delete(self):
-        self.list_json_name_all_mod = JsonUtils.load_all_name_json_mod()
-        if self.list_json_name_all_mod:
-            self.detail_window = ctk.CTkToplevel(self.root)
-            self.focus_new_window()
-            ListItemAlreadyMod(self.detail_window,
-                               self.root,
-                               self.detail_window,
-                               self.list_json_name_all_mod,
-                               self, WindowType.DELETE)
+        msg_choice = CTkMessagebox(title="All Delete Or Choice Which One?",
+                                   message="Choose an option: Delete All Ammo / Delete All Weapons / Select a Mod to Delete",
+                                   icon="warning", option_1="All Ammo", option_2="All Weapons", option_3="Select One")
+        response = msg_choice.get()
+        if response == "All Ammo":
+            ModSelectionWindow.delete_all_weapons(WindowType.AMMO)
+        elif response == "All Weapons":
+            ModSelectionWindow.delete_all_weapons(WindowType.WEAPON)
+        elif response == "Select One":
+            self.list_json_name_all_mod = JsonUtils.load_all_name_json_mod()
+            if self.list_json_name_all_mod:
+                self.detail_window = ctk.CTkToplevel(self.root)
+                self.focus_new_window()
+                ListItemAlreadyMod(self.detail_window,
+                                   self.root,
+                                   self.detail_window,
+                                   self.list_json_name_all_mod,
+                                   self, WindowType.DELETE)
+        else:
+            print("no choice")
 
     def create_frame_top(self):
         self.main_frame_top = ctk.CTkFrame(self.root, fg_color="transparent")
@@ -268,7 +281,7 @@ class ModSelectionWindow:
         self.buttonWeapon.pack(side="top", anchor="center",
                                expand=True, fill="both")
 
-        self.buttonCaliber = ctk.CTkButton(
+        self.button_caliber = ctk.CTkButton(
             self.frame_top_2,
             image=self.caliber_image,
             text="Weapons by Ballistics",
@@ -279,9 +292,9 @@ class ModSelectionWindow:
             font=("Arial", 18, "bold"),
             command=lambda: self.generate_list_button_caliber_ammo(WindowType.CALIBER)
         )
-        self.buttonCaliber.pack(side="top", anchor="center",
-                                expand=True, fill="both")
-        self.buttonAmmo = ctk.CTkButton(
+        self.button_caliber.pack(side="top", anchor="center",
+                                 expand=True, fill="both")
+        self.button_ammo = ctk.CTkButton(
             self.frame_top_3,
             image=self.ammo_image,
             text="Ammo Attributes",
@@ -292,9 +305,9 @@ class ModSelectionWindow:
             font=("Arial", 18, "bold"),
             command=self.ammo_window
         )
-        self.buttonAmmo.pack(side="top", anchor="center",
-                             expand=True, fill="both")
-        self.buttonPmc = ctk.CTkButton(
+        self.button_ammo.pack(side="top", anchor="center",
+                              expand=True, fill="both")
+        self.button_pmc = ctk.CTkButton(
             self.frame_top_4,
             image=self.pmc_image,
             text="PMC Attributes",
@@ -305,13 +318,13 @@ class ModSelectionWindow:
             font=("Arial", 18, "bold"),
             command=self.pmc_window
         )
-        self.buttonPmc.pack(side="top", anchor="center",
-                            expand=True, fill="both")
+        self.button_pmc.pack(side="top", anchor="center",
+                             expand=True, fill="both")
         self.frames_buttons = {
             "weapon": self.buttonWeapon,
-            "caliber": self.buttonCaliber,
-            "pmc": self.buttonPmc,
-            "ammo": self.buttonAmmo
+            "caliber": self.button_caliber,
+            "pmc": self.button_pmc,
+            "ammo": self.button_ammo
         }
 
     def generate_list_button_caliber_ammo(self, choice_window: WindowType):
@@ -574,3 +587,7 @@ class ModSelectionWindow:
         self.detail_window.grab_set()
         self.detail_window.focus_force()
         self.root.attributes('-disabled', True)
+
+    @staticmethod
+    def delete_all_weapons(window_type: WindowType):
+        JsonUtils.delete_all_mod(window_type)

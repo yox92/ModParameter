@@ -173,7 +173,7 @@ class JsonUtils:
     @staticmethod
     def load_all_name_json_mod():
         json_dirs = [JSON_FILES_DIR_WEAPONS, JSON_FILES_DIR_AMMO]
-        file_name: list[str] = []
+        file_name: list[tuple[str, WindowType]] = []
 
         for json_dir in json_dirs:
             if not os.path.exists(json_dir):
@@ -181,7 +181,10 @@ class JsonUtils:
 
             for filename in os.listdir(json_dir):
                 if filename.endswith('mod.json'):
-                    file_name.append(filename)
+                    if json_dir == JSON_FILES_DIR_AMMO:
+                        file_name.append((filename, WindowType.AMMO))
+                    else:
+                        file_name.append((filename, WindowType.WEAPON))
 
         if not file_name:
             print("No file mod found")
@@ -303,6 +306,11 @@ class JsonUtils:
             print(f" file delete : {file_path}")
 
     @staticmethod
+    def delete_file(file_path):
+            os.remove(file_path)
+            print(f" file delete : {file_path}")
+
+    @staticmethod
     def delete_file_mod_if_exists(file_path):
         json_file_path_mod = file_path.replace(".json", "_mod.json")
         if os.path.exists(json_file_path_mod):
@@ -346,3 +354,16 @@ class JsonUtils:
     @staticmethod
     def update_json_caliber_from_new_value_change(path_to_json_calibber, new_value_change):
         JsonUtils.update_json_caliber(path_to_json_calibber, new_value_change)
+
+    @staticmethod
+    def delete_all_mod(window_type: WindowType):
+        if window_type == WindowType.AMMO:
+            for file_name in os.listdir(JSON_FILES_DIR_AMMO):
+                if file_name.endswith('_mod.json'):
+                    file_path = os.path.join(JSON_FILES_DIR_AMMO, file_name)
+                    JsonUtils.delete_file(file_path)
+        elif window_type == WindowType.WEAPON:
+            for file_name in os.listdir(JSON_FILES_DIR_WEAPONS):
+                if file_name.endswith('_mod.json'):
+                    file_path = os.path.join(JSON_FILES_DIR_WEAPONS, file_name)
+                    JsonUtils.delete_file(file_path)
