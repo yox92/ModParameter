@@ -1,101 +1,108 @@
 # ModParameter App
 
-## Table des matières
-1. [Aperçu du projet](#aperçu-du-projet)
-2. [Fonctionnalités principales](#fonctionnalités-principales)
-3. [Lancement de l’application](#lancement-de-lapplication)
-4. [Structure du projet](#structure-du-projet)
+## Table of Contents
+1. [Project Overview](#project-overview)
+2. [Main Features](#main-features)
+3. [Launching the Application](#launching-the-application)
+4. [Project Structure](#python-project-structure)
+5. [General Usage](#general-usage)
+6. [Key Classes Overview](#key-classes-overview)
+   - [ModSelectionWindow](#ModSelectionWindow-)
+   - [CaliberWeaponsMod](#CaliberWeaponsMod-)
+   - [SingleWeaponMod](#SingleWeaponMod-)
+   - [AmmoMod](#AmmoMod-)
+   - [ListItemAlreadyMod](#ListItemAlreadyMod-)
+7. [Utils](#Utils)
+   - [JsonUtils](#JsonUtils)
+   - [Utils](#Utils)
+8. [Config](#Config)
+9. [Examples](#JSON-File-Examples)
 
-6. [Utilisation générale](#utilisation-générale)
-7. [Focus sur les classes principales](#focus-sur-les-classes-principales)
-   - [ModSelectionWindow](#modselectionwindow--menu-principal)
-   - [CaliberWeaponsMod](#caliberweaponsmod--modification-groupée-par-calibre)
-   - [SingleWeaponMod](#singleweaponmod--modification-ciblée-dune-unique-arme)
-   - [AmmoMod](#ammomod--modification-de-munitions)
-   - [ListItemAlreadyMod](#listitemalreadymod--liste-et-suppression-de-fichiers-mod)
-8. [Dépendances](#dépendances)
-
----
-
-## Aperçu du projet
-1. **ModParameter App** est une application Python conçue pour créer et gérer des “mods” (fichiers `*_mod.json`) 
-relatifs à différents éléments d’un jeu (armes, munitions, PMC). Elle utilise **[customtkinter](https://github.com/TomSchimansky/CustomTkinter)** 
-pour son interface graphique et manipule des **fichiers JSON** pour charger, modifier ou supprimer des valeurs de configuration.
-2. Les fichiers `*_mod.json` sont par la suite récupéré par le projet TypeScript pour mapper dans les Objets de la `BDD SPT`
+10. [Dependencies](#dependencies)
 
 ---
 
-## Fonctionnalités principales
+## Project Overview
+1. **ModParameter App** is a Python application designed to create and manage “mod” files (`*_mod.json`) 
+related to various game elements (weapons, ammo, PMC). It uses **[customtkinter](https://github.com/TomSchimansky/CustomTkinter)** 
+for its graphical interface and manipulates **JSON files** to load, modify, or delete configuration values.
+2. The `*_mod.json` files are later retrieved by the TypeScript project to be mapped into the `SPT Database` objects.
 
-1. **Interface graphique intuitive**  
-   - Menu principal avec choix de modification (armes, munitions, PMC).  
-   - Fenêtres dédiées pour configurer un objet ou un groupe d’objets.
+---
+## Main Features
 
-2. **Gestion centralisée de Mods**  
-   - Création automatique de fichiers `*_mod.json` pour séparer les modifications du fichier de base.
-   - Les fichiers `*_mod.json` sont placé par python dans :
+1. **Intuitive Graphical Interface**  
+   - Main menu with modification options (weapons, ammo, PMC).  
+   - Dedicated windows for configuring a single object or a group of objects.
+
+2. **Centralized Mod Management**  
+   - Automatic creation of `*_mod.json` files to separate modifications from base files.
+   - The `*_mod.json` files are placed by Python into:
      - JsonFiles/Weapons
      - JsonFiles/Ammo
      - JsonFiles/PMC
-   - Suppression ciblée ou globale de ces fichiers `*_mod.json`, permettant de revenir à l’état “vanilla”.
+   - Targeted or global deletion of `*_mod.json` files, allowing a return to the “vanilla” state.
 
-3. **Recherche et tri**  
-   - Filtrer des armes via leur nom.  
-   - Sélectionner toutes les armes d’un même calibre.
-   - Sélectionner les balles par leur calibres
-   - Lister toutes les munitions / armes déjà modifiées.
+3. **Search and Sorting**  
+   - Filter weapons by name.  
+   - Select all weapons of the same caliber.
+   - Select bullets by their caliber.
+   - List all modified weapons and ammo.
 
-4. **Suppression**  
-   - supprimer les fichiers `*_mod.json` des armes/balles/PMC :
-     - Suppression globale
-     - Suppression ciblée
-     - Remettre les valeurs d'origine = suppression `*_mod.json`
+4. **Deletion**  
+   - Delete `*_mod.json` files for weapons/ammo/PMC:
+     - Global deletion.
+     - Targeted deletion.
+     - Restore original values = delete `*_mod.json`.
 
-5. **Édition et contrôle**  
-   - Barres de glissement (sliders) pour ajuster en pourcentage les valeurs numériques %.  
-   - Champs de saisie pour fixer manuellement des valeurs.  
-   - switch boolean
-   - Indicateurs d’éventuels dépassements (seuils de sécurité) ou d’erreur d’entrée.
+5. **Editing and Control**  
+   - Sliders to adjust numerical values in percentage %.  
+   - Input fields to manually set values.  
+   - Boolean switch.
+   - Indicators for possible threshold violations (safety limits) or input errors.
 
-6. **Feedback visuel**  
-   - Barres de progression pour afficher l’évolution de l’opération.  
-   - Étiquettes de statut (ex. “Changes applied successfully” ou “All modifications removed”).
+6. **Visual Feedback**  
+   - Progress bars to display operation progress.  
+   - Status labels (e.g., “Changes applied successfully” or “All modifications removed”).
 
 ---
 
-# Lancement de l’application
+# Launching the Application
+
 ## Python
-- Placez-vous à la racine du projet.
-- le main.py se trouve dans le répertoire main
-- La fenêtre ModParameter App s’affiche, proposant différents choix.
+- Navigate to the project root directory.
+- The `main.py` file is located in the `main` directory.
+- The ModParameter App window will appear, providing various modification options.
 
-##  fichier .EXE
-- Tout le packaging est réalisé avec `pyinstaller`
-- un fichier `buildExeFile.bat` permet la fabrication du fichier `*.exe`
-- par défault, il est généré à la racine du projet dans `py'
+## .EXE File
+- The entire packaging process is done using `pyinstaller`.
+- A `buildExeFile.bat` script is available to generate the `*.exe` file.
+- By default, it is generated in the `py` folder at the project root.
 
-- le fichier exe est configuré pour être executé dans l'arborescence inférieure du dossier py `config.py`
-- la structure doit être :
-  - NameModeFolder <==> `*.exe`
+- The `.exe` file is configured to run within the subdirectory structure defined in `config.py`.
+- The required structure is as follows:
+
+  - **NameModeFolder** <==> `*.exe`
     - **py**
       - JsonFiles
-        - Weapons  **Json File HERE**
-        - Ammo     **Json File HERE**
-        - Calibers **Json File HERE**
-        - PMC      **Json File HERE**
-    - **src** ==> TypeScript SPT
+        - Weapons  **(JSON Files Here)**
+        - Ammo     **(JSON Files Here)**
+        - Calibers **(JSON Files Here)**
+        - PMC      **(JSON Files Here)**
+    - **src** (TypeScript SPT)
 
 ---
 
-## Structure du projet Python
+
+# python-project-structure
 
 .
 ├── Entity/
 │   ├── Caliber.py         
-│   ├── EnumProps.py       # Enum pour les propriétés d'armes
-│   ├── EnumAmmo.py        # Enum pour les propriétés de munitions
+│   ├── EnumProps.py       
+│   ├── EnumAmmo.py        
 │   ├── Item.py
-│   ├── ItemManager.py     # Mapper pour facilité la manipulation du Props `ItemProps.py`
+│   ├── ItemManager.py     
 │   ├── ItemProps.py
 │   ├── Logger.py
 │   ├── Root.py
@@ -106,95 +113,96 @@ pour son interface graphique et manipule des **fichiers JSON** pour charger, mod
 │   ├── Utils.py
 │   └── WindowUtils.py
 ├── WindowComponent/
-│   ├── AmmoMod.py            # Modification d'une munition
-│   ├── CaliberWeaponsMod.py  # Modification groupée par calibre
-│   ├── ListItemAlreadyMod.py # Liste + suppression de fichiers mod existants
+│   ├── AmmoMod.py            
+│   ├── CaliberWeaponsMod.py  
+│   ├── ListItemAlreadyMod.py s
 │   ├── PmcMod.py
-│   ├── ModSelectionWindow.py     # Classe principale (menu)
+│   ├── ModSelectionWindow.py     
 │   ├── ProgressBar.py
-│   └── SingleWeaponMod.py    # Modification d'une arme précise
+│   └── SingleWeaponMod.py    
 ├── requirements.txt
-└── main.py                   # Point d'entrée
+└── main.py                   
 
 ---
 
-# Utilisation Générale
-### Menu Principal
+# General Usage
 
-- **One Specific Weapon** : Trouver et ajuster une seule arme.
-- **Weapons by Ballistics** : Trier les armes par calibre.
-- **Ammo Attributes** : Modifier les attributs des munitions.
-- **PMC Attributes** : Ajuster les attributs des personnages.
+### Main Menu
+
+- **One Specific Weapon**: Find and adjust a single weapon.
+- **Weapons by Ballistics**: Sort weapons by caliber.
+- **Ammo Attributes**: Modify ammunition attributes.
+- **PMC Attributes**: Adjust character attributes.
 
 ### Modification
 
-- Selon la fenêtre ouverte, vous trouverez des sliders (pourcentage) ou des champs de texte (valeurs absolues).
-- Cliquez sur **Apply** pour créer ou mettre à jour le fichier `*_mod.json`
+- Depending on the open window, you will find sliders (percentage) or text fields (absolute values).
+- Click **Apply** to create or update the `*_mod.json` file.
 
-- En bas de la fenêtre principale, des boutons vous montrent la liste des armes ou munitions déjà modifiées.
-Vous pouvez supprimer certains ou tous les fichiers *_mod.json.
-- vous avez aussi la possibilité d'appliquer la propriété "balles traçantes" à toutes les balles du jeu.
+- At the bottom of the main window, buttons display the list of already modified weapons or ammunition.
+- You can delete some or all `*_mod.json` files.
+- You also have the option to apply the "tracer bullets" property to all bullets in the game.
 
-### Retour ou Fermeture
-- Fermez la fenêtre secondaire pour revenir au menu principal.
-- Quittez l'application ou sélectionnez une autre action.
+### Returning or Closing
+- Close the secondary window to return to the main menu.
+- Exit the application or select another action.
 
+### Mod List and Deletion
+- At the bottom of the main window, buttons allow you to display the list of already modified weapons or ammunition.
+- You can delete some or all `*_mod.json` files.
 
-### Liste et Suppression de Mods
-- En bas de la fenêtre principale, des boutons permettent d'afficher la liste des armes ou munitions déjà modifiées.
-- Vous pouvez supprimer certains ou tous les fichiers `*_mod.json`.
+# key-classes-overview
 
-# Focus sur les Classes Principales
+## **ModSelectionWindow** – Main Menu
+- **File**: `ModSelectionWindow.py`
+- **Role**: Creates the main window with 8 possible choices (including 5 leading to specialized classes).
+- **Key Points**:
+  - Management of buttons **All Saved Weapons Mod, All Saved Ammo Mod**, etc.
+  - Opening and closing of secondary windows (`Toplevel`).
+  - Global deletion of Mods (all `*_mod.json` of a certain type).
 
-## **ModSelectionWindow** – Menu Principal
-- **Fichier** : `ModSelectionWindow.py`
-- **Rôle** : Créer la fenêtre principale avec 8 choix possibles (dont 5 vers des classes spécialisées).
-- **Points clés** :
-  - Gestion des boutons **All Saved Weapons Mod, All Saved Ammo Mod**, etc.
-  - Ouverture et fermeture de fenêtres secondaires (`Toplevel`).
-  - Suppression globale de Mods (tous les `*_mod.json` d’un certain type).
+## **CaliberWeaponsMod** Group Modification by Caliber
+- **File**: `WindowComponent/CaliberWeaponsMod.py`
+- **Role**: Lists all weapons of a given caliber and applies massive changes (e.g., +20% damage).
+- **Key Points**:
+  - Selection/deselection of weapons.
+  - Sliders to adjust attributes (damage, recoil, accuracy, etc.).
+  - Automatic creation/deletion of `*_mod.json` files.
+  - For this module, a configuration file = one caliber
+    - Located in: `JsonFiles/Calibers`
 
-## **CaliberWeaponsMod** – Modification Groupée par Calibre
-- **Fichier** : `WindowComponent/CaliberWeaponsMod.py`
-- **Rôle** : Lister toutes les armes d’un calibre donné et appliquer des changements massifs (ex. +20% de dégâts).
-- **Points clés** :
-  - Sélection/désélection d’armes.
-  - Sliders pour ajuster les attributs (dégâts, recul, précision, etc.).
-  - Création/suppression automatique de fichiers `*_mod.json`.
-  - Pour ce module un fichier de configuration = un calibre
-    - Dans le dossier : `JsonFiles/Calibers`
+## **SingleWeaponMod** – Targeted Modification of a Single Weapon
+- **File**: `WindowComponent/SingleWeaponMod.py`
+- **Role**: Manages the modification of a specific weapon (via search bar or global list).
+- **Key Points**:
+  - Loads the original JSON file and checks for an existing `*_mod.json`.
+  - Sliders for percentage adjustments.
+  - Reset possible if all values return to the original state.
 
-## **SingleWeaponMod** – Modification Ciblée d’une Unique Arme
-- **Fichier** : `WindowComponent/SingleWeaponMod.py`
-- **Rôle** : Gérer la modification d’une arme précise (via barre de recherche ou liste globale).
-- **Points clés** :
-  - Chargement du fichier JSON original et vérification d’un éventuel `*_mod.json`.
-  - Sliders pour ajustements en pourcentage.
-  - Réinitialisation possible si toutes les valeurs reviennent à l’origine.
+## **AmmoMod** – Ammunition Modification
+- **File**: `WindowComponent/AmmoMod.py`
+- **Role**: Customizes ammunition attributes (penetration, damage, tracer, etc.).
+- **Key Points**:
+  - Text fields (e.g., penetration) and switch (e.g., ammo tracer on/off).
+  - Validity control (upper/lower limits).
+  - Creation/deletion of a `*_mod.json` file to enable/disable the mod.
 
-## **AmmoMod** – Modification de Munitions
-- **Fichier** : `WindowComponent/AmmoMod.py`
-- **Rôle** : Personnalisation des attributs de munitions (pénétration, dommages, tracer, etc.).
-- **Points clés** :
-  - Champs de texte (ex. pénétration) et switch (ex. ammo tracer on/off).
-  - Contrôle de validité (limites hautes/basses).
-  - Création/effacement d’un `*_mod.json` pour activer/désactiver le mod.
+## **ListItemAlreadyMod** – *List and delete mod files*
+- **File**: `WindowComponent/ListItemAlreadyMod.py`
+- **Role**: Displays all weapons or ammunition that already have a `*_mod.json`, or, depending on the *WindowType*, allows deleting these files in one click.
+- **Key Points**:
+  1. **Scrolling list**
+     - Each item is represented by a button.
+  2. **Viewing / Deletion**
+     - **Viewing**: For `WEAPON` or `AMMO`, clicking a button opens the detail window (via `SingleWeaponMod`, `AmmoMod`, etc.).
+     - **Deletion**: Clicking a button immediately deletes the corresponding `*_mod.json` file (weapon or ammunition).
+       - The list updates (refreshes) after deletion so that the item is no longer displayed.
+  3. **Display Modes**:
+     - Adjusts the interface (window size, button colors) based on the type of item (weapon or ammo) and action (simple viewing or deletion).
+  4. **Parameters**:
+     - `window_type`: an enumerator (`WindowType`) distinguishing the expected operation (WEAPON, AMMO, DELETE).
+     - `weapon_list`: list of elements (weapons or tuples) already modified and detected as `*_mod.json`.
 
-## ListItemAlreadyMod – *Liste et suppression de fichiers mod*
-- **Fichier** : `WindowComponent/ListItemAlreadyMod.py`  
-- **Rôle** : Affiche toutes les armes ou munitions qui ont déjà un `*_mod.json`, ou permet, selon le *WindowType*, de supprimer ces fichiers en un clic.  
-- **Points clés** :
-  1. **Liste défilante**   
-     - Chaque élément est représenté par un bouton.
-  2. **Consultation / Suppression**  
-     - **Consultation** : Pour `WEAPON` ou `AMMO`, chaque clic sur un bouton ouvre la fenêtre de détail (via `SingleWeaponMod`, `AmmoMod`, etc.).  
-     - **Suppression** :  chaque clic sur un bouton supprime immédiatement le `*_mod.json` correspondant à l’élément sélectionné (arme ou munition).
-       - La liste est mise à jour (rafraîchie) après la suppression pour ne plus afficher l’élément.  
-  3. **Modes d’affichage** :  
-     - Ajuste l’interface (taille de la fenêtre, couleur des boutons) en fonction du type d’élément (arme ou munition) et de l’action (simple consultation ou suppression).
-  4. **Paramètres** :  
-     - `window_type` : un énumérateur (`WindowType`) permettant de distinguer l’opération attendue (WEAPON, AMMO, DELETE).  
-     - `weapon_list` : liste d’éléments (armes ou tuples) déjà modifiés et détectés comme `*_mod.json`.
 
 **Exemple d’usage** :
 - Depuis la fenêtre principale, vous cliquez sur “All Saved Weapons Mod” :  
@@ -205,128 +213,136 @@ Vous pouvez supprimer certains ou tous les fichiers *_mod.json.
   - Tous les `*_mod.json` (armes et munitions) sont listés et un clic sur l’un d’eux le supprime instantanément. 
   - La liste est automatiquement rafraîchie.
 
-## JsonUtils – *Gestion des fichiers JSON*
-- **Fichier** : `Utils/JsonUtils.py`  
-- **Rôle** : Centraliser toutes les opérations sur les fichiers JSON, que ce soit pour :
-  - **Charger** et **enregistrer** des données (création/suppression de `_mod.json`).
-  - **Manipuler** des attributs particuliers (mises à jour, multiplications de valeurs, etc.).
-  - **Rechercher** des fichiers correspondants (ex. `find_json_file_with_name`, `find_caliber_json_config`).
-
-- **Fonctionnalités clés** :  
-  1. **Chargement et validation de JSON**  
-     - Méthodes comme `load_json` ou `load_json_and_add_path` s’assurent que le fichier existe et qu’il contient un JSON valide.  
-     - Si un fichier est introuvable ou son contenu illisible, une exception est levée (ex. `FileNotFoundError`, `ValueError`).  
-
-  2. **Gestion des `_mod.json`**  
-     - `file_mod_exist(file_path)`, `return_json_mod(file_path)` vérifient et retournent un éventuel fichier `_mod.json` associé à un JSON de base.  
-     - `save_json_as_new_file(data, file_path_new_json)` crée un fichier `_mod.json` en supprimant l’ancien s’il existe déjà.  
-
-  3. **Operations CRUD (Create, Read, Update, Delete)**  
-     - **Create** : `save_json_as_new_file` ou `write_json` génère un fichier, soit neuf, soit en écrasant l’ancien.  
-     - **Read** : `load_json`, `find_caliber_json_config`, ou d’autres méthodes pour localiser un fichier dans les dossiers (`JSON_FILES_DIR_WEAPONS`, etc.).  
-     - **Update** : 
-       - `update_json_value` et `update_json_caliber` modifient les clés/valeurs selon le `WindowType` (arme, munition, calibre, PMC…).  
-       - `update_json_in_new_file_multi_choice` ajoute un chemin partiel dans l’arborescence JSON (`["item", "_props", key]`) pour appliquer la nouvelle valeur.  
-       - `update_or_multiply_final_key` gère, pour les armes à *WindowType.CALIBER*, un produit par pourcentage (ex. +20%).  
-     - **Delete** : 
-       - `delete_file_if_exists` supprime un fichier s’il est présent.  
-       - `delete_all_mod` (pour `WindowType.AMMO` ou `WindowType.WEAPON`) efface tous les `_mod.json` existants dans un répertoire.
-
-  4. **Filtrage et récupération en masse**  
-     - Méthodes comme `load_all_json_files_without_mod`, `load_all_json_files_weapons_mod` ou `load_all_json_ammo` facilitent le chargement groupé de fichiers.  
-     - `load_all_name_json_mod` retourne notamment toutes les armes et munitions sous forme de liste, ce qui est utile pour la classe `ListItemAlreadyMod`.
-
-- **Exemple d’utilisation** :  
-  - **Création d’un nouveau mod** : On charge d’abord le JSON d’origine via `load_json(...)`. Puis on modifie la structure en appelant `update_json_in_new_file_multi_choice` et enfin `save_json_as_new_file(...)` qui génère le fichier `_mod.json`.  
-  - **Suppression** : Dans l’interface, un clic sur un bouton *Delete* appelle `delete_file_if_exists(...)` pour effacer le `*_mod.json`, et l’UI se met à jour en conséquence.  
-  - **Modification groupée** : Pour toutes les armes d’un calibre, on liste leurs fichiers JSON d’origine, on applique les changements avec un coefficient, puis on sauvegarde chaque arme avec `_mod.json`.
-
-Ce module **JsonUtils** est donc au cœur de votre application, car il uniformise l’accès aux données **JSON** et leur mise à jour. Il simplifie également l’implémentation de nouvelles règles ou le support de nouveaux types d’objets en garantissant une interface de lecture/écriture cohérente.
 ---
-## Utils – *Fonctions utilitaires*
-- **Fichier** : `Utils/Utils.py`  
-- **Rôle** : Fournir diverses fonctions génériques ou spécialisées, utiles à l’interface et à la manipulation de données.  
+# Utils
+## JsonUtils
 
-##### Principales responsabilités
-1. **Gestion des interfaces**  
-   - **Nettoyage et configuration de widgets** :  
-     - `clear_frame` : Efface le contenu d’une frame et réinitialise son découpage en lignes/colonnes.  
-     - `configure_grid`, `create_grid_row_col_config` : Aide à configurer les grilles (lignes, colonnes, poids de redimensionnement, etc.).
-   - **Aide à la création de sous-frames** (ex. `create_5x4_bottom`) pour organiser dynamiquement des panneaux ou boutons.
+- **File**: `Utils/JsonUtils.py`  
+- **Role**: Centralizes all operations on JSON files, including:
+  - **Loading** and **saving** data (creating/deleting `_mod.json`).
+  - **Manipulating** specific attributes (updates, value multiplications, etc.).
+  - **Searching** for corresponding files (e.g., `find_json_file_with_name`, `find_caliber_json_config`).
 
-2. **Gestion des valeurs numériques**  
-   - `float_to_scaled_int` : Convertit un float en un entier *scaled_int* et un facteur d’échelle *scale_factor*.  
-   - `determine_format_spec` : Calcule un format (`.2f`, `.3f`, etc.) pour afficher un nombre avec le nombre de décimales adéquat.
+- **Key Features**:  
+  1. **Loading and Validating JSON**  
+     - Methods like `load_json` or `load_json_and_add_path` ensure that the file exists and contains valid JSON.  
+     - If a file is missing or contains unreadable content, an exception is raised (e.g., `FileNotFoundError`, `ValueError`).  
+  
+  2. **Managing `_mod.json` Files**  
+     - `file_mod_exist(file_path)`, `return_json_mod(file_path)` check and return an associated `_mod.json` file for a base JSON.  
+     - `save_json_as_new_file(data, file_path_new_json)` creates a `_mod.json` file, deleting the old one if it already exists.  
+  
+  3. **CRUD Operations (Create, Read, Update, Delete)**  
+     - **Create**: `save_json_as_new_file` or `write_json` generates a new file, either from scratch or by overwriting an existing one.  
+     - **Read**: `load_json`, `find_caliber_json_config`, and other methods locate a file within directories (`JSON_FILES_DIR_WEAPONS`, etc.).  
+     - **Update**:  
+       - `update_json_value` and `update_json_caliber` modify key-value pairs based on `WindowType` (weapon, ammo, caliber, PMC, etc.).  
+       - `update_json_in_new_file_multi_choice` adds a partial path in the JSON hierarchy (`["item", "_props", key]`) to apply the new value.  
+       - `update_or_multiply_final_key` handles percentage-based value multiplication for weapons with *WindowType.CALIBER* (e.g., +20%).  
+     - **Delete**:  
+       - `delete_file_if_exists` removes a file if present.  
+       - `delete_all_mod` (for `WindowType.AMMO` or `WindowType.WEAPON`) deletes all existing `_mod.json` files in a directory.  
+  
+  4. **Filtering and Bulk Retrieval**  
+     - Methods like `load_all_json_files_without_mod`, `load_all_json_files_weapons_mod`, or `load_all_json_ammo` facilitate batch loading of files.  
+     - `load_all_name_json_mod` returns all weapons and ammunition as a list, useful for the `ListItemAlreadyMod` class.  
+  
+- **Usage Examples**:  
+  - **Creating a new mod**: First, load the original JSON using `load_json(...)`. Then, modify the structure with `update_json_in_new_file_multi_choice`, and finally, `save_json_as_new_file(...)` generates the `_mod.json` file.  
+  - **Deletion**: In the UI, clicking a *Delete* button calls `delete_file_if_exists(...)` to remove the `*_mod.json` file, triggering an interface update.  
+  - **Batch Modification**: For all weapons of a specific caliber, retrieve their original JSON files, apply modifications with a coefficient, and save each weapon with `_mod.json`.  
 
-3. **Filtrage et déplacements de fichiers**  
-   - `remove_file_by_name`, `move_file_between_lists`, `transfer_file_between_lists` : Ces méthodes servent à gérer la liste des chemins de fichiers (p. ex. déplacer un fichier d’une liste “source” vers une liste “cible”). 
-   - `transform_list_of_strings`, `remove_jon_extension`, etc. : Fonctions auxiliaires pour uniformiser les noms de fichiers (lowercase, retrait du `.json`…).
+# JsonUtils Module
 
-4. **Vérification de valeurs limites**  
-   - `is_value_outside_limits_weapons`, `is_value_outside_limits_ammo`, `is_value_outside_limits_aiming` : Détermine si un pourcentage ou une valeur (ex. dégâts de munition, cadence de tir) dépasse un seuil.  
-   - Les seuils sont définis dans des `dict` spécifiques (p. ex. dégâts min/max = `(1, 450)`).
+The **JsonUtils** module is at the core of your application, as it standardizes access to **JSON** data and its updates. It also simplifies the implementation of new rules or support for new object types by ensuring a consistent read/write interface.
 
-5. **Gestion de l’interface en cas d’erreur**  
-   - `block_all_input_before_correction`, `disable_all_widgets_recursive`, `enable_all_widgets_recursive` : Permettent de **désactiver/réactiver** en masse les widgets (boutons, sliders, etc.) de manière hiérarchique.  
-   - `unlock_all`, `unlock_all_buttons_recursive` : Permet de redonner la main à l’utilisateur une fois l’erreur résolue.
-
-6. **Méthodes spécifiques pour munitions traçantes**  
-   - `apply_tracer_to_ammo_no_mod_again`, `apply_tracer_to_ammo_with_mod_exist_already` : Applique la propriété “tracer” (booléenne ou couleur) à toutes les munitions, y compris celles qui disposent déjà d’un `*_mod.json`.
-
-#### Exemples d’usage
-- **Gestion de la fenêtre** : Dans `ModSelectionWindow`, on appelle `Utils.clear_frame` pour vider la zone avant de recréer des boutons.  
-- **Contrôle de saisie** : Dans `AmmoMod`, si l’utilisateur entre une valeur hors limite, `Utils.is_value_outside_limits_ammo` renvoie `True`, ce qui bloque les contrôles et affiche un message d’erreur.
-- **Modification globale** : Dans `apply_tracer_to_ammo_no_mod_again`, on parcourt chaque fichier de munition, on utilise `JsonUtils` pour charger et sauvegarder, et on insère l’info “tracer = true + red/green” via `Utils.modify_json_value`.
-
-En résumé, **`Utils.py`** agit comme une boîte à outils pour d’autres classes (interface ou manipulation de données), afin d’éviter la duplication de code et de regrouper la logique “utilitaire” en un seul endroit.
 ---
+## Utils
+- **File**: `Utils/Utils.py`  
+- **Purpose**: Provides various generic or specialized functions useful for interface handling and data manipulation.  
 
-## config.py – *Gestion des chemins et validation de l’arborescence*
+### Main Responsibilities
 
-- **Fichier** : `config.py`
-- **Rôle** :  
-  - Centraliser les chemins (path) vers les répertoires du projet (ex. `JsonFiles/Weapons`, `JsonFiles/Ammo`, etc.)  
-  - Vérifier que l’arborescence du projet est cohérente (dossiers existants et non vides)  
-  - Valider les fichiers JSON (ex. corriger certaines valeurs par défaut pour les calibres)
+1. **Interface Management**  
+   - **Widget Cleanup and Configuration**:  
+     - `clear_frame`: Clears the contents of a frame and resets its row/column layout.  
+     - `configure_grid`, `create_grid_row_col_config`: Helps configure grids (rows, columns, resizing weight, etc.).
+   - **Helper Functions for Sub-frame Creation** (e.g., `create_5x4_bottom`) to dynamically organize panels or buttons.
 
-#### Variables principales
-1. **`BASE_DIR`** : Le dossier de base, déterminé selon que l’application est exécutée en `.exe` (mode “frozen”) ou en script Python classique.  
-2. **`JSON_FILES_DIR_*`** : Références aux sous-dossiers où se trouvent les armes (`Weaps`), les calibres (`Calibers`), les PNJ (`PMC`), les munitions (`Ammo`), etc.  
-3. **`IMAGES_DIR`** : Contient vos ressources graphiques (icônes, images).
+2. **Numeric Value Handling**  
+   - `float_to_scaled_int`: Converts a float into a *scaled_int* integer and a *scale_factor*.
+   - `determine_format_spec`: Calculates a format (`.2f`, `.3f`, etc.) to display a number with the appropriate decimal precision.
 
-#### Fonctions principales
+3. **File Filtering and Moving**  
+   - `remove_file_by_name`, `move_file_between_lists`, `transfer_file_between_lists`: These methods manage file path lists (e.g., moving a file from a "source" list to a "target" list).
+   - `transform_list_of_strings`, `remove_json_extension`, etc.: Auxiliary functions to standardize file names (lowercase, removing `.json`, etc.).
+
+4. **Limit Value Checking**  
+   - `is_value_outside_limits_weapons`, `is_value_outside_limits_ammo`, `is_value_outside_limits_aiming`: Determines whether a percentage or value (e.g., ammo damage, fire rate) exceeds a threshold.
+   - Thresholds are defined in specific `dicts` (e.g., min/max damage = `(1, 450)`).
+
+5. **Interface Management in Case of Errors**  
+   - `block_all_input_before_correction`, `disable_all_widgets_recursive`, `enable_all_widgets_recursive`: Allows mass **disabling/enabling** of widgets (buttons, sliders, etc.) in a hierarchical manner.
+   - `unlock_all`, `unlock_all_buttons_recursive`: Restores user interaction after an error is resolved.
+
+6. **Specific Methods for Tracer Ammunition**  
+   - `apply_tracer_to_ammo_no_mod_again`, `apply_tracer_to_ammo_with_mod_exist_already`: Applies the "tracer" property (boolean or color) to all ammunition, including those that already have a `*_mod.json`.
+
+### Usage Examples
+- **Window Management**: In `ModSelectionWindow`, `Utils.clear_frame` is called to clear the area before recreating buttons.
+- **Input Validation**: In `AmmoMod`, if the user enters an out-of-range value, `Utils.is_value_outside_limits_ammo` returns `True`, blocking controls and displaying an error message.
+- **Global Modification**: In `apply_tracer_to_ammo_no_mod_again`, each ammunition file is processed, `JsonUtils` is used to load and save, and the "tracer = true + red/green" info is inserted via `Utils.modify_json_value`.
+
+### Summary
+In summary, **`Utils.py`** acts as a toolbox for other classes (interface or data manipulation) to avoid code duplication and centralize "utility" logic in one place.
+---
+## Config
+
+- **File**: `config.py`
+- **Purpose**:
+  - Centralize paths to project directories (e.g., `JsonFiles/Weapons`, `JsonFiles/Ammo`, etc.).  
+  - Ensure the project structure is consistent (existing and non-empty folders).  
+  - Validate JSON files (e.g., correct certain default values for calibers).
+
+#### Main Variables
+1. **`BASE_DIR`**: The base directory, determined based on whether the application is executed as a `.exe` ("frozen" mode) or as a standard Python script.
+2. **`JSON_FILES_DIR_*`**: References to subdirectories containing weapons (`Weaps`), calibers (`Calibers`), NPCs (`PMC`), ammo (`Ammo`), etc.
+3. **`IMAGES_DIR`**: Contains graphical resources (icons, images).
+
+#### Main Functions
 1. **`check_project_structure()`**  
-   - Vérifie l’existence des dossiers listés dans `REQUIRED_DIRS`.  
-   - S’assure qu’ils ne sont pas vides.  
-   - Valide aussi le format JSON de tous les fichiers *.json* dans chaque dossier (si un fichier est corrompu, lève une erreur).
+   - Checks for the existence of directories listed in `REQUIRED_DIRS`.  
+   - Ensures they are not empty.  
+   - Also validates the JSON format of all `*.json*` files in each directory (raises an error if a file is corrupted).
 
 2. **`check_and_fix_json_caliber_files()`**  
-   - Parcourt tous les JSON relatifs aux calibres.  
-   - Si une valeur numéraire (int/float) est trop faible ou nulle, la corrige à `1.0` pour éviter les divisions par zéro ou configurations invalides.  
-   - Affiche un récapitulatif des fichiers modifiés, du nombre de fichiers manquants ou supplémentaires selon un plafond/maximum attendu (`caliber_max_min_count`).
+   - Iterates through all JSON files related to calibers.  
+   - If a numerical value (int/float) is too low or zero, it corrects it to `1.0` to prevent division by zero or invalid configurations.  
+   - Displays a summary of modified files, missing files, or additional files based on an expected threshold (`caliber_max_min_count`).
 
 3. **`check_json_files(directory)`**  
-   - Valide chaque fichier du répertoire passé en paramètre pour s’assurer qu’il contient un JSON valide (ex. pas de `JSONDecodeError`).
+   - Validates each file in the given directory to ensure it contains valid JSON (e.g., no `JSONDecodeError`).
 
-4. **`relatif_path(path)`**  
-   - Renvoie un chemin relatif à `BASE_DIR`, utile pour afficher des chemins plus courts dans les logs.
+4. **`relative_path(path)`**  
+   - Returns a path relative to `BASE_DIR`, useful for displaying shorter paths in logs.
 
-#### Exemples d’utilisation
+#### Usage Examples
 
-- **Au lancement** : Dans `main.py` (ou équivalent), on appelle ces fonctions pour vérifier que la structure du projet est correcte (dossiers et JSON), et on corrige éventuellement des valeurs pour les calibres.  
-- **En mode exécutable** : La logique détecte si l’application est lancée via un `.exe` (PyInstaller ou similaire). Dans ce cas, le chemin racine (`BASE_DIR`) est modifié en conséquence.  
-- **Journalisation** : Lorsqu’il manque des dossiers ou que des JSON sont illisibles, le script affiche des messages d’erreur et peut stopper l’exécution pour éviter des plantages ultérieurs.
+- **At Startup**: In `main.py` (or equivalent), these functions are called to verify the project structure (folders and JSON files) and possibly correct values for calibers.
+- **Executable Mode**: The logic detects whether the application is launched as a `.exe` (PyInstaller or similar). In that case, the root path (`BASE_DIR`) is adjusted accordingly.
+- **Logging**: When folders are missing or JSON files are unreadable, the script logs error messages and may halt execution to prevent later crashes.
 
-Ce fichier **`config.py`** est donc essentiel pour maintenir un environnement cohérent : il garantit que toutes les ressources (fichiers JSON ou dossiers) sont en place et valides avant de démarrer le cœur de l’application.
+This **`config.py`** file is essential for maintaining a consistent environment: it ensures that all resources (JSON files or folders) are in place and valid before starting the core of the application.
+
 ---
 
-## Exemples de fichiers JSON
+## JSON-File-Examples
 
-Cette application se base sur des fichiers JSON pour décrire les objets (armes, munitions, etc.) que vous souhaitez modifier. Ci-dessous, deux exemples de fichiers, l’un pour une munition (`.json` à placer dans `JsonFiles/Ammo/`), et l’autre pour une arme (`.json` à placer dans `JsonFiles/Weapons/`).
+This application relies on JSON files to describe objects (weapons, ammunition, etc.) that you want to modify. Below are two example files: one for ammunition (`.json` to be placed in `JsonFiles/Ammo/`) and another for a weapon (`.json` to be placed in `JsonFiles/Weapons/`).
 
-### Exemple : Munition
+### Example: Ammunition
 
-#### Fichier : `45_ACP_AP.json`
+#### File: `45_ACP_AP.json`
 
 ```json
 {
@@ -351,9 +367,9 @@ Cette application se base sur des fichiers JSON pour décrire les objets (armes,
 }
 ```
 
-### Exemple : Arme
+### Example: Weapon
 
-#### Fichier : `weapon_kbp_9a91_9x39.json`
+#### File: `weapon_kbp_9a91_9x39.json`
 
 ```json
 {
@@ -380,22 +396,19 @@ Cette application se base sur des fichiers JSON pour décrire les objets (armes,
 }
 ```
 
-Avec ce type de structuration, l’application peut identifier facilement chaque objet (via `item._id` et `item._name`),
-récupérer et afficher ses propriétés (`_props`), puis créer (ou mettre à jour) des mods séparés (`*_mod.json`) afin de ne jamais altérer vos fichiers de base.
+With this structured format, the application can easily identify each object (via `item._id` and `item._name`), retrieve and display its properties (`_props`), then create (or update) separate mods (`*_mod.json`) to ensure your original files remain untouched.
 
-### Explication
-- Lorsqu’un fichier JSON est chargé, ses valeurs sont extraites et utilisées pour initialiser un objet `Ammo`.
-- `props.get(EnumAmmo.DAMAGE.label, None)` permet de récupérer la valeur de l’attribut dans le fichier JSON.
-- Chaque propriété est stockée sous forme d’un tuple contenant la valeur et son label d’origine pour assurer un suivi clair.
-- La méthode `convert_to_boolean` est utilisée pour convertir certains attributs (`TracerColor`) String ==> Boolean en format approprié.
+### Explanation
+- When a JSON file is loaded, its values are extracted and used to initialize an `Ammo` object.
+- `props.get(EnumAmmo.DAMAGE.label, None)` retrieves the attribute's value from the JSON file.
+- Each property is stored as a tuple containing the value and its original label to ensure clear tracking.
+- The `convert_to_boolean` method is used to convert certain attributes (`TracerColor`) from String to Boolean format as needed.
 
-Ce modèle est également utilisé pour les objets `Weapon`, suivant la même logique de liaison entre le JSON et les objets Python manipulés dans l’application.
-
-
-## Dépendances
+This model is also used for `Weapon` objects, following the same logic of linking JSON data to Python objects handled within the application.
+---
+## Dependencies
 - **Python** 3.9+
 - **customtkinter**
 - **CTkMessagebox**
 - **Pillow**
-- (Consultez `requirements.txt` pour la liste complète des bibliothèques nécessaires.)
-
+- (See `requirements.txt` for the full list of required libraries.)
