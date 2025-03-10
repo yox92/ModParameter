@@ -61,7 +61,7 @@ export class ItemService {
             this.itemUpdaterService.applyWeaponsModifications(
                 itemsPropsJson,
                 itemsJson._id,
-                locale.Name,
+                locale.ShortName,
                 this.iDatabaseTables)
         }
     }

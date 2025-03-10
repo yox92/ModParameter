@@ -135,7 +135,7 @@ export class ItemUpdaterService {
 
         // check value if not null before assignation
         if (invalidProps.length > 0) {
-            this.logger.warning(`[AttributMod] Skipping ammo: ${name_item_to_modify} due to invalid values: ${invalidProps.map(([key]) => key).join(", ")}`);
+            this.logger.warning(`[AttributMod] Skipping: ${name_item_to_modify} due to invalid values: ${invalidProps.map(([key]) => key).join(", ")}`);
             return false;
         }
 
@@ -144,7 +144,7 @@ export class ItemUpdaterService {
             sptItem._props[key] = updatedProps[key];
         }
 
-        this.logger.info(`[AttributMod] Successfully updated ${name_item_to_modify} ammo`);
+        this.logger.info(`[AttributMod] Successfully updated ${name_item_to_modify}`);
 
         return true;
     }
