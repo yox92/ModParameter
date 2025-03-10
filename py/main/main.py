@@ -25,7 +25,7 @@ if __name__ == "__main__":
         main()
     except Exception as e:
         import traceback
-        print("❌ Error detect !")
+        print("Error detect !")
         print(traceback.format_exc())
         input("Press Enter to close...")
 

@@ -100,12 +100,12 @@ def check_project_structure():
     empty_dirs = check_empty_directories(REQUIRED_DIRS)
 
     if missing_dirs:
-        print("❌ ERROR: Invalid project structure! The following directories are missing:")
+        print(" ERROR: Invalid project structure! The following directories are missing:")
         for d in missing_dirs:
             print(f"   - {d}")
         sys.exit(1)
     if empty_dirs:
-        print("❌ ERROR: Some directories are empty! The following directories contain no files:")
+        print("ERROR: Some directories are empty! The following directories contain no files:")
         for d in empty_dirs:
             print(f"   - {d}")
         sys.exit(1)
@@ -113,7 +113,7 @@ def check_project_structure():
     for directory in [JSON_FILES_DIR_WEAPONS, JSON_FILES_DIR_CALIBER, JSON_FILES_DIR_PMC, JSON_FILES_DIR_AMMO]:
         invalid_json_files = check_json_files(directory)
         if invalid_json_files:
-            print(f"❌ ERROR: Invalid JSON files found in {directory}:")
+            print(f"ERROR: Invalid JSON files found in {directory}:")
             for file, error in invalid_json_files:
                 print(f"   - {file.name}: {error}")
             sys.exit(1)
