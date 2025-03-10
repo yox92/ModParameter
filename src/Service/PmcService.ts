@@ -1,7 +1,7 @@
 import {JsonFileService} from "./JsonFileService";
 import {AimingService} from "./AimingService";
-import {ILogger} from "@spt-server/models/spt/utils/ILogger";
-import {IDatabaseTables} from "@spt-server/models/spt/server/IDatabaseTables";
+import {ILogger} from "@spt-aki/models/spt/utils/ILogger";
+import {IDatabaseTables} from "@spt-aki/models/spt/server/IDatabaseTables";
 import {Aiming, createAiming} from "../Entity/Aiming";
 
 

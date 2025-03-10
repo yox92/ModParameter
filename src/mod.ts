@@ -1,10 +1,7 @@
 import {ItemService} from "./Service/ItemService";
 import {PmcService} from "./Service/PmcService";
 import { DependencyContainer } from "tsyringe";
-// import {ILogger} from "@spt-server/models/spt/utils/ILogger";
-// import {DatabaseServer} from "@spt-server/servers/DatabaseServer";
-// import {IPostDBLoadMod} from "@spt-server/models/external/IPostDBLoadMod";
-import type { Ilogger } from "@spt-aki/models/spt/utils/Ilogger";
+import type { ILogger } from "@spt-aki/models/spt/utils/ILogger";
 import { IPostDBLoadMod } from "@spt-aki/models/external/IPostDBLoadMod";
 import { DatabaseServer } from "@spt-aki/servers/DatabaseServer";
 
@@ -18,7 +15,7 @@ class AttributMod implements IPostDBLoadMod {
     public postDBLoad(dependencyContainer: DependencyContainer): void {
         this.dependencyContainer = dependencyContainer
         const tableData = this.dependencyContainer.resolve<DatabaseServer>("DatabaseServer").getTables()
-        const logger = dependencyContainer.resolve<Ilogger>("WinstonLogger");
+        const logger = dependencyContainer.resolve<ILogger>("WinstonLogger");
 
         if (!tableData || !logger) {
             console.error(`[AttributMod] Critical error: Missing dependencies. Mod cannot function properly.`);

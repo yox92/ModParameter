@@ -60,6 +60,8 @@ class JsonUtils:
     def write_json(data, file_path):
         with open(file_path, "w") as json_file:
             json.dump(data, json_file, indent=4)
+            print("🔍 apply_changes() exécutée")
+        print(f"✅ file save : {file_path}")
 
     @staticmethod
     def load_json_and_add_path(file_path):
@@ -244,6 +246,7 @@ class JsonUtils:
     def delete_file_if_exists(file_path):
         if os.path.exists(file_path):
             os.remove(file_path)
+            print(f"✅ file delete : {file_path}")
 
     @staticmethod
     def delete_file_mod_if_exists(file_path):
@@ -261,6 +264,7 @@ class JsonUtils:
         with open(new_file_path, "w") as new_file:
             json.dump(data, new_file, indent=4)
 
+        print(f"✅ file save : {new_file_path}")
         return new_file_path
 
     @staticmethod

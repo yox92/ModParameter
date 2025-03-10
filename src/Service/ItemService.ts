@@ -1,14 +1,13 @@
 import {ItemUpdaterService} from "./ItemUpdaterService";
 import {JsonFileService} from "./JsonFileService";
-import {ILogger} from "@spt-server/models/spt/utils/ILogger";
-import {IDatabaseTables} from "@spt-server/models/spt/server/IDatabaseTables";
+import {ILogger} from "@spt-aki/models/spt/utils/ILogger";
+import {IDatabaseTables} from "@spt-aki/models/spt/server/IDatabaseTables";
 import {Item} from "../Entity/Item";
 import {ItemProps} from "../Entity/ItemProps";
 import {Templates} from "../Entity/Templates";
 import {Ammo, createItemAmmo} from "../Entity/Ammo";
 import {ItemType} from "../Entity/Enum";
 import {Locale} from "../Entity/Locale";
-
 
 export class ItemService {
     private readonly logger: ILogger;
@@ -27,35 +26,35 @@ export class ItemService {
     private caseWeapons(jsonWeaponsFiles): boolean {
         for (const {fileName, json} of jsonWeaponsFiles) {
             if (!json) {
-                this.logger.info(`[AttributMod] Skipping invalid or missing weapon JSON data: ${fileName}`);
+                this.logger.warning(`[AttributMod] Skipping invalid or missing weapon JSON data: ${fileName}`);
                 continue;
             }
 
             const templateJson: Templates<ItemProps> = json;
 
             if (!templateJson.locale) {
-                this.logger.info(`[AttributMod] Skipping invalid or missing template Weapon: ${fileName}`);
+                this.logger.warning(`[AttributMod] Skipping invalid or missing template Weapon: ${fileName}`);
                 continue;
             }
 
             const locale: Locale = templateJson.locale
 
             if (!templateJson.item) {
-                this.logger.info(`[AttributMod] Skipping invalid or missing template Weapon: ${fileName}`);
+                this.logger.warning(`[AttributMod] Skipping invalid or missing template Weapon: ${fileName}`);
                 continue;
             }
 
             const itemsJson: Item<ItemProps> = templateJson.item;
 
             if (!itemsJson._props) {
-                this.logger.info(`[AttributMod] Skipping invalid or missing item Weapon: ${fileName}`);
+                this.logger.warning(`[AttributMod] Skipping invalid or missing item Weapon: ${fileName}`);
                 continue;
             }
 
             const itemsPropsJson: ItemProps = itemsJson._props;
 
             if (!itemsPropsJson) {
-                this.logger.info(`[AttributMod] Skipping invalid or missing ItemProps Weapon: ${fileName}`);
+                this.logger.warning(`[AttributMod] Skipping invalid or missing ItemProps Weapon: ${fileName}`);
                 continue;
             }
 
@@ -72,19 +71,19 @@ export class ItemService {
     private caseAmmo(jsonAmmoFiles): boolean {
         for (const {fileName, json} of jsonAmmoFiles) {
             if (!json) {
-                this.logger.info(`[AttributMod] Skipping invalid or missing ammo JSON data: ${fileName}`);
+                this.logger.warning(`[AttributMod] Skipping invalid or missing ammo JSON data: ${fileName}`);
                 continue;
             }
 
             const templateJson: Templates<Ammo> = json;
 
             if (!templateJson.item) {
-                this.logger.info(`[AttributMod] Skipping invalid or missing template Ammo: ${fileName}`);
+                this.logger.warning(`[AttributMod] Skipping invalid or missing template Ammo: ${fileName}`);
                 continue;
             }
 
             if (!templateJson.locale) {
-                this.logger.info(`[AttributMod] Skipping invalid or missing template Weapon: ${fileName}`);
+                this.logger.warning(`[AttributMod] Skipping invalid or missing template Weapon: ${fileName}`);
                 continue;
             }
 
@@ -94,14 +93,14 @@ export class ItemService {
             const itemsJson: Item<Ammo> = templateJson.item;
 
             if (!itemsJson._props) {
-                this.logger.info(`[AttributMod] Skipping invalid or missing item Ammo: ${fileName}`);
+                this.logger.warning(`[AttributMod] Skipping invalid or missing item Ammo: ${fileName}`);
                 continue;
             }
 
             const itemsPropsJson: Ammo = itemsJson._props;
 
             if (!itemsPropsJson) {
-                this.logger.info(`[AttributMod] Skipping invalid or missing ItemProps Ammo: ${fileName}`);
+                this.logger.warning(`[AttributMod] Skipping invalid or missing ItemProps Ammo: ${fileName}`);
                 continue;
             }
 

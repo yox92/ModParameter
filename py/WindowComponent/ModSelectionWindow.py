@@ -1,5 +1,3 @@
-from idlelib.replace import replace
-
 import customtkinter as ctk
 from customtkinter import CTkImage
 

@@ -1,9 +1,9 @@
 import {ItemProps} from "../Entity/ItemProps";
-import {ILogger} from "@spt-server/models/spt/utils/ILogger";
+import {ILogger} from "@spt-aki/models/spt/utils/ILogger";
 import {Ammo} from "../Entity/Ammo";
-import {IDatabaseTables} from "@spt-server/models/spt/server/IDatabaseTables";
-import {ITemplates} from "@spt-server/models/spt/templates/ITemplates";
-import {IProps, ITemplateItem} from "@spt-server/models/eft/common/tables/ITemplateItem";
+import {IDatabaseTables} from "@spt-aki/models/spt/server/IDatabaseTables";
+import {ITemplates} from "@spt-aki/models/spt/templates/ITemplates";
+import {IProps, ITemplateItem} from "@spt-aki/models/eft/common/tables/ITemplateItem";
 import {ValidateUtils} from "../Utils/ValidateUtils";
 
 

@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
-import {ILogger} from "@spt-server/models/spt/utils/ILogger";
+import {ILogger} from "@spt-aki/models/spt/utils/ILogger";
 import {config} from "../config";
 import {ItemType} from "../Entity/Enum";
 

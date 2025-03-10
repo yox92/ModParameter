@@ -230,8 +230,8 @@ class PmcMod:
             for name_props_to_modify, value_modify in self.aiming_manager_pmc.iterate_key_and_values():
                 data_json_to_update = JsonUtils.update_json_in_new_file_aiming(name_props_to_modify, value_modify,
                                                                                data_json_to_update, WindowType.PMC)
-                file_path_update = JsonUtils.save_json_as_new_file(data_json_to_update, self.json_pmc_file_path)
-                self.check_for_file(file_path_update)
+            file_path_update = JsonUtils.save_json_as_new_file(data_json_to_update, self.json_pmc_file_path)
+            self.check_for_file(file_path_update)
         else:
             if self.save_pmc_exist:
                 JsonUtils.delete_file_mod_if_exists(self.json_pmc_file_path)

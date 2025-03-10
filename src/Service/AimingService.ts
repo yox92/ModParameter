@@ -1,6 +1,6 @@
-import {ILogger} from "@spt-server/models/spt/utils/ILogger";
-import {IDatabaseTables} from "@spt-server/models/spt/server/IDatabaseTables";
-import {IAiming, IConfig, IGlobals} from "@spt-server/models/eft/common/IGlobals";
+import {ILogger} from "@spt-aki/models/spt/utils/ILogger";
+import {IDatabaseTables} from "@spt-aki/models/spt/server/IDatabaseTables";
+import {IAiming, IConfig, IGlobals} from "@spt-aki/models/eft/common/IGlobals";
 import {Aiming} from "../Entity/Aiming";
 import {ValidateUtils} from "../Utils/ValidateUtils";
 

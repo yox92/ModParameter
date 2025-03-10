@@ -350,7 +350,6 @@ class CaliberWeaponsMod:
             self.progress_bar.configure(progress_color="green")
             self.check_for_all_files(list_path_new_json)
         if self.progress_bar.is_progress_running():
-            self.logger.log("info", "Progressing...")
             self.root.after(1000, lambda: self.check_wait_modify_json(list_path_new_json, attempts + 1))
         else:
             self.logger.log("info", "Done !")
@@ -365,7 +364,6 @@ class CaliberWeaponsMod:
             self.detail_window.after(3000,lambda:  WindowUtils.close_window(self.detail_window,
                                                                             self.root, self.main_instance))
         if self.progress_bar.is_progress_running():
-            self.logger.log("info", "Progressing...")
             self.root.after(1000, lambda: self.check_wait_delete_json( attempts + 1))
         else:
             self.logger.log("info", "Done !")
