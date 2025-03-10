@@ -4,7 +4,6 @@ from WindowComponent.ModSelectionWindow import ModSelectionWindow
 
 class MainWindow:
     def __init__(self):
-        # Création de la fenêtre principale
         self.root = ctk.CTk()
         self.setup_ui()
 
@@ -26,8 +25,8 @@ if __name__ == "__main__":
         main()
     except Exception as e:
         import traceback
-        print("❌ Une erreur est survenue !")
-        print(traceback.format_exc())  # Affiche le détail de l'erreur
-        input("Appuie sur Entrée pour fermer...")  # Pause pour lire l'erreur
+        print("❌ Error detect !")
+        print(traceback.format_exc())
+        input("Press Enter to close...")
 
 

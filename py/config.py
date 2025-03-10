@@ -2,17 +2,16 @@ import json
 from pathlib import Path
 import sys
 
-if getattr(sys, 'frozen', False):  # Mode `.exe`cle
+if getattr(sys, 'frozen', False):  # Mode `.exe`
     print("Running in executable mode")
-    BASE_DIR = Path(sys.executable).parent.parent
-    WRITE_DIR = Path.home() / "AttributMod"
+    BASE_DIR = Path(sys.executable).parent
     MAIN_DIR = BASE_DIR
 else:
     print("Running in manual mode")
     MAIN_DIR = Path(__file__).resolve().parent / "main"
     BASE_DIR = MAIN_DIR.parent
-    WRITE_DIR = BASE_DIR
 
+BASE_DIR = MAIN_DIR.parent
 sys.path.append(str(BASE_DIR))
 
 LOG_FILE_PATH = BASE_DIR / "app.log"
@@ -115,15 +114,14 @@ def check_project_structure():
     for directory in [JSON_FILES_DIR_WEAPONS, JSON_FILES_DIR_CALIBER, JSON_FILES_DIR_PMC, JSON_FILES_DIR_AMMO]:
         invalid_json_files = check_json_files(directory)
         if invalid_json_files:
-            print(f"❌ ERROR: Invalid JSON files found in {relatif_path(directory)}:")
+            print(f"❌ ERROR: Invalid JSON files found in {directory}:")
             for file, error in invalid_json_files:
                 print(f"   - {file.name}: {error}")
             sys.exit(1)
     else:
         print("\n Everything is in order! The project structure is correct")
         print("------------------------------------------------------------")
-        print(f"📂 bas directory : {BASE_DIR}")
-        print(f"📂 Directory write : {WRITE_DIR}")
+        print(f"📂 base directory : {BASE_DIR}")
         print(f"📂 Directory containing `main.py`: {MAIN_DIR}")
         print(f"📂 JSON directory (JsonFiles): {JSON_FILES_DIR_WEAPONS}")
         print(f"📂 JSON directory (JsonFiles): {JSON_FILES_DIR_CALIBER}")
