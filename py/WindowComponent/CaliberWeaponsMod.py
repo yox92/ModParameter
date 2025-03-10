@@ -314,7 +314,7 @@ class CaliberWeaponsMod:
             self.check_wait_delete_json()
             self.main_instance.list_json_name_mod_weapons = JsonUtils.load_all_json_files_weapons_mod()
             if self.main_instance.list_json_name_mod_weapons:
-                self.main_instance.button_view_all_weapons_mod.configure(text="View All Saved Weapons Mod")
+                self.main_instance.button_view_all_weapons_mod.configure(text="All Saved Weapons Mod")
             else:
                 self.main_instance.button_view_all_weapons_mod.configure(text="No weapons mod find")
 
@@ -323,10 +323,10 @@ class CaliberWeaponsMod:
             for file_path in self.all_path:
                 data_json_to_update = JsonUtils.load_json(file_path)
                 for key, value in self.manager.iterate_key_values_where_key_ve_change(self.originale_value_from_JSON):
-                    data_json_to_update = JsonUtils.update_json_in_new_file_weapon(key,
-                                                                                   value,
-                                                                                   data_json_to_update,
-                                                                                   WindowType.CALIBER)
+                    data_json_to_update = JsonUtils.update_json_in_new_file_multi_choice(key,
+                                                                                         value,
+                                                                                         data_json_to_update,
+                                                                                         WindowType.CALIBER)
 
                 list_path_new_json.append(JsonUtils.save_json_as_new_file(data_json_to_update, file_path))
 
@@ -335,7 +335,7 @@ class CaliberWeaponsMod:
             self.check_wait_modify_json(list_path_new_json)
             self.main_instance.list_json_name_mod_weapons = JsonUtils.load_all_json_files_weapons_mod()
             if self.main_instance.list_json_name_mod_weapons:
-                self.main_instance.button_view_all_weapons_mod.configure(text="View All Saved Weapons Mod")
+                self.main_instance.button_view_all_weapons_mod.configure(text="All Saved Weapons Mod")
             else:
                 self.main_instance.button_view_all_weapons_mod.configure(text="No weapons mod find")
 

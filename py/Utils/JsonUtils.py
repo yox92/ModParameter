@@ -1,11 +1,10 @@
 import json
 import os
 
-import Utils
 from Entity import EnumAmmo, Logger
 from Entity.WindowType import WindowType
 from config import JSON_FILES_DIR_WEAPONS, JSON_FILES_DIR_CALIBER, JSON_FILES_DIR_PMC, JSON_FILES_DIR_AMMO
-from Utils.Utils import Utils
+
 
 
 class JsonUtils:
@@ -57,11 +56,24 @@ class JsonUtils:
         return None
 
     @staticmethod
+    def get_file_path_json_all_mod_ammo(with_mod_on_name: bool):
+        file_paths = []
+        for file_name in os.listdir(JSON_FILES_DIR_AMMO):
+            if file_name.endswith('mod.json'):
+                file_name_correct: str
+                if with_mod_on_name:
+                    file_name_correct = file_name.replace("_mod.json", ".json")
+                else:
+                    file_name_correct = file_name
+                file_paths.append(os.path.join(JSON_FILES_DIR_AMMO, file_name_correct))
+        return file_paths
+
+    @staticmethod
     def write_json(data, file_path):
         with open(file_path, "w") as json_file:
             json.dump(data, json_file, indent=4)
             print("🔍 apply_changes() exécutée")
-        print(f"✅ file save : {file_path}")
+        print(f" file save : {file_path}")
 
     @staticmethod
     def load_json_and_add_path(file_path):
@@ -132,7 +144,7 @@ class JsonUtils:
         return data_list
 
     @staticmethod
-    def load_all_json_files_ammo_mod():
+    def load_all_name_json_files_ammo_mod():
         json_dir_path = JSON_FILES_DIR_AMMO
         data_list = []
         for filename in os.listdir(json_dir_path):
@@ -159,7 +171,48 @@ class JsonUtils:
         return data, file_paths
 
     @staticmethod
-    def udate_json_caliber(path_to_json_calibber, new_value_change):
+    def load_all_name_json_mod():
+        json_dirs = [JSON_FILES_DIR_WEAPONS, JSON_FILES_DIR_AMMO]
+        file_name: list[str] = []
+
+        for json_dir in json_dirs:
+            if not os.path.exists(json_dir):
+                continue
+
+            for filename in os.listdir(json_dir):
+                if filename.endswith('mod.json'):
+                    file_name.append(filename)
+
+        if not file_name:
+            print("No file mod found")
+            return []
+        else:
+            return file_name
+
+    @staticmethod
+    def find_json_file_with_name(file_name: str, window_type: WindowType):
+        json_dirs: list = []
+        if window_type == WindowType.DELETE:
+            json_dirs = [JSON_FILES_DIR_WEAPONS, JSON_FILES_DIR_AMMO]
+        elif window_type == WindowType.AMMO:
+            json_dirs = [JSON_FILES_DIR_AMMO]
+        elif window_type == WindowType.WEAPON:
+            json_dirs = [JSON_FILES_DIR_WEAPONS]
+
+        for json_dir in json_dirs:
+            if not JsonUtils.file_exist(json_dir):
+                print(f" Directory not found: {json_dir}")
+                continue
+
+            for filename in os.listdir(json_dir):
+                if filename == file_name:
+                    return os.path.join(json_dir, filename)
+
+        print(f"No file found: {file_name}")
+        return None
+
+    @staticmethod
+    def update_json_caliber(path_to_json_calibber, new_value_change):
         data = JsonUtils.load_json(path_to_json_calibber)
         for key, value in new_value_change.items():
             data[key] = value
@@ -176,6 +229,7 @@ class JsonUtils:
 
     @staticmethod
     def update_or_multiply_final_key(current, final_key, new_value, window_type):
+        from Utils.Utils import Utils
         if final_key not in current:
             raise KeyError(f"Error on apply value. : key : '{final_key}' value to update do not existe on target.")
 
@@ -244,9 +298,9 @@ class JsonUtils:
 
     @staticmethod
     def delete_file_if_exists(file_path):
-        if os.path.exists(file_path):
+        if JsonUtils.file_exist(file_path):
             os.remove(file_path)
-            print(f"✅ file delete : {file_path}")
+            print(f" file delete : {file_path}")
 
     @staticmethod
     def delete_file_mod_if_exists(file_path):
@@ -264,11 +318,12 @@ class JsonUtils:
         with open(new_file_path, "w") as new_file:
             json.dump(data, new_file, indent=4)
 
-        print(f"✅ file save : {new_file_path}")
+        print(f" file save : {new_file_path}")
         return new_file_path
 
     @staticmethod
     def return_list_json_path(name_json):
+        from Utils.Utils import Utils
         list_of_json = []
         clean_name_json = Utils.transform_list_of_strings(name_json)
         for filename in os.listdir(JSON_FILES_DIR_WEAPONS):
@@ -279,7 +334,7 @@ class JsonUtils:
         return list_of_json
 
     @staticmethod
-    def update_json_in_new_file_weapon(key, new_value, data, window_type: WindowType):
+    def update_json_in_new_file_multi_choice(key, new_value, data, window_type: WindowType):
         path_props_json = ["item", "_props", key]
         return JsonUtils.update_json_value(data, path_props_json, new_value, window_type)
 
@@ -290,4 +345,4 @@ class JsonUtils:
 
     @staticmethod
     def update_json_caliber_from_new_value_change(path_to_json_calibber, new_value_change):
-        JsonUtils.udate_json_caliber(path_to_json_calibber, new_value_change)
+        JsonUtils.update_json_caliber(path_to_json_calibber, new_value_change)

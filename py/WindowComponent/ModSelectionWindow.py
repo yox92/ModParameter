@@ -1,7 +1,8 @@
 import customtkinter as ctk
 from customtkinter import CTkImage
+from CTkMessagebox import CTkMessagebox
 
-from Entity import Caliber, Root, Logger
+from Entity import Caliber, Root, Logger, EnumAmmo
 from Entity.WindowType import WindowType
 from Utils import WindowUtils
 from Utils.ImageUtils import ImageUtils
@@ -24,6 +25,9 @@ WINDOW_OFFSET = 10
 
 class ModSelectionWindow:
     def __init__(self, root):
+        self.button_delete_mod = None
+        self.button_all_ammo_tracer = None
+        self.list_json_name_all_mod = None
         self.logger = Logger()
         self.button_frame = None
         self.button_view_all_ammo_mod = None
@@ -68,7 +72,7 @@ class ModSelectionWindow:
         self.loaded_data = JsonUtils.load_all_json_files_without_mod()
         self.loaded_data_ammo = JsonUtils.load_all_json_files_without_mod_ammo()
         self.list_json_name_mod_weapons = JsonUtils.load_all_json_files_weapons_mod()
-        self.list_json_name_mod_ammo = JsonUtils.load_all_json_files_ammo_mod()
+        self.list_json_name_mod_ammo = JsonUtils.load_all_name_json_files_ammo_mod()
         self.create_frame_main()
         self.create_image_var()
         self.create_frame_top()
@@ -93,11 +97,11 @@ class ModSelectionWindow:
         self.button_frame.grid(row=2, column=0, pady=5)
         self.button_view_all_weapons_mod = ctk.CTkButton(
             self.button_frame,
-            text="View All Saved Weapons Mod",
+            text="All Saved Weapons Mod",
             compound="top",
-            fg_color="red",
-            text_color="white",
-            hover_color="blue",
+            fg_color="green",
+            text_color="black",
+            hover_color="white",
             font=("Arial", 15, "bold"),
             height=10,
             width=10,
@@ -105,28 +109,100 @@ class ModSelectionWindow:
         )
         self.button_view_all_weapons_mod.grid(row=0, column=0, padx=10)
         if self.list_json_name_mod_weapons:
-            self.button_view_all_weapons_mod.configure(text="View All Saved Weapons Mod")
+            self.button_view_all_weapons_mod.configure(text="All Saved Weapons Mod")
         else:
             self.button_view_all_weapons_mod.configure(text="No weapons mod find")
 
     def active_window_list_ammo_already_mod(self):
         self.button_view_all_ammo_mod = ctk.CTkButton(
             self.button_frame,
-            text="View All Saved Ammo Mod",
+            text="All Saved Ammo Mod",
             compound="top",
-            fg_color="orange",
-            text_color="white",
-            hover_color="blue",
+            fg_color="yellow",
+            text_color="black",
+            hover_color="white",
             font=("Arial", 15, "bold"),
             height=10,
             width=10,
             command=self.show_all_ammo_mod
         )
-        self.button_view_all_ammo_mod.grid(row=0, column=1,padx=10)
+        self.button_view_all_ammo_mod.grid(row=0, column=1, padx=10)
+        self.button_all_ammo_tracer = ctk.CTkButton(
+            self.button_frame,
+            text="All Ammo Tracer ?",
+            compound="top",
+            fg_color="blue",
+            text_color="white",
+            hover_color="black",
+            font=("Arial", 15, "bold"),
+            height=10,
+            width=10,
+            command=self.all_ammo_tracer
+        )
+        self.button_all_ammo_tracer.grid(row=0, column=2, padx=10)
+        self.button_delete_mod = ctk.CTkButton(
+            self.button_frame,
+            text="Select mod to DELETE",
+            compound="top",
+            fg_color="RED",
+            text_color="white",
+            hover_color="black",
+            font=("Arial", 15, "bold"),
+            height=10,
+            width=10,
+            command=self.all_mod_to_delete
+        )
+        self.button_delete_mod.grid(row=0, column=3, padx=10)
         if self.list_json_name_mod_ammo:
-            self.button_view_all_ammo_mod.configure(text="View All Saved Ammo Mod")
+            self.button_view_all_ammo_mod.configure(text="All Saved Ammo Mod")
         else:
-            self.button_view_all_ammo_mod.configure(text="No ammo mod find")
+            self.button_view_all_ammo_mod.configure(text="All Saved Ammo Mod")
+
+    def all_ammo_tracer(self):
+        msg_choice = CTkMessagebox(title="All Ammo Tracer ?",
+                                  message="Would you like all the bullets in the game to become tracer rounds",
+                                  icon="warning", option_1="No", option_2="Yes")
+        response = msg_choice.get()
+
+        if response == "Yes":
+            msg_color = CTkMessagebox(title="Which color ?",
+                                     message="Which color do you want to apply ",
+                                     icon="info", option_1="Cancel", option_2="Green", option_3="Red", )
+            response_color = msg_color.get()
+
+            if response_color == "Red":
+                self.apply_all_ammo_tracer(False)
+            elif response_color == "Green":
+                self.apply_all_ammo_tracer(True)
+            else:
+                print("Too bad, wise decision")
+        elif response == "No":
+            print("Too bad, wise decision")
+
+    def apply_all_ammo_tracer(self, color: bool):
+        list_path_ammo: list = []
+        list_path_ammo_mod_without_mod_at_the_end = JsonUtils.get_file_path_json_all_mod_ammo(True)
+
+        for data in self.loaded_data_ammo:
+            if data["file_path"] not in list_path_ammo_mod_without_mod_at_the_end:
+                list_path_ammo.append(data["file_path"])
+
+        if list_path_ammo:
+            Utils.apply_tracer_to_ammo_no_mod_again(list_path_ammo, color)
+
+        if list_path_ammo_mod_without_mod_at_the_end:
+            Utils.apply_tracer_to_ammo_with_mod_exist_already(color)
+
+    def all_mod_to_delete(self):
+        self.list_json_name_all_mod = JsonUtils.load_all_name_json_mod()
+        if self.list_json_name_all_mod:
+            self.detail_window = ctk.CTkToplevel(self.root)
+            self.focus_new_window()
+            ListItemAlreadyMod(self.detail_window,
+                               self.root,
+                               self.detail_window,
+                               self.list_json_name_all_mod,
+                               self, WindowType.DELETE)
 
     def create_frame_top(self):
         self.main_frame_top = ctk.CTkFrame(self.root, fg_color="transparent")
@@ -163,7 +239,7 @@ class ModSelectionWindow:
             self.buttonWeapon.configure(text="No weapons mod find")
 
     def show_all_ammo_mod(self):
-        self.list_json_name_mod_ammo = JsonUtils.load_all_json_files_ammo_mod()
+        self.list_json_name_mod_ammo = JsonUtils.load_all_name_json_files_ammo_mod()
         if self.list_json_name_mod_ammo:
             self.detail_window = ctk.CTkToplevel(self.root)
 
@@ -175,7 +251,7 @@ class ModSelectionWindow:
                                self.list_json_name_mod_ammo,
                                self, WindowType.AMMO)
         else:
-            self.buttonWeapon.configure(text="No ammo mod find")
+            self.buttonWeapon.configure(text="All Saved Ammo Mod")
 
     def create_buttons_for_choice(self):
         self.buttonWeapon = ctk.CTkButton(
@@ -322,7 +398,7 @@ class ModSelectionWindow:
             results = [{"short_name": root.locale.ShortName, "name": root.locale.Name} for root in results]
 
             button = ctk.CTkButton(self.frame_bot_top,
-                                   text="<-- BACK -->",
+                                   text="<== BACK ==>",
                                    command=self.ammo_window,
                                    fg_color="orange",
                                    font=("Arial", 20, "bold"),

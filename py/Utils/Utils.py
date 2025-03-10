@@ -1,4 +1,3 @@
-from operator import truediv
 
 import customtkinter as ctk
 
@@ -276,6 +275,44 @@ class Utils:
             return True
         else:
             return False
+
+    @staticmethod
+    def apply_tracer_to_ammo_with_mod_exist_already(color):
+        from Utils.JsonUtils import JsonUtils
+        list_path_ammo_mod_with_mod_at_the_end = JsonUtils.get_file_path_json_all_mod_ammo(False)
+        for file_path in list_path_ammo_mod_with_mod_at_the_end:
+            data_json_to_modify = JsonUtils.load_json(file_path)
+            data_json_to_modify = Utils.modify_json_value(EnumAmmo.TRACER.label,
+                                                         True,
+                                                         data_json_to_modify)
+            data_json_to_modify = Utils.modify_json_value(EnumAmmo.TRACERCOLOR.label,
+                                                         color,
+                                                         data_json_to_modify)
+            JsonUtils.save_json_as_new_file(data_json_to_modify, file_path)
+
+    @staticmethod
+    def apply_tracer_to_ammo_no_mod_again(list_path_ammo, color):
+        from Utils.JsonUtils import JsonUtils
+        for file_path in list_path_ammo:
+            data_json_to_modify = JsonUtils.load_json(file_path)
+            data_json_to_modify = Utils.modify_json_value(EnumAmmo.TRACER.label,
+                                                         True,
+                                                         data_json_to_modify)
+            data_json_to_modify = Utils.modify_json_value(EnumAmmo.TRACERCOLOR.label,
+                                                         color,
+                                                         data_json_to_modify)
+            JsonUtils.save_json_as_new_file(data_json_to_modify, file_path)
+
+    @staticmethod
+    def modify_json_value(attribut, value_to_apply, data_json_to_modify):
+        from Utils.JsonUtils import JsonUtils
+        return JsonUtils.update_json_in_new_file_multi_choice(attribut,
+                                                              value_to_apply,
+                                                              data_json_to_modify,
+                                                              WindowType.AMMO)
+
+
+
 
 
 

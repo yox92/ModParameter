@@ -290,8 +290,8 @@ class SingleWeaponMod:
             data_json_to_update = JsonUtils.load_json(self.file_path)
 
             for name_props_to_modify, value_modify in self.data_from_json_no_save.iterate_key_and_values():
-                data_json_to_update = JsonUtils.update_json_in_new_file_weapon(name_props_to_modify, value_modify,
-                                                                               data_json_to_update, WindowType.WEAPON)
+                data_json_to_update = JsonUtils.update_json_in_new_file_multi_choice(name_props_to_modify, value_modify,
+                                                                                     data_json_to_update, WindowType.WEAPON)
 
             file_path_update = JsonUtils.save_json_as_new_file(data_json_to_update, self.file_path)
             self.check_for_file(file_path_update)
@@ -300,7 +300,7 @@ class SingleWeaponMod:
             JsonUtils.delete_file_mod_if_exists(self.file_path)
             self.main_instance.list_json_name_mod_weapons = JsonUtils.load_all_json_files_weapons_mod()
             if self.main_instance.list_json_name_mod_weapons:
-                self.main_instance.button_view_all_weapons_mod.configure(text="View All Saved Weapons Mod")
+                self.main_instance.button_view_all_weapons_mod.configure(text="All Saved Weapons Mod")
             else:
                 self.main_instance.button_view_all_weapons_mod.configure(text="No weapons mod find")
 
@@ -312,7 +312,7 @@ class SingleWeaponMod:
     def check_for_file(self, new_file_path, attempts=0, max_attempts=10):
         self.main_instance.list_json_name_mod_weapons = JsonUtils.load_all_json_files_weapons_mod()
         if self.main_instance.list_json_name_mod_weapons:
-            self.main_instance.button_view_all_weapons_mod.configure(text="View All Saved Weapons Mod")
+            self.main_instance.button_view_all_weapons_mod.configure(text="All Saved Weapons Mod")
         else:
             self.main_instance.button_view_all_weapons_mod.configure(text="No weapons mod find")
 

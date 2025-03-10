@@ -2,7 +2,7 @@
 
 echo 🚀 Compilation avec PyInstaller...
 
-pyinstaller --onefile --clean --name ModParameters --icon=Images/ModParameters.ico --distpath main --add-data "JsonFiles;JsonFiles" --add-data "Images;Images" main/main.py
+pyinstaller --onefile --clean --name ModParameters --icon=Images/ModParameters.ico --distpath . --add-data "JsonFiles;JsonFiles" --add-data "Images;Images" main/main.py
 
-echo ✅ Compilation terminée !
+echo  Compilation terminée !
 pause

@@ -325,8 +325,8 @@ class AmmoMod:
             data_json_to_update = JsonUtils.load_json(self.file_path)
 
             for name_props_to_modify, value_modify in self.data_from_json_no_save.iterate_key_and_values():
-                data_json_to_update = JsonUtils.update_json_in_new_file_weapon(name_props_to_modify, value_modify,
-                                                                               data_json_to_update, WindowType.AMMO)
+                data_json_to_update = JsonUtils.update_json_in_new_file_multi_choice(name_props_to_modify, value_modify,
+                                                                                     data_json_to_update, WindowType.AMMO)
             file_path_update = JsonUtils.save_json_as_new_file(data_json_to_update, self.file_path)
             self.check_for_file(file_path_update)
             self.change_list_ammo_mod()
@@ -379,6 +379,6 @@ class AmmoMod:
 
     def change_list_ammo_mod(self):
         if self.main_instance.list_json_name_mod_ammo:
-            self.main_instance.button_view_all_ammo_mod.configure(text="View All Saved Ammo Mod")
+            self.main_instance.button_view_all_ammo_mod.configure(text="All Saved Ammo Mod")
         else:
-            self.main_instance.button_view_all_ammo_mod.configure(text="No ammo mod find")
+            self.main_instance.button_view_all_ammo_mod.configure(text="All Saved Ammo Mod")

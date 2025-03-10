@@ -4,14 +4,13 @@ import sys
 
 if getattr(sys, 'frozen', False):  # Mode `.exe`
     print("Running in executable mode")
-    BASE_DIR = Path(sys.executable).parent
-    MAIN_DIR = BASE_DIR
+    EXE_PATH = Path(sys.executable).parent
+    BASE_DIR = EXE_PATH / "py"
 else:
     print("Running in manual mode")
     MAIN_DIR = Path(__file__).resolve().parent / "main"
     BASE_DIR = MAIN_DIR.parent
 
-BASE_DIR = MAIN_DIR.parent
 sys.path.append(str(BASE_DIR))
 
 LOG_FILE_PATH = BASE_DIR / "app.log"
@@ -21,11 +20,11 @@ JSON_FILES_DIR_CALIBER = JSON_FILES_DIR / "Calibers"
 JSON_FILES_DIR_PMC = JSON_FILES_DIR / "PMC"
 JSON_FILES_DIR_AMMO = JSON_FILES_DIR / "Ammo"
 IMAGES_DIR = BASE_DIR / "Images"
-REQUIRED_DIRS = [MAIN_DIR,
-                 JSON_FILES_DIR,
+REQUIRED_DIRS = [JSON_FILES_DIR,
                  JSON_FILES_DIR_WEAPONS,
                  JSON_FILES_DIR_CALIBER,
-                 JSON_FILES_DIR_PMC, JSON_FILES_DIR_AMMO
+                 JSON_FILES_DIR_PMC,
+                 JSON_FILES_DIR_AMMO
                  ]
 
 
@@ -121,13 +120,11 @@ def check_project_structure():
     else:
         print("\n Everything is in order! The project structure is correct")
         print("------------------------------------------------------------")
-        print(f"📂 base directory : {BASE_DIR}")
-        print(f"📂 Directory containing `main.py`: {MAIN_DIR}")
-        print(f"📂 JSON directory (JsonFiles): {JSON_FILES_DIR_WEAPONS}")
-        print(f"📂 JSON directory (JsonFiles): {JSON_FILES_DIR_CALIBER}")
-        print(f"📂 JSON directory (JsonFiles): {JSON_FILES_DIR_PMC}")
-        print(f"📂 JSON directory (JsonFiles): {JSON_FILES_DIR_AMMO}")
-        print(f"📂 Image directory (JsonFiles): {IMAGES_DIR}")
+        print(f" JSON directory (JsonFiles): {JSON_FILES_DIR_WEAPONS}")
+        print(f" JSON directory (JsonFiles): {JSON_FILES_DIR_CALIBER}")
+        print(f" JSON directory (JsonFiles): {JSON_FILES_DIR_PMC}")
+        print(f" JSON directory (JsonFiles): {JSON_FILES_DIR_AMMO}")
+        print(f" Image directory (JsonFiles): {IMAGES_DIR}")
         print("------------------------------------------------------------\n")
 
 check_and_fix_json_caliber_files()
