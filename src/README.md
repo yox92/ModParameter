@@ -26,6 +26,7 @@ ModParameter/
 │-- │--│--PMC
 │-- │--│--Calibers
 │-- src/                   # TypeScript source code
+│   │-- external/          # (optional) import SPT-server
 │   │-- Entity/            # Game entity definitions
 │   │-- ListIdItem/        # Item ID management
 │   │-- Service/           # Core services for modifying data
@@ -44,7 +45,20 @@ ModParameter/
 │   │-- README.md
 
 ```
-![img.png](img.png)
+-![img.png](img.png)
+### 🔧 External (no need for mod)
+- Personally, to implement classes and interfaces, I use "[sp-tarkov](https://github.com/sp-tarkov/server)" in external.
+for : 
+- ILogger Logging
+- IPostDBLoadMod
+- DatabaseServer 
+- IDatabaseTables 
+- ITemplates 
+- IProps 
+- ITemplateItem 
+- IAiming 
+- IConfig 
+- IGlobals
 ---
 
 ## 🔧 Core Components & Features
