@@ -19,6 +19,8 @@
 9. [Examples](#JSON-File-Examples)
 
 10. [Dependencies](#dependencies)
+11. [Explanation](#Explanation)
+12. [Author](#Author)
 
 ---
 
@@ -406,6 +408,7 @@ This application relies on JSON files to describe objects (weapons, ammunition, 
 With this structured format, the application can easily identify each object (via `item._id` and `item._name`), retrieve and display its properties (`_props`), then create (or update) separate mods (`*_mod.json`) to ensure your original files remain untouched.
 
 ### Explanation
+
 - When a JSON file is loaded, its values are extracted and used to initialize an `Ammo` object.
 - `props.get(EnumAmmo.DAMAGE.label, None)` retrieves the attribute's value from the JSON file.
 - Each property is stored as a tuple containing the value and its original label to ensure clear tracking.
@@ -419,3 +422,12 @@ This model is also used for `Weapon` objects, following the same logic of linkin
 - **CTkMessagebox**
 - **Pillow**
 - (See `requirements.txt` for the full list of required libraries.)
+- 
+## Author
+
+👤 **Yox**  
+📧 Email: [@gmail.com](mailto:vivien.hoyaux@gmail.com)  
+   GitHub: [gitlab](https://github.com/yox92/ModParameter.git)
+   Discord : yox_92 1235644139
+
+Feel free to contact me for any questions!

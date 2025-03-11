@@ -310,5 +310,13 @@ node script.js
 ## License
 This project follows the applicable license terms set by the SPT-AKI modding framework.
 
+## Author
+
+👤 **Yox**  
+📧 Email: [@gmail.com](mailto:vivien.hoyaux@gmail.com)  
+   GitHub: [gitlab](https://github.com/yox92/ModParameter.git)
+   Discord : yox_92 1235644139
+
+Feel free to contact me for any questions!
 
 
