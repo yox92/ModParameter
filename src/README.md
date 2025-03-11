@@ -1,13 +1,100 @@
 # ModParameter App
 
+## 📖 Table of Contents  
+
+- [ModParameter App](#modparameter-app)  
+- [Features](#-features)  
+  - [Search for a Weapon](#1-search-for-a-weapon-by-its-name-using-a-search-bar-to-mod-it)  
+  - [Modify Weapons by Caliber](#2-select-a-group-of-weapons-based-on-their-calibers-to-mod-all)  
+  - [Modify Ammunition](#3-organize-bullet-search-based-on-their-caliber-categories-to-allow-modifications)  
+  - [Modify PMC Attributes](#4-modifying-pmc-attributes-in-eft)  
+  - [Assign Tracers to Bullets](#5-ability-to-assign-tracer-to-all-bullets-in-the-game-and-choose-their-color)  
+  - [Save Modifications](#6-saving-your-modifications-made-to)  
+  - [Deletion Options](#7-deletion)  
+
+- [🔧 Project Structure](#-typescript-project-structure)  
+- [🛠 Core Components & Features](#-core-components--features)  
+  - [AttributMod (Main Mod Class)](#attributmod-main-mod-class)  
+  - [PmcService (PMC Attribute Management)](#pmcservice-pmc-attribute-management)  
+  - [ItemService](#itemservice)  
+  - [ItemUpdaterService](#itemupdaterservice)  
+  - [AimingService](#aimingservice)  
+
+- [Database Structure](#-pattern-database-item-props-structure)  
+- [Weapon & Ammo Data Fetcher](#weapon--ammo-data-fetcher)  
+- [License](#license)  
+- [Author & Contact](#author)  
+
 ## Project Overview
 
 1. **ModParameter** is a mod for **SPT-AKI** that allows users to dynamically modify **weapon statistics, ammunition properties, and PMC attributes** through a **graphical Python interface** with an executable `.exe` file. This mod enhances gameplay customization by enabling direct item and character modifications within the game.
 2. The Python program will automatically generate JSON files that can be retrieved, corrected, and used to implement objects in the SPT database. Automation can only take place if the file structure is strictly followed, ensuring that the Python program has full visibility on the generated files.
    👉 "Read the README.md file for more information."
 ---
+## Features : 
+### 1. Search for a **weapon** by its name using a search bar to mod it.
+### 2. Select a group of **weapons** based on their calibers to mod all.
+📌 **Weapons** : 
+- CameraSnap: Represents the speed at which the camera moves during recoil
+- AimSensitivity: Sensitivity while aiming
+- Ergonomics: The weapon's ergonomics
+- RecoilCamera: The upward camera movement when firing a shot
+- RecoilDispersion: The dispersion of the weapon's barrel when firing
+- RecoilForceBack: The horizontal recoil
+- RecoilForceUp: The vertical recoil
+- Weight: The weapon's weight
+- bFirerate: Rate of Fire
 
+### 3. Organize bullet search based on their caliber categories to allow modifications:
+📌 **Ammo** : 
+- ArmorDamage: The damage dealt by the bullet to armor.  
+- Damage: The raw damage a bullet deals to flesh, excluding armor absorption.  
+- PenetrationPower: The bullet's penetration power.  
+- InitialSpeed: The bullet's speed.  
+- Tracer: Defines whether a bullet has tracer properties.  
+- TracerColor: Defines the tracer bullet color, if it is set as a tracer bullet.  
+- StackMaxSize: The maximum number of bullets per stack in the stash and during a raid.
 
+### 4. Modifying PMC Attributes in EFT  
+📌 **PMC** : 
+- AimPunchMagnitude: The intensity at which the player's camera moves when hit by a bullet.
+- RecoilHandDamping: The forward and backward camera movement when firing.  
+- RecoilDamping: The vertical animation of the weapon when firing.
+- ProceduralIntensity: Defines the player's stability when aiming. It is initially set based on a value of 1 (100%).
+  * ProceduralIntensityByPoseStanding: Defines sway while standing.  
+  * ProceduralIntensityByPoseCrouching: Defines sway while crouching.  
+  * ProceduralIntensityByPoseProne: Defines sway while prone.  
+    - ➡️ It is recommended to modify **ProceduralIntensityByPoseStanding**, as it serves as the reference value. If modified, the other two will adjust accordingly.  
+
+- RecoilIntensity: The player's overall recoil across all weapons. It follows the same logic as **ProceduralIntensity**.  
+  * RecoilIntensityStanding: Recoil while standing.  
+  * RecoilIntensityCrouching: Recoil while crouching.  
+  * RecoilIntensityProne: Recoil while prone.  
+
+### 5. Ability to assign "tracer" to all bullets in the game and choose their color
+📌 AMMO
+
+### 6. Saving your modifications made to:
+   * A group of weapons
+   * A specific weapon
+   * A specific bullet
+   * Attributes PMC
+- When you return to modify an item / PMC, your changes are saved. If you delete the modification, the save is removed.
+
+### 7. Deletion
+- Reset to default values ==> removes the save and all modifications (Weapons / Bullets / PMC)
+- Delete a specific item
+- Delete all weapon modifications
+- Delete all bullet modifications
+---
+## Schéma fonctionnement
+````
+----------------+          +---------------+       +-------------+       +--------------+
+|  Python Script  | ======> | JsonFiles Dir | ====> |  mod.js     | ====> |  SPT DB      |
+|  (Generate .json) |       | (Store files) |       | (Load JSON) |       | (Map data)   |
++------------------+       +---------------+       +-------------+       +--------------+
+````
+---
 ## 📂 TypeScript Project Structure
 
 🛠️ Use console `cmd`/ `PowerShell` to show terminal to execute `ModParameter.exe` 🛠️
@@ -198,7 +285,7 @@ This project follows the applicable license terms set by the SPT-AKI modding fra
 
 
 # Pattern Database item props structure
-
+````
 DatabaseServer
 ├── templates
 │   ├── items                
@@ -249,7 +336,7 @@ DatabaseServer
 │   │   │   │   ├── x: number
 │   │   │   │   ├── y: number
 │   │   │   │   ├── z: number
-
+````
 ---
 # Weapon & Ammo Data Fetcher
 
