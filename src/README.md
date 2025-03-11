@@ -16,11 +16,15 @@
 ```
 ModParameter/
 │-- ModParameter.exe       # Python exe file 
+│-- package.json           # Project dependencies
+│-- tsconfig.json          # TypeScript configuration
+│-- node_modules           # Dependancies
 │-- py/                    # Python GUI files
 │-- │--JsonFiles           # JsonFiles Stock Modif. HERE
 │-- │--│--Weapons           
 │-- │--│--Ammo
 │-- │--│--PMC
+│-- │--│--Calibers
 │-- src/                   # TypeScript source code
 │   │-- Entity/            # Game entity definitions
 │   │-- ListIdItem/        # Item ID management
@@ -32,14 +36,13 @@ ModParameter/
 │   │   │-- PmcService.ts
 │   │-- Utils/             # Utility functions
 │   │   │-- ValidateUtils.ts
-│   │-- caliber.ts         # Ammunition calibers
+│   │-- caliber.ts         # generate json calibers data
 │   │-- config.ts          # Configuration settings
 │   │-- mod.ts             # Main mod entry point
-│   │-- scrap_ammo.ts      # Ammunition modification script
-│   │-- scrap_weapon.ts    # Weapon modification script
-    │-- README.md
-│-- package.json           # Project dependencies
-│-- tsconfig.json          # TypeScript configuration
+│   │-- scrap_ammo.ts      # Ammunition scrap data script
+│   │-- scrap_weapon.ts    # Weapon scrap data script
+│   │-- README.md
+
 ```
 
 ---

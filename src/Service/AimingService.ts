@@ -35,7 +35,7 @@ export class AimingService {
 
        this.assigneAttributs(aimingJson, aimingSpt, config);
 
-        this.logger.info(`[AttributMod] Successfully applied Aiming modifications.`);
+        this.logger.info(`[AttributMod] Successfully applied PMC modifications.`);
         return true;
     }
 
