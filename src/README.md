@@ -44,7 +44,7 @@ ModParameter/
 │   │-- README.md
 
 ```
-
+![img.png](img.png)
 ---
 
 ## 🔧 Core Components & Features
@@ -236,6 +236,65 @@ DatabaseServer
 │   │   │   │   ├── y: number
 │   │   │   │   ├── z: number
 
+---
+# Weapon & Ammo Data Fetcher
+
+## Overview
+This TypeScript script is a bonus utility designed to fetch both **weapon** and **ammunition** JSON data from the 
+[SPTarkov Database API](https://db.sp-tarkov.com/api/item). 
+Instead of maintaining separate scripts for each item type, this unified script efficiently handles both, reducing redundancy.
+
+## Features
+- 🛠 **Fetches weapon and ammunition data** from the SPTarkov API.
+- 🗂 **Organizes data** into JSON files with properly formatted filenames.
+- 🚀 **Uses a queue system** to limit concurrent requests and prevent API overload.
+- 🔄 **Cleans up existing JSON files** before fetching new ones.
+- ✅ **Verifies that all expected files were created** and logs missing entries.
+- 🏗 **Unified architecture** for both weapons and ammo, reducing duplicate code.
+
+## How It Works
+1. **Retrieves item IDs** from `WeaponList` and `AmmoList`.
+2. **Requests item data** from `https://db.sp-tarkov.com/api/item`.
+3. **Processes the response** into structured `Templates<ItemProps | Ammo>` objects.
+4. **Saves JSON files** using `ShortName` as the filename.
+5. **Handles API rate limits** by adding a delay between requests.
+6. **Logs successes and errors** to the console.
+
+## Dependencies
+The script relies on the following libraries:
+- [`axios`](https://www.npmjs.com/package/axios) - For making API requests.
+- [`fs`](https://nodejs.org/api/fs.html) - For file system operations.
+- [`path`](https://nodejs.org/api/path.html) - For handling file paths.
+- [`p-queue`](https://www.npmjs.com/package/p-queue) - For managing concurrent API requests.
+- `config.ts` - Stores the output directory paths.
+
+## Usage
+### Prerequisites
+Make sure you have **Node.js** installed and run:
+```sh
+npm install axios p-queue
+```
+
+### Running the Script
+Execute the script with:
+```sh
+node script.js
+```
+
+### Expected Output
+- JSON files will be stored in the directories specified by `config.jsonWeaponFolderPath` and `config.jsonAmmoFolderPath`.
+- The script will output logs indicating success (`✅ Saved item to ...`) and errors (`❌ Failed to fetch data for ID: ...`).
+- A summary report will be displayed at the end.
+
+## Notes
+- **Concurrent Requests**: The script processes up to **5** requests at a time.
+- **Rate Limiting**: A `500ms` delay prevents API overload.
+- **File Cleanup**: All existing `.json` files in the output directories are deleted before new ones are created.
+- **Error Handling**: Items that fail to fetch are logged and checked for missing data.
+- **Unified Logic**: Instead of separate scripts, both weapons and ammo are handled in the same structure.
+
+## License
+This project follows the applicable license terms set by the SPT-AKI modding framework.
 
 
 

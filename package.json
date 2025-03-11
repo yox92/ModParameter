@@ -14,7 +14,7 @@
   },
   "private": false,
   "dependencies": {
-    "axios": "^1.7.9",
+    "axios": "^1.8.2",
     "p-queue": "^8.1.0",
     "tsyringe": "^4.8.0"
   },
