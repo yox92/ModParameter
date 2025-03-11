@@ -245,12 +245,12 @@ This TypeScript script is a bonus utility designed to fetch both **weapon** and 
 Instead of maintaining separate scripts for each item type, this unified script efficiently handles both, reducing redundancy.
 
 ## Features
-- 🛠 **Fetches weapon and ammunition data** from the SPTarkov API.
-- 🗂 **Organizes data** into JSON files with properly formatted filenames.
-- 🚀 **Uses a queue system** to limit concurrent requests and prevent API overload.
-- 🔄 **Cleans up existing JSON files** before fetching new ones.
-- ✅ **Verifies that all expected files were created** and logs missing entries.
-- 🏗 **Unified architecture** for both weapons and ammo, reducing duplicate code.
+-  **Fetches weapon and ammunition data** from the SPTarkov API.
+-  **Organizes data** into JSON files with properly formatted filenames.
+-  **Uses a queue system** to limit concurrent requests and prevent API overload.
+-  **Cleans up existing JSON files** before fetching new ones.
+-  **Verifies that all expected files were created** and logs missing entries.
+-  **Unified architecture** for both weapons and ammo, reducing duplicate code.
 
 ## How It Works
 1. **Retrieves item IDs** from `WeaponList` and `AmmoList`.
