@@ -1,2 +1,9 @@
-For TypeScript check README.md on src folder
-For Python check README.md on py folder
+# ModParameter App
+
+## TypeScript
+- check [TypeScript](src/README.md) on src folder
+- Explain MOD SPT feature : [src/README.md](src/README.md#main-features)
+## Python 
+- check [Python](py/README.MD) on py folder
+
+
