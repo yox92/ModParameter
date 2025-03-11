@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "5df8ce05b11454561e39243b",
+    "_name": "weapon_kac_sr25_762x51",
+    "_props": {
+      "CameraSnap": 3.5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 47,
+      "RecoilCamera": 0.08,
+      "RecoilForceBack": 356,
+      "RecoilForceUp": 155,
+      "RecolDispersion": 11,
+      "Weight": 0.51,
+      "ammoCaliber": "Caliber762x51",
+      "bFirerate": 700
+    }
+  },
+  "locale": {
+    "Name": "Knight's Armament Company SR-25 7.62x51 marksman rifle",
+    "ShortName": "SR-25"
+  }
+}

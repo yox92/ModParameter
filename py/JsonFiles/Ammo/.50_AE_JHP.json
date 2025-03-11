@@ -1,0 +1,20 @@
+{
+  "item": {
+    "_id": "66a0d1c87d0d369e270bb9de",
+    "_name": "patron_127x33_jhp",
+    "_props": {
+      "ArmorDamage": 23,
+      "Caliber": "Caliber127x33",
+      "Damage": 147,
+      "InitialSpeed": 440,
+      "PenetrationPower": 12,
+      "StackMaxSize": 30,
+      "Tracer": false,
+      "TracerColor": "red"
+    }
+  },
+  "locale": {
+    "Name": ".50 AE JHP",
+    "ShortName": "JHP"
+  }
+}

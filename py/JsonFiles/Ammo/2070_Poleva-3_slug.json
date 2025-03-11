@@ -1,0 +1,20 @@
+{
+  "item": {
+    "_id": "5d6e6a53a4b9361bd473feec",
+    "_name": "patron_20x70_slug_poleva_3",
+    "_props": {
+      "ArmorDamage": 35,
+      "Caliber": "Caliber20g",
+      "Damage": 120,
+      "InitialSpeed": 425,
+      "PenetrationPower": 14,
+      "StackMaxSize": 20,
+      "Tracer": false,
+      "TracerColor": "red"
+    }
+  },
+  "locale": {
+    "Name": "20/70 Poleva-3 slug",
+    "ShortName": "Poleva-3"
+  }
+}

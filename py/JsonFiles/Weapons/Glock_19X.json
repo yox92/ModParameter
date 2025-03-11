@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "63088377b5cd696784087147",
+    "_name": "weapon_glock_glock_19x_9x19",
+    "_props": {
+      "CameraSnap": 5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 93,
+      "RecoilCamera": 0.007,
+      "RecoilForceBack": 250,
+      "RecoilForceUp": 302,
+      "RecolDispersion": 8,
+      "Weight": 0.197,
+      "ammoCaliber": "Caliber9x19PARA",
+      "bFirerate": 30
+    }
+  },
+  "locale": {
+    "Name": "Glock 19X 9x19 pistol",
+    "ShortName": "Glock 19X"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "item": {
+    "_id": "5d6e6869a4b9361c140bcfde",
+    "_name": "patron_12x70_slug_grizzly_40",
+    "_props": {
+      "ArmorDamage": 48,
+      "Caliber": "Caliber12g",
+      "Damage": 190,
+      "InitialSpeed": 390,
+      "PenetrationPower": 12,
+      "StackMaxSize": 20,
+      "Tracer": false,
+      "TracerColor": "red"
+    }
+  },
+  "locale": {
+    "Name": "12/70 Grizzly 40 slug",
+    "ShortName": "Grizzly 40"
+  }
+}

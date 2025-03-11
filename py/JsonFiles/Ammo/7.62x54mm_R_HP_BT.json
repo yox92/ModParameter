@@ -1,0 +1,20 @@
+{
+  "item": {
+    "_id": "64b8f7c241772715af0f9c3d",
+    "_name": "patron_762x54r_bthp",
+    "_props": {
+      "ArmorDamage": 37,
+      "Caliber": "Caliber762x54R",
+      "Damage": 102,
+      "InitialSpeed": 807,
+      "PenetrationPower": 23,
+      "StackMaxSize": 40,
+      "Tracer": false,
+      "TracerColor": "red"
+    }
+  },
+  "locale": {
+    "Name": "7.62x54mm R HP BT",
+    "ShortName": "HP BT"
+  }
+}

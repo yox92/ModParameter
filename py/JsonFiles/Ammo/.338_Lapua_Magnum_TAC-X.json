@@ -1,0 +1,20 @@
+{
+  "item": {
+    "_id": "5fc382b6d6fa9c00c571bbc3",
+    "_name": "patron_86x70_lapua_tac_x",
+    "_props": {
+      "ArmorDamage": 55,
+      "Caliber": "Caliber86x70",
+      "Damage": 196,
+      "InitialSpeed": 880,
+      "PenetrationPower": 18,
+      "StackMaxSize": 30,
+      "Tracer": false,
+      "TracerColor": "red"
+    }
+  },
+  "locale": {
+    "Name": ".338 Lapua Magnum TAC-X",
+    "ShortName": "TAC-X"
+  }
+}

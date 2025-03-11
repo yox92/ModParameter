@@ -1,0 +1,20 @@
+{
+  "item": {
+    "_id": "59e655cb86f77411dc52a77b",
+    "_name": "patron_366_TKM_EKO",
+    "_props": {
+      "ArmorDamage": 40,
+      "Caliber": "Caliber366TKM",
+      "Damage": 73,
+      "InitialSpeed": 770,
+      "PenetrationPower": 30,
+      "StackMaxSize": 50,
+      "Tracer": false,
+      "TracerColor": "red"
+    }
+  },
+  "locale": {
+    "Name": ".366 TKM EKO",
+    "ShortName": "EKO"
+  }
+}

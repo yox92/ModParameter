@@ -1,0 +1,20 @@
+{
+  "item": {
+    "_id": "59e4d3d286f774176a36250a",
+    "_name": "patron_762x39_HP",
+    "_props": {
+      "ArmorDamage": 20,
+      "Caliber": "Caliber762x39",
+      "Damage": 80,
+      "InitialSpeed": 754,
+      "PenetrationPower": 15,
+      "StackMaxSize": 60,
+      "Tracer": false,
+      "TracerColor": "red"
+    }
+  },
+  "locale": {
+    "Name": "7.62x39mm HP",
+    "ShortName": "HP"
+  }
+}

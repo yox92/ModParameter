@@ -1,0 +1,20 @@
+{
+  "item": {
+    "_id": "5efb0cabfb3e451d70735af5",
+    "_name": "patron_1143x23_acp_ap",
+    "_props": {
+      "ArmorDamage": 48,
+      "Caliber": "Caliber1143x23ACP",
+      "Damage": 66,
+      "InitialSpeed": 299,
+      "PenetrationPower": 38,
+      "StackMaxSize": 50,
+      "Tracer": false,
+      "TracerColor": "red"
+    }
+  },
+  "locale": {
+    "Name": ".45 ACP AP",
+    "ShortName": "AP"
+  }
+}

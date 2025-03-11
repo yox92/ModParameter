@@ -1,0 +1,20 @@
+{
+  "item": {
+    "_id": "5ba2678ad4351e44f824b344",
+    "_name": "patron_46x30_fmj_sx",
+    "_props": {
+      "ArmorDamage": 41,
+      "Caliber": "Caliber46x30",
+      "Damage": 43,
+      "InitialSpeed": 620,
+      "PenetrationPower": 40,
+      "StackMaxSize": 70,
+      "Tracer": false,
+      "TracerColor": "red"
+    }
+  },
+  "locale": {
+    "Name": "4.6x30mm FMJ SX",
+    "ShortName": "FMJ SX"
+  }
+}

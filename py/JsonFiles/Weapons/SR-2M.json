@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "62e14904c2699c0ec93adc47",
+    "_name": "weapon_tochmash_sr2m_veresk_9x21",
+    "_props": {
+      "CameraSnap": 3.5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 59,
+      "RecoilCamera": 0.03,
+      "RecoilForceBack": 234,
+      "RecoilForceUp": 54,
+      "RecolDispersion": 10,
+      "Weight": 0.938,
+      "ammoCaliber": "Caliber9x21",
+      "bFirerate": 950
+    }
+  },
+  "locale": {
+    "Name": "SR-2M Veresk 9x21 submachine gun",
+    "ShortName": "SR-2M"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "5e848cc2988a8701445df1e8",
+    "_name": "weapon_toz_ks23m_23x75",
+    "_props": {
+      "CameraSnap": 2,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 38,
+      "RecoilCamera": 0.09,
+      "RecoilForceBack": 601,
+      "RecoilForceUp": 467,
+      "RecolDispersion": 12,
+      "Weight": 1.5,
+      "ammoCaliber": "Caliber23x75",
+      "bFirerate": 30
+    }
+  },
+  "locale": {
+    "Name": "TOZ KS-23M 23x75mm pump-action shotgun",
+    "ShortName": "KS-23M"
+  }
+}

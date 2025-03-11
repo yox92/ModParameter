@@ -1,0 +1,20 @@
+{
+  "item": {
+    "_id": "5ea2a8e200685063ec28c05a",
+    "_name": "patron_1143x23_rip",
+    "_props": {
+      "ArmorDamage": 12,
+      "Caliber": "Caliber1143x23ACP",
+      "Damage": 130,
+      "InitialSpeed": 293,
+      "PenetrationPower": 3,
+      "StackMaxSize": 50,
+      "Tracer": false,
+      "TracerColor": "red"
+    }
+  },
+  "locale": {
+    "Name": ".45 ACP RIP",
+    "ShortName": "RIP"
+  }
+}

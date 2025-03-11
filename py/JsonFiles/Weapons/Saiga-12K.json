@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "576165642459773c7a400233",
+    "_name": "weapon_izhmash_saiga12k_10_12g",
+    "_props": {
+      "CameraSnap": 2.5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 35,
+      "RecoilCamera": 0.06,
+      "RecoilForceBack": 526,
+      "RecoilForceUp": 298,
+      "RecolDispersion": 15,
+      "Weight": 2.622,
+      "ammoCaliber": "Caliber12g",
+      "bFirerate": 40
+    }
+  },
+  "locale": {
+    "Name": "Saiga-12K ver.10 12ga semi-automatic shotgun",
+    "ShortName": "Saiga-12K"
+  }
+}

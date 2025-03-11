@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "5a367e5dc4a282000e49738f",
+    "_name": "weapon_remington_r11_rsass_762x51",
+    "_props": {
+      "CameraSnap": 3.5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 50,
+      "RecoilCamera": 0.08,
+      "RecoilForceBack": 342,
+      "RecoilForceUp": 153,
+      "RecolDispersion": 11,
+      "Weight": 1.72,
+      "ammoCaliber": "Caliber762x51",
+      "bFirerate": 700
+    }
+  },
+  "locale": {
+    "Name": "Remington R11 RSASS 7.62x51 marksman rifle",
+    "ShortName": "RSASS"
+  }
+}

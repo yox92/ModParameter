@@ -1,0 +1,20 @@
+{
+  "item": {
+    "_id": "5e023e53d4353e3302577c4c",
+    "_name": "patron_762x51_bpz_fmj",
+    "_props": {
+      "ArmorDamage": 42,
+      "Caliber": "Caliber762x51",
+      "Damage": 83,
+      "InitialSpeed": 840,
+      "PenetrationPower": 35,
+      "StackMaxSize": 40,
+      "Tracer": false,
+      "TracerColor": "red"
+    }
+  },
+  "locale": {
+    "Name": "7.62x51mm BCP FMJ",
+    "ShortName": "BCP FMJ"
+  }
+}

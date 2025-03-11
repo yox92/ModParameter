@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "5cc82d76e24e8d00134b4b83",
+    "_name": "weapon_fn_p90_57x28",
+    "_props": {
+      "CameraSnap": 3.5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 60,
+      "RecoilCamera": 0.04,
+      "RecoilForceBack": 243,
+      "RecoilForceUp": 54,
+      "RecolDispersion": 15,
+      "Weight": 0.7,
+      "ammoCaliber": "Caliber57x28",
+      "bFirerate": 900
+    }
+  },
+  "locale": {
+    "Name": "FN P90 5.7x28 submachine gun",
+    "ShortName": "P90"
+  }
+}

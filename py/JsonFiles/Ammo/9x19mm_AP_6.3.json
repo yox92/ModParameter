@@ -1,0 +1,20 @@
+{
+  "item": {
+    "_id": "5c925fa22e221601da359b7b",
+    "_name": "patron_9x19_ap_63",
+    "_props": {
+      "ArmorDamage": 48,
+      "Caliber": "Caliber9x19PARA",
+      "Damage": 52,
+      "InitialSpeed": 392,
+      "PenetrationPower": 30,
+      "StackMaxSize": 50,
+      "Tracer": false,
+      "TracerColor": "red"
+    }
+  },
+  "locale": {
+    "Name": "9x19mm AP 6.3",
+    "ShortName": "AP 6.3"
+  }
+}

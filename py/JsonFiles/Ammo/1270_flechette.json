@@ -1,0 +1,20 @@
+{
+  "item": {
+    "_id": "5d6e6911a4b9361bd5780d52",
+    "_name": "patron_12x70_flechette",
+    "_props": {
+      "ArmorDamage": 26,
+      "Caliber": "Caliber12g",
+      "Damage": 25,
+      "InitialSpeed": 320,
+      "PenetrationPower": 31,
+      "StackMaxSize": 20,
+      "Tracer": false,
+      "TracerColor": "red"
+    }
+  },
+  "locale": {
+    "Name": "12/70 flechette",
+    "ShortName": "Flechette"
+  }
+}

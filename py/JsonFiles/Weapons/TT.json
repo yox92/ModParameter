@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "571a12c42459771f627b58a0",
+    "_name": "weapon_toz_tt_762x25tt",
+    "_props": {
+      "CameraSnap": 5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 70,
+      "RecoilCamera": 0.012,
+      "RecoilForceBack": 325,
+      "RecoilForceUp": 553,
+      "RecolDispersion": 10,
+      "Weight": 0.664,
+      "ammoCaliber": "Caliber762x25TT",
+      "bFirerate": 30
+    }
+  },
+  "locale": {
+    "Name": "TT-33 7.62x25 TT pistol",
+    "ShortName": "TT"
+  }
+}

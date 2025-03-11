@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "6193a720f8ee7e52e42109ed",
+    "_name": "weapon_hk_usp_45",
+    "_props": {
+      "CameraSnap": 6,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 82,
+      "RecoilCamera": 0.011,
+      "RecoilForceBack": 295,
+      "RecoilForceUp": 410,
+      "RecolDispersion": 8,
+      "Weight": 0.222,
+      "ammoCaliber": "Caliber1143x23ACP",
+      "bFirerate": 30
+    }
+  },
+  "locale": {
+    "Name": "HK USP .45 ACP pistol",
+    "ShortName": "USP .45"
+  }
+}

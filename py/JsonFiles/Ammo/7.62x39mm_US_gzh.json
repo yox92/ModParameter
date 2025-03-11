@@ -1,0 +1,20 @@
+{
+  "item": {
+    "_id": "59e4d24686f7741776641ac7",
+    "_name": "patron_762x39_US",
+    "_props": {
+      "ArmorDamage": 42,
+      "Caliber": "Caliber762x39",
+      "Damage": 56,
+      "InitialSpeed": 301,
+      "PenetrationPower": 29,
+      "StackMaxSize": 60,
+      "Tracer": false,
+      "TracerColor": "red"
+    }
+  },
+  "locale": {
+    "Name": "7.62x39mm US gzh",
+    "ShortName": "US"
+  }
+}

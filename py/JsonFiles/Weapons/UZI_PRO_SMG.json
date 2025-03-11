@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "668e71a8dadf42204c032ce1",
+    "_name": "weapon_iwi_uzi_pro_smg_9x19",
+    "_props": {
+      "CameraSnap": 3.5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 78,
+      "RecoilCamera": 0.03,
+      "RecoilForceBack": 198,
+      "RecoilForceUp": 56,
+      "RecolDispersion": 10,
+      "Weight": 1.128,
+      "ammoCaliber": "Caliber9x19PARA",
+      "bFirerate": 1075
+    }
+  },
+  "locale": {
+    "Name": "IWI UZI PRO SMG 9x19 submachine gun",
+    "ShortName": "UZI PRO SMG"
+  }
+}

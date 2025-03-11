@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "5abccb7dd8ce87001773e277",
+    "_name": "weapon_toz_apb_9x18pm",
+    "_props": {
+      "CameraSnap": 5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 80,
+      "RecoilCamera": 0.006,
+      "RecoilForceBack": 260,
+      "RecoilForceUp": 328,
+      "RecolDispersion": 8,
+      "Weight": 0.81,
+      "ammoCaliber": "Caliber9x18PM",
+      "bFirerate": 750
+    }
+  },
+  "locale": {
+    "Name": "APB 9x18PM silenced machine pistol",
+    "ShortName": "APB"
+  }
+}

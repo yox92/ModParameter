@@ -1,0 +1,20 @@
+{
+  "item": {
+    "_id": "57a0dfb82459774d3078b56c",
+    "_name": "patron_9x39_sp5",
+    "_props": {
+      "ArmorDamage": 39,
+      "Caliber": "Caliber9x39",
+      "Damage": 71,
+      "InitialSpeed": 290,
+      "PenetrationPower": 28,
+      "StackMaxSize": 50,
+      "Tracer": false,
+      "TracerColor": "red"
+    }
+  },
+  "locale": {
+    "Name": "9x39mm SP-5 gs",
+    "ShortName": "SP-5"
+  }
+}

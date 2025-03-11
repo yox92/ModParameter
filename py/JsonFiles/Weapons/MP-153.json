@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "56dee2bdd2720bc8328b4567",
+    "_name": "weapon_izhmeh_mr153_12g",
+    "_props": {
+      "CameraSnap": 2.8,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 43,
+      "RecoilCamera": 0.06,
+      "RecoilForceBack": 474,
+      "RecoilForceUp": 348,
+      "RecolDispersion": 10,
+      "Weight": 1.2,
+      "ammoCaliber": "Caliber12g",
+      "bFirerate": 40
+    }
+  },
+  "locale": {
+    "Name": "MP-153 12ga semi-automatic shotgun",
+    "ShortName": "MP-153"
+  }
+}

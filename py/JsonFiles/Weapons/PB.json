@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "56e0598dd2720bb5668b45a6",
+    "_name": "weapon_tochmash_pb_9x18pm",
+    "_props": {
+      "CameraSnap": 5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 80,
+      "RecoilCamera": 0.006,
+      "RecoilForceBack": 260,
+      "RecoilForceUp": 380,
+      "RecolDispersion": 12,
+      "Weight": 0.674,
+      "ammoCaliber": "Caliber9x18PM",
+      "bFirerate": 30
+    }
+  },
+  "locale": {
+    "Name": "PB 9x18PM silenced pistol",
+    "ShortName": "PB"
+  }
+}

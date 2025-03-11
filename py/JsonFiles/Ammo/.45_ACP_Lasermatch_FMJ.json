@@ -1,0 +1,20 @@
+{
+  "item": {
+    "_id": "5efb0d4f4bc50b58e81710f3",
+    "_name": "patron_1143x23_acp_lasermatch_fmj",
+    "_props": {
+      "ArmorDamage": 37,
+      "Caliber": "Caliber1143x23ACP",
+      "Damage": 76,
+      "InitialSpeed": 290,
+      "PenetrationPower": 19,
+      "StackMaxSize": 50,
+      "Tracer": true,
+      "TracerColor": "red"
+    }
+  },
+  "locale": {
+    "Name": ".45 ACP Lasermatch FMJ",
+    "ShortName": "Lasermatch"
+  }
+}

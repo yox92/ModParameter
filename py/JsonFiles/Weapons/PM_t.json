@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "579204f224597773d619e051",
+    "_name": "weapon_izhmeh_pm_treaded_9x18pm",
+    "_props": {
+      "CameraSnap": 5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 84,
+      "RecoilCamera": 0.006,
+      "RecoilForceBack": 265,
+      "RecoilForceUp": 380,
+      "RecolDispersion": 12,
+      "Weight": 0.34,
+      "ammoCaliber": "Caliber9x18PM",
+      "bFirerate": 30
+    }
+  },
+  "locale": {
+    "Name": "Makarov PM (t) 9x18PM pistol",
+    "ShortName": "PM (t)"
+  }
+}

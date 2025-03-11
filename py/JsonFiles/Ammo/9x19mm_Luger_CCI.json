@@ -1,0 +1,20 @@
+{
+  "item": {
+    "_id": "5a3c16fe86f77452b62de32a",
+    "_name": "patron_9x19_luger_cci",
+    "_props": {
+      "ArmorDamage": 38,
+      "Caliber": "Caliber9x19PARA",
+      "Damage": 70,
+      "InitialSpeed": 420,
+      "PenetrationPower": 10,
+      "StackMaxSize": 50,
+      "Tracer": false,
+      "TracerColor": "red"
+    }
+  },
+  "locale": {
+    "Name": "9x19mm Luger CCI",
+    "ShortName": "Luger CCI"
+  }
+}

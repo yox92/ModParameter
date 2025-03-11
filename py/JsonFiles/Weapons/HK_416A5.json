@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "5bb2475ed4351e00853264e3",
+    "_name": "weapon_hk_416a5_556x45",
+    "_props": {
+      "CameraSnap": 3,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 51,
+      "RecoilCamera": 0.055,
+      "RecoilForceBack": 358,
+      "RecoilForceUp": 125,
+      "RecolDispersion": 10,
+      "Weight": 0.52,
+      "ammoCaliber": "Caliber556x45NATO",
+      "bFirerate": 850
+    }
+  },
+  "locale": {
+    "Name": "HK 416A5 5.56x45 assault rifle",
+    "ShortName": "HK 416A5"
+  }
+}

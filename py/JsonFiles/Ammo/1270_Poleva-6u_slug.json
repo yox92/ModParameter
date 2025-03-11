@@ -1,0 +1,20 @@
+{
+  "item": {
+    "_id": "5d6e689ca4b9361bc8618956",
+    "_name": "patron_12x70_slug_poleva_6u",
+    "_props": {
+      "ArmorDamage": 50,
+      "Caliber": "Caliber12g",
+      "Damage": 150,
+      "InitialSpeed": 430,
+      "PenetrationPower": 20,
+      "StackMaxSize": 20,
+      "Tracer": false,
+      "TracerColor": "red"
+    }
+  },
+  "locale": {
+    "Name": "12/70 Poleva-6u slug",
+    "ShortName": "Poleva-6u"
+  }
+}

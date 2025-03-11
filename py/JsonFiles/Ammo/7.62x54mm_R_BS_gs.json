@@ -1,0 +1,20 @@
+{
+  "item": {
+    "_id": "5e023d48186a883be655e551",
+    "_name": "patron_762x54r_7n37",
+    "_props": {
+      "ArmorDamage": 88,
+      "Caliber": "Caliber762x54R",
+      "Damage": 72,
+      "InitialSpeed": 785,
+      "PenetrationPower": 70,
+      "StackMaxSize": 40,
+      "Tracer": false,
+      "TracerColor": "red"
+    }
+  },
+  "locale": {
+    "Name": "7.62x54mm R BS gs",
+    "ShortName": "BS"
+  }
+}

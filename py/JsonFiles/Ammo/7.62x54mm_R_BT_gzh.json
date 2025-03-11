@@ -1,0 +1,20 @@
+{
+  "item": {
+    "_id": "5e023d34e8a400319a28ed44",
+    "_name": "patron_762x54r_7bt1",
+    "_props": {
+      "ArmorDamage": 87,
+      "Caliber": "Caliber762x54R",
+      "Damage": 78,
+      "InitialSpeed": 875,
+      "PenetrationPower": 55,
+      "StackMaxSize": 40,
+      "Tracer": true,
+      "TracerColor": "green"
+    }
+  },
+  "locale": {
+    "Name": "7.62x54mm R BT gzh",
+    "ShortName": "BT"
+  }
+}

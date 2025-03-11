@@ -1,0 +1,20 @@
+{
+  "item": {
+    "_id": "5e023cf8186a883be655e54f",
+    "_name": "patron_762x54r_t46m",
+    "_props": {
+      "ArmorDamage": 83,
+      "Caliber": "Caliber762x54R",
+      "Damage": 82,
+      "InitialSpeed": 800,
+      "PenetrationPower": 41,
+      "StackMaxSize": 40,
+      "Tracer": true,
+      "TracerColor": "green"
+    }
+  },
+  "locale": {
+    "Name": "7.62x54mm R T-46M gzh",
+    "ShortName": "T-46M"
+  }
+}

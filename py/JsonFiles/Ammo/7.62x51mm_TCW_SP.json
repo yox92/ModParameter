@@ -1,0 +1,20 @@
+{
+  "item": {
+    "_id": "5e023e6e34d52a55c3304f71",
+    "_name": "patron_762x51_tpz_sp",
+    "_props": {
+      "ArmorDamage": 25,
+      "Caliber": "Caliber762x51",
+      "Damage": 87,
+      "InitialSpeed": 808,
+      "PenetrationPower": 30,
+      "StackMaxSize": 40,
+      "Tracer": false,
+      "TracerColor": "red"
+    }
+  },
+  "locale": {
+    "Name": "7.62x51mm TCW SP",
+    "ShortName": "TCW SP"
+  }
+}

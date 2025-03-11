@@ -1,0 +1,20 @@
+{
+  "item": {
+    "_id": "573718ba2459775a75491131",
+    "_name": "patron_9x18pm_BZT_gzh",
+    "_props": {
+      "ArmorDamage": 28,
+      "Caliber": "Caliber9x18PM",
+      "Damage": 53,
+      "InitialSpeed": 325,
+      "PenetrationPower": 18,
+      "StackMaxSize": 50,
+      "Tracer": false,
+      "TracerColor": "red"
+    }
+  },
+  "locale": {
+    "Name": "9x18mm PM BZhT gzh",
+    "ShortName": "BZhT"
+  }
+}
