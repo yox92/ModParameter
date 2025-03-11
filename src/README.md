@@ -67,7 +67,7 @@ postDBLoad(dependencyContainer: DependencyContainer): void
 
 ---
 
-### **PmcService (PMC Attribute Management)**
+## **PmcService (PMC Attribute Management)**
 
 Handles **Player Main Character (PMC) attribute updates**, utilizing external services for data management.
 
@@ -120,9 +120,6 @@ Processes ammunition JSON files:
 - Creates `Ammo` instances using `createItemAmmo`.
 - Applies modifications using `ItemUpdaterService`.
 
-## Usage
-To use the `ItemService`, instantiate it with a logger and database reference:
-
 ---
 # ItemUpdaterService
 
@@ -149,21 +146,33 @@ The `ItemUpdaterService` processes item updates through two main methods:
 - This service only modifies properties that exist within `_props` of an `ITemplateItem`.
 - If the database structure is invalid or an item is missing, the modification process is aborted.
 
+---
+# AimingService
 
-### **AimingService (Aiming Attribute Adjustments)**
+## Overview
+The `AimingService` class is responsible for modifying aiming-related 
+attributes in the SPT (Single Player Tarkov) environment. It maps JSON-defined values onto existing SPT configurations, ensuring that only valid values are applied.
 
-Handles **aiming-related parameters** for the **PMC**, ensuring valid values are assigned.
+## Functionality
+The `AimingService` updates the aiming parameters of a PMC based on JSON input:
+- **applyModifications**: Modifies attributes related to recoil, procedural intensity, and aiming sensitivity.
 
-#### ✅ Features:
-- Modifies **aiming attributes** (e.g., **recoil, aim stability**).
-- Uses `ValidateUtils` for data validation.
-- Logs changes for debugging purposes.
+### How it Works
+- The service extracts the necessary data from the SPT database (`iDatabaseTables`).
+- It verifies that the required configurations (`globals`, `config`, `aiming`) exist.
+- It validates and casts each modification from the JSON input using `ValidateUtils`.
+- If any value is invalid, the modification is skipped, and a warning is logged.
+- If all values are valid, they are assigned to the corresponding `_props`.
+- The service logs success or failure messages accordingly.
 
-#### 🔹 Key Method:
-```typescript
-applyModifications(aimingJson: Aiming, iDatabaseTables: IDatabaseTables): boolean
-```
-- Reads **JSON aiming data** and updates the **game’s aiming attributes**.
+
+## Notes
+- This service only modifies properties that exist within the `IAiming` and `IConfig` objects.
+- If the database structure is invalid or attributes are missing, the modification process is aborted.
+- Ensure JSON input is correctly formatted and validated before passing it to the service.
+
+## License
+This project follows the applicable license terms set by the SPT-AKI modding framework.
 
 ---
 
