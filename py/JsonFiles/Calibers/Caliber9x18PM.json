@@ -1,0 +1,12 @@
+{
+    "CameraSnap": 1.0,
+    "AimSensitivity": 1.0,
+    "Ergonomics": 1.0,
+    "RecoilCamera": 1.0,
+    "RecoilForceBack": 1.0,
+    "RecoilForceUp": 1.0,
+    "RecolDispersion": 1.0,
+    "Weight": 1.0,
+    "ammoCaliber": "Caliber9x18PM",
+    "bFirerate": 1.0
+}
