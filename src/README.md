@@ -1,108 +1,174 @@
-📖 AttributMod - Data Modification for SPT-AKI
+# ModParameter App
 
-🚀 Introduction
+## Project Overview
 
-AttributMod is a mod for SPT-AKI that allows dynamic modification
-of weapon statistics, ammunition, and PMC parameters through a graphical interface.
+1. **ModParameter** is a mod for **SPT-AKI** that allows users to dynamically modify **weapon statistics, ammunition properties, and PMC attributes** through a **graphical Python interface** with an executable `.exe` file. This mod enhances gameplay customization by enabling direct item and character modifications within the game.
+2. The Python program will automatically generate JSON files that can be retrieved, corrected, and used to implement objects in the SPT database. Automation can only take place if the file structure is strictly followed, ensuring that the Python program has full visibility on the generated files.
+   👉 "Read the README.md file for more information."
+---
 
-📂 Project Structure
 
-AttributMod/
-│── Entity/                 # JSON entity definitions
-│── Service/                # Services for processing modifications
-│── Utils/                  # Utilities and log management
-│── config.ts               # Configuration paths
-│── mod.ts                  # Main entry point
-│── README.md               # This file
+## 📂 TypeScript Project Structure
 
-⚙️ Configuration
+```
+ModParameter/
+│-- ModParameter.exe       # Python exe file
+│-- py/                    # Python GUI files
+│-- │--JsonFiles           # JsonFiles Stock Modif. HERE
+│-- │--│--Weapons           
+│-- │--│--Ammo
+│-- │--│--PMC
+│-- src/                   # TypeScript source code
+│   │-- Entity/            # Game entity definitions
+│   │-- ListIdItem/        # Item ID management
+│   │-- Service/           # Core services for modifying data
+│   │   │-- AimingService.ts
+│   │   │-- ItemService.ts
+│   │   │-- ItemUpdaterService.ts
+│   │   │-- JsonFileService.ts
+│   │   │-- PmcService.ts
+│   │-- Utils/             # Utility functions
+│   │   │-- ValidateUtils.ts
+│   │-- caliber.ts         # Ammunition calibers
+│   │-- config.ts          # Configuration settings
+│   │-- mod.ts             # Main mod entry point
+│   │-- scrap_ammo.ts      # Ammunition modification script
+│   │-- scrap_weapon.ts    # Weapon modification script
+│-- README.md
+│-- package.json           # Project dependencies
+│-- tsconfig.json          # TypeScript configuration
+```
 
-1️⃣ Using the Modification Tool
+---
 
-The user does not need to manually edit JSON files. Instead, 
-they should execute the provided program:📂 Executable Path: py/main/ModParameters.exe
+## 🔧 Core Components & Features
 
-A graphical interface is available, allowing users to make the modifications they need. There are four main options:
+### **AttributMod (Main Mod Class)**
 
-Modify a specific weapon
+The `AttributMod` class implements the `IPostDBLoadMod` interface for **SPT-AKI**. It modifies game data **after the database is loaded**, using `ItemService` and `PmcService` to apply changes.
 
-Modify a group of weapons based on their caliber
+#### ✅ Features:
+- **Dependency Injection:** Uses `tsyringe` to inject required services.
+- **Game Data Modification:** Alters **Weapons, ammunition, and PMC attributes**.
+- **Error Handling:** Ensures essential dependencies (`DatabaseServer`, `ILogger`) are available.
 
-Modify ammunition parameters
+#### 🔹 Key Method:
+```typescript
+postDBLoad(dependencyContainer: DependencyContainer): void
+```
+- Loads dependencies and retrieves game data.
+- Applies modifications through `updateItems()` and `updatePmc()`.
 
-Modify PMC statistics
+#### 📌 Dependencies:
+- **`DatabaseServer`** – Access to game database tables.
+- **`ILogger`** – Logs information and errors.
+- **`ItemService`** – Handles item modifications.
+- **`PmcService`** – Manages PMC attribute updates.
 
-All changes are automatically saved into .json files for future use.
+---
 
-🏗️ Mod Functionality
+### **PmcService (PMC Attribute Management)**
 
-📌 1. Loading JSON Files
+Handles **Player Main Character (PMC) attribute updates**, utilizing external services for data management.
 
-📁 Service: JsonFileService.ts
+#### ✅ Features:
+- Reads **JSON configuration files** via `JsonFileService`.
+- Applies **aiming modifications** using `AimingService`.
+- Logs updates and errors with `ILogger`.
 
-Checks if directories exist
+#### 🔹 Key Method:
+```typescript
+updatePmc(): void
+```
+- Loads **aiming configuration JSON**.
+- Parses and applies modifications to **PMC aiming attributes**.
 
-Loads and parses JSON files
+#### 📌 Dependencies:
+- **`ILogger`** – Logging service.
+- **`JsonFileService`** – Loads JSON configurations.
+- **`AimingService`** – Applies aiming changes.
 
-Validates data integrity
+---
+# ItemService
 
-📌 2. Applying Modifications
+## Overview
+The `ItemService` class is responsible for loading JSON files containing item data (weapons and ammunition) and applying modifications to them within the SPT game environment. This service ensures that the JSON data follows the required structure and applies appropriate updates using the `ItemUpdaterService`.
 
-📁 Service: ItemService.ts and PmcService.ts
+## Features
+- Loads JSON data for weapons and ammunition.
+- Validates the structure of the JSON files before processing.
+- Applies modifications to weapons and ammunition.
+- Logs warnings when encountering invalid or missing data.
 
-updateItems(): Modifies weapons and ammunition
+## Class Methods
+### `updateItems()`
+This method initiates the process of updating weapons and ammunition:
+- Loads JSON files using `JsonFileService`.
+- Calls `caseWeapons()` to process weapon modifications.
+- Calls `caseAmmo()` to process ammunition modifications.
 
-updatePmc(): Modifies PMC parameters
+### `caseWeapons(jsonWeaponsFiles)`
+Processes weapon JSON files:
+- Checks for missing or invalid weapon data.
+- Extracts `ItemProps` and `Locale` from the JSON.
+- Applies modifications using `ItemUpdaterService`.
 
-📌 3. Modifying Game Database Values
+### `caseAmmo(jsonAmmoFiles)`
+Processes ammunition JSON files:
+- Validates ammo data structure.
+- Extracts `Ammo` properties.
+- Creates `Ammo` instances using `createItemAmmo`.
+- Applies modifications using `ItemUpdaterService`.
 
-📁 Service: ItemUpdaterService.ts
+## Usage
+To use the `ItemService`, instantiate it with a logger and database reference:
 
-Verifies if the item exists in the game database
+---
+# ItemUpdaterService
 
-Validates JSON values
+## Overview
+The `ItemUpdaterService` class is responsible for applying modifications to in-game items in the SPT (Single Player Tarkov) ecosystem. It maps JSON-defined modifications onto existing SPT items, ensuring that only valid values are applied.
 
-Applies modifications
+This service primarily works with two types of items:
+- **Ammunition (`Ammo`)**
+- **Weapons (`ItemProps`)**
 
-🛠️ Installation and Usage
+## Functionality
+The `ItemUpdaterService` processes item updates through two main methods:
+1. **applyAmmoModifications**: Updates ammunition properties such as damage, penetration power, initial speed, and tracer attributes.
+2. **applyWeaponsModifications**: Updates weapon attributes like recoil, ergonomics, fire rate, and aiming sensitivity.
 
-1️⃣ Installation
+### How it Works
+- The service extracts the relevant item from the SPT database (`iDatabaseTables`).
+- It validates and casts each modification from the JSON input using `ValidateUtils`.
+- If any value is invalid, the modification is skipped, and a warning is logged.
+- If all values are valid, they are applied to the item's `_props`.
+- The service logs success or failure messages accordingly.
 
-Extract the mod into the user/mods/ folder of SPT-AKI.
+## Notes
+- This service only modifies properties that exist within `_props` of an `ITemplateItem`.
+- If the database structure is invalid or an item is missing, the modification process is aborted.
 
-Run py/main/ModParameters.exe to access the modification tool.
 
-2️⃣ Usage
+### **AimingService (Aiming Attribute Adjustments)**
 
-Start the executable to open the graphical interface.
+Handles **aiming-related parameters** for the **PMC**, ensuring valid values are assigned.
 
-Make modifications through the provided options.
+#### ✅ Features:
+- Modifies **aiming attributes** (e.g., **recoil, aim stability**).
+- Uses `ValidateUtils` for data validation.
+- Logs changes for debugging purposes.
 
-Changes will be saved automatically in JSON files.
+#### 🔹 Key Method:
+```typescript
+applyModifications(aimingJson: Aiming, iDatabaseTables: IDatabaseTables): boolean
+```
+- Reads **JSON aiming data** and updates the **game’s aiming attributes**.
 
-🔍 Debugging and Logs
+---
 
-📁 Log File: logs.txt
 
-Every applied modification is recorded.
-
-In case of errors, detailed messages are displayed.
-
-🎯 Future Features
-
-✅ Support for additional items and equipment
-
-✅ Advanced customization of statistics
-
-🚀 User interface improvements for better usability
-
-📝 Author
-
-👤 Developed by: Netnikogo
-📧 Contact: Discord ==> 
-
-🚀 Thank you for using AttributMod! 🎯
-
+# Pattern Database item props structure
 
 DatabaseServer
 ├── templates
@@ -154,3 +220,7 @@ DatabaseServer
 │   │   │   │   ├── x: number
 │   │   │   │   ├── y: number
 │   │   │   │   ├── z: number
+
+
+
+

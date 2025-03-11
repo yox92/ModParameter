@@ -68,7 +68,7 @@ for its graphical interface and manipulates **JSON files** to load, modify, or d
 ---
 
 # Launching the Application
-
+⚙️
 ## Python
 - Navigate to the project root directory.
 - The `main.py` file is located in the `main` directory.
@@ -96,6 +96,7 @@ for its graphical interface and manipulates **JSON files** to load, modify, or d
 
 # python-project-structure
 
+📂 Project Structure
 .
 ├── Entity/
 │   ├── Caliber.py         

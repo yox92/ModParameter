@@ -4,7 +4,7 @@
   "description": "A custom mod for weapons / ammo / PMC stats in SPT-AKI",
   "main": "src/mod.js",
   "type": "commonjs",
-  "author": "netnikogo",
+  "author": "Yox",
   "sptVersion": "3.10.*",
   "license": "MIT",
   "scripts": {},
