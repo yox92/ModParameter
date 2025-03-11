@@ -114,6 +114,12 @@ for its graphical interface and manipulates **JSON files** to load, modify, or d
 │   ├── Utils.py
 │   └── WindowUtils.py
 ├── WindowComponent/
+├── JsonFiles/
+│   ├── Ammo/
+│   ├── Calibers/
+│   ├── PMC/
+│   ├── Weapons/
+├── Images/
 │   ├── AmmoMod.py            
 │   ├── CaliberWeaponsMod.py  
 │   ├── ListItemAlreadyMod.py s
