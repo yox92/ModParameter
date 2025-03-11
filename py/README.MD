@@ -90,7 +90,7 @@ for its graphical interface and manipulates **JSON files** to load, modify, or d
         - Calibers **(JSON Files Here)**
         - PMC      **(JSON Files Here)**
     - **src** (TypeScript SPT)
-
+🛠️ Use console `cmd`/ `PowerShell` to show terminal to execute *.exe 🛠️
 ---
 
 

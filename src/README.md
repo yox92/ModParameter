@@ -10,9 +10,12 @@
 
 ## 📂 TypeScript Project Structure
 
+🛠️ Use console `cmd`/ `PowerShell` to show terminal to execute `ModParameter.exe` 🛠️
+
+
 ```
 ModParameter/
-│-- ModParameter.exe       # Python exe file
+│-- ModParameter.exe       # Python exe file 
 │-- py/                    # Python GUI files
 │-- │--JsonFiles           # JsonFiles Stock Modif. HERE
 │-- │--│--Weapons           
@@ -34,7 +37,7 @@ ModParameter/
 │   │-- mod.ts             # Main mod entry point
 │   │-- scrap_ammo.ts      # Ammunition modification script
 │   │-- scrap_weapon.ts    # Weapon modification script
-│-- README.md
+    │-- README.md
 │-- package.json           # Project dependencies
 │-- tsconfig.json          # TypeScript configuration
 ```
