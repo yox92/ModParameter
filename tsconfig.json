@@ -11,11 +11,11 @@
     "esModuleInterop": true,
     "target": "es6",
     "paths": {
-      "@spt-aki/*": ["external/SPT-Server/project/src/*"]
+      "@spt/*": ["../types/spt/*"],
+      "@/*": ["./*"]
     }
   },
   "include": [
-    "src",
-    "external/SPT-Server/project/src"
+    "src"
   ]
 }
