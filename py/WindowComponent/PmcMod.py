@@ -131,11 +131,12 @@ class PmcMod:
         slider = ctk.CTkSlider(
             self.right_main,
             from_=0.1,
-            to=1.9,
+            to=1.0,
             command=lambda lambda_value, pname=props:
             self.update_props_value(pname, lambda_value, number))
 
         slider.grid(row=row, column=1, sticky=ctk.W, padx=10)
+        slider.set(number)
         percentage_change = ((number / number) - 1) * 100 if number != 0 else 0
 
         if props == EnumAiming.RECOIL_HAND_DAMPING.label:
