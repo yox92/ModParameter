@@ -37,6 +37,7 @@
 📌 **Weapons** : 
 - CameraSnap: Represents the speed at which the camera moves during recoil
 - AimSensitivity: Sensitivity while aiming
+- AimProceduralIntensity: Movement on walking on scope (stability movement)
 - Ergonomics: The weapon's ergonomics
 - RecoilCamera: The upward camera movement when firing a shot
 - RecoilDispersion: The dispersion of the weapon's barrel when firing
@@ -321,6 +322,7 @@ DatabaseServer
 │   │   │   ├── AimPunchMagnitude: number
 │   │   │   ├── RecoilDamping: number
 │   │   │   ├── RecoilHandDamping: number
+│   │   │   ├── AimProceduralIntensity: number
 │   │   │   ├── RecoilXIntensityByPose
 │   │   │   │   ├── x: number
 │   │   │   │   ├── y: number
