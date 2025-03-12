@@ -99,6 +99,7 @@ for its graphical interface and manipulates **JSON files** to load, modify, or d
 # python-project-structure
 
 📂 Project Structure
+```
 .
 ├── Entity/
 │   ├── Caliber.py         
@@ -131,7 +132,7 @@ for its graphical interface and manipulates **JSON files** to load, modify, or d
 │   └── SingleWeaponMod.py    
 ├── requirements.txt
 └── main.py                   
-
+```
 ---
 
 # General Usage
