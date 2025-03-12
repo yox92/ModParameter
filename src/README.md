@@ -369,19 +369,6 @@ The script relies on the following libraries:
 - [`p-queue`](https://www.npmjs.com/package/p-queue) - For managing concurrent API requests.
 - `config.ts` - Stores the output directory paths.
 
-## Usage
-### Prerequisites
-Make sure you have **Node.js** installed and run:
-```sh
-npm install axios p-queue
-```
-
-### Running the Script
-Execute the script with:
-```sh
-node script.js
-```
-
 ### Expected Output
 - JSON files will be stored in the directories specified by `config.jsonWeaponFolderPath` and `config.jsonAmmoFolderPath`.
 - The script will output logs indicating success (`✅ Saved item to ...`) and errors (`❌ Failed to fetch data for ID: ...`).
