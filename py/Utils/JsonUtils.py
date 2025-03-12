@@ -6,7 +6,6 @@ from Entity.WindowType import WindowType
 from config import JSON_FILES_DIR_WEAPONS, JSON_FILES_DIR_CALIBER, JSON_FILES_DIR_PMC, JSON_FILES_DIR_AMMO
 
 
-
 class JsonUtils:
     logger = Logger()
 
@@ -31,7 +30,7 @@ class JsonUtils:
     @staticmethod
     def load_json(file_path):
         try:
-            with open(file_path, 'r', encoding='utf-8') as fileReadable:
+            with open(file_path, 'r', encoding="utf-8") as fileReadable:
                 data = json.load(fileReadable)
             return data
         except FileNotFoundError:
@@ -70,15 +69,18 @@ class JsonUtils:
 
     @staticmethod
     def write_json(data, file_path):
-        with open(file_path, "w") as json_file:
-            json.dump(data, json_file, indent=4)
-            print("🔍 apply_changes() exécutée")
-        print(f" file save : {file_path}")
+        try:
+            with open(file_path, "w", encoding="utf-8") as json_file:
+                json.dump(data, json_file, indent=4, ensure_ascii=False)
+                print("JSON file successfully written.")
+        except IOError as e:
+            print(f"Error on write file :  '{file_path}': {e}")
+        print(f"File saved: {file_path}")
 
     @staticmethod
     def load_json_and_add_path(file_path):
         try:
-            with open(file_path, "r") as file:
+            with open(file_path, "r", encoding="utf-8") as file:
                 data = json.load(file)
                 data['file_path'] = str(file_path.resolve())
                 return data
@@ -307,8 +309,8 @@ class JsonUtils:
 
     @staticmethod
     def delete_file(file_path):
-            os.remove(file_path)
-            print(f" file delete : {file_path}")
+        os.remove(file_path)
+        print(f" file delete : {file_path}")
 
     @staticmethod
     def delete_file_mod_if_exists(file_path):
@@ -323,7 +325,7 @@ class JsonUtils:
 
         JsonUtils.delete_file_if_exists(new_file_path)
 
-        with open(new_file_path, "w") as new_file:
+        with open(new_file_path, "w", encoding="utf-8") as new_file:
             json.dump(data, new_file, indent=4)
 
         print(f" file save : {new_file_path}")
