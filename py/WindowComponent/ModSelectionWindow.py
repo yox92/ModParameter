@@ -452,7 +452,7 @@ class ModSelectionWindow:
             else:
                 self.logger.log("info", f"File ignore : {result}")
         elif window_type == WindowType.AMMO:
-            json_filename = f"{result.replace('(', '').replace(')', '').replace(' ', '_')}.json"
+            json_filename = f"{result.replace('(', '').replace(')', '').replace(' ', '_').replace('/', '').replace('\\', '')}.json"
             matching_file = next(
                 (fp for fp in self.file_path_from_load_all_ammo if fp.endswith(json_filename)),
                 None)
