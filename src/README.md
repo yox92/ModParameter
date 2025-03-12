@@ -24,7 +24,7 @@
 - [Weapon & Ammo Data Fetcher](#weapon--ammo-data-fetcher)  
 - [License](#license)  
 - [Author & Contact](#author)  
-
+ 
 ## Project Overview
 
 1. **ModParameter** is a mod for **SPT-AKI** that allows users to dynamically modify **weapon statistics, ammunition properties, and PMC attributes** through a **graphical Python interface** with an executable `.exe` file. This mod enhances gameplay customization by enabling direct item and character modifications within the game.
