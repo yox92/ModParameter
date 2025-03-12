@@ -191,7 +191,10 @@ class PmcMod:
         else:
             percent_label.configure(text=f"{lambda_value:.1f} ({percentage_change:+.0f}%)")
             transforme_value = round(lambda_value, 1)
-
+        if Utils.is_value_outside_limits_aiming(pname, lambda_value):
+            percent_label.configure(text_color="red")
+        else:
+            percent_label.configure(text_color="white")
         self.aiming_manager_pmc.update_from_props_json(pname, transforme_value)
         self.reset_apply_button()
 

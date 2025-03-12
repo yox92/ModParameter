@@ -12,7 +12,8 @@
     "target": "es6",
     "paths": {
       "@spt/*": ["../types/spt/*"],
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+       "@spt-aki/*": ["external/server/project/src/*"]
     }
   },
   "include": [

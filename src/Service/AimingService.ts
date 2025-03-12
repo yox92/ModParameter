@@ -42,6 +42,7 @@ export class AimingService {
     private assigneAttributs(aimingJson: Aiming, aimingSpt: IAiming, config: IConfig): void {
         const validateUtils = new ValidateUtils();
 
+        aimingSpt.AimProceduralIntensity = validateUtils.validateAndCastFloat(aimingJson.AimProceduralIntensity, 1)
         config.AimPunchMagnitude = validateUtils.validateAndCastFloat(aimingJson.AimPunchMagnitude, 1)
         aimingSpt.RecoilHandDamping = validateUtils.validateAndCastFloat(aimingJson.RecoilHandDamping, 2);
         aimingSpt.RecoilDamping = validateUtils.validateAndCastFloat(aimingJson.RecoilDamping, 1);

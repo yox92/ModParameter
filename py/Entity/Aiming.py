@@ -38,6 +38,10 @@ class Aiming:
             props.get(EnumAiming.RECOIL_INTENSITY_BY_POSE_PRONE.label, None),
             EnumAiming.RECOIL_INTENSITY_BY_POSE_PRONE.label
         )
+        self._AimProceduralIntensity = (
+            props.get(EnumAiming.AIM_PROCEDURAL_INTENSITY.label, None),
+            EnumAiming.AIM_PROCEDURAL_INTENSITY.label
+        )
 
     @property
     def AimPunchMagnitude(self):
@@ -75,6 +79,10 @@ class Aiming:
     def RecoilIntensityProne(self):
         return self._RecoilIntensityProne
 
+    @property
+    def AimProceduralIntensity(self):
+        return self._AimProceduralIntensity
+
     @classmethod
     def from_data(cls, data: dict):
         return cls(**data)
@@ -100,6 +108,7 @@ class Aiming:
                 f"ProceduralIntensityByPoseStanding={self.ProceduralIntensityByPoseStanding}, "
                 f"ProceduralIntensityByPoseCrouching={self.ProceduralIntensityByPoseCrouching}, "
                 f"ProceduralIntensityByPoseProne={self.ProceduralIntensityByPoseProne}, "
+                f"AimProceduralIntensity={self.AimProceduralIntensity}, "
                 f"RecoilDamping={self.RecoilDamping}, "
                 f"RecoilHandDamping={self.RecoilHandDamping}, "
                 f"RecoilIntensityStanding={self.RecoilIntensityStanding}, "

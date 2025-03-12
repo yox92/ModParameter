@@ -8,6 +8,7 @@ export class Aiming {
     RecoilIntensityStanding: number;
     RecoilIntensityCrouching: number;
     RecoilIntensityProne: number;
+    AimProceduralIntensity: number;
     constructor(aiming: Partial<Aiming>) {
         Object.assign(this, aiming);
     }
@@ -23,5 +24,6 @@ export function createAiming(data: any): Aiming {
         RecoilIntensityStanding: data.RecoilIntensityStanding,
         RecoilIntensityCrouching: data.RecoilIntensityCrouching,
         RecoilIntensityProne: data.RecoilIntensityProne,
+        AimProceduralIntensity: data.AimProceduralIntensity,
     });
 }

@@ -159,12 +159,13 @@ class Utils:
         limits = {
             EnumAiming.PROCEDURAL_INTENSITY_BY_POSE_STANDING.label: (0.15, 2.0),
             EnumAiming.RECOIL_DAMPING.label: (0.1, 0.8),
-            EnumAiming.PROCEDURAL_INTENSITY_BY_POSE_CROUCHING.label: (0.1, 1.2),
-            EnumAiming.PROCEDURAL_INTENSITY_BY_POSE_PRONE.label: (0.1, 1.0),
-            EnumAiming.RECOIL_INTENSITY_BY_POSE_STANDING.label: (0.2, 2.0),
-            EnumAiming.RECOIL_INTENSITY_BY_POSE_CROUCHING.label: (0.1, 1.0),
-            EnumAiming.RECOIL_INTENSITY_BY_POSE_PRONE.label: (0.1, 1.0),
+            EnumAiming.PROCEDURAL_INTENSITY_BY_POSE_CROUCHING.label: (0.6, 1.0),
+            EnumAiming.PROCEDURAL_INTENSITY_BY_POSE_PRONE.label: (0.5, 1.0),
+            EnumAiming.RECOIL_INTENSITY_BY_POSE_STANDING.label: (0.1, 1.0),
+            EnumAiming.RECOIL_INTENSITY_BY_POSE_CROUCHING.label: (0.5, 1.0),
+            EnumAiming.RECOIL_INTENSITY_BY_POSE_PRONE.label: (0.4, 1.0),
             EnumAiming.RECOIL_HAND_DAMPING.label: (0.01, 0.90),
+            EnumAiming.AIM_PROCEDURAL_INTENSITY.label: (0.1, 0.7),
         }
 
         if name in limits:

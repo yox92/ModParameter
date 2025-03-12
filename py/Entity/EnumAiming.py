@@ -28,7 +28,8 @@ class EnumAiming(Enum):
                                           "Lower value reduces recoil while crouching")
     RECOIL_INTENSITY_BY_POSE_PRONE = ("RecoilIntensityProne",
                                       "Lower value reduces recoil while prone")
-
+    AIM_PROCEDURAL_INTENSITY = ("AimProceduralIntensity",
+                                      "Lower value reduces movement \n while walking on aiming")
     @property
     def label(self):
         return self.value[0]
