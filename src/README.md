@@ -321,9 +321,6 @@ DatabaseServer
 │   │   │   ├── AimPunchMagnitude: number
 │   │   │   ├── RecoilDamping: number
 │   │   │   ├── RecoilHandDamping: number
-│   │   │   ├── RecoilIntensityStanding: number
-│   │   │   ├── RecoilIntensityCrouching: number
-│   │   │   ├── RecoilIntensityProne: number
 │   │   │   ├── RecoilXIntensityByPose
 │   │   │   │   ├── x: number
 │   │   │   │   ├── y: number
@@ -336,6 +333,7 @@ DatabaseServer
 │   │   │   │   ├── x: number
 │   │   │   │   ├── y: number
 │   │   │   │   ├── z: number
+│   │   │   │   ├── RecoilIntensity: Same pattern than RecoilIntensityByPose
 ```
 ---
 # Weapon & Ammo Data Fetcher
