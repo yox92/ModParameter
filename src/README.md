@@ -285,7 +285,7 @@ This project follows the applicable license terms set by the SPT-AKI modding fra
 
 
 # Pattern Database item props structure
-````
+```
 DatabaseServer
 ├── templates
 │   ├── items                
@@ -336,7 +336,7 @@ DatabaseServer
 │   │   │   │   ├── x: number
 │   │   │   │   ├── y: number
 │   │   │   │   ├── z: number
-````
+```
 ---
 # Weapon & Ammo Data Fetcher
 
