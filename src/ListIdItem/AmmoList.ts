@@ -133,6 +133,8 @@ export class AmmoList {
             "5fc382c1016cce60e8341b20",
             "5fc275cf85fd526b824a571a",
             "5fc382a9d724d907e2077dab",
+            "5e85a9f4add9fe03027d9bf1"
+
         ];
     }
 
