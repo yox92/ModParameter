@@ -26,6 +26,7 @@ class AttributMod implements IPostDBLoadMod {
         const pmcService = new PmcService(logger, tableData);
 
         itemService.updateItems();
+        itemService.updateItems();
         pmcService.updatePmc();
 
     }

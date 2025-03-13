@@ -11,6 +11,7 @@ export class ItemUpdaterService {
     private BUCKSHOT: string = "buckshot";
     private readonly logger: ILogger;
 
+
     constructor(logger: ILogger) {
         this.logger = logger;
     }

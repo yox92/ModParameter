@@ -21,6 +21,7 @@ export class ItemService {
 
         this.jsonFileService = new JsonFileService(logger);
         this.itemUpdaterService = new ItemUpdaterService(logger);
+        this.itemClonerService = new ItemUpdaterService(logger);
     }
 
     private caseWeapons(jsonWeaponsFiles): void {
@@ -136,6 +137,15 @@ export class ItemService {
         this.caseWeapons(jsonWeaponsFiles);
         this.caseAmmo(jsonAmmoFiles);
 
+    }
+
+    public cloneItems(): void {
+        const jsonAmmoFiles = this.jsonFileService.loadJsonFiles(ItemType.Ammo);
+        this.itemClonerService.applyAmmoModifications(
+                ammoProps,
+                itemsJson._id,
+                locale.Name,
+                this.iDatabaseTables)
     }
 
 }
