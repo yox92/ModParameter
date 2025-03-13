@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "5ba26812d4351e003201fef1",
+    "_name": "patron_46x30_action_sx",
+    "_props": {
+      "ArmorDamage": 28,
+      "Caliber": "Caliber46x30",
+      "Damage": 65,
+      "PenetrationPower": 18,
+      "StackMaxSize": 70,
+      "Tracer": false,
+      "TracerColor": "red",
+      "InitialSpeed": 690,
+      "BallisticCoeficient": 175,
+      "BulletMassGram": 200,
+      "ProjectileCount": 1,
+      "ammoAccr": 0,
+      "ammoRec": 0
+    }
+  },
+  "locale": {
+    "Name": "4.6x30mm Action SX",
+    "ShortName": "Action SX"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "560d61e84bdc2da74d8b4571",
+    "_name": "patron_762х54R_SNB",
+    "_props": {
+      "ArmorDamage": 87,
+      "Caliber": "Caliber762x54R",
+      "Damage": 75,
+      "PenetrationPower": 62,
+      "StackMaxSize": 40,
+      "Tracer": false,
+      "TracerColor": "red",
+      "InitialSpeed": 875,
+      "BallisticCoeficient": 342,
+      "BulletMassGram": 980,
+      "ProjectileCount": 1,
+      "ammoAccr": 0,
+      "ammoRec": 10
+    }
+  },
+  "locale": {
+    "Name": "7.62x54mm R SNB gzh",
+    "ShortName": "SNB"
+  }
+}

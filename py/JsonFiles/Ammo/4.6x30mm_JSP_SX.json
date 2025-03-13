@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "64b6979341772715af0f9c39",
+    "_name": "patron_46x30_jsp",
+    "_props": {
+      "ArmorDamage": 37,
+      "Caliber": "Caliber46x30",
+      "Damage": 46,
+      "PenetrationPower": 32,
+      "StackMaxSize": 70,
+      "Tracer": false,
+      "TracerColor": "red",
+      "InitialSpeed": 579,
+      "BallisticCoeficient": 175,
+      "BulletMassGram": 200,
+      "ProjectileCount": 1,
+      "ammoAccr": 0,
+      "ammoRec": 0
+    }
+  },
+  "locale": {
+    "Name": "4.6x30mm JSP SX",
+    "ShortName": "JSP SX"
+  }
+}

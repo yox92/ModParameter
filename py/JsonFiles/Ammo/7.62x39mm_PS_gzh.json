@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "5656d7c34bdc2d9d198b4587",
+    "_name": "patron_762x39_PS",
+    "_props": {
+      "ArmorDamage": 52,
+      "Caliber": "Caliber762x39",
+      "Damage": 61,
+      "PenetrationPower": 35,
+      "StackMaxSize": 60,
+      "Tracer": false,
+      "TracerColor": "red",
+      "InitialSpeed": 717,
+      "BallisticCoeficient": 280,
+      "BulletMassGram": 790,
+      "ProjectileCount": 1,
+      "ammoAccr": 0,
+      "ammoRec": 0
+    }
+  },
+  "locale": {
+    "Name": "7.62x39mm PS gzh",
+    "ShortName": "PS"
+  }
+}

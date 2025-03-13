@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "5ba26844d4351e00334c9475",
+    "_name": "patron_46x30_subsonic_sx",
+    "_props": {
+      "ArmorDamage": 33,
+      "Caliber": "Caliber46x30",
+      "Damage": 52,
+      "PenetrationPower": 23,
+      "StackMaxSize": 70,
+      "Tracer": false,
+      "TracerColor": "red",
+      "InitialSpeed": 290,
+      "BallisticCoeficient": 437,
+      "BulletMassGram": 500,
+      "ProjectileCount": 1,
+      "ammoAccr": 10,
+      "ammoRec": -22
+    }
+  },
+  "locale": {
+    "Name": "4.6x30mm Subsonic SX",
+    "ShortName": "Subsonic SX"
+  }
+}

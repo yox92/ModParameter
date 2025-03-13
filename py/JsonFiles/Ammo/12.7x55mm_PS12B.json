@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "5cadf6eeae921500134b2799",
+    "_name": "patron_127x55_ps12b",
+    "_props": {
+      "ArmorDamage": 57,
+      "Caliber": "Caliber127x55",
+      "Damage": 102,
+      "PenetrationPower": 46,
+      "StackMaxSize": 30,
+      "Tracer": false,
+      "TracerColor": "red",
+      "InitialSpeed": 570,
+      "BallisticCoeficient": 151,
+      "BulletMassGram": 1800,
+      "ProjectileCount": 1,
+      "ammoAccr": 0,
+      "ammoRec": 15
+    }
+  },
+  "locale": {
+    "Name": "12.7x55mm PS12B",
+    "ShortName": "PS12B"
+  }
+}

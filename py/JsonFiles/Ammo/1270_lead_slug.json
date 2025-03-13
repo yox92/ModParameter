@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "58820d1224597753c90aeb13",
+    "_name": "patron_12x70_slug",
+    "_props": {
+      "ArmorDamage": 55,
+      "Caliber": "Caliber12g",
+      "Damage": 167,
+      "PenetrationPower": 15,
+      "StackMaxSize": 20,
+      "Tracer": false,
+      "TracerColor": "red",
+      "InitialSpeed": 370,
+      "BallisticCoeficient": 121,
+      "BulletMassGram": 3660,
+      "ProjectileCount": 1,
+      "ammoAccr": 120,
+      "ammoRec": 0
+    }
+  },
+  "locale": {
+    "Name": "12/70 lead slug",
+    "ShortName": "Slug"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "54527ac44bdc2d36668b4567",
+    "_name": "patron_556x45_M855A1",
+    "_props": {
+      "ArmorDamage": 47,
+      "Caliber": "Caliber556x45NATO",
+      "Damage": 49,
+      "PenetrationPower": 44,
+      "StackMaxSize": 60,
+      "Tracer": false,
+      "TracerColor": "red",
+      "InitialSpeed": 945,
+      "BallisticCoeficient": 233,
+      "BulletMassGram": 400,
+      "ProjectileCount": 1,
+      "ammoAccr": -5,
+      "ammoRec": 5
+    }
+  },
+  "locale": {
+    "Name": "5.56x45mm M855A1",
+    "ShortName": "M855A1"
+  }
+}

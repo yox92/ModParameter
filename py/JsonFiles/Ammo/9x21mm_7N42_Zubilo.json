@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "6576f4708ca9c4381d16cd9d",
+    "_name": "patron_9x21_7n42",
+    "_props": {
+      "ArmorDamage": 47,
+      "Caliber": "Caliber9x21",
+      "Damage": 49,
+      "PenetrationPower": 38,
+      "StackMaxSize": 50,
+      "Tracer": false,
+      "TracerColor": "red",
+      "InitialSpeed": 400,
+      "BallisticCoeficient": 156,
+      "BulletMassGram": 670,
+      "ProjectileCount": 1,
+      "ammoAccr": -3,
+      "ammoRec": 10
+    }
+  },
+  "locale": {
+    "Name": "9x21mm 7N42 Zubilo",
+    "ShortName": "7N42"
+  }
+}

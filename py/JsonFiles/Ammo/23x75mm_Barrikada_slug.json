@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "5e85aa1a988a8701445df1f5",
+    "_name": "patron_23x75_barricade",
+    "_props": {
+      "ArmorDamage": 75,
+      "Caliber": "Caliber23x75",
+      "Damage": 192,
+      "PenetrationPower": 39,
+      "StackMaxSize": 15,
+      "Tracer": false,
+      "TracerColor": "red",
+      "InitialSpeed": 420,
+      "BallisticCoeficient": 287,
+      "BulletMassGram": 8000,
+      "ProjectileCount": 1,
+      "ammoAccr": -5,
+      "ammoRec": 25
+    }
+  },
+  "locale": {
+    "Name": "23x75mm Barrikada slug",
+    "ShortName": "Barrikada"
+  }
+}

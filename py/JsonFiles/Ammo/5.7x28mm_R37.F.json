@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "5cc86832d7f00c000d3a6e6c",
+    "_name": "patron_57x28_r37f",
+    "_props": {
+      "ArmorDamage": 7,
+      "Caliber": "Caliber57x28",
+      "Damage": 98,
+      "PenetrationPower": 8,
+      "StackMaxSize": 60,
+      "Tracer": false,
+      "TracerColor": "red",
+      "InitialSpeed": 729,
+      "BallisticCoeficient": 75,
+      "BulletMassGram": 240,
+      "ProjectileCount": 1,
+      "ammoAccr": 0,
+      "ammoRec": 0
+    }
+  },
+  "locale": {
+    "Name": "5.7x28mm R37.F",
+    "ShortName": "R37.F"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "668fe62ac62660a5d8071446",
+    "_name": "patron_127x33_fmj",
+    "_props": {
+      "ArmorDamage": 50,
+      "Caliber": "Caliber127x33",
+      "Damage": 85,
+      "PenetrationPower": 40,
+      "StackMaxSize": 30,
+      "Tracer": false,
+      "TracerColor": "red",
+      "InitialSpeed": 440,
+      "BallisticCoeficient": 131,
+      "BulletMassGram": 1940,
+      "ProjectileCount": 1,
+      "ammoAccr": 0,
+      "ammoRec": 10
+    }
+  },
+  "locale": {
+    "Name": ".50 AE FMJ",
+    "ShortName": "FMJ"
+  }
+}

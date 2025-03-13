@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "5efb0fc6aeb21837e749c801",
+    "_name": "patron_1143x23_acp_hydra_shok",
+    "_props": {
+      "ArmorDamage": 30,
+      "Caliber": "Caliber1143x23ACP",
+      "Damage": 100,
+      "PenetrationPower": 13,
+      "StackMaxSize": 50,
+      "Tracer": false,
+      "TracerColor": "red",
+      "InitialSpeed": 274,
+      "BallisticCoeficient": 114,
+      "BulletMassGram": 1490,
+      "ProjectileCount": 1,
+      "ammoAccr": 0,
+      "ammoRec": 0
+    }
+  },
+  "locale": {
+    "Name": ".45 ACP Hydra-Shok",
+    "ShortName": "HydraShok"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "5e85a9a6eacf8c039e4e2ac1",
+    "_name": "patron_23x75_shrapnel_10",
+    "_props": {
+      "ArmorDamage": 20,
+      "Caliber": "Caliber23x75",
+      "Damage": 87,
+      "PenetrationPower": 11,
+      "StackMaxSize": 15,
+      "Tracer": false,
+      "TracerColor": "red",
+      "InitialSpeed": 270,
+      "BallisticCoeficient": 22,
+      "BulletMassGram": 338,
+      "ProjectileCount": 8,
+      "ammoAccr": 0,
+      "ammoRec": 0
+    }
+  },
+  "locale": {
+    "Name": "23x75mm Shrapnel-10 buckshot",
+    "ShortName": "Shrap-10"
+  }
+}

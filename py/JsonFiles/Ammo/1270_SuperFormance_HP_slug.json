@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "5d6e68d1a4b93622fe60e845",
+    "_name": "patron_12x70_slug_superformance",
+    "_props": {
+      "ArmorDamage": 12,
+      "Caliber": "Caliber12g",
+      "Damage": 220,
+      "PenetrationPower": 5,
+      "StackMaxSize": 20,
+      "Tracer": false,
+      "TracerColor": "red",
+      "InitialSpeed": 594,
+      "BallisticCoeficient": 200,
+      "BulletMassGram": 1950,
+      "ProjectileCount": 1,
+      "ammoAccr": 170,
+      "ammoRec": -15
+    }
+  },
+  "locale": {
+    "Name": "12/70 SuperFormance HP slug",
+    "ShortName": "SFormance"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "6529243824cbe3c74a05e5c1",
+    "_name": "patron_68x51",
+    "_props": {
+      "ArmorDamage": 58,
+      "Caliber": "Caliber68x51",
+      "Damage": 72,
+      "PenetrationPower": 47,
+      "StackMaxSize": 40,
+      "Tracer": false,
+      "TracerColor": "red",
+      "InitialSpeed": 914,
+      "BallisticCoeficient": 388,
+      "BulletMassGram": 870,
+      "ProjectileCount": 1,
+      "ammoAccr": 3,
+      "ammoRec": 10
+    }
+  },
+  "locale": {
+    "Name": "6.8x51mm SIG Hybrid",
+    "ShortName": "Hybrid"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "59e4cf5286f7741778269d8a",
+    "_name": "patron_762x39_T45M",
+    "_props": {
+      "ArmorDamage": 46,
+      "Caliber": "Caliber762x39",
+      "Damage": 65,
+      "PenetrationPower": 30,
+      "StackMaxSize": 60,
+      "Tracer": true,
+      "TracerColor": "red",
+      "InitialSpeed": 720,
+      "BallisticCoeficient": 227,
+      "BulletMassGram": 750,
+      "ProjectileCount": 1,
+      "ammoAccr": -4,
+      "ammoRec": -6
+    }
+  },
+  "locale": {
+    "Name": "7.62x39mm T-45M1 gzh",
+    "ShortName": "T-45M1"
+  }
+}

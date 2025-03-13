@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "5fc275cf85fd526b824a571a",
+    "_name": "patron_86x70_lapua_magnum",
+    "_props": {
+      "ArmorDamage": 83,
+      "Caliber": "Caliber86x70",
+      "Damage": 122,
+      "PenetrationPower": 47,
+      "StackMaxSize": 30,
+      "Tracer": false,
+      "TracerColor": "red",
+      "InitialSpeed": 900,
+      "BallisticCoeficient": 480,
+      "BulletMassGram": 1620,
+      "ProjectileCount": 1,
+      "ammoAccr": 0,
+      "ammoRec": 0
+    }
+  },
+  "locale": {
+    "Name": ".338 Lapua Magnum FMJ",
+    "ShortName": "FMJ"
+  }
+}

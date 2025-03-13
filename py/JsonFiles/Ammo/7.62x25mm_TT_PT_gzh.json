@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "573603c924597764442bd9cb",
+    "_name": "patron_762x25tt_T_Gzh",
+    "_props": {
+      "ArmorDamage": 34,
+      "Caliber": "Caliber762x25TT",
+      "Damage": 55,
+      "PenetrationPower": 18,
+      "StackMaxSize": 50,
+      "Tracer": true,
+      "TracerColor": "tracerRed",
+      "InitialSpeed": 415,
+      "BallisticCoeficient": 124,
+      "BulletMassGram": 539,
+      "ProjectileCount": 1,
+      "ammoAccr": -10,
+      "ammoRec": 0
+    }
+  },
+  "locale": {
+    "Name": "7.62x25mm TT PT gzh",
+    "ShortName": "PT"
+  }
+}

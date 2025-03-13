@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "59e6918f86f7746c9f75e849",
+    "_name": "patron_556x45_MK_255_Mod_0",
+    "_props": {
+      "ArmorDamage": 24,
+      "Caliber": "Caliber556x45NATO",
+      "Damage": 72,
+      "PenetrationPower": 11,
+      "StackMaxSize": 60,
+      "Tracer": false,
+      "TracerColor": "red",
+      "InitialSpeed": 936,
+      "BallisticCoeficient": 335,
+      "BulletMassGram": 500,
+      "ProjectileCount": 1,
+      "ammoAccr": 0,
+      "ammoRec": 0
+    }
+  },
+  "locale": {
+    "Name": "5.56x45mm MK 255 Mod 0 (RRLP)",
+    "ShortName": "RRLP"
+  }
+}

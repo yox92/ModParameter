@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "61962b617c6c7b169525f168",
+    "_name": "patron_545x39_7n40",
+    "_props": {
+      "ArmorDamage": 45,
+      "Caliber": "Caliber545x39",
+      "Damage": 55,
+      "PenetrationPower": 42,
+      "StackMaxSize": 60,
+      "Tracer": false,
+      "TracerColor": "red",
+      "InitialSpeed": 915,
+      "BallisticCoeficient": 252,
+      "BulletMassGram": 365,
+      "ProjectileCount": 1,
+      "ammoAccr": 50,
+      "ammoRec": -10
+    }
+  },
+  "locale": {
+    "Name": "5.45x39mm 7N40",
+    "ShortName": "7N40"
+  }
+}

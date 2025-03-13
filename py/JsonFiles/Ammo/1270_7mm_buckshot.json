@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "560d5e524bdc2d25448b4571",
+    "_name": "patron_12x70_buckshot",
+    "_props": {
+      "ArmorDamage": 26,
+      "Caliber": "Caliber12g",
+      "Damage": 39,
+      "PenetrationPower": 3,
+      "StackMaxSize": 20,
+      "Tracer": false,
+      "TracerColor": "red",
+      "InitialSpeed": 415,
+      "BallisticCoeficient": 13,
+      "BulletMassGram": 9,
+      "ProjectileCount": 8,
+      "ammoAccr": 0,
+      "ammoRec": 0
+    }
+  },
+  "locale": {
+    "Name": "12/70 7mm buckshot",
+    "ShortName": "7mm"
+  }
+}

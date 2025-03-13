@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "573719df2459775a626ccbc2",
+    "_name": "patron_9x18pm_PBM",
+    "_props": {
+      "ArmorDamage": 30,
+      "Caliber": "Caliber9x18PM",
+      "Damage": 40,
+      "PenetrationPower": 28,
+      "StackMaxSize": 50,
+      "Tracer": false,
+      "TracerColor": "red",
+      "InitialSpeed": 519,
+      "BallisticCoeficient": 61,
+      "BulletMassGram": 370,
+      "ProjectileCount": 1,
+      "ammoAccr": 0,
+      "ammoRec": 4
+    }
+  },
+  "locale": {
+    "Name": "9x18mm PM PBM gzh",
+    "ShortName": "PBM"
+  }
+}

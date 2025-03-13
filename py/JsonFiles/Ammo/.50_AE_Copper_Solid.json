@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "66a0d1e0ed648d72fe064d06",
+    "_name": "patron_127x33_cooper",
+    "_props": {
+      "ArmorDamage": 56,
+      "Caliber": "Caliber127x33",
+      "Damage": 94,
+      "PenetrationPower": 33,
+      "StackMaxSize": 30,
+      "Tracer": false,
+      "TracerColor": "red",
+      "InitialSpeed": 460,
+      "BallisticCoeficient": 163,
+      "BulletMassGram": 2590,
+      "ProjectileCount": 1,
+      "ammoAccr": 5,
+      "ammoRec": 8
+    }
+  },
+  "locale": {
+    "Name": ".50 AE Copper Solid",
+    "ShortName": "Copper"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "59e6542b86f77411dc52a77a",
+    "_name": "patron_366_TKM_FMJ",
+    "_props": {
+      "ArmorDamage": 48,
+      "Caliber": "Caliber366TKM",
+      "Damage": 98,
+      "PenetrationPower": 23,
+      "StackMaxSize": 50,
+      "Tracer": false,
+      "TracerColor": "red",
+      "InitialSpeed": 580,
+      "BallisticCoeficient": 202,
+      "BulletMassGram": 1300,
+      "ProjectileCount": 1,
+      "ammoAccr": 0,
+      "ammoRec": 10
+    }
+  },
+  "locale": {
+    "Name": ".366 TKM FMJ",
+    "ShortName": "FMJ"
+  }
+}

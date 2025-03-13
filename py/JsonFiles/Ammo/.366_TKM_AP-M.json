@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "5f0596629e22f464da6bbdd9",
+    "_name": "patron_366_custom_ap",
+    "_props": {
+      "ArmorDamage": 60,
+      "Caliber": "Caliber366TKM",
+      "Damage": 90,
+      "PenetrationPower": 42,
+      "StackMaxSize": 50,
+      "Tracer": false,
+      "TracerColor": "red",
+      "InitialSpeed": 602,
+      "BallisticCoeficient": 373,
+      "BulletMassGram": 1800,
+      "ProjectileCount": 1,
+      "ammoAccr": -22,
+      "ammoRec": 35
+    }
+  },
+  "locale": {
+    "Name": ".366 TKM AP-M",
+    "ShortName": "AP-M"
+  }
+}
