@@ -50,7 +50,6 @@ class PmcMod:
         self.aiming_manager_pmc = self.aiming_manager_pmc_save
         self.status_label.configure(text="Existing data has been found and loaded")
 
-
     def param_main_root(self):
         self.master.grid_columnconfigure(0, weight=1)
         self.master.grid_rowconfigure(0, weight=1)
@@ -107,6 +106,12 @@ class PmcMod:
                        column=0,
                        sticky="ew",
                        pady=10)
+            if any(word in props for word in {"RecoilIntensity", "ProceduralIntensityBy"}):
+                label.configure(font=("Arial", 14, "bold"), text_color="lightgreen")
+                if any(word in props for word in {"Crouching", "Prone"}):
+                    label.configure(font=("Arial", 10, "bold"), text_color="DarkOliveGreen")
+            else:
+                label.configure(font=("Arial", 14, "bold"), text_color="Green")
 
             if props != EnumAiming.AIM_PUNCH_MAGNITUDE.label:
                 percent_label, slider = self.create_slider_down_two(row, props, number)
@@ -219,8 +224,9 @@ class PmcMod:
                                             hover_color="lightblue",
                                             border_color="blue",
                                             state="enable")
-                self.status_label.configure(text="Same as the original values \n You will get back the \n original values" ,
-                                            text_color="pink", font=("Arial", 13, "italic"))
+                self.status_label.configure(
+                    text="Same as the original values \n You will get back the \n original values",
+                    text_color="pink", font=("Arial", 13, "italic"))
                 self.reset_after_load_save_and_value_reset = True
         else:
             if self.aiming_manager_pmc_originale_value == self.aiming_manager_pmc:
@@ -241,9 +247,8 @@ class PmcMod:
                 JsonUtils.delete_file_mod_if_exists(self.json_pmc_file_path)
             self.apply_button.configure(fg_color="green", hover_color="green")
             self.status_label.configure(text="All PMC modifications have been removed.")
-            self.detail_window.after(3000,lambda:  WindowUtils.close_window(self.detail_window,
+            self.detail_window.after(3000, lambda: WindowUtils.close_window(self.detail_window,
                                                                             self.root, self.main_instance))
-
 
     def check_for_file(self, new_file_path, attempts=0, max_attempts=10):
         Utils.disable_all_buttons_recursive(self.close_button, self.detail_window)
@@ -260,7 +265,5 @@ class PmcMod:
             self.status_label.configure(text="Failed to detect the file. Please try again.", text_color="red")
             self.apply_button.configure(fg_color="red", hover_color="gray")
             self.main_instance.root.attributes('-disabled', False)
-            self.detail_window.after(3000,lambda:  WindowUtils.close_window(self.detail_window,
+            self.detail_window.after(3000, lambda: WindowUtils.close_window(self.detail_window,
                                                                             self.root, self.main_instance))
-
-

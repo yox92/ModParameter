@@ -162,14 +162,14 @@ class ModSelectionWindow:
 
     def all_ammo_tracer(self):
         msg_choice = CTkMessagebox(title="All Ammo Tracer ?",
-                                  message="Would you like all the bullets in the game to become tracer rounds",
-                                  icon="warning", option_1="No", option_2="Yes")
+                                   message="Would you like all the bullets in the game to become tracer rounds",
+                                   icon="warning", option_1="No", option_2="Yes")
         response = msg_choice.get()
 
         if response == "Yes":
             msg_color = CTkMessagebox(title="Which color ?",
-                                     message="Which color do you want to apply ",
-                                     icon="info", option_1="Cancel", option_2="Green", option_3="Red", )
+                                      message="Which color do you want to apply ",
+                                      icon="info", option_1="Cancel", option_2="Green", option_3="Red", )
             response_color = msg_color.get()
 
             if response_color == "Red":
@@ -513,10 +513,17 @@ class ModSelectionWindow:
 
         root_list = [Root.from_data(data, WindowType.AMMO) for data in self.data_json_from_load_all_ammo]
 
-        filtered_roots = [
-            root for root in root_list
-            if root.item.props.get_value_by_label("Caliber") == caliber_select
-        ]
+        if caliber_select == Caliber.SHOTGUN_12_70.code:
+            filtered_roots = [
+                root for root in root_list
+                if root.item.props.get_value_by_label("Caliber") in {caliber_select, "Caliber23x75"}
+            ]
+
+        else:
+            filtered_roots = [
+                root for root in root_list
+                if root.item.props.get_value_by_label("Caliber") == caliber_select
+            ]
         self.list_ammo_select = filtered_roots
 
         self.generate_bot_frame_weapon_and_ammo(choice_window)

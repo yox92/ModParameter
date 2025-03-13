@@ -7,6 +7,6 @@
     "RecoilForceUp": 1.0,
     "RecolDispersion": 1.0,
     "Weight": 1.0,
-    "ammoCaliber": "Caliber12g",
-    "bFirerate": 1.38
+    "ammoCaliber": "Caliber23x75",
+    "bFirerate": 1.0
 }

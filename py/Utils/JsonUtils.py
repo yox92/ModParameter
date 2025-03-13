@@ -354,8 +354,8 @@ class JsonUtils:
         return JsonUtils.update_json_value(data, path_props_json, new_value, window_type)
 
     @staticmethod
-    def update_json_caliber_from_new_value_change(path_to_json_calibber, new_value_change):
-        JsonUtils.update_json_caliber(path_to_json_calibber, new_value_change)
+    def update_json_caliber_from_new_value_change(path_to_json_caliber, new_value_change):
+        JsonUtils.update_json_caliber(path_to_json_caliber, new_value_change)
 
     @staticmethod
     def delete_all_mod(window_type: WindowType):

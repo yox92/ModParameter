@@ -145,6 +145,12 @@ class SingleWeaponMod:
                 label = ctk.CTkLabel(self.right_main, text=f"{EnumProps.get_code_by_label(prop_value)}:")
                 label.grid(row=row, column=0, sticky=ctk.W, padx=10)
 
+                if any(word in prop_value for word in
+                       {"Ergonomics", "RecoilCamera", "RecoilForceBack", "RecoilForceUp", "bFirerate"}):
+                    label.configure(font=("Arial", 16, "bold"), text_color="Peru")
+                else:
+                    label.configure(font=("Arial", 12, "bold"), text_color="white")
+
                 if isinstance(number, int):
                     percent_label, slider = self.slider_integer(number, row, prop_value)
 
@@ -291,7 +297,8 @@ class SingleWeaponMod:
 
             for name_props_to_modify, value_modify in self.data_from_json_no_save.iterate_key_and_values():
                 data_json_to_update = JsonUtils.update_json_in_new_file_multi_choice(name_props_to_modify, value_modify,
-                                                                                     data_json_to_update, WindowType.WEAPON)
+                                                                                     data_json_to_update,
+                                                                                     WindowType.WEAPON)
 
             file_path_update = JsonUtils.save_json_as_new_file(data_json_to_update, self.file_path)
             self.check_for_file(file_path_update)

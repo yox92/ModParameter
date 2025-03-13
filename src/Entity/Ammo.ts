@@ -7,6 +7,12 @@ export class Ammo {
     StackMaxSize: number;
     Tracer: boolean;
     TracerColor: string;
+    BallisticCoeficient: number;
+    BulletMassGram: number;
+    ProjectileCount: number;
+    ammoAccr: number;
+    ammoRec: number;
+
     constructor(props: Partial<Ammo>) {
         Object.assign(this, props);
     }
@@ -21,5 +27,11 @@ export function createItemAmmo(data: any): Ammo {
     StackMaxSize: data.StackMaxSize,
     Tracer: data.Tracer,
     TracerColor: data.TracerColor,
+    BallisticCoeficient: data.BallisticCoeficient,
+    BulletMassGram: data.BulletMassGram,
+    ProjectileCount: data.ProjectileCount,
+    ammoAccr: data.ammoAccr,
+    ammoRec: data.ammoRec
+
     });
 }

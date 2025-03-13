@@ -29,11 +29,16 @@ async function fetchAmmoData(id: string): Promise<Templates<Ammo>> {
         ArmorDamage: itemData._props.ArmorDamage,
         Caliber: itemData._props.Caliber,
         Damage: itemData._props.Damage,
-        InitialSpeed: itemData._props.InitialSpeed,
         PenetrationPower: itemData._props.PenetrationPower,
         StackMaxSize: itemData._props.StackMaxSize,
         Tracer: itemData._props.Tracer,
         TracerColor: itemData._props.TracerColor,
+        InitialSpeed: itemData._props.InitialSpeed,
+        BallisticCoeficient: Math.round(itemData._props.BallisticCoeficient * 1000),
+        BulletMassGram: Math.round(itemData._props.BulletMassGram * 100),
+        ProjectileCount: itemData._props.ProjectileCount,
+        ammoAccr: itemData._props.ammoAccr,
+        ammoRec: itemData._props.ammoRec,
     });
 
     const locale = new Locale({
@@ -49,7 +54,7 @@ async function fetchAmmoData(id: string): Promise<Templates<Ammo>> {
 async function main() {
     const ammoList = new AmmoList();
     const ids = ammoList.getIds();
-    const basePath = config.jsonAmmoFolderPath;
+    const basePath = config.jsonAmmoFolderPathNew;
 
     if (!fs.existsSync(basePath)) {
         fs.mkdirSync(basePath, {recursive: true});
@@ -93,7 +98,7 @@ async function main() {
     const filesInDirectory = new Set(
         fs.readdirSync(basePath)
             .filter(file => file.endsWith(".json"))
-            .map(file => file.replace(".json", "")) // Retirer l'extension pour comparer avec `cleanName`
+            .map(file => file.replace(".json", ""))
     );
 
     const missingIds: string[] = [];

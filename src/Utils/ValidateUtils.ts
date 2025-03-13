@@ -15,7 +15,8 @@ export class ValidateUtils {
 
         return parseFloat(value.toFixed(decimal));
     }
-        /**
+
+    /**
      * Validates and casts a value to an integer **only if it's not already an integer**.
      * Returns null if the value is invalid or zero.
      * @param value The value to check
@@ -32,19 +33,98 @@ export class ValidateUtils {
 
         return Math.floor(value);
     }
+    /**
+     * Validates and casts a value to an integer **only if it's not already an integer**.
+     * Returns null if the value is invalid.
+     * Returns 0 if 0
+     * @param value The value to check
+     * @returns The formatted integer or if invalid
+     */
+    public validateAndCastIntNegatifCase(value: any): number | null {
+        if (typeof value !== "number" || isNaN(value)) {
+            return null;
+        }
+        if ( value === 0) {
+            return 0;
+        }
 
-    public validateString(value: any, isTracerColor: boolean = false): string | null {
-        if (isTracerColor) {
-            if (typeof value === "boolean") {
-                return value ? "green" : "red";
+        if (Number.isInteger(value)) {
+            return value;
+        }
+
+        return Math.floor(value);
+    }
+
+
+    /**
+     * We deal with Ballistic * 1000 on Python GUI
+     */
+    public validateBallistic(value: number): number | null {
+        if (typeof value !== "number" || isNaN(value)) {
+            return null;
+        }
+        else if (value < 10) {
+            return 0.01
+        }
+        else if (value > 501) {
+            return 0.501
+        }
+
+        const result = value / 1000;
+
+        let decimalPlaces = 3;
+
+        if (value >= 100 && value <= 500) {
+
+            if (value % 100 === 0) {
+                decimalPlaces = 1;
+            } else if (value % 10 === 0) {
+                decimalPlaces = 2;
+            }
+
+        } else if (value >= 10 && value <= 99) {
+
+            if (value % 10 === 0) {
+                decimalPlaces = 2;
             }
         }
 
-        if (typeof value !== "string") {
+        return parseFloat(result.toFixed(decimalPlaces));
+    }
+
+    /**
+     * We deal with BulletMassGram * 100 on Python GUI
+     */
+    public validateBulletMassGram(value: number): number | null {
+        if (typeof value !== "number" || isNaN(value)) {
             return null;
         }
+        else if (value > 8001) {
+            return 80.0
+        }
+        else if (value <= 8) {
+            return 0.08
+        }
 
-        return value.trim() !== "" ? value : null;
+        const result = value / 100;
+
+        let decimalPlaces = 2;
+        if (value % 100 === 0 || value % 10 === 0) {
+            decimalPlaces = 1;
+        }
+        return parseFloat(result.toFixed(decimalPlaces));
+    }
+
+    public validateTracerColor(value: any): string {
+        if (typeof value === "boolean") {
+            return value ? "tracerGreen" : "red";
+        }
+
+        if (typeof value !== "string") {
+            return "red";
+        }
+
+        return value.trim() !== "" ? value : "red";
     }
 
     public validateBoolean(value: any): boolean | null {

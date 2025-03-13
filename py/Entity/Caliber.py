@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class Caliber(Enum):
     MAKAROV_9x18 = "9x18mm Makarov", "Caliber9x18PM"
     PARABELLUM_9x19 = "9x19mm Para", "Caliber9x19PARA"
@@ -20,7 +21,7 @@ class Caliber(Enum):
     RUSSIAN_9x39 = "9x39mm", "Caliber9x39"
     TKM_366 = ".366 TKM", "Caliber366TKM"
     RUSSIAN_127x55 = "12.7x55mm", "Caliber127x55"
-    SHOTGUN_12_70 = "12x70mm", "Caliber12g"
+    SHOTGUN_12_70 = "12x70/23x75", "Caliber12g"
 
     @property
     def label(self):
@@ -36,8 +37,5 @@ class Caliber(Enum):
 
     @classmethod
     def enumerate_calibers(cls):
-        # Retourne un itérable avec des paires d'indice et d'élément
         return ((idx, caliber)
                 for idx, caliber in enumerate(list(cls)))
-
-

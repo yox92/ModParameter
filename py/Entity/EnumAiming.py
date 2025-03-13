@@ -1,18 +1,19 @@
 from enum import Enum
 
+
 class EnumAiming(Enum):
     AIM_PUNCH_MAGNITUDE = "AimPunchMagnitude", "Lower value decrease aim displacement when hit."
 
     PROCEDURAL_INTENSITY_BY_POSE_STANDING = ("ProceduralIntensityByPoseStanding",
-                                             "Lower value reduces weapon sway when \n "
+                                             "Lower value reduces breathing sway when \n "
                                              " aiming while standing")
 
     PROCEDURAL_INTENSITY_BY_POSE_CROUCHING = ("ProceduralIntensityByPoseCrouching",
-                                              "Lower value reduces weapon sway when "
+                                              "Lower value reduces breathing sway when "
                                               "\n aiming while crouching")
 
     PROCEDURAL_INTENSITY_BY_POSE_PRONE = ("ProceduralIntensityByPoseProne",
-                                          ("Lower value reduces weapon sway "
+                                          ("Lower value reduces breathing sway "
                                            "when \n aiming while prone"))
 
     RECOIL_DAMPING = ("RecoilDamping",
@@ -29,7 +30,8 @@ class EnumAiming(Enum):
     RECOIL_INTENSITY_BY_POSE_PRONE = ("RecoilIntensityProne",
                                       "Lower value reduces recoil while prone")
     AIM_PROCEDURAL_INTENSITY = ("AimProceduralIntensity",
-                                      "Lower value reduces movement \n while walking on aiming")
+                                "Lower value reduces movement \n while walking on aiming")
+
     @property
     def label(self):
         return self.value[0]
@@ -54,4 +56,3 @@ class EnumAiming(Enum):
 
     def __str__(self):
         return f"{self.label} ({self.code})"
-

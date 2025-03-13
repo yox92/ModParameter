@@ -54,7 +54,7 @@ def check_json_files(directory):
 def check_and_fix_json_caliber_files():
     modified_files = []
     file_iteration: int = 0
-    caliber_max_min_count: int = 20
+    caliber_max_min_count: int = 21
     for json_file in JSON_FILES_DIR_CALIBER.glob("*.json"):
         file_iteration = file_iteration + 1
         try:

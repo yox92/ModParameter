@@ -147,6 +147,20 @@ class AmmoMod:
                 label = ctk.CTkLabel(self.right_main, text=f"{EnumAmmo.get_code_by_label(prop_value)}:")
                 label.grid(row=row, column=0, sticky=ctk.W, padx=10)
 
+                if any(word in prop_value for word in {"Damage", "PenetrationPower", "StackMaxSize"}):
+                    label.configure(font=("Arial", 14, "bold"), text_color="Peru")
+                elif any(word in prop_value for word in {"InitialSpeed",
+                                                         "BallisticCoeficient",
+                                                         "BulletMassGram",
+                                                         "ammoAccr",
+                                                         "ammoRec",
+                                                         "StackMaxSize"}):
+                    label.configure(font=("Arial", 13, "bold"), text_color="#00a2ff")
+                elif any(word in prop_value for word in {"ProjectileCount"}):
+                    label.configure(font=("Arial", 13, "bold"), text_color="red")
+                else:
+                    label.configure(font=("Arial", 13, "bold"), text_color="white")
+
                 if isinstance(value, bool):
                     self.switch_button(value, row, prop_value)
 

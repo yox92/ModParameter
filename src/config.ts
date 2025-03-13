@@ -8,4 +8,5 @@ export const config = {
     jsonWCaliberFolderPath: path.join(__dirname, "..", "py", "JsonFiles", "Calibers"),
     jsonAimingFolderPath: path.join(__dirname, "..", "py", "JsonFiles", "PMC"),
     jsonAmmoFolderPath: path.join(__dirname, "..", "py", "JsonFiles", "Ammo"),
+    jsonAmmoFolderPathNew: path.join(__dirname, "..", "py", "JsonFiles", "AmmoNew"),
 };

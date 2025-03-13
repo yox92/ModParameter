@@ -1,6 +1,6 @@
 import customtkinter as ctk
 
-from Entity import Logger
+from Entity import Logger, Caliber
 from Entity.WindowType import WindowType
 from Utils import WindowUtils
 from WindowComponent.ProgressBar import ProgressBar
@@ -173,18 +173,25 @@ class CaliberWeaponsMod:
         Utils.disable_all_buttons_recursive(self.close_button, self.master)
         self.apply_button.configure(fg_color="red", hover_color="red")
         self.status_label.configure(text="No Weapons Select")
-        self.detail_window.after(2000,lambda:  WindowUtils.close_window(self.detail_window,
+        self.detail_window.after(2000, lambda: WindowUtils.close_window(self.detail_window,
                                                                         self.root, self.main_instance))
 
     def get_weapons_by_calibre(self):
         matching_names = []
+        case_slug = ''
+        if self.caliber == Caliber.SHOTGUN_12_70.code:
+            case_slug = 'Caliber23x75'
         for data in self.main_instance.loaded_data:
             try:
                 if (
                         isinstance(data, dict) and
                         "item" in data and "_props" in data["item"] and
                         "ammoCaliber" in data["item"]["_props"] and
-                        self.caliber == data["item"]["_props"]["ammoCaliber"]
+                        (
+                                self.caliber == data["item"]["_props"]["ammoCaliber"]
+                                or (self.caliber == Caliber.SHOTGUN_12_70.code and data["item"]["_props"][
+                            "ammoCaliber"] == case_slug)
+                        )
                 ):
                     try:
                         if "locale" in data and "ShortName" in data["locale"]:
@@ -210,8 +217,6 @@ class CaliberWeaponsMod:
         self.manager.update_from_json(data)
         self.no_save = self.originale_value_from_JSON.all_values_are_one()
 
-
-
     def run(self):
         row = 0
         manager_inverse_value: ItemManager = ItemManager(EnumProps)
@@ -222,6 +227,12 @@ class CaliberWeaponsMod:
 
                 label = ctk.CTkLabel(self.right_main, text=f"{EnumProps.get_code_by_label(props)}:")
                 label.grid(row=row, column=0, sticky=ctk.W, padx=10)
+                if any(word in props for word in
+                       {"Ergonomics", "RecoilCamera", "RecoilForceBack", "RecoilForceUp", "bFirerate"}):
+                    label.configure(font=("Arial", 16, "bold"), text_color="Peru")
+                else:
+                    label.configure(font=("Arial", 12, "bold"), text_color="white")
+
                 slider = ctk.CTkSlider(
                     self.right_main,
                     from_=-99,
@@ -293,8 +304,9 @@ class CaliberWeaponsMod:
                                                 hover_color="lightblue",
                                                 border_color="blue",
                                                 state="enable")
-                    self.status_label.configure(text="Same as the original values \n You will get back the \n original values" ,
-                                            text_color="pink", font=("Arial", 13, "italic"))
+                    self.status_label.configure(
+                        text="Same as the original values \n You will get back the \n original values",
+                        text_color="pink", font=("Arial", 13, "italic"))
                     self.reset_after_load_save_and_value_reset = True
             else:
                 self.apply_button.configure(state="disabled", fg_color="white")
@@ -361,10 +373,10 @@ class CaliberWeaponsMod:
             self.progress_bar.configure(progress_color="green")
             self.apply_button.configure(fg_color="green", hover_color="green")
             self.status_label.configure(text="All weapon modifications have been removed.")
-            self.detail_window.after(3000,lambda:  WindowUtils.close_window(self.detail_window,
+            self.detail_window.after(3000, lambda: WindowUtils.close_window(self.detail_window,
                                                                             self.root, self.main_instance))
         if self.progress_bar.is_progress_running():
-            self.root.after(1000, lambda: self.check_wait_delete_json( attempts + 1))
+            self.root.after(1000, lambda: self.check_wait_delete_json(attempts + 1))
         else:
             self.logger.log("info", "Done !")
             self.progress_bar.configure(progress_color="green")
@@ -383,11 +395,11 @@ class CaliberWeaponsMod:
         if list_path_new_json and JsonUtils.all_file_exist(list_path_new_json):
             self.apply_button.configure(fg_color="green", hover_color="green")
             self.status_label.configure(text="Changes applied successfully.")
-            self.detail_window.after(2000,lambda:  WindowUtils.close_window(self.detail_window,
+            self.detail_window.after(2000, lambda: WindowUtils.close_window(self.detail_window,
                                                                             self.root, self.main_instance))
         else:
             self.status_label.configure(text="Error: \n One or more JSON \n files are missing.", text_color="red")
             self.apply_button.configure(fg_color="red", hover_color="red")
-            self.detail_window.after(2000,lambda:
-                                     WindowUtils.close_window(self.detail_window,
-                                                              self.root))
+            self.detail_window.after(2000, lambda:
+            WindowUtils.close_window(self.detail_window,
+                                     self.root))

@@ -1,4 +1,3 @@
-
 import customtkinter as ctk
 
 from Entity import EnumProps, EnumAiming, EnumAmmo, ItemManager
@@ -180,7 +179,12 @@ class Utils:
             EnumAmmo.DAMAGE.label: (1, 450),
             EnumAmmo.PENETRATION_POWER.label: (1, 70),
             EnumAmmo.INITIAL_SPEED.label: (100, 2000),
-            EnumAmmo.STACK_MAX_SIZE.label: (1, 9999)
+            EnumAmmo.BULLET_MASSGRAM.label: (5, 8001),
+            EnumAmmo.STACK_MAX_SIZE.label: (1, 9999),
+            EnumAmmo.BALLISTIC_COEFICIENT.label: (11, 500),
+            EnumAmmo.PROJECTILE_COUNT.label: (0, 51),
+            EnumAmmo.AMMO_ACCR.label: (-201, 501),
+            EnumAmmo.AMMO_REC.label: (-201, 101),
         }
         if name in limits:
             min_value, max_value = limits[name]
@@ -195,6 +199,11 @@ class Utils:
             EnumAmmo.PENETRATION_POWER.label,
             EnumAmmo.STACK_MAX_SIZE.label,
             EnumAmmo.INITIAL_SPEED.label,
+            EnumAmmo.BALLISTIC_COEFICIENT.label,
+            EnumAmmo.AMMO_REC.label,
+            EnumAmmo.AMMO_ACCR.label,
+            EnumAmmo.BULLET_MASSGRAM.label,
+            EnumAmmo.PROJECTILE_COUNT.label,
         }
         return name in int_to_input_text
 
@@ -202,8 +211,8 @@ class Utils:
     def disable_all_buttons_recursive(frame_to_not_block, main_frame):
         for child in main_frame.winfo_children():
             if ((isinstance(child, ctk.CTkButton)
-                    or isinstance(child, ctk.CTkSlider))
-            and not frame_to_not_block == child):
+                 or isinstance(child, ctk.CTkSlider))
+                    and not frame_to_not_block == child):
                 child.configure(state="disabled")
             elif child.winfo_children():
                 Utils.disable_all_buttons_recursive(frame_to_not_block, child)
@@ -230,30 +239,29 @@ class Utils:
                 child.configure(state="normal")
 
             if child.winfo_children():
-
                 Utils.enable_all_widgets_recursive(child, frame_to_not_unlock)
 
     @staticmethod
     def unlock_all_buttons_recursive(frame, widget):
         for child in widget.winfo_children():
             if ((isinstance(child, ctk.CTkButton)
-                    or isinstance(child, ctk.CTkSlider))
-            and not frame == child):
+                 or isinstance(child, ctk.CTkSlider))
+                    and not frame == child):
                 child.configure(state="normal")
             elif child.winfo_children():
                 Utils.disable_all_buttons_recursive(frame, child)
 
     @staticmethod
-    def no_all_value_are_load_from_save(value_save: ItemManager, value_change_from_load_data:ItemManager):
+    def no_all_value_are_load_from_save(value_save: ItemManager, value_change_from_load_data: ItemManager):
         return value_save != value_change_from_load_data
-
 
     @staticmethod
     def case_on_app_bol_on_file_string_transform_bool(value: bool):
         if isinstance(value, bool):
             if value:
-                return  "green"
-            else: return "red"
+                return "tracerGreen"
+            else:
+                return "red"
         else:
             raise KeyError(f"value '{value}' must be boolean for apply app.")
 
@@ -284,11 +292,12 @@ class Utils:
         for file_path in list_path_ammo_mod_with_mod_at_the_end:
             data_json_to_modify = JsonUtils.load_json(file_path)
             data_json_to_modify = Utils.modify_json_value(EnumAmmo.TRACER.label,
-                                                         True,
-                                                         data_json_to_modify)
+                                                          True,
+                                                          data_json_to_modify)
             data_json_to_modify = Utils.modify_json_value(EnumAmmo.TRACERCOLOR.label,
-                                                         color,
-                                                         data_json_to_modify)
+                                                          color,
+                                                          data_json_to_modify)
+            file_path = file_path.replace("_mod.json", ".json")
             JsonUtils.save_json_as_new_file(data_json_to_modify, file_path)
 
     @staticmethod
@@ -297,11 +306,11 @@ class Utils:
         for file_path in list_path_ammo:
             data_json_to_modify = JsonUtils.load_json(file_path)
             data_json_to_modify = Utils.modify_json_value(EnumAmmo.TRACER.label,
-                                                         True,
-                                                         data_json_to_modify)
+                                                          True,
+                                                          data_json_to_modify)
             data_json_to_modify = Utils.modify_json_value(EnumAmmo.TRACERCOLOR.label,
-                                                         color,
-                                                         data_json_to_modify)
+                                                          color,
+                                                          data_json_to_modify)
             JsonUtils.save_json_as_new_file(data_json_to_modify, file_path)
 
     @staticmethod
@@ -311,10 +320,3 @@ class Utils:
                                                               value_to_apply,
                                                               data_json_to_modify,
                                                               WindowType.AMMO)
-
-
-
-
-
-
-

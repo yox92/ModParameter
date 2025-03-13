@@ -8,6 +8,7 @@ import {ValidateUtils} from "../Utils/ValidateUtils";
 
 
 export class ItemUpdaterService {
+    private BUCKSHOT: string = "buckshot";
     private readonly logger: ILogger;
 
     constructor(logger: ILogger) {
@@ -51,17 +52,21 @@ export class ItemUpdaterService {
             return false;
         }
 
-
         let updatedProps: Partial<Ammo> = {};
+
 
         updatedProps.ArmorDamage = validateUtils.validateAndCastInt(ammoProps.ArmorDamage);
         updatedProps.Damage = validateUtils.validateAndCastInt(ammoProps.Damage);
-        updatedProps.InitialSpeed = validateUtils.validateAndCastInt(ammoProps.InitialSpeed);
         updatedProps.PenetrationPower = validateUtils.validateAndCastInt(ammoProps.PenetrationPower);
         updatedProps.StackMaxSize = validateUtils.validateAndCastInt(ammoProps.StackMaxSize);
         updatedProps.Tracer = validateUtils.validateBoolean(ammoProps.Tracer);
-        updatedProps.TracerColor = validateUtils.validateString(ammoProps.TracerColor, true);
-
+        updatedProps.TracerColor = validateUtils.validateTracerColor(ammoProps.TracerColor);
+        updatedProps.InitialSpeed = validateUtils.validateAndCastInt(ammoProps.InitialSpeed);
+        updatedProps.ammoAccr = validateUtils.validateAndCastIntNegatifCase(ammoProps.ammoAccr);
+        updatedProps.ammoRec = validateUtils.validateAndCastIntNegatifCase(ammoProps.ammoRec);
+        updatedProps.BallisticCoeficient = validateUtils.validateBallistic(ammoProps.BallisticCoeficient);
+        updatedProps.BulletMassGram = validateUtils.validateBulletMassGram(ammoProps.BulletMassGram);
+        updatedProps.ProjectileCount = validateUtils.validateAndCastInt(ammoProps.ProjectileCount);
 
         const invalidProps = Object.entries(updatedProps).filter(([_, value]) => value === null);
 
@@ -71,7 +76,12 @@ export class ItemUpdaterService {
             return false;
         }
 
-        // assignation
+        //case buckshot ammo
+        if (sptItemProps.ProjectileCount !== updatedProps.ProjectileCount
+            && sptItemProps.ammoType === this.BUCKSHOT) {
+            sptItemProps.buckshotBullets = updatedProps.ProjectileCount;
+        }
+
         for (const key in updatedProps) {
             sptItem._props[key] = updatedProps[key];
         }
@@ -117,7 +127,6 @@ export class ItemUpdaterService {
             this.logger.warning(`[AttributMod] Item with ID '${id_item_to_modify}' has no _props on DB`);
             return false;
         }
-
 
         let updatedProps: Partial<ItemProps> = {};
 
