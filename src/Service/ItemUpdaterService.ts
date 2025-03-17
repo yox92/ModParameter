@@ -1,60 +1,59 @@
 import {ItemProps} from "../Entity/ItemProps";
-import {ILogger} from "@spt-aki/models/spt/utils/ILogger";
+import {ILogger} from "@spt/models/spt/utils/ILogger";
 import {Ammo} from "../Entity/Ammo";
-import {IDatabaseTables} from "@spt-aki/models/spt/server/IDatabaseTables";
-import {ITemplates} from "@spt-aki/models/spt/templates/ITemplates";
-import {IProps, ITemplateItem} from "@spt-aki/models/eft/common/tables/ITemplateItem";
+import {ITemplates} from "@spt/models/spt/templates/ITemplates";
+import {IProps, ITemplateItem} from "@spt/models/eft/common/tables/ITemplateItem";
 import {ValidateUtils} from "../Utils/ValidateUtils";
+import {DatabaseService} from "@spt/services/DatabaseService";
 
 
 export class ItemUpdaterService {
     private BUCKSHOT: string = "buckshot";
     private readonly logger: ILogger;
+    private readonly dataService: DatabaseService;
 
 
-    constructor(logger: ILogger) {
+    constructor(logger: ILogger, dataService: DatabaseService) {
         this.logger = logger;
+        this.dataService = dataService
     }
 
     /**
-     * Applies modifications from a JSON item to an SPT item.
-     * If any value is invalid, the modification is skipped for that item.
+     * Applies modifications from a JSON item to an SPT item structure.
+     * If any value is invalid, skipped for that item.
      * @param ammoProps Ammo extract from JSON
-     * @param iDatabaseTables data from the SPT database
      * @param id_item_to_modify id from the JSON
      * @param name_item_to_modify name from the JSON
      * @returns true if the item was modified, false if skipped
      */
     public applyAmmoModifications(ammoProps: Ammo,
                                   id_item_to_modify: string,
-                                  name_item_to_modify: string,
-                                  iDatabaseTables: IDatabaseTables): boolean {
+                                  name_item_to_modify: string): Partial<Ammo> {
         const validateUtils = new ValidateUtils();
 
-        const templates: ITemplates | undefined = iDatabaseTables?.templates;
+        const templates: ITemplates | undefined = this.dataService.getTemplates();
         const items: Record<string, ITemplateItem> | undefined = templates?.items;
 
         if (!templates || !items) {
-            this.logger.error("[AttributMod] Invalid iDatabaseTables structure. Modification aborted");
-            return false;
+            this.logger.debug("[AttributMod] Invalid dataService structure. Modification aborted");
+            return null;
         }
 
         const sptItem: ITemplateItem | undefined = items[id_item_to_modify];
 
         if (!sptItem) {
-            this.logger.warning(`[AttributMod] Item with ID '${id_item_to_modify}' not found in templates DB.`);
-            return false;
+            this.logger.debug(`[AttributMod] Item with ID '${id_item_to_modify}' not found in templates DB.`);
+            return null;
         }
 
         const sptItemProps: IProps | undefined = sptItem._props;
 
         if (!sptItemProps) {
-            this.logger.warning(`[AttributMod] Item with ID '${id_item_to_modify}' has no _props on DB`);
-            return false;
+            this.logger.debug(`[AttributMod] Item with ID '${id_item_to_modify}' has no _props on DB`);
+            return null;
         }
 
         let updatedProps: Partial<Ammo> = {};
-
 
         updatedProps.ArmorDamage = validateUtils.validateAndCastInt(ammoProps.ArmorDamage);
         updatedProps.Damage = validateUtils.validateAndCastInt(ammoProps.Damage);
@@ -73,8 +72,8 @@ export class ItemUpdaterService {
 
         // check value if not null before assignation
         if (invalidProps.length > 0) {
-            this.logger.warning(`[AttributMod] Skipping ammo: ${name_item_to_modify} due to invalid values: ${invalidProps.map(([key]) => key).join(", ")}`);
-            return false;
+            this.logger.debug(`[AttributMod] Skipping ammo: ${name_item_to_modify} due to invalid values: ${invalidProps.map(([key]) => key).join(", ")}`);
+            return null;
         }
 
         //case buckshot ammo
@@ -82,51 +81,43 @@ export class ItemUpdaterService {
             && sptItemProps.ammoType === this.BUCKSHOT) {
             sptItemProps.buckshotBullets = updatedProps.ProjectileCount;
         }
-
-        for (const key in updatedProps) {
-            sptItem._props[key] = updatedProps[key];
-        }
-
-        this.logger.info(`[AttributMod] Successfully updated ${name_item_to_modify}`);
-
-        return true;
+        return updatedProps;
     }
 
     /**
-     * Applies modifications from a JSON item to an SPT item.
-     * If any value is invalid, the modification is skipped for that item.
+     * Applies modifications from a JSON item.
+     * If any value is invalid, skipped for that item.
      * @param weaponItem Weapon extract from JSON
-     * @param iDatabaseTables data from the SPT database
+     * @param dataService data from the SPT database
      * @param id_item_to_modify id from the JSON
      * @param name_item_to_modify name from the JSON
      * @returns true if the item was modified, false if skipped
      */
-    public applyWeaponsModifications(weaponItem: ItemProps,
-                                     id_item_to_modify: string,
-                                     name_item_to_modify: string,
-                                     iDatabaseTables: IDatabaseTables): boolean {
+    public constructWeaponsProps(weaponItem: ItemProps,
+                                 id_item_to_modify: string,
+                                 name_item_to_modify: string): Partial<ItemProps> {
         const validateUtils = new ValidateUtils();
 
-        const templates: ITemplates | undefined = iDatabaseTables?.templates;
+        const templates: ITemplates | undefined = this.dataService.getTemplates();
         const itemsSpt: Record<string, ITemplateItem> | undefined = templates?.items;
 
         if (!templates || !itemsSpt) {
-            this.logger.error("[AttributMod] Invalid iDatabaseTables structure. Modification aborted");
-            return false;
+            this.logger.debug("[AttributMod] Invalid dataService structure. Modification aborted");
+            return null;
         }
 
         const sptItem: ITemplateItem | undefined = itemsSpt[id_item_to_modify];
 
         if (!sptItem) {
-            this.logger.warning(`[AttributMod] Item with ID '${id_item_to_modify}' not found in templates DB.`);
-            return false;
+            this.logger.debug(`[AttributMod] Item with ID '${id_item_to_modify}' not found in templates DB.`);
+            return null;
         }
 
         const sptItemProps: IProps | undefined = sptItem._props;
 
         if (!sptItemProps) {
-            this.logger.warning(`[AttributMod] Item with ID '${id_item_to_modify}' has no _props on DB`);
-            return false;
+            this.logger.debug(`[AttributMod] Item with ID '${id_item_to_modify}' has no _props on DB`);
+            return null;
         }
 
         let updatedProps: Partial<ItemProps> = {};
@@ -145,18 +136,11 @@ export class ItemUpdaterService {
 
         // check value if not null before assignation
         if (invalidProps.length > 0) {
-            this.logger.warning(`[AttributMod] Skipping: ${name_item_to_modify} due to invalid values: ${invalidProps.map(([key]) => key).join(", ")}`);
-            return false;
+            this.logger.debug(`[AttributMod] Skipping: ${name_item_to_modify} due to invalid values: ${invalidProps.map(([key]) => key).join(", ")}`);
+            return null;
         }
 
-        // assignation
-        for (const key in updatedProps) {
-            sptItem._props[key] = updatedProps[key];
-        }
-
-        this.logger.info(`[AttributMod] Successfully updated ${name_item_to_modify}`);
-
-        return true;
+        return updatedProps;
     }
 
 }

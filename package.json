@@ -16,7 +16,9 @@
     "url": "https://github.com/yox92/ModParameter.git"
   },
   "private": false,
-  "dependencies": {},
+  "dependencies": {
+    "mongoid-js": "^1.3.0"
+  },
   "devDependencies": {
     "@types/node": "^22.13.9",
     "tsyringe": "^4.8.0",

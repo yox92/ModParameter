@@ -1,8 +1,9 @@
-import {ILogger} from "@spt-aki/models/spt/utils/ILogger";
-import {IDatabaseTables} from "@spt-aki/models/spt/server/IDatabaseTables";
-import {IAiming, IConfig, IGlobals} from "@spt-aki/models/eft/common/IGlobals";
+import {ILogger} from "@spt/models/spt/utils/ILogger";
+import {DatabaseService} from "@spt/services/DatabaseService";
+import {IAiming, IConfig, IGlobals} from "@spt/models/eft/common/IGlobals";
 import {Aiming} from "../Entity/Aiming";
 import {ValidateUtils} from "../Utils/ValidateUtils";
+import {LogTextColor} from "../Entity/LogTextColor";
 
 export class AimingService {
     private readonly logger: ILogger;
@@ -15,19 +16,19 @@ export class AimingService {
      * Applies modifications from a JSON PMC attributes to an SPT attributes.
      * If any value is invalid, the modification is skipped for that item.
      * @param aimingJson The PMC attributes data from JSON
-     * @param iDatabaseTables data from the SPT database
+     * @param dataService dataservice from the SPT database
      * @returns true if the attributes were modified, false if skipped
      */
-    public applyModifications(aimingJson: Aiming, iDatabaseTables: IDatabaseTables): boolean {
+    public applyModifications(aimingJson: Aiming, dataService: DatabaseService): boolean {
 
-        this.logger.info(`[AttributMod] Starting Aiming modifications...`);
+        this.logger.debug(`[AttributMod] Starting Aiming modifications...`);
 
-        const globals: IGlobals | undefined = iDatabaseTables?.globals;
+        const globals: IGlobals | undefined = dataService.getGlobals();
         const config: IConfig | undefined = globals?.config;
         const aimingSpt: IAiming | undefined = config?.Aiming;
 
         if (!globals || !config || !aimingSpt) {
-            this.logger.error(`[AttributMod] Invalid iDatabaseTables structure. Modification aborted. Missing: ${
+            this.logger.debug(`[AttributMod] Invalid Global structure. Modification aborted. Missing: ${
                 !globals ? "globals " : ""
             }${!config ? "config " : ""}${!aimingSpt ? "aiming " : ""}`.trim());
             return false;
@@ -35,7 +36,7 @@ export class AimingService {
 
        this.assigneAttributs(aimingJson, aimingSpt, config);
 
-        this.logger.info(`[AttributMod] Successfully applied PMC modifications.`);
+        this.logger.debug(`[AttributMod] Successfully applied PMC modifications.`);
         return true;
     }
 
