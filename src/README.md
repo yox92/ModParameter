@@ -1,4 +1,4 @@
-# $${\color{red} ModParameter App
+# ModParameter App
 
 ## 📖 Table of Contents  
 
