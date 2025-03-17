@@ -8,11 +8,14 @@ import {DatabaseService} from "@spt/services/DatabaseService";
 import {colorBackgroundDebug, colorTextDebug, debug} from "./config";
 import {ItemHelper} from "@spt/helpers/ItemHelper";
 import {PreSptModLoader} from "@spt/loaders/PreSptModLoader";
+import {IPostSptLoadMod} from "@spt/models/external/IPostSptLoadMod";
+import {SaveServer} from "@spt/servers/SaveServer";
+import {ClearCloneService} from "./Service/ClearCloneService";
 
-class ModParameter implements IPostDBLoadMod, PreSptModLoader {
+class ModParameter implements IPostDBLoadMod, PreSptModLoader, IPostSptLoadMod {
 
     public preSptLoad(container: DependencyContainer): void {
-        console.log(`!!! Debug Mode: ${debug ? "Enabled" : "Disabled"} !!!`);
+        console.log(`!!! DEBUG Mode: ${debug ? "Enabled" : "Disabled"} !!!`);
         container.afterResolution("WinstonLogger", (_t, result: ILogger) => {
             const originalDebugMethod = result.debug.bind(result);
 
@@ -34,7 +37,7 @@ class ModParameter implements IPostDBLoadMod, PreSptModLoader {
         const itemHelper: ItemHelper = container.resolve<ItemHelper>("ItemHelper");
 
         if (!dataService || !logger || !itemHelper || !customItemService) {
-            console.error(`[AttributMod] Critical error: Missing dependencies. Mod cannot function properly.`);
+            console.error(`[ModParameter] Critical error: Missing dependencies. Mod cannot function properly.`);
             return;
         }
 
@@ -47,6 +50,21 @@ class ModParameter implements IPostDBLoadMod, PreSptModLoader {
         pmcService.updatePmc();
 
     }
+
+    public postSptLoad(container: DependencyContainer): void {
+        const logger = container.resolve<ILogger>("WinstonLogger");
+        const saveServer: SaveServer = container.resolve<SaveServer>("SaveServer");
+        const itemHelper: ItemHelper = container.resolve<ItemHelper>("ItemHelper");
+
+        if (!logger || !saveServer) {
+            console.error(`[ModParameter] Critical error: Missing dependencies. Mod cannot function properly.`);
+            return;
+        }
+        const clearCloneService = new ClearCloneService(logger, saveServer, itemHelper);
+        clearCloneService.clearAmmoWeaponNotUseAnymore()
+    }
+
+
 
     private overrideDebugMethod(logger: ILogger): void {
         const originalDebugMethod = logger.debug.bind(logger);

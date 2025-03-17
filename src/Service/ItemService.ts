@@ -41,35 +41,35 @@ export class ItemService {
     private caseWeapons(jsonWeaponsFiles:{ fileName: string; json: any }[], clone: boolean): void {
         for (const {fileName, json} of jsonWeaponsFiles) {
             if (!json) {
-                this.logger.debug(`[AttributMod] Skipping invalid or missing weapon JSON data: ${fileName}`);
+                this.logger.debug(`[ModParameter] Skipping invalid or missing weapon JSON data: ${fileName}`);
                 continue;
             }
 
             const templateJson: Templates<ItemProps> = json;
 
             if (!templateJson.locale) {
-                this.logger.debug(`[AttributMod] Skipping invalid or missing template Weapon: ${fileName}`);
+                this.logger.debug(`[ModParameter] Skipping invalid or missing template Weapon: ${fileName}`);
                 continue;
             }
 
             const locale: Locale = templateJson.locale
 
             if (!templateJson.item) {
-                this.logger.debug(`[AttributMod] Skipping invalid or missing template Weapon: ${fileName}`);
+                this.logger.debug(`[ModParameter] Skipping invalid or missing template Weapon: ${fileName}`);
                 continue;
             }
 
             const itemsJson: Item<ItemProps> = templateJson.item;
 
             if (!itemsJson._props) {
-                this.logger.debug(`[AttributMod] Skipping invalid or missing item Weapon: ${fileName}`);
+                this.logger.debug(`[ModParameter] Skipping invalid or missing item Weapon: ${fileName}`);
                 continue;
             }
 
             const itemsPropsJson: ItemProps = itemsJson._props;
 
             if (!itemsPropsJson) {
-                this.logger.debug(`[AttributMod] Skipping invalid or missing ItemProps Weapon: ${fileName}`);
+                this.logger.debug(`[ModParameter] Skipping invalid or missing ItemProps Weapon: ${fileName}`);
                 continue;
             }
 
@@ -93,19 +93,19 @@ export class ItemService {
     private caseAmmo(jsonAmmoFiles:{ fileName: string; json: any }[], clone: boolean) {
         for (const {fileName, json} of jsonAmmoFiles) {
             if (!json) {
-                this.logger.debug(`[AttributMod] Skipping invalid or missing ammo JSON data: ${fileName}`);
+                this.logger.debug(`[ModParameter] Skipping invalid or missing ammo JSON data: ${fileName}`);
                 continue;
             }
 
             const templateJson: Templates<Ammo> = json;
 
             if (!templateJson.item) {
-                this.logger.debug(`[AttributMod] Skipping invalid or missing template Ammo: ${fileName}`);
+                this.logger.debug(`[ModParameter] Skipping invalid or missing template Ammo: ${fileName}`);
                 continue;
             }
 
             if (!templateJson.locale) {
-                this.logger.debug(`[AttributMod] Skipping invalid or missing template Weapon: ${fileName}`);
+                this.logger.debug(`[ModParameter] Skipping invalid or missing template Weapon: ${fileName}`);
                 continue;
             }
 
@@ -115,21 +115,21 @@ export class ItemService {
             const itemsJson: Item<Ammo> = templateJson.item;
 
             if (!itemsJson._props) {
-                this.logger.debug(`[AttributMod] Skipping invalid or missing item Ammo: ${fileName}`);
+                this.logger.debug(`[ModParameter] Skipping invalid or missing item Ammo: ${fileName}`);
                 continue;
             }
 
             const itemsPropsJson: Ammo = itemsJson._props;
 
             if (!itemsPropsJson) {
-                this.logger.debug(`[AttributMod] Skipping invalid or missing ItemProps Ammo: ${fileName}`);
+                this.logger.debug(`[ModParameter] Skipping invalid or missing ItemProps Ammo: ${fileName}`);
                 continue;
             }
 
             const ammoProps: Ammo = createItemAmmo(itemsPropsJson);
 
             if (!ammoProps) {
-                this.logger.debug(`[AttributMod] [AimingService] Invalid Json PMC update.`);
+                this.logger.debug(`[ModParameter] [AimingService] Invalid Json PMC update.`);
                 return;
             }
 
@@ -160,7 +160,7 @@ export class ItemService {
         const jsonFiles:{ fileName: string; json: any }[] = this.jsonFileService.loadJsonFiles(itemType);
 
         if (jsonFiles.length === 0) {
-            this.logger.debug(`[AttributMod] No ${itemType} mod found. Skipping ${itemType} updates.`);
+            this.logger.debug(`[ModParameter] No ${itemType} mod found. Skipping ${itemType} updates.`);
         }
         return jsonFiles;
     }

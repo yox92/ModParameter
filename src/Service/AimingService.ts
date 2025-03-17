@@ -3,7 +3,6 @@ import {DatabaseService} from "@spt/services/DatabaseService";
 import {IAiming, IConfig, IGlobals} from "@spt/models/eft/common/IGlobals";
 import {Aiming} from "../Entity/Aiming";
 import {ValidateUtils} from "../Utils/ValidateUtils";
-import {LogTextColor} from "../Entity/LogTextColor";
 
 export class AimingService {
     private readonly logger: ILogger;
@@ -21,14 +20,14 @@ export class AimingService {
      */
     public applyModifications(aimingJson: Aiming, dataService: DatabaseService): boolean {
 
-        this.logger.debug(`[AttributMod] Starting Aiming modifications...`);
+        this.logger.debug(`[ModParameter] Starting Aiming modifications...`);
 
         const globals: IGlobals | undefined = dataService.getGlobals();
         const config: IConfig | undefined = globals?.config;
         const aimingSpt: IAiming | undefined = config?.Aiming;
 
         if (!globals || !config || !aimingSpt) {
-            this.logger.debug(`[AttributMod] Invalid Global structure. Modification aborted. Missing: ${
+            this.logger.debug(`[ModParameter] Invalid Global structure. Modification aborted. Missing: ${
                 !globals ? "globals " : ""
             }${!config ? "config " : ""}${!aimingSpt ? "aiming " : ""}`.trim());
             return false;
@@ -36,7 +35,7 @@ export class AimingService {
 
        this.assigneAttributs(aimingJson, aimingSpt, config);
 
-        this.logger.debug(`[AttributMod] Successfully applied PMC modifications.`);
+        this.logger.debug(`[ModParameter] Successfully applied PMC modifications.`);
         return true;
     }
 

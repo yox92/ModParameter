@@ -1,14 +1,13 @@
 import {Baseclass} from "../Entity/Baseclass";
 import {AmmoCloneRegistry} from "../Entity/AmmoCloneRegistry";
 import {TradersAmmoWeapon} from "../Entity/TradersAmmoWeapon";
-import {ITemplates} from "../external/server/project/src/models/spt/templates/ITemplates";
-import {DatabaseService} from "../external/server/project/src/services/DatabaseService";
-import {ILogger} from "../external/server/project/src/models/spt/utils/ILogger";
-import {ItemHelper} from "../external/server/project/src/helpers/ItemHelper";
-import {ITemplateItem} from "../external/server/project/src/models/eft/common/tables/ITemplateItem";
-import {ITrader} from "../external/server/project/src/models/eft/common/tables/ITrader";
-import {IItem} from "../external/server/project/src/models/eft/common/tables/IItem";
-import {LogTextColor} from "../external/server/project/src/models/spt/logging/LogTextColor";
+import {ITemplates} from "@spt/models/spt/templates/ITemplates";
+import {DatabaseService} from "@spt/services/DatabaseService";
+import {ILogger} from "@spt/models/spt/utils/ILogger";
+import {ItemHelper} from "@spt/helpers/ItemHelper";
+import {ITemplateItem} from "@spt/models/eft/common/tables/ITemplateItem";
+import {ITrader} from "@spt/models/eft/common/tables/ITrader";
+import {IItem} from "@spt/models/eft/common/tables/IItem";
 import {ItemTypeEnum} from "../Entity/ItemTypeEnum";
 import {WeaponCloneRegistry} from "../Entity/WeaponCloneRegistry";
 
@@ -41,17 +40,17 @@ export class ClonerUtils {
         for (const [traderName, traderId] of Object.entries(TradersAmmoWeapon)) {
             const trader: ITrader = dataService.getTraders()[traderId];
             if (!trader) {
-                this.logger.debug(`Trader ${traderId} are undefined, SKIP.`);
+                this.logger.debug(`[ModParameter] Trader ${traderId} are undefined, SKIP.`);
                 continue;
             }
 
             if (!trader.assort) {
-                this.logger.debug(`Trader ${traderId} no assort, SKIP.`);
+                this.logger.debug(`[ModParameter] Trader ${traderId} no assort, SKIP.`);
                 continue;
             }
 
             if (!trader.assort.items || !Array.isArray(trader.assort.items)) {
-                this.logger.debug(`Trader ${traderId} does not have items in assort or is not an array, SKIP.`);
+                this.logger.debug(`[ModParameter] Trader ${traderId} does not have items in assort or is not an array, SKIP.`);
                 continue;
             }
 
@@ -78,7 +77,7 @@ export class ClonerUtils {
                     }
 
                     if (!clonedId) {
-                        this.logger.debug(`tpl not found with trader: ${traderName}, with item _id: ${item._id}`);
+                        this.logger.debug(`[ModParameter] tpl not found with trader: ${traderName}, with item _id: ${item._id}`);
                         continue;
                     }
 
@@ -102,7 +101,7 @@ export class ClonerUtils {
             if (bestItem && bestClonedId && bestLoyalLevel && bestOriginalId) {
                 trader.assort.items.push(bestItem);
                 objectFindTrader = true;
-                this.logger.debug(`Item ${name} added to Trader: ${traderName} with ID: ${bestClonedId}`);
+                this.logger.debug(`[ModParameter] Item ${name} added to Trader: ${traderName} with ID: ${bestClonedId}`);
 
                 trader.assort.barter_scheme[bestItem._id] = structuredClone(trader.assort.barter_scheme[bestOriginalId]);
                 this.logger.debug(`Copy of the same structures for: ${bestClonedId} (Trader: ${traderName})`);

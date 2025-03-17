@@ -9,7 +9,6 @@ import {Languages} from "../Utils/Languages";
 import {DatabaseService} from "@spt/services/DatabaseService";
 import {ClonerUtils} from "../Utils/ClonerUtils";
 import {AmmoCloneRegistry} from "../Entity/AmmoCloneRegistry";
-import {LogTextColor} from "@spt/models/spt/logging/LogTextColor";
 import {ItemTypeEnum} from "../Entity/ItemTypeEnum";
 import {WeaponCloneRegistry} from "../Entity/WeaponCloneRegistry";
 import {ItemProps} from "../Entity/ItemProps";
@@ -51,7 +50,7 @@ export class ItemClonerService {
                       itemTypeEnum: ItemTypeEnum
     ) {
         if (!props || Object.keys(props).length === 0) {
-            this.logger.debug(` Error with ${name} : missing or empty properties`)
+            this.logger.debug(`[ModParameter] Error with ${name} : missing or empty properties`)
             return;
         }
 
@@ -82,14 +81,14 @@ export class ItemClonerService {
 
         for (const check of checks) {
             if (check.value === null || check.value === undefined) {
-                this.logger.debug(` ERROR : ${check.name} are null or undefined`);
+                this.logger.debug(`[ModParameter] ERROR : ${check.name} are null or undefined`);
             }
         }
 
         const locales = Languages.generateLocales(name, shortName);
 
         if (!id || !sptItem._parent || !handbookParentId || !locales) {
-            this.logger.debug(` can not clone ${name} : leak member parameters`)
+            this.logger.debug(`[ModParameter] can not clone ${name} : leak member parameters`)
             return;
         }
 
@@ -114,7 +113,7 @@ export class ItemClonerService {
                 locales,
                 shortName)
         } else {
-            this.logger.debug("No Type Item Find For Cloning")
+            this.logger.debug("[ModParameter] No Type Item Find For Cloning")
         }
 
 
@@ -161,9 +160,9 @@ export class ItemClonerService {
         if (result.success) {
             clonerUtils.addToTrader(id, result.itemId, this.dataService, name, ItemTypeEnum.Ammo);
             clonerUtils.propagateAmmoCompatibility(id, result.itemId, this.itemHelper, this.dataService);
-            this.logger.debug(`${name} have new clone ! `);
+            this.logger.debug(`[ModParameter] ${name} have new clone ! `);
         } else {
-            this.logger.debug(`Clone do not work for ${name} `)
+            this.logger.debug(`[ModParameter] Clone do not work for ${name} `)
         }
     }
 
@@ -205,9 +204,9 @@ export class ItemClonerService {
         const result: CreateItemResult = this.customItemService.createItemFromClone(clone);
         if (result.success) {
             clonerUtils.addToTrader(id, result.itemId, this.dataService, shortName, ItemTypeEnum.Weapon);
-            this.logger.debug(`${shortName} have new clone ! `);
+            this.logger.debug(`[ModParameter] ${shortName} have new clone ! `);
         } else {
-            this.logger.debug(`Clone do not work for ${shortName} `)
+            this.logger.debug(`[ModParameter] Clone do not work for ${shortName} `)
         }
     }
 

@@ -35,21 +35,21 @@ export class ItemUpdaterService {
         const items: Record<string, ITemplateItem> | undefined = templates?.items;
 
         if (!templates || !items) {
-            this.logger.debug("[AttributMod] Invalid dataService structure. Modification aborted");
+            this.logger.debug("[ModParameter] Invalid dataService structure. Modification aborted");
             return null;
         }
 
         const sptItem: ITemplateItem | undefined = items[id_item_to_modify];
 
         if (!sptItem) {
-            this.logger.debug(`[AttributMod] Item with ID '${id_item_to_modify}' not found in templates DB.`);
+            this.logger.debug(`[ModParameter] Item with ID '${id_item_to_modify}' not found in templates DB.`);
             return null;
         }
 
         const sptItemProps: IProps | undefined = sptItem._props;
 
         if (!sptItemProps) {
-            this.logger.debug(`[AttributMod] Item with ID '${id_item_to_modify}' has no _props on DB`);
+            this.logger.debug(`[ModParameter] Item with ID '${id_item_to_modify}' has no _props on DB`);
             return null;
         }
 
@@ -72,7 +72,7 @@ export class ItemUpdaterService {
 
         // check value if not null before assignation
         if (invalidProps.length > 0) {
-            this.logger.debug(`[AttributMod] Skipping ammo: ${name_item_to_modify} due to invalid values: ${invalidProps.map(([key]) => key).join(", ")}`);
+            this.logger.debug(`[ModParameter] Skipping ammo: ${name_item_to_modify} due to invalid values: ${invalidProps.map(([key]) => key).join(", ")}`);
             return null;
         }
 
@@ -102,21 +102,21 @@ export class ItemUpdaterService {
         const itemsSpt: Record<string, ITemplateItem> | undefined = templates?.items;
 
         if (!templates || !itemsSpt) {
-            this.logger.debug("[AttributMod] Invalid dataService structure. Modification aborted");
+            this.logger.debug("[ModParameter] Invalid dataService structure. Modification aborted");
             return null;
         }
 
         const sptItem: ITemplateItem | undefined = itemsSpt[id_item_to_modify];
 
         if (!sptItem) {
-            this.logger.debug(`[AttributMod] Item with ID '${id_item_to_modify}' not found in templates DB.`);
+            this.logger.debug(`[ModParameter] Item with ID '${id_item_to_modify}' not found in templates DB.`);
             return null;
         }
 
         const sptItemProps: IProps | undefined = sptItem._props;
 
         if (!sptItemProps) {
-            this.logger.debug(`[AttributMod] Item with ID '${id_item_to_modify}' has no _props on DB`);
+            this.logger.debug(`[ModParameter] Item with ID '${id_item_to_modify}' has no _props on DB`);
             return null;
         }
 
@@ -136,7 +136,7 @@ export class ItemUpdaterService {
 
         // check value if not null before assignation
         if (invalidProps.length > 0) {
-            this.logger.debug(`[AttributMod] Skipping: ${name_item_to_modify} due to invalid values: ${invalidProps.map(([key]) => key).join(", ")}`);
+            this.logger.debug(`[ModParameter] Skipping: ${name_item_to_modify} due to invalid values: ${invalidProps.map(([key]) => key).join(", ")}`);
             return null;
         }
 

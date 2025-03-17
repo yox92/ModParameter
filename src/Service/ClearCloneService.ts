@@ -6,11 +6,15 @@ import {ISptProfile} from "@spt/models/eft/profile/ISptProfile";
 import {IItem} from "@spt/models/eft/common/tables/IItem";
 import {IInsuredItem} from "@spt/models/eft/common/tables/IBotBase";
 import {ItemHelper} from "@spt/helpers/ItemHelper";
+import {ITemplateItem} from "@spt/models/eft/common/tables/ITemplateItem";
 
 export class ClearCloneService {
     private readonly logger: ILogger;
     private readonly saveServer: SaveServer;
     private readonly itemHelper: ItemHelper;
+    private readonly GREEN: string = "\x1b[32m";
+    private readonly RESET : string = "\x1b[0m";
+    private readonly CYAN  : string = "\x1b[36m";
 
 
     constructor(logger: ILogger, saveServer: SaveServer, itemHelper: ItemHelper) {
@@ -33,6 +37,24 @@ export class ClearCloneService {
         this.filterExistingClones(map_ammo_idOriginal_vs_idClone, ammoStatusMap);
         this.filterExistingClones(map_weapon_idOriginal_vs_idClone, weaponStatusMap);
 
+        for (const [originalId, cloneId] of Object.entries(WeaponCloneRegistry.id_and_cloneId)) {
+            if (weaponStatusMap.get(cloneId) === "existing") {
+                const [, item]: [boolean, ITemplateItem] = this.itemHelper.getItem(cloneId);
+                const itemName = item._props.ShortName;
+                this.logger.info(`[ModParameter] ${this.CYAN}Weapon clone in game: ${this.RESET}${this.GREEN}${itemName}${this.RESET}`);
+            }
+        }
+
+        // Log existing ammo
+        for (const [originalId, cloneId] of Object.entries(AmmoCloneRegistry.id_and_cloneId)) {
+            if (ammoStatusMap.get(cloneId) === "existing") {
+                const [, item] = this.itemHelper.getItem(cloneId);
+                const itemName = item._props.Name;
+                this.logger.info(`[ModParameter] ${this.CYAN}Ammo clone in game: ${this.RESET}${this.GREEN}${itemName}${this.RESET}`);
+            }
+        }
+
+
         const profiles: Record<string, ISptProfile> = this.saveServer.getProfiles();
 
         this.logger.debug(`Starting cleanup of cloned weapons and ammo... ${Object.keys(profiles).length} profiles detected.`);
@@ -42,7 +64,7 @@ export class ClearCloneService {
             const inventory: IItem[] = profile.characters.pmc.Inventory.items;
             const insuredItems: IInsuredItem[] = profile.characters.pmc.InsuredItems;
 
-           this.logger.debug(`Processing profile: ${profile.info.username} (ID: ${profileId})`);
+           this.logger.debug(`[ModParameter] Processing profile: ${profile.info.username} (ID: ${profileId})`);
 
             // INVENTORY
             let serialisedInventory = JSON.stringify(inventory);
@@ -81,7 +103,7 @@ export class ClearCloneService {
 
             if (json.includes(`"${cloneId}"`)) {
 
-                this.logger.debug(`Munition assurée clonée détectée ${cloneId} → Remplacement par ${originalId}`);
+                this.logger.debug(`[ModParameter] Munition assurée clonée détectée ${cloneId} → Remplacement par ${originalId}`);
                 const regex = new RegExp(`"${cloneId}"`, "g");
                 json = json.replace(regex, `"${originalId}"`);
                 index++;
@@ -102,7 +124,7 @@ export class ClearCloneService {
 
             if (json.includes(`"${cloneId}"`)) {
 
-                this.logger.debug(`Arme assurée clonée détectée ${cloneId} → Remplacement par ${originalId}`);
+                this.logger.debug(`[ModParameter] Arme assurée clonée détectée ${cloneId} → Remplacement par ${originalId}`);
                 const regex = new RegExp(`"${cloneId}"`, "g");
                 json = json.replace(regex, `"${originalId}"`);
                 index++;
@@ -124,21 +146,21 @@ export class ClearCloneService {
                      clearCountInsurance: number,
                      profileName: string): void {
         if (modificationsWeapon > 0) {
-           this.logger.debug(`${modificationsWeapon} weapons corrected for ${profileName}`);
+           this.logger.debug(`[ModParameter] ${modificationsWeapon} weapons corrected for ${profileName}`);
         } else {
-            this.logger.debug(`No cloned weapons found for ${profileName}`);
+            this.logger.debug(`[ModParameter] No cloned weapons found for ${profileName}`);
         }
 
         if (modificationsAmmo > 0) {
-            this.logger.debug(`${modificationsAmmo} ammo corrected for ${profileName}`);
+            this.logger.debug(`[ModParameter] ${modificationsAmmo} ammo corrected for ${profileName}`);
         } else {
-           this.logger.debug(`No cloned ammo found for ${profileName}`);
+           this.logger.debug(`[ModParameter] No cloned ammo found for ${profileName}`);
         }
 
         if (clearCountInsurance > 0) {
-            this.logger.debug(`${clearCountInsurance} insured items (weapons + ammo) corrected for ${profileName}`);
+            this.logger.debug(`[ModParameter] ${clearCountInsurance} insured items (weapons + ammo) corrected for ${profileName}`);
         } else {
-            this.logger.debug(`No cloned insured items found for ${profileName}`);
+            this.logger.debug(`[ModParameter] No cloned insured items found for ${profileName}`);
         }
     }
 

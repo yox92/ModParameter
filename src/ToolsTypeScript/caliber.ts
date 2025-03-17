@@ -8,7 +8,7 @@ async function processWeaponFiles() {
     const jsonWCaliberFolderPath = config.jsonWCaliberFolderPath;
 
     if (!fs.existsSync(jsonWeaponFolderPath)) {
-        console.error(`❌ Le dossier ${jsonWeaponFolderPath} n'existe pas.`);
+        console.debug(`[ModParameter] Le dossier ${jsonWeaponFolderPath} n'existe pas.`);
         return;
     }
 
