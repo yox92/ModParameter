@@ -8,6 +8,9 @@
       <excludeFolder url="file://$MODULE_DIR$/py/.idea" />
       <excludeFolder url="file://$MODULE_DIR$/src/external/SPT-Server/project/.idea" />
       <excludeFolder url="file://$MODULE_DIR$/src/external/SPT-Server/project/src/.idea" />
+      <excludeFolder url="file://$MODULE_DIR$/py/build" />
+      <excludeFolder url="file://$MODULE_DIR$/src/.idea" />
+      <excludeFolder url="file://$MODULE_DIR$/src/external" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.9" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />

@@ -1,1 +1,9 @@
 /.idea/
+ModParameters.exe
+node_modules
+/src/.gitignore
+/src/external
+/src/node_modules
+/src/.idea
+/py/build
+/py/ModParameters.spec
