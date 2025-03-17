@@ -1,4 +1,4 @@
-# ModParameter App
+# $${\color{red} ModParameter App
 
 ## 📖 Table of Contents  
 
@@ -44,7 +44,7 @@ The Python program automatically generates JSON files that define the properties
 - This behavior is only true if you leave  to default `removeModItemsFromProfile` set to false in the SPT file:
 `\spt\SPT_Data\Server\configs\core.json`
 
-- If this value is set to true, then the following scenario will apply:
+-  If this value is set to true, then the following scenario will apply:
   * You mod an object
   * You play the game
   * You disconnect
@@ -91,7 +91,7 @@ Hope this is clear enough! 😄
 - **Ammo Accuracy Bonus** – Bonus ammo , Modifies shot accuracy.
 - **Recoil Bonus ammo** : Adjusts weapon kickback for better control.
 - **Projectile Count** – Defines the number of pellets per shot (useful for shotguns)
-  * Be careful with this parameter 50 rounds can be fired at the same time with single bullet bullets. With tracers, it creates a beautiful fireworks display, but your RAM and CPU usage will suffer if the value is too high.
+  * 💣 💣 💣 Be careful with this parameter 50 rounds can be fired at the same time with single bullet bullets. With tracers, it creates a beautiful fireworks display, but your RAM and CPU usage will suffer if the value is too high.
 
 ### 3. Modify PMC Attributes in Escape from Tarkov
 Modify various PMC attributes to fine-tune gameplay. Changes only affect the **cloned versions** of related entities.
