@@ -7,20 +7,23 @@ import {IItem} from "@spt/models/eft/common/tables/IItem";
 import {IInsuredItem} from "@spt/models/eft/common/tables/IBotBase";
 import {ItemHelper} from "@spt/helpers/ItemHelper";
 import {ITemplateItem} from "@spt/models/eft/common/tables/ITemplateItem";
+import {LocaleService} from "@spt/services/LocaleService";
 
 export class ClearCloneService {
     private readonly logger: ILogger;
     private readonly saveServer: SaveServer;
     private readonly itemHelper: ItemHelper;
+    private readonly localeService: LocaleService;
     private readonly GREEN: string = "\x1b[32m";
-    private readonly RESET : string = "\x1b[0m";
-    private readonly CYAN  : string = "\x1b[36m";
+    private readonly RESET: string = "\x1b[0m";
+    private readonly CYAN: string = "\x1b[36m";
 
 
-    constructor(logger: ILogger, saveServer: SaveServer, itemHelper: ItemHelper) {
+    constructor(logger: ILogger, saveServer: SaveServer, itemHelper: ItemHelper, localeService: LocaleService) {
         this.logger = logger;
         this.saveServer = saveServer;
-        this.itemHelper = itemHelper
+        this.itemHelper = itemHelper;
+        this.localeService = localeService
     }
 
     /**
@@ -31,7 +34,7 @@ export class ClearCloneService {
     public clearAmmoWeaponNotUseAnymore(): void {
         const map_weapon_idOriginal_vs_idClone = new Map(Object.entries(WeaponCloneRegistry.id_and_cloneId));
         const map_ammo_idOriginal_vs_idClone = new Map(Object.entries(AmmoCloneRegistry.id_and_cloneId));
-        const { ammoStatusMap, weaponStatusMap } = this.differentiateClones();
+        const {ammoStatusMap, weaponStatusMap} = this.differentiateClones();
         const profiles: Record<string, ISptProfile> = this.saveServer.getProfiles();
 
         // 🔍 Filtrer les clones encore en jeu
@@ -47,7 +50,7 @@ export class ClearCloneService {
             const inventory: IItem[] = profile.characters.pmc.Inventory.items;
             const insuredItems: IInsuredItem[] = profile.characters.pmc.InsuredItems;
 
-           this.logger.debug(`[ModParameter] Processing profile: ${profile.info.username} (ID: ${profileId})`);
+            this.logger.debug(`[ModParameter] Processing profile: ${profile.info.username} (ID: ${profileId})`);
 
             // INVENTORY
             let serialisedInventory = JSON.stringify(inventory);
@@ -129,7 +132,7 @@ export class ClearCloneService {
                      clearCountInsurance: number,
                      profileName: string): void {
         if (modificationsWeapon > 0) {
-           this.logger.debug(`[ModParameter] ${modificationsWeapon} weapons corrected for ${profileName}`);
+            this.logger.debug(`[ModParameter] ${modificationsWeapon} weapons corrected for ${profileName}`);
         } else {
             this.logger.debug(`[ModParameter] No cloned weapons found for ${profileName}`);
         }
@@ -137,7 +140,7 @@ export class ClearCloneService {
         if (modificationsAmmo > 0) {
             this.logger.debug(`[ModParameter] ${modificationsAmmo} ammo corrected for ${profileName}`);
         } else {
-           this.logger.debug(`[ModParameter] No cloned ammo found for ${profileName}`);
+            this.logger.debug(`[ModParameter] No cloned ammo found for ${profileName}`);
         }
 
         if (clearCountInsurance > 0) {
@@ -174,7 +177,7 @@ export class ClearCloneService {
         return {ammoStatusMap, weaponStatusMap};
     }
 
-     /**
+    /**
      * Filters out cloned items that are still present in the game.
      * Removes them from the provided map to prevent unnecessary replacements.
      * @param map - The map containing cloned items.
@@ -189,30 +192,34 @@ export class ClearCloneService {
     }
 
     /**
- * Logs weapons and ammo clones that are still in the game.
- * Displays weapon names in green and prefixes them with "[ModParameter]".
- */
-private logExistingClones(weaponStatusMap: Map<string, "existing" | "missing">, ammoStatusMap: Map<string, "existing" | "missing">): void {
-    for (const [originalId, cloneId] of Object.entries(WeaponCloneRegistry.id_and_cloneId)) {
-        if (weaponStatusMap.get(cloneId) === "existing") {
-            const [, item]: [boolean, ITemplateItem] = this.itemHelper.getItem(cloneId);
-            const itemName = item?._props.ShortName ?? "Unknown Weapon";
-            this.logger.info(`[ModParameter] ${this.CYAN}Weapon clone in game: ${this.RESET}${this.GREEN}${itemName}${this.RESET}`);
+     * Logs weapons and ammo clones that are still present in the game.
+     * Retrieves the localized names of the original items from the locale database.
+     * Displays weapon and ammo names in green and prefixes the log entry with "[ModParameter]".
+     *
+     * @param weaponStatusMap - A map indicating whether each weapon clone is "existing" or "missing".
+     * @param ammoStatusMap - A map indicating whether each ammo clone is "existing" or "missing".
+     */
+    private logExistingClones(weaponStatusMap: Map<string, "existing" | "missing">, ammoStatusMap: Map<string, "existing" | "missing">): void {
+        for (const [originalId, cloneId] of Object.entries(WeaponCloneRegistry.id_and_cloneId)) {
+
+            if (weaponStatusMap.get(cloneId) === "existing") {
+                const localeDb = this.localeService.getLocaleDb();
+                const result = localeDb[`${originalId} ShortName`];
+
+                this.logger.info(`[ModParameter] ${this.CYAN} Weapon MOD and Clone in game: ${this.RESET}${this.GREEN}${result}${this.RESET}`);
+            }
+        }
+
+        for (const [originalId, cloneId] of Object.entries(AmmoCloneRegistry.id_and_cloneId)) {
+
+            if (ammoStatusMap.get(cloneId) === "existing") {
+                const localeDb = this.localeService.getLocaleDb();
+                const result = localeDb[`${originalId} Name`];
+
+                this.logger.info(`[ModParameter] ${this.CYAN}Ammo MOD and Clone in game: ${this.RESET}${this.GREEN}${result}${this.RESET}`);
+            }
         }
     }
-
-    for (const [originalId, cloneId] of Object.entries(AmmoCloneRegistry.id_and_cloneId)) {
-        if (ammoStatusMap.get(cloneId) === "existing") {
-            const [, item] = this.itemHelper.getItem(cloneId);
-            const itemName = item?._props.Name ?? "Unknown Ammo";
-            this.logger.info(`[ModParameter] ${this.CYAN}Ammo clone in game: ${this.RESET}${this.GREEN}${itemName}${this.RESET}`);
-        }
-    }
-}
-
-
-
-
 
 
 }

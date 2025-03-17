@@ -11,6 +11,7 @@ import {PreSptModLoader} from "@spt/loaders/PreSptModLoader";
 import {IPostSptLoadMod} from "@spt/models/external/IPostSptLoadMod";
 import {SaveServer} from "@spt/servers/SaveServer";
 import {ClearCloneService} from "./Service/ClearCloneService";
+import {LocaleService} from "@spt/services/LocaleService";
 
 class ModParameter implements IPostDBLoadMod, PreSptModLoader, IPostSptLoadMod {
 
@@ -57,8 +58,9 @@ class ModParameter implements IPostDBLoadMod, PreSptModLoader, IPostSptLoadMod {
         const logger = container.resolve<ILogger>("WinstonLogger");
         const saveServer: SaveServer = container.resolve<SaveServer>("SaveServer");
         const itemHelper: ItemHelper = container.resolve<ItemHelper>("ItemHelper");
+        const localeService: LocaleService = container.resolve<LocaleService>("LocaleService");
 
-        if (!logger || !saveServer) {
+        if (!logger || !saveServer || !localeService) {
             console.error(`[ModParameter] Critical error: Missing dependencies. Mod cannot function properly.`);
             return;
         }
@@ -68,7 +70,7 @@ class ModParameter implements IPostDBLoadMod, PreSptModLoader, IPostSptLoadMod {
             return;
         }
 
-        const clearCloneService = new ClearCloneService(logger, saveServer, itemHelper);
+        const clearCloneService = new ClearCloneService(logger, saveServer, itemHelper, localeService);
         clearCloneService.clearAmmoWeaponNotUseAnymore()
     }
 
