@@ -1,19 +1,19 @@
 import {JsonFileService} from "./JsonFileService";
 import {AimingService} from "./AimingService";
-import {ILogger} from "@spt-aki/models/spt/utils/ILogger";
-import {IDatabaseTables} from "@spt-aki/models/spt/server/IDatabaseTables";
+import {ILogger} from "@spt/models/spt/utils/ILogger";
 import {Aiming, createAiming} from "../Entity/Aiming";
+import {DatabaseService} from "@spt/services/DatabaseService";
 
 
 export class PmcService {
     private readonly logger: ILogger;
-    private readonly iDatabaseTables: IDatabaseTables;
+    private readonly dataService: DatabaseService;
     private readonly jsonFileService: JsonFileService;
     private readonly aimingService: AimingService;
 
-    constructor(logger: ILogger, iDatabaseTables: IDatabaseTables) {
+    constructor(logger: ILogger, dataService: DatabaseService) {
         this.logger = logger;
-        this.iDatabaseTables = iDatabaseTables;
+        this.dataService = dataService;
 
         this.jsonFileService = new JsonFileService(logger);
         this.aimingService = new AimingService(logger);
@@ -23,7 +23,7 @@ export class PmcService {
         const aimingFile = this.jsonFileService.loadJsonAimingFile();
 
         if (!aimingFile) {
-            this.logger.warning("[AttributMod] Skipping PMC update.");
+            this.logger.debug("[AttributMod] Skipping PMC update.");
             return;
         }
 
@@ -31,11 +31,11 @@ export class PmcService {
 
         const aimingJson: Aiming = createAiming(jsonData);
         if (!aimingJson) {
-            this.logger.warning(`[AttributMod] Invalid Json PMC update.`);
+            this.logger.debug(`[AttributMod] Invalid Json PMC update.`);
             return;
         }
 
-        this.aimingService.applyModifications(aimingJson, this.iDatabaseTables);
+        this.aimingService.applyModifications(aimingJson, this.dataService);
     }
 
 }

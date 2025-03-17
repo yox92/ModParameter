@@ -1,23 +1,23 @@
 import axios from 'axios';
-import {Item} from './Entity/Item';
-import {ItemProps} from './Entity/ItemProps';
-import {Locale} from './Entity/Locale';
+import {Ammo} from '../Entity/Ammo';
+import {Locale} from '../Entity/Locale';
 import fs from 'fs';
 import path from 'path';
-import {Templates} from "./Entity/Templates";
-import {WeaponList} from "./ListIdItem/WeaponList";
+import {Templates} from "../Entity/Templates";
+import {AmmoList} from "../ListIdItem/AmmoEnum";
 import PQueue from "p-queue";
-import {config} from "./config";
+import {config} from "../config";
+import {Item} from "../Entity/Item";
 
 const baseURL = 'https://db.sp-tarkov.com/api/item';
 
 /**
- * item from DB SP API.
+ * ammo from DB SP API.
  *
  * @param id - ID use.
- * @returns {Promise<Templates>} - Object containing the formatted properties.
+ * @returns {Promise<{ ammo: Ammo, locale: Locale }>} - Object containing the formatted properties.
  */
-async function fetchItemData(id: string): Promise<Templates<any>> {
+async function fetchAmmoData(id: string): Promise<Templates<Ammo>> {
     const url = `${baseURL}?id=${id}&locale=en`;
     const response = await axios.get(url);
 
@@ -25,35 +25,36 @@ async function fetchItemData(id: string): Promise<Templates<any>> {
     const itemData = rootData.item;
     const localeData = rootData.locale;
 
-    const itemProps = new ItemProps({
-        CameraSnap: itemData._props.CameraSnap,
-        AimSensitivity: itemData._props.AimSensitivity,
-        Ergonomics: itemData._props.Ergonomics,
-        RecoilCamera: itemData._props.RecoilCamera,
-        RecoilForceBack: itemData._props.RecoilForceBack,
-        RecoilForceUp: itemData._props.RecoilForceUp,
-        RecolDispersion: itemData._props.RecolDispersion,
-        Weight: itemData._props.Weight,
-        ammoCaliber: itemData._props.ammoCaliber,
-        bFirerate: itemData._props.bFirerate,
+    const ammoProps = new Ammo({
+        ArmorDamage: itemData._props.ArmorDamage,
+        Caliber: itemData._props.Caliber,
+        Damage: itemData._props.Damage,
+        PenetrationPower: itemData._props.PenetrationPower,
+        StackMaxSize: itemData._props.StackMaxSize,
+        Tracer: itemData._props.Tracer,
+        TracerColor: itemData._props.TracerColor,
+        InitialSpeed: itemData._props.InitialSpeed,
+        BallisticCoeficient: Math.round(itemData._props.BallisticCoeficient * 1000),
+        BulletMassGram: Math.round(itemData._props.BulletMassGram * 100),
+        ProjectileCount: itemData._props.ProjectileCount,
+        ammoAccr: itemData._props.ammoAccr,
+        ammoRec: itemData._props.ammoRec,
     });
-
 
     const locale = new Locale({
         Name: localeData.Name,
         ShortName: localeData.ShortName,
     });
 
-    const item = new Item(itemData._id, itemData._name, itemProps);
+    const item = new Item<Ammo>(itemData._id, itemData._name, ammoProps);
 
-    return new Templates<ItemProps>(locale, item);
-
+    return new Templates<Ammo>(locale, item);
 }
 
 async function main() {
-    const weaponList = new WeaponList();
-    const ids = weaponList.getIds();
-    const basePath = config.jsonWeaponFolderPath;
+    const ammoList = new AmmoList();
+    const ids = ammoList.getIds();
+    const basePath = config.jsonAmmoFolderPathNew;
 
     if (!fs.existsSync(basePath)) {
         fs.mkdirSync(basePath, {recursive: true});
@@ -71,9 +72,11 @@ async function main() {
 
     const tasks = ids.map(id => queue.add(async () => {
         try {
-            await delay(500)
-            const root = await fetchItemData(id);
-            const cleanName = root.locale.ShortName.replace(/\s+/g, '_').replace(/[^\w.-]/g, '');
+            await delay(500);
+            const root = await fetchAmmoData(id);
+            const locale = root.locale;
+
+            const cleanName = locale.Name.replace(/\s+/g, '_').replace(/[^\w.-]/g, '');
             const filePath = path.join(basePath, `${cleanName}.json`);
 
             await fs.promises.writeFile(
@@ -84,13 +87,14 @@ async function main() {
 
             createdFiles.add(filePath);
 
-            console.log(`✅ Saved item to ${filePath}`);
+            console.log(`✅ Saved ammo data to ${filePath}`);
         } catch (error) {
             console.error(`❌ Failed to fetch data for ID: ${id}`, error);
         }
     }));
 
     await Promise.all(tasks);
+
     const filesInDirectory = new Set(
         fs.readdirSync(basePath)
             .filter(file => file.endsWith(".json"))
@@ -101,10 +105,8 @@ async function main() {
 
     for (const id of ids) {
         try {
-            const root = await fetchItemData(id);
-            const expectedFileName = root.locale.ShortName
-                .replace(/\s+/g, '_')
-                .replace(/[^\w.-]/g, '');
+            const {locale} = await fetchAmmoData(id);
+            const expectedFileName = locale.ShortName.replace(/\s+/g, '_').replace(/[^\w.-]/g, '');
 
             if (!filesInDirectory.has(expectedFileName)) {
                 missingIds.push(id);
@@ -116,8 +118,15 @@ async function main() {
     }
 
     console.log("\n=== 🔍 Verification of created files ===");
-    console.log(`🎯 Total Weapons to Create: ${ids.length}`);
+    console.log(`🎯 Total Ammo to Create: ${ids.length}`);
     console.log(`📂 Files Created: ${filesInDirectory.size}`);
+
+    if (missingIds.length > 0) {
+        console.warn(`⚠️ ${missingIds.length} ammo items did not generate a JSON file:`);
+        console.warn(missingIds.join(", "));
+    } else {
+        console.log("✅ All ammo items have successfully generated JSON files.");
+    }
 }
 
 /**

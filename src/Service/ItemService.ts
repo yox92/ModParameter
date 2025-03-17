@@ -1,87 +1,111 @@
 import {ItemUpdaterService} from "./ItemUpdaterService";
 import {JsonFileService} from "./JsonFileService";
-import {ILogger} from "@spt-aki/models/spt/utils/ILogger";
-import {IDatabaseTables} from "@spt-aki/models/spt/server/IDatabaseTables";
+import {ILogger} from "@spt/models/spt/utils/ILogger";
 import {Item} from "../Entity/Item";
-import {ItemProps} from "../Entity/ItemProps";
+import {createItemProps, ItemProps} from "../Entity/ItemProps";
 import {Templates} from "../Entity/Templates";
 import {Ammo, createItemAmmo} from "../Entity/Ammo";
-import {ItemType} from "../Entity/Enum";
+import {ItemTypeEnum} from "../Entity/ItemTypeEnum";
 import {Locale} from "../Entity/Locale";
+import {CustomItemService} from "@spt/services/mod/CustomItemService";
+import {ItemClonerService} from "./ItemClonerService";
+import {ItemHelper} from "@spt/helpers/ItemHelper";
+import {DatabaseService} from "@spt/services/DatabaseService";
 
 export class ItemService {
     private readonly logger: ILogger;
-    private readonly iDatabaseTables: IDatabaseTables;
+    private readonly customItemService: CustomItemService;
+    private readonly dataService: DatabaseService;
     private readonly jsonFileService: JsonFileService;
     private readonly itemUpdaterService: ItemUpdaterService;
+    private readonly itemClonerService: ItemClonerService;
+    private readonly itemHelper: ItemHelper;
 
-    constructor(logger: ILogger, iDatabaseTables: IDatabaseTables) {
+    constructor(logger: ILogger,
+                dataService: DatabaseService,
+                customItemService: CustomItemService,
+                itemHelper: ItemHelper) {
         this.logger = logger;
-        this.iDatabaseTables = iDatabaseTables;
+        this.dataService = dataService;
+        this.customItemService = customItemService;
+        this.itemHelper = itemHelper;
 
         this.jsonFileService = new JsonFileService(logger);
-        this.itemUpdaterService = new ItemUpdaterService(logger);
+        this.itemUpdaterService = new ItemUpdaterService(logger, dataService);
+        this.itemClonerService = new ItemClonerService(logger,
+            dataService,
+            customItemService,
+            itemHelper);
     }
 
-    private caseWeapons(jsonWeaponsFiles): void {
+    private caseWeapons(jsonWeaponsFiles:{ fileName: string; json: any }[], clone: boolean): void {
         for (const {fileName, json} of jsonWeaponsFiles) {
             if (!json) {
-                this.logger.warning(`[AttributMod] Skipping invalid or missing weapon JSON data: ${fileName}`);
+                this.logger.debug(`[AttributMod] Skipping invalid or missing weapon JSON data: ${fileName}`);
                 continue;
             }
 
             const templateJson: Templates<ItemProps> = json;
 
             if (!templateJson.locale) {
-                this.logger.warning(`[AttributMod] Skipping invalid or missing template Weapon: ${fileName}`);
+                this.logger.debug(`[AttributMod] Skipping invalid or missing template Weapon: ${fileName}`);
                 continue;
             }
 
             const locale: Locale = templateJson.locale
 
             if (!templateJson.item) {
-                this.logger.warning(`[AttributMod] Skipping invalid or missing template Weapon: ${fileName}`);
+                this.logger.debug(`[AttributMod] Skipping invalid or missing template Weapon: ${fileName}`);
                 continue;
             }
 
             const itemsJson: Item<ItemProps> = templateJson.item;
 
             if (!itemsJson._props) {
-                this.logger.warning(`[AttributMod] Skipping invalid or missing item Weapon: ${fileName}`);
+                this.logger.debug(`[AttributMod] Skipping invalid or missing item Weapon: ${fileName}`);
                 continue;
             }
 
             const itemsPropsJson: ItemProps = itemsJson._props;
 
             if (!itemsPropsJson) {
-                this.logger.warning(`[AttributMod] Skipping invalid or missing ItemProps Weapon: ${fileName}`);
+                this.logger.debug(`[AttributMod] Skipping invalid or missing ItemProps Weapon: ${fileName}`);
                 continue;
             }
 
-            this.itemUpdaterService.applyWeaponsModifications(
-                itemsPropsJson,
+            const weaponProps: ItemProps = createItemProps(itemsPropsJson);
+
+            const partialWeaponProps: Partial<ItemProps> = this.itemUpdaterService.constructWeaponsProps(
+                weaponProps,
                 itemsJson._id,
+                locale.ShortName)
+
+            this.itemClonerService.applyClone(
+                partialWeaponProps,
+                itemsJson._id,
+                locale.Name,
                 locale.ShortName,
-                this.iDatabaseTables)
+                ItemTypeEnum.Weapon)
+
         }
     }
 
-    private caseAmmo(jsonAmmoFiles) {
+    private caseAmmo(jsonAmmoFiles:{ fileName: string; json: any }[], clone: boolean) {
         for (const {fileName, json} of jsonAmmoFiles) {
             if (!json) {
-                this.logger.warning(`[AttributMod] Skipping invalid or missing ammo JSON data: ${fileName}`);
+                this.logger.debug(`[AttributMod] Skipping invalid or missing ammo JSON data: ${fileName}`);
                 continue;
             }
 
             const templateJson: Templates<Ammo> = json;
 
             if (!templateJson.item) {
-                this.logger.warning(`[AttributMod] Skipping invalid or missing template Ammo: ${fileName}`);
+                this.logger.debug(`[AttributMod] Skipping invalid or missing template Ammo: ${fileName}`);
                 continue;
             }
 
             if (!templateJson.locale) {
-                this.logger.warning(`[AttributMod] Skipping invalid or missing template Weapon: ${fileName}`);
+                this.logger.debug(`[AttributMod] Skipping invalid or missing template Weapon: ${fileName}`);
                 continue;
             }
 
@@ -91,51 +115,54 @@ export class ItemService {
             const itemsJson: Item<Ammo> = templateJson.item;
 
             if (!itemsJson._props) {
-                this.logger.warning(`[AttributMod] Skipping invalid or missing item Ammo: ${fileName}`);
+                this.logger.debug(`[AttributMod] Skipping invalid or missing item Ammo: ${fileName}`);
                 continue;
             }
 
             const itemsPropsJson: Ammo = itemsJson._props;
 
             if (!itemsPropsJson) {
-                this.logger.warning(`[AttributMod] Skipping invalid or missing ItemProps Ammo: ${fileName}`);
+                this.logger.debug(`[AttributMod] Skipping invalid or missing ItemProps Ammo: ${fileName}`);
                 continue;
             }
 
             const ammoProps: Ammo = createItemAmmo(itemsPropsJson);
 
             if (!ammoProps) {
-                this.logger.warning(`[AttributMod] [AimingService] Invalid Json PMC update.`);
+                this.logger.debug(`[AttributMod] [AimingService] Invalid Json PMC update.`);
                 return;
             }
 
-            this.itemUpdaterService.applyAmmoModifications(
+            const partialAmmoProps = this.itemUpdaterService.applyAmmoModifications(
                 ammoProps,
                 itemsJson._id,
+                locale.Name)
+
+            this.itemClonerService.applyClone(
+                partialAmmoProps,
+                itemsJson._id,
                 locale.Name,
-                this.iDatabaseTables)
+                locale.ShortName,
+                ItemTypeEnum.Ammo)
+
         }
     }
 
     /**
-     * Load JSON and apply mod into SPT weapon in game
+     * clone Items : First Weapons because new ammo need compatibility with new weapon ofc
      */
-    public updateItems(): void {
-        const jsonWeaponsFiles = this.jsonFileService.loadJsonFiles(ItemType.Weapon);
-        const jsonAmmoFiles = this.jsonFileService.loadJsonFiles(ItemType.Ammo);
+    public cloneItems(): void {
+        this.caseWeapons(this.loadJsonFiles(ItemTypeEnum.Weapon), true);
+        this.caseAmmo(this.loadJsonFiles(ItemTypeEnum.Ammo), true);
+    }
 
+    private loadJsonFiles(itemType: ItemTypeEnum): any {
+        const jsonFiles:{ fileName: string; json: any }[] = this.jsonFileService.loadJsonFiles(itemType);
 
-        if (jsonWeaponsFiles.length === 0) {
-            this.logger.info("[AttributMod] No weapon mod found. Skipping weapon updates.");
+        if (jsonFiles.length === 0) {
+            this.logger.debug(`[AttributMod] No ${itemType} mod found. Skipping ${itemType} updates.`);
         }
-
-        if (jsonAmmoFiles.length === 0) {
-            this.logger.info("[AttributMod]  No ammo found. Skipping ammo updates.");
-        }
-
-        this.caseWeapons(jsonWeaponsFiles);
-        this.caseAmmo(jsonAmmoFiles);
-
+        return jsonFiles;
     }
 
 }

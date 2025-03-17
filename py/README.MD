@@ -427,7 +427,7 @@ This model is also used for `Weapon` objects, following the same logic of linkin
 ## Author
 
 👤 **Yox**  
-📧 Email: [@gmail.com](mailto:vivien.hoyaux@gmail.com)  
+📧 Email: [vivien.hoyaux@gmail.com](mailto:vivien.hoyaux@gmail.com)  
    GitHub: [gitlab](https://github.com/yox92/ModParameter.git)
    Discord : yox_92 1235644139
 

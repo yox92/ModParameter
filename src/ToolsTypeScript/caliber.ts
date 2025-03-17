@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
-import {config} from "./config";
-import {createItemProps} from "./Entity/ItemProps";
+import {config} from "../config";
+import {createItemProps} from "../Entity/ItemProps";
 
 async function processWeaponFiles() {
     const jsonWeaponFolderPath = config.jsonWeaponFolderPath;
@@ -31,10 +31,8 @@ async function processWeaponFiles() {
                 continue;
             }
 
-            // Création de l'objet ItemProps
             const itemProps = createItemProps(jsonData.item._props);
 
-            // Ajout du calibre à l'ensemble unique
             ammoCaliberSet.add(itemProps.ammoCaliber);
 
             console.log(`✅ Traitement de ${file}, calibre: ${itemProps.ammoCaliber}`);
@@ -43,7 +41,6 @@ async function processWeaponFiles() {
         }
     }
 
-    // 📌 Générer les fichiers JSON pour chaque ammoCaliber trouvé
     generateAmmoCaliberFiles(ammoCaliberSet);
 }
 
@@ -54,7 +51,6 @@ function generateAmmoCaliberFiles(ammoCalibers: Set<string>) {
     const ignoredCalibers = new Set([
         "Caliber9x18PMM",
         "Caliber20g",
-        "Caliber23x75",
         "Caliber762x25TT"]);
 
     if (!fs.existsSync(outputPath)) {
