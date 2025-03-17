@@ -1,6 +1,9 @@
 export class AmmoCloneRegistry {
     //      _tpl from original    :   new _tpl for ammo clone
-    private static readonly tpl_and_cloneTpl: Record<string, string> = {
+     /**
+     * SHOW generate_ipl_mongoId_Item.ts
+     */
+    public static readonly tpl_and_cloneTpl: Record<string, string> = {
         "67877f70ecc0f8078906016b": "67d6e53565d0105464000001",
         "67877f70ecc0f80789060174": "67d6e53565d0105464000002",
         "67877f70ecc0f80789060177": "67d6e53565d0105464000003",
@@ -163,7 +166,10 @@ export class AmmoCloneRegistry {
         "677536c6b06e57fd5c0e0978": "67d6e53565d01054640000a0",
         "6492e44bf4287b13040fcd1e": "67d6e53565d01054640000a1"
     }
-    private static readonly id_and_cloneId: Record<string, string> = {
+    /**
+     * SHOW generate_id_mongoId_Item.ts
+     */
+    public static readonly id_and_cloneId: Record<string, string> = {
         "5cde8864d7f00c0010373be1": "67d6e38a4b35f348b0000001",
         "5d2f2ab648f03550091993ca": "67d6e38a4b35f348b0000002",
         "66a0d1e0ed648d72fe064d06": "67d6e38a4b35f348b0000003",

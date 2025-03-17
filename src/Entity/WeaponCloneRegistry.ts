@@ -1,6 +1,9 @@
 export class WeaponCloneRegistry {
     //      _tpl from original    :   new _tpl for ammo clone
-    private static readonly tpl_and_cloneTpl: Record<string, string> = {
+     /**
+     * SHOW generate_ipl_mongoId_Item.ts
+     */
+    public static readonly tpl_and_cloneTpl: Record<string, string> = {
         "67877f70ecc0f80789060185": "67d71b53950f272184000001",
         "67877f71ecc0f8078906019f": "67d71b53950f272184000002",
         "67877f71ecc0f807890601af": "67d71b53950f272184000003",
@@ -288,7 +291,10 @@ export class WeaponCloneRegistry {
         "66c1beaffa6e5a0c120f0dbe": "67d71b53950f27218400011d",
         "66c1beb0fa6e5a0c120f0eaf": "67d71b53950f27218400011e"
     }
-    private static readonly id_and_cloneId: Record<string, string> = {
+    /**
+     * SHOW generate_id_mongoId_Item.ts
+     */
+    public static readonly id_and_cloneId: Record<string, string> = {
         "587e02ff24597743df3deaeb": "67d716557e2937472c000001",
         "574d967124597745970e7c94": "67d716557e2937472c000002",
         "5c501a4d2e221602b412b540": "67d716557e2937472c000003",
