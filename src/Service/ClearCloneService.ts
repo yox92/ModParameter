@@ -32,31 +32,14 @@ export class ClearCloneService {
         const map_weapon_idOriginal_vs_idClone = new Map(Object.entries(WeaponCloneRegistry.id_and_cloneId));
         const map_ammo_idOriginal_vs_idClone = new Map(Object.entries(AmmoCloneRegistry.id_and_cloneId));
         const { ammoStatusMap, weaponStatusMap } = this.differentiateClones();
+        const profiles: Record<string, ISptProfile> = this.saveServer.getProfiles();
 
         // 🔍 Filtrer les clones encore en jeu
         this.filterExistingClones(map_ammo_idOriginal_vs_idClone, ammoStatusMap);
         this.filterExistingClones(map_weapon_idOriginal_vs_idClone, weaponStatusMap);
 
-        for (const [originalId, cloneId] of Object.entries(WeaponCloneRegistry.id_and_cloneId)) {
-            if (weaponStatusMap.get(cloneId) === "existing") {
-                const [, item]: [boolean, ITemplateItem] = this.itemHelper.getItem(cloneId);
-                const itemName = item._props.ShortName;
-                this.logger.info(`[ModParameter] ${this.CYAN}Weapon clone in game: ${this.RESET}${this.GREEN}${itemName}${this.RESET}`);
-            }
-        }
-
-        // Log existing ammo
-        for (const [originalId, cloneId] of Object.entries(AmmoCloneRegistry.id_and_cloneId)) {
-            if (ammoStatusMap.get(cloneId) === "existing") {
-                const [, item] = this.itemHelper.getItem(cloneId);
-                const itemName = item._props.Name;
-                this.logger.info(`[ModParameter] ${this.CYAN}Ammo clone in game: ${this.RESET}${this.GREEN}${itemName}${this.RESET}`);
-            }
-        }
-
-
-        const profiles: Record<string, ISptProfile> = this.saveServer.getProfiles();
-
+        // LOG
+        this.logExistingClones(weaponStatusMap, ammoStatusMap)
         this.logger.debug(`Starting cleanup of cloned weapons and ammo... ${Object.keys(profiles).length} profiles detected.`);
 
         for (const profileId in profiles) {
@@ -204,6 +187,29 @@ export class ClearCloneService {
             }
         }
     }
+
+    /**
+ * Logs weapons and ammo clones that are still in the game.
+ * Displays weapon names in green and prefixes them with "[ModParameter]".
+ */
+private logExistingClones(weaponStatusMap: Map<string, "existing" | "missing">, ammoStatusMap: Map<string, "existing" | "missing">): void {
+    for (const [originalId, cloneId] of Object.entries(WeaponCloneRegistry.id_and_cloneId)) {
+        if (weaponStatusMap.get(cloneId) === "existing") {
+            const [, item]: [boolean, ITemplateItem] = this.itemHelper.getItem(cloneId);
+            const itemName = item?._props.ShortName ?? "Unknown Weapon";
+            this.logger.info(`[ModParameter] ${this.CYAN}Weapon clone in game: ${this.RESET}${this.GREEN}${itemName}${this.RESET}`);
+        }
+    }
+
+    for (const [originalId, cloneId] of Object.entries(AmmoCloneRegistry.id_and_cloneId)) {
+        if (ammoStatusMap.get(cloneId) === "existing") {
+            const [, item] = this.itemHelper.getItem(cloneId);
+            const itemName = item?._props.Name ?? "Unknown Ammo";
+            this.logger.info(`[ModParameter] ${this.CYAN}Ammo clone in game: ${this.RESET}${this.GREEN}${itemName}${this.RESET}`);
+        }
+    }
+}
+
 
 
 

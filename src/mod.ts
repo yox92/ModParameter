@@ -45,7 +45,9 @@ class ModParameter implements IPostDBLoadMod, PreSptModLoader, IPostSptLoadMod {
             dataService,
             customItemService,
             itemHelper);
+
         const pmcService = new PmcService(logger, dataService);
+
         itemService.cloneItems();
         pmcService.updatePmc();
 
@@ -60,6 +62,12 @@ class ModParameter implements IPostDBLoadMod, PreSptModLoader, IPostSptLoadMod {
             console.error(`[ModParameter] Critical error: Missing dependencies. Mod cannot function properly.`);
             return;
         }
+
+        if (!saveServer.getProfiles()) {
+            console.error(`[ModParameter] Critical error: Missing Profil on SPT. Please create at least ONE`);
+            return;
+        }
+
         const clearCloneService = new ClearCloneService(logger, saveServer, itemHelper);
         clearCloneService.clearAmmoWeaponNotUseAnymore()
     }
