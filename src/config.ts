@@ -13,7 +13,7 @@ export const config = {
     jsonAmmoFolderPathNew: path.join(__dirname, "..", "py", "JsonFiles", "AmmoNew"),
 };
 
-export const debug = false;
+export const debug = true;
 export const colorTextDebug = LogTextColor.GRAY;
 export const colorBackgroundDebug = LogBackgroundColor.BLACK;
 
