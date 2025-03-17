@@ -1,32 +1,34 @@
 {
   "name": "modparameter",
-  "version": "1.0.1",
-  "description": "A custom mod for weapons / ammo / PMC stats in SPT-AKI",
+  "version": "2.0.0",
+  "description": "A custom mod for weapons / ammo / PMC stats in SPT",
   "main": "src/mod.js",
   "type": "commonjs",
   "author": "Yox",
-  "sptVersion": "3.10.*",
+  "sptVersion": "3.11.*",
   "license": "MIT",
   "isBundleMod": false,
   "scripts": {
-        "setup": "npm i"
-    },
+    "setup": "npm i"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/yox92/ModParameter.git"
   },
   "private": false,
   "dependencies": {
-    "mongoid-js": "^1.3.0"
+    "axios": "^1.8.3",
+    "mongoid-js": "^1.3.0",
+    "p-queue": "^8.1.0"
   },
   "devDependencies": {
     "@types/node": "^22.13.9",
-    "tsyringe": "^4.8.0",
-    "typescript": "^5.4",
-    "@typescript-eslint/parser": "^6.18.1",
     "@typescript-eslint/eslint-plugin": "^6.18.1",
+    "@typescript-eslint/parser": "^6.18.1",
     "copyfiles": "^2.4.1",
+    "eslint": "^8.56.0",
     "rimraf": "^5.0.5",
-    "eslint": "^8.56.0"
+    "tsyringe": "^4.8.0",
+    "typescript": "^5.8.2"
   }
 }
