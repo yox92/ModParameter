@@ -270,7 +270,7 @@ Cette classe TypeScript permet d'extraire et de générer des identifiants Mongo
 ## Author
 
 👤 **Yox**  
-📧 Email: [@gmail.com](mailto:vivien.hoyaux@gmail.com)  
+📧 Email: [vivien.hoyaux@gmail.com](mailto:vivien.hoyaux@gmail.com)  
    GitHub: [gitlab](https://github.com/yox92/ModParameter.git)
    Discord : yox_92 1235644139
 
