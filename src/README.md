@@ -14,9 +14,9 @@
   - [Deletion Options](#7-deletion)
 - [🎯 Main Classe](#Main-Classe)
 - [📂 Project Structure](#-typescript-project-structure)  
-- [📝 Database Structure](#-pattern-database-item-props-structure)  
+- [📂Database Structure](#-pattern-database-item-props-structure)  
 - [🔍Weapon & Ammo Data Fetcher](#weapon--ammo-data-fetcher)  
-- [📊License](#license)  
+- [📝License](#license)  
 - [🌐Author & Contact](#author)
 
 # Project Overview
