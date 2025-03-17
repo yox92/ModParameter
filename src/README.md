@@ -2,78 +2,125 @@
 
 ## 📖 Table of Contents  
 
-- [ModParameter App](#modparameter-app)  
-- [Features](#-features)  
+- [🎮ModParameter App](#modparameter-app)  
+- [📝Note](#Notes)
+- [📌Features](#Features)  
+  - [Assign Tracers to Bullets]()
   - [Search for a Weapon](#1-search-for-a-weapon-by-its-name-using-a-search-bar-to-mod-it)  
   - [Modify Weapons by Caliber](#2-select-a-group-of-weapons-based-on-their-calibers-to-mod-all)  
   - [Modify Ammunition](#3-organize-bullet-search-based-on-their-caliber-categories-to-allow-modifications)  
-  - [Modify PMC Attributes](#4-modifying-pmc-attributes-in-eft)  
-  - [Assign Tracers to Bullets](#5-ability-to-assign-tracer-to-all-bullets-in-the-game-and-choose-their-color)  
+  - [Modify PMC Attributes](#4-modifying-pmc-attributes-in-eft)
   - [Save Modifications](#6-saving-your-modifications-made-to)  
-  - [Deletion Options](#7-deletion)  
+  - [Deletion Options](#7-deletion)
+- [🎯 Main Classe](#Main-Classe)
+- [📂 Project Structure](#-typescript-project-structure)  
+- [📝 Database Structure](#-pattern-database-item-props-structure)  
+- [🔍Weapon & Ammo Data Fetcher](#weapon--ammo-data-fetcher)  
+- [📊License](#license)  
+- [🌐Author & Contact](#author)
 
-- [🔧 Project Structure](#-typescript-project-structure)  
-- [🛠 Core Components & Features](#-core-components--features)  
-  - [AttributMod (Main Mod Class)](#attributmod-main-mod-class)  
-  - [PmcService (PMC Attribute Management)](#pmcservice-pmc-attribute-management)  
-  - [ItemService](#itemservice)  
-  - [ItemUpdaterService](#itemupdaterservice)  
-  - [AimingService](#aimingservice)  
+# Project Overview
 
-- [Database Structure](#-pattern-database-item-props-structure)  
-- [Weapon & Ammo Data Fetcher](#weapon--ammo-data-fetcher)  
-- [License](#license)  
-- [Author & Contact](#author)  
- 
-## Project Overview
+**ModParameter** is a mod for **SPT** that allows users to dynamically modify **weapon statistics, ammunition properties, and PMC attributes** through a **graphical Python interface** with an executable `.exe` file. This mod enhances gameplay customization by enabling direct modifications to cloned items within the game.
 
-1. **ModParameter** is a mod for **SPT-AKI** that allows users to dynamically modify **weapon statistics, ammunition properties, and PMC attributes** through a **graphical Python interface** with an executable `.exe` file. This mod enhances gameplay customization by enabling direct item and character modifications within the game.
-2. The Python program will automatically generate JSON files that can be retrieved, corrected, and used to implement objects in the SPT database. Automation can only take place if the file structure is strictly followed, ensuring that the Python program has full visibility on the generated files.
-   👉 "Read the README.md file for more information."
+The Python program automatically generates JSON files that define the properties of the cloned objects. These files can be retrieved, edited, and applied to the SPT database. Automation is only possible if the file structure is strictly followed, ensuring that the Python program can properly read and apply changes to the generated files.
+
+📌 **"Read the README.md file for more information."**
+
 ---
-## Features : 
-### 1. Search for a **weapon** by its name using a search bar to mod it.
-### 2. Select a group of **weapons** based on their calibers to mod all.
-📌 **Weapons** : 
-- CameraSnap: Represents the speed at which the camera moves during recoil
-- AimSensitivity: Sensitivity while aiming
-- AimProceduralIntensity: Movement on walking on scope (stability movement)
-- Ergonomics: The weapon's ergonomics
-- RecoilCamera: The upward camera movement when firing a shot
-- RecoilDispersion: The dispersion of the weapon's barrel when firing
-- RecoilForceBack: The horizontal recoil
-- RecoilForceUp: The vertical recoil
-- Weight: The weapon's weight
-- bFirerate: Rate of Fire
 
-### 3. Organize bullet search based on their caliber categories to allow modifications:
-📌 **Ammo** : 
-- ArmorDamage: The damage dealt by the bullet to armor.  
-- Damage: The raw damage a bullet deals to flesh, excluding armor absorption.  
-- PenetrationPower: The bullet's penetration power.  
-- InitialSpeed: The bullet's speed.  
-- Tracer: Defines whether a bullet has tracer properties.  
-- TracerColor: Defines the tracer bullet color, if it is set as a tracer bullet.  
-- StackMaxSize: The maximum number of bullets per stack in the stash and during a raid.
+## Notes
 
-### 4. Modifying PMC Attributes in EFT  
-📌 **PMC** : 
-- AimPunchMagnitude: The intensity at which the player's camera moves when hit by a bullet.
-- RecoilHandDamping: The forward and backward camera movement when firing.  
-- RecoilDamping: The vertical animation of the weapon when firing.
-- ProceduralIntensity: Defines the player's stability when aiming. It is initially set based on a value of 1 (100%).
-  * ProceduralIntensityByPoseStanding: Defines sway while standing.  
-  * ProceduralIntensityByPoseCrouching: Defines sway while crouching.  
-  * ProceduralIntensityByPoseProne: Defines sway while prone.  
-    - ➡️ It is recommended to modify **ProceduralIntensityByPoseStanding**, as it serves as the reference value. If modified, the other two will adjust accordingly.  
+- **This mod does not modify original game assets.** All changes apply to **cloned versions** of weapons, ammunition, and attributes, ensuring that the original game balance remains untouched.
+- For troubleshooting and further details, refer to the `README.md` file in the repository.
 
-- RecoilIntensity: The player's overall recoil across all weapons. It follows the same logic as **ProceduralIntensity**.  
-  * RecoilIntensityStanding: Recoil while standing.  
-  * RecoilIntensityCrouching: Recoil while crouching.  
-  * RecoilIntensityProne: Recoil while prone.  
+- In case of any issues, the **config.ts** file located in:
+`ModParameter\src\config.ts` allows you to launch the server in `DEBUG` mode, where you can choose your preferred **colors**.
 
-### 5. Ability to assign "tracer" to all bullets in the game and choose their color
-📌 AMMO
+#### Saving mod' item strategy
+
+- Cloned objects have a **STATIC** identifier, meaning they remain in your inventory after disconnection.
+- If you disable `ModParameter` or if you remove the modding from an object in your inventory beforehand, the game temporarily removes it from your inventory. However, if you redefine the object, the same quantity will reappear but with the newly applied characteristics.
+- This behavior is only true if you leave  to default `removeModItemsFromProfile` set to false in the SPT file:
+`\spt\SPT_Data\Server\configs\core.json`
+
+- If this value is set to true, then the following scenario will apply:
+  * You mod an object
+  * You play the game
+  * You disconnect
+  * You disable the modding of the object 
+  * Upon your next login, the object will be deleted
+Hope this is clear enough! 😄
+---
+
+## Features
+
+####  Ability to assign "tracer" to all bullets in the game and choose their color
+
+### 1. Search and Modify Weapons
+- Search for a **weapon** by its name using a search bar to modify it.
+- Select a group of **weapons** based on their calibers to modify them all at once.
+- Any modifications apply to a **cloned version** of the weapon instead of the original.
+
+#### 📌 **Weapon Attributes**
+- **CameraSnap**: Speed at which the camera moves during recoil.
+- **AimSensitivity**: Sensitivity while aiming.
+- **AimProceduralIntensity**: Movement while walking with a scope (stability movement).
+- **Ergonomics**: The weapon's ergonomics.
+- **RecoilCamera**: Upward camera movement when firing.
+- **RecoilDispersion**: Barrel dispersion when firing.
+- **RecoilForceBack**: Horizontal recoil.
+- **RecoilForceUp**: Vertical recoil.
+- **Weight**: The weapon's weight.
+- **bFirerate**: Rate of fire.
+
+### 2. Modify Ammunition Attributes
+- Organize bullet search based on their caliber categories for easy modifications.
+- Any modifications apply to a **cloned version** of the ammunition instead of the original.
+
+#### 📌 **Ammo Attributes**
+- **ArmorDamage**: Damage dealt by the bullet to armor.
+- **Damage**: Raw damage a bullet deals to flesh (excluding armor absorption).
+- **PenetrationPower**: Bullet penetration power.
+- **InitialSpeed**: Bullet speed.
+- **Tracer**: Defines whether the bullet has tracer properties.
+- **TracerColor**: Specifies the tracer bullet color if applicable.
+- **StackMaxSize**: Maximum number of bullets per stack in the stash and during a raid.
+- **Ballistic Coefficient** – Determines bullet aerodynamics and impact over distance.
+- **Bullet Mass** : Take into account the bullet's velocity during its trajectory and fall
+- **Ammo Accuracy Bonus** – Bonus ammo , Modifies shot accuracy.
+- **Recoil Bonus ammo** : Adjusts weapon kickback for better control.
+- **Projectile Count** – Defines the number of pellets per shot (useful for shotguns)
+  * Be careful with this parameter 50 rounds can be fired at the same time with single bullet bullets. With tracers, it creates a beautiful fireworks display, but your RAM and CPU usage will suffer if the value is too high.
+
+### 3. Modify PMC Attributes in Escape from Tarkov
+Modify various PMC attributes to fine-tune gameplay. Changes only affect the **cloned versions** of related entities.
+
+#### 📌 **PMC Attributes**
+- **AimPunchMagnitude**: Intensity of the camera movement when hit by a bullet.
+- Reduce **movement on aiming** while you **walking** (**stability** on walking on scope)
+- **RecoilHandDamping**: Forward and backward camera movement when firing.
+- **RecoilDamping**: Vertical animation of the weapon when firing.
+- **ProceduralIntensity**: Defines player stability when aiming. Initially set at 1 (100%).
+  - **ProceduralIntensityByPoseStanding**: Sway while standing.
+  - **ProceduralIntensityByPoseCrouching**: Sway while crouching.
+  - **ProceduralIntensityByPoseProne**: Sway while prone.
+    * **Recommended**: Modify **ProceduralIntensityByPoseStanding** as it serves as the reference value. Adjusting this will affect the others proportionally.
+
+- **RecoilIntensity**: Player's overall recoil across all weapons. Follows the same logic as **ProceduralIntensity**.
+  - **RecoilIntensityStanding**: Recoil while standing.
+  - **RecoilIntensityCrouching**: Recoil while crouching.
+  - **RecoilIntensityProne**: Recoil while prone.
+
+---
+
+## Installation
+1. Download the latest version of **ModParameter**.
+2. Extract the files into your `spt/user/mods` folder.
+3. Run the Python interface executable (`.exe` file) to configure your modifications.
+4. Start the game and enjoy your customized **cloned** items!
+ * 🛠️ Use console `cmd`/ `PowerShell` to show terminal to execute `ModParameter.exe` 🛠️
+---
 
 ### 6. Saving your modifications made to:
    * A group of weapons
@@ -95,11 +142,27 @@
 |  (Generate .json) |       | (Store files) |       | (Load JSON) |       | (Map data)   |
 +------------------+       +---------------+       +-------------+       +--------------+
 ````
+
 ---
+# Main Classe
+
+## ItemClonerService
+
+**ItemClonerService** is a service that enables dynamic cloning of **weapons and ammunition** in **SPT**. Instead of modifying the original items, this class creates **cloned versions** with customized properties, ensuring safe and flexible game modifications. It integrates seamlessly with the database, handles validation, and ensures that cloned items are correctly registered in the game mechanics. The service supports:
+
+- Cloning **ammo and weapons** based on modified properties.
+- Ensuring compatibility with traders and game mechanics.
+- Managing localized names and attributes.
+- Logging errors and debugging missing parameters.
+
+## ItemUpdaterService
+
+The **ItemUpdaterService** class is responsible for applying modifications to weapons and ammunition properties in the **SPT-AKI** game database. It ensures data validation and prevents invalid modifications by leveraging utility functions. This service retrieves item templates from the database, validates user-defined modifications, and applies changes only if all values are valid. The class supports updating key attributes such as recoil, damage, penetration power, ergonomics, and rate of fire while maintaining game integrity.
+
+## ClonerUtils
+
+**ClonerUtils** is a utility class for **SPT** that manages the cloning and distribution of weapons and ammunition. It ensures that cloned items are correctly assigned to traders while preserving barter schemes and loyalty levels. Additionally, it propagates compatibility adjustments for cloned items, updating magazine and weapon slot filters to include the newly cloned IDs. This maintains consistency and seamless integration of cloned items within the game's ecosystem.
 ## 📂 TypeScript Project Structure
-
-🛠️ Use console `cmd`/ `PowerShell` to show terminal to execute `ModParameter.exe` 🛠️
-
 
 ```
 ModParameter/
@@ -117,13 +180,16 @@ ModParameter/
 │   │-- external/          # (optional) import SPT-server
 │   │-- Entity/            # Game entity definitions
 │   │-- ListIdItem/        # Item ID management
+│   │-- ToolsTypeScript/   # (optional) Script for me to update itemID/generate mongoID
+│   │-- Utils/             # Class Utils
 │   │-- Service/           # Core services for modifying data
 │   │   │-- AimingService.ts
 │   │   │-- ItemService.ts
 │   │   │-- ItemUpdaterService.ts
+│   │   │-- ItemClonerService.ts
 │   │   │-- JsonFileService.ts
+│   │   │-- EnumUtils.ts
 │   │   │-- PmcService.ts
-│   │-- Utils/             # Utility functions
 │   │   │-- ValidateUtils.ts
 │   │-- caliber.ts         # generate json calibers data
 │   │-- config.ts          # Configuration settings
@@ -133,157 +199,8 @@ ModParameter/
 │   │-- README.md
 
 ```
--![img.png](img.png)
-### 🔧 External (no need for mod)
-- Personally, to implement classes and interfaces, I use "[sp-tarkov](https://github.com/sp-tarkov/server)" in external.
-for : 
-- ILogger Logging
-- IPostDBLoadMod
-- DatabaseServer 
-- IDatabaseTables 
-- ITemplates 
-- IProps 
-- ITemplateItem 
-- IAiming 
-- IConfig 
-- IGlobals
----
-
-## 🔧 Core Components & Features
-
-### **AttributMod (Main Mod Class)**
-
-The `AttributMod` class implements the `IPostDBLoadMod` interface for **SPT-AKI**. It modifies game data **after the database is loaded**, using `ItemService` and `PmcService` to apply changes.
-
-#### ✅ Features:
-- **Dependency Injection:** Uses `tsyringe` to inject required services.
-- **Game Data Modification:** Alters **Weapons, ammunition, and PMC attributes**.
-- **Error Handling:** Ensures essential dependencies (`DatabaseServer`, `ILogger`) are available.
-
-#### 🔹 Key Method:
-```typescript
-postDBLoad(dependencyContainer: DependencyContainer): void
-```
-- Loads dependencies and retrieves game data.
-- Applies modifications through `updateItems()` and `updatePmc()`.
-
-#### 📌 Dependencies:
-- **`DatabaseServer`** – Access to game database tables.
-- **`ILogger`** – Logs information and errors.
-- **`ItemService`** – Handles item modifications.
-- **`PmcService`** – Manages PMC attribute updates.
 
 ---
-
-## **PmcService (PMC Attribute Management)**
-
-Handles **Player Main Character (PMC) attribute updates**, utilizing external services for data management.
-
-#### ✅ Features:
-- Reads **JSON configuration files** via `JsonFileService`.
-- Applies **aiming modifications** using `AimingService`.
-- Logs updates and errors with `ILogger`.
-
-#### 🔹 Key Method:
-```typescript
-updatePmc(): void
-```
-- Loads **aiming configuration JSON**.
-- Parses and applies modifications to **PMC aiming attributes**.
-
-#### 📌 Dependencies:
-- **`ILogger`** – Logging service.
-- **`JsonFileService`** – Loads JSON configurations.
-- **`AimingService`** – Applies aiming changes.
-
----
-# ItemService
-
-## Overview
-The `ItemService` class is responsible for loading JSON files containing item data (weapons and ammunition) and applying modifications to them within the SPT game environment. This service ensures that the JSON data follows the required structure and applies appropriate updates using the `ItemUpdaterService`.
-
-## Features
-- Loads JSON data for weapons and ammunition.
-- Validates the structure of the JSON files before processing.
-- Applies modifications to weapons and ammunition.
-- Logs warnings when encountering invalid or missing data.
-
-## Class Methods
-### `updateItems()`
-This method initiates the process of updating weapons and ammunition:
-- Loads JSON files using `JsonFileService`.
-- Calls `caseWeapons()` to process weapon modifications.
-- Calls `caseAmmo()` to process ammunition modifications.
-
-### `caseWeapons(jsonWeaponsFiles)`
-Processes weapon JSON files:
-- Checks for missing or invalid weapon data.
-- Extracts `ItemProps` and `Locale` from the JSON.
-- Applies modifications using `ItemUpdaterService`.
-
-### `caseAmmo(jsonAmmoFiles)`
-Processes ammunition JSON files:
-- Validates ammo data structure.
-- Extracts `Ammo` properties.
-- Creates `Ammo` instances using `createItemAmmo`.
-- Applies modifications using `ItemUpdaterService`.
-
----
-# ItemUpdaterService
-
-## Overview
-The `ItemUpdaterService` class is responsible for applying modifications to in-game items in the SPT (Single Player Tarkov) ecosystem. It maps JSON-defined modifications onto existing SPT items, ensuring that only valid values are applied.
-
-This service primarily works with two types of items:
-- **Ammunition (`Ammo`)**
-- **Weapons (`ItemProps`)**
-
-## Functionality
-The `ItemUpdaterService` processes item updates through two main methods:
-1. **applyAmmoModifications**: Updates ammunition properties such as damage, penetration power, initial speed, and tracer attributes.
-2. **applyWeaponsModifications**: Updates weapon attributes like recoil, ergonomics, fire rate, and aiming sensitivity.
-
-### How it Works
-- The service extracts the relevant item from the SPT database (`iDatabaseTables`).
-- It validates and casts each modification from the JSON input using `ValidateUtils`.
-- If any value is invalid, the modification is skipped, and a warning is logged.
-- If all values are valid, they are applied to the item's `_props`.
-- The service logs success or failure messages accordingly.
-
-## Notes
-- This service only modifies properties that exist within `_props` of an `ITemplateItem`.
-- If the database structure is invalid or an item is missing, the modification process is aborted.
-
----
-# AimingService
-
-## Overview
-The `AimingService` class is responsible for modifying aiming-related 
-attributes in the SPT (Single Player Tarkov) environment. It maps JSON-defined values onto existing SPT configurations, ensuring that only valid values are applied.
-
-## Functionality
-The `AimingService` updates the aiming parameters of a PMC based on JSON input:
-- **applyModifications**: Modifies attributes related to recoil, procedural intensity, and aiming sensitivity.
-
-### How it Works
-- The service extracts the necessary data from the SPT database (`iDatabaseTables`).
-- It verifies that the required configurations (`globals`, `config`, `aiming`) exist.
-- It validates and casts each modification from the JSON input using `ValidateUtils`.
-- If any value is invalid, the modification is skipped, and a warning is logged.
-- If all values are valid, they are assigned to the corresponding `_props`.
-- The service logs success or failure messages accordingly.
-
-
-## Notes
-- This service only modifies properties that exist within the `IAiming` and `IConfig` objects.
-- If the database structure is invalid or attributes are missing, the modification process is aborted.
-- Ensure JSON input is correctly formatted and validated before passing it to the service.
-
-## License
-This project follows the applicable license terms set by the SPT-AKI modding framework.
-
----
-
 
 # Pattern Database item props structure
 ```
@@ -339,51 +256,17 @@ DatabaseServer
 ```
 ---
 # Weapon & Ammo Data Fetcher
-
-## Overview
-This TypeScript script is a bonus utility designed to fetch both **weapon** and **ammunition** JSON data from the 
-[SPTarkov Database API](https://db.sp-tarkov.com/api/item). 
-Instead of maintaining separate scripts for each item type, this unified script efficiently handles both, reducing redundancy.
-
-## Features
--  **Fetches weapon and ammunition data** from the SPTarkov API.
--  **Organizes data** into JSON files with properly formatted filenames.
--  **Uses a queue system** to limit concurrent requests and prevent API overload.
--  **Cleans up existing JSON files** before fetching new ones.
--  **Verifies that all expected files were created** and logs missing entries.
--  **Unified architecture** for both weapons and ammo, reducing duplicate code.
-
-## How It Works
-1. **Retrieves item IDs** from `WeaponList` and `AmmoList`.
-2. **Requests item data** from `https://db.sp-tarkov.com/api/item`.
-3. **Processes the response** into structured `Templates<ItemProps | Ammo>` objects.
-4. **Saves JSON files** using `ShortName` as the filename.
-5. **Handles API rate limits** by adding a delay between requests.
-6. **Logs successes and errors** to the console.
-
-## Dependencies
-The script relies on the following libraries:
-- [`axios`](https://www.npmjs.com/package/axios) - For making API requests.
-- [`fs`](https://nodejs.org/api/fs.html) - For file system operations.
-- [`path`](https://nodejs.org/api/path.html) - For handling file paths.
-- [`p-queue`](https://www.npmjs.com/package/p-queue) - For managing concurrent API requests.
-- `config.ts` - Stores the output directory paths.
-
-### Expected Output
-- JSON files will be stored in the directories specified by `config.jsonWeaponFolderPath` and `config.jsonAmmoFolderPath`.
-- The script will output logs indicating success (`✅ Saved item to ...`) and errors (`❌ Failed to fetch data for ID: ...`).
-- A summary report will be displayed at the end.
-
-## Notes
-- **Concurrent Requests**: The script processes up to **5** requests at a time.
-- **Rate Limiting**: A `500ms` delay prevents API overload.
-- **File Cleanup**: All existing `.json` files in the output directories are deleted before new ones are created.
-- **Error Handling**: Items that fail to fetch are logged and checked for missing data.
-- **Unified Logic**: Instead of separate scripts, both weapons and ammo are handled in the same structure.
-
+#### MongoDB ID Generator simple ID
+This TypeScript module generates unique MongoDB ObjectIDs for weapons and ammunition in the SPT modding environment. It ensures that each item in predefined lists (WeaponEnum, AmmoEnum) receives a unique identifier while maintaining consistency across sessions by storing the mappings in JSON files. The script verifies existing mappings, generates new IDs if necessary, and saves them persistently. This utility facilitates data management by preventing duplicate ID assignments and ensuring reliable referencing of cloned game items.
+#### MongoDB ID Generator ipl trader
+Cette classe TypeScript permet d'extraire et de générer des identifiants MongoDB-like pour les objets du jeu **SPT-AKI** (armes et munitions) en créant des clones des éléments originaux. Elle scanne les fichiers de marchands dans la base de données du serveur, identifie les objets à dupliquer, et associe de nouveaux identifiants uniques aux clones. Le programme sauvegarde ces mappings dans un fichier JSON, garantissant une traçabilité et une persistance des modifications.
+- Lecture et analyse des fichiers de marchands (`assort.json`).
+- Création d'IDs uniques via `mongoid-js`.
+- Gestion des mappings (_id original -> nouvel ID) et sauvegarde dans un fichier JSON.
+---
 ## License
-This project follows the applicable license terms set by the SPT-AKI modding framework.
-
+- This project follows the applicable license terms set by the SPT modding framework.
+---
 ## Author
 
 👤 **Yox**  
