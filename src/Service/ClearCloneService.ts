@@ -15,10 +15,10 @@ export class ClearCloneService {
     private readonly localeService: LocaleService;
     private readonly GREEN: string = "\x1b[32m";
     private readonly RESET: string = "\x1b[0m";
+    private readonly RED: string = "\x1b[31m";
     private readonly CYAN: string = "\x1b[36m";
     private readonly INVENTORY: string = "Inventory";
     private readonly INSURED: string = "insured";
-    private readonly RED: string = "\x1b[31m";
 
 
     constructor(logger: ILogger, saveServer: SaveServer, itemHelper: ItemHelper, localeService: LocaleService) {
@@ -94,7 +94,7 @@ export class ClearCloneService {
                 const localeDb = this.localeService.getLocaleDb();
                 const result = localeDb[`${originalId} Name`];
 
-                this.logger.debug(`[ModParameter] ${this.CYAN}Cloned AMMO detected in ${this.RESET}${this.RED}${location}${this.RESET} : ${this.RESET}${this.GREEN}${result}${this.RESET} → Replaced with the Orignal`);
+                this.logger.info(`[ModParameter] ${this.CYAN}Cloned AMMO detected in ${this.RESET}${this.RED}${location}${this.RESET} : ${this.RESET}${this.GREEN}${result}${this.RESET} → Replaced with the Orignal`);
                 const regex = new RegExp(`"${cloneId}"`, "g");
                 json = json.replace(regex, `"${originalId}"`);
                 index.value++;
@@ -118,7 +118,7 @@ export class ClearCloneService {
                  const localeDb = this.localeService.getLocaleDb();
                 const result = localeDb[`${originalId} Name`];
 
-               this.logger.debug(`[ModParameter] ${this.CYAN}Cloned WEAPON detected in ${this.RESET}${this.RED}${location}${this.RESET} : ${this.RESET}${this.GREEN}${result}${this.RESET} → Replaced with the Orignal`);
+               this.logger.info(`[ModParameter] ${this.CYAN}Cloned WEAPON detected in ${this.RESET}${this.RED}${location}${this.RESET} : ${this.RESET}${this.GREEN}${result}${this.RESET} → Replaced with the Orignal`);
                 const regex = new RegExp(`"${cloneId}"`, "g");
                 json = json.replace(regex, `"${originalId}"`);
                 index.value++;
