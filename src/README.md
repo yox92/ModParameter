@@ -31,18 +31,12 @@ The Python program automatically generates JSON files that define the properties
 
 ## Notes
 
-- **This mod does not modify original game assets.** All changes apply to **cloned versions** of weapons, ammunition, and attributes, ensuring that the original game balance remains untouched.
-- For troubleshooting and further details, refer to the `README.md` file in the repository.
-
-- In case of any issues, the **config.ts** file located in:
-`ModParameter\src\config.ts` allows you to launch the server in `DEBUG` mode, where you can choose your preferred **colors**.
-
 #### Saving mod' item strategy
 
-- Cloned objects have a **STATIC** identifier, meaning they remain in your inventory after disconnection.
-- If you disable `ModParameter` or if you remove the modding from an object in your inventory beforehand, the game temporarily removes it from your inventory. However, if you redefine the object, the same quantity will reappear but with the newly applied characteristics.
-- This behavior is only true if you leave  to default `removeModItemsFromProfile` set to false in the SPT file:
-`\spt\SPT_Data\Server\configs\core.json`
+- This mod no longer modifies your original items. All changes are applied to a copy of the item you choose to modify, preserving the game's original balance. Copies have a unique identifier, so even if you disconnect,
+they remain in your inventory. Modifications won't delete your copied item but will simply update its newly defined properties. If you decide to remove a modification,
+on your next login, the mod will detect the missing copy and replace it with the original version.
+- If you decide to DELETE this mod, please remove all modifications and log in one last time to allow the mod to restore everything properly.
 
 -  If this value is set to true, then the following scenario will apply:
   * You mod an object
@@ -162,6 +156,15 @@ The **ItemUpdaterService** class is responsible for applying modifications to we
 ## ClonerUtils
 
 **ClonerUtils** is a utility class for **SPT** that manages the cloning and distribution of weapons and ammunition. It ensures that cloned items are correctly assigned to traders while preserving barter schemes and loyalty levels. Additionally, it propagates compatibility adjustments for cloned items, updating magazine and weapon slot filters to include the newly cloned IDs. This maintains consistency and seamless integration of cloned items within the game's ecosystem.
+
+## ClearCloneService
+
+The ClearCloneService ensures that unused cloned weapons and ammunition are automatically replace to original from player inventories and insured items.
+It identifies cloned items still present in the game and filters them out, replacing obsolete clones with their original counterparts.
+- Preserves Game Balance: Clones are replaced with their original versions if removed.
+- Automatic Inventory Cleanup: Detects and removes outdated cloned items upon login.
+- Safe and Efficient: Prevents unnecessary modifications while maintaining player progress.
+
 ## 📂 TypeScript Project Structure
 
 ```

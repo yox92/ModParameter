@@ -67,6 +67,7 @@ export class ItemUpdaterService {
         updatedProps.BallisticCoeficient = validateUtils.validateBallistic(ammoProps.BallisticCoeficient);
         updatedProps.BulletMassGram = validateUtils.validateBulletMassGram(ammoProps.BulletMassGram);
         updatedProps.ProjectileCount = validateUtils.validateAndCastInt(ammoProps.ProjectileCount);
+        updatedProps.BackgroundColor = "blue";
 
         const invalidProps = Object.entries(updatedProps).filter(([_, value]) => value === null);
 
@@ -131,6 +132,7 @@ export class ItemUpdaterService {
         updatedProps.RecoilForceUp = validateUtils.validateAndCastInt(weaponItem.RecoilForceUp);
         updatedProps.Weight = validateUtils.validateAndCastFloatItem(weaponItem.Weight, 2);
         updatedProps.bFirerate = validateUtils.validateAndCastInt(weaponItem.bFirerate);
+        updatedProps.BackgroundColor = "blue";
 
         const invalidProps = Object.entries(updatedProps).filter(([_, value]) => value === null);
 
