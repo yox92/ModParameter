@@ -1,7 +1,7 @@
 import customtkinter as ctk
 import tkinter
 
-from Entity import Logger
+from Entity import Logger, Root, Locale
 from Entity.WindowType import WindowType
 from Utils import WindowUtils, JsonUtils
 
@@ -11,6 +11,7 @@ SMALL_WINDOW = "600x600"
 
 class ListItemAlreadyMod:
     def __init__(self, master, root, detail_window, weapon_list, main_instance, window_type):
+        self.json_path_name_button = []
         self.logger = Logger()
         self.close_button = None
         self.master = master
@@ -29,7 +30,22 @@ class ListItemAlreadyMod:
                                                            self.detail_window,
                                                            self.root, self.main_instance)
 
+        self.create_json_name_button()
         self.run()
+
+    def create_json_name_button(self):
+        for json in self.weapon_list:
+            data = JsonUtils.load_json_Weapon_or_Ammo(json)
+            root: Root = Root.from_data(data, self.window_type)
+            local: Locale = root.locale
+
+            if self.window_type == WindowType.AMMO:
+                self.json_path_name_button.append((json, local.name))
+            if self.window_type == WindowType.WEAPON:
+                self.json_path_name_button.append((json, local.short_name))
+
+
+
 
     def run(self):
         self.master.grid_rowconfigure(0, weight=8)

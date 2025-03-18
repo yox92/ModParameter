@@ -334,8 +334,8 @@ class ModSelectionWindow:
             WindowUtils.lock_choice_frame("caliber", self.frames_buttons)
 
         Utils.clear_frame(self.main_frame_bot)
-        Utils.create_grid_row_col_config(self.main_frame_bot, 4, 5)
-        Utils.create_5x4_bottom(self.framesBotCaliber, self.main_frame_bot)
+        Utils.create_grid_row_col_config(self.main_frame_bot, 5, 5)
+        Utils.create_5x5_bottom(self.framesBotCaliber, self.main_frame_bot, choice_window)
 
         self.create_buttons_for_calibers_ammo(choice_window)
 
@@ -477,32 +477,42 @@ class ModSelectionWindow:
     def create_buttons_for_calibers_ammo(self, choice_window: WindowType):
         row = 1
         column = 0
+        available_frames = len(self.framesBotCaliber)
+        calibers_to_display = [caliber for caliber in Caliber.enumerate_calibers()
+                               if not (choice_window == WindowType.WEAPON and caliber == Caliber.GRENADE_40x46)]
         colors = ["dodgerblue", "peru", "mediumseagreen", "khaki"]
+        CATEGORY_COLORS = {
+            "pistol": colors[0],
+            "rifle": colors[1],
+            "heavy": colors[2],
+            "explosive": colors[3],
+        }
+        if len(calibers_to_display) != available_frames:
+            calibers_to_display = calibers_to_display[:available_frames]
 
-        if len(self.framesBotCaliber) < Caliber.count():
-            self.logger.log("error", "Erreur : 'framesBotCaliber' no enought frames")
-            return
+        for idx, (label, code, categorie) in enumerate(calibers_to_display):
 
-        for idx, caliber in Caliber.enumerate_calibers():
+            color = CATEGORY_COLORS[categorie]
             idx: int
-            caliber: Caliber
 
-            color = colors[idx % 4]
             button = ctk.CTkButton(
                 self.framesBotCaliber[idx],
-                text=caliber.label,
+                text=label,
                 width=150,
                 text_color="black",
                 fg_color=color,
-                font=("Arial", 15, "bold"))
+                font=("Arial", 15, "bold")
+            )
+
             button.pack(side="top", anchor="center")
+
             if choice_window == WindowType.AMMO:
-                button.configure(command=lambda r=caliber.code: self.ammo_button_press(r, choice_window))
+                button.configure(command=lambda r=code: self.ammo_button_press(r, choice_window))
             elif choice_window == WindowType.CALIBER:
-                button.configure(command=lambda r=caliber.code: self.open_weapon_specific_window(r, choice_window))
+                button.configure(command=lambda r=code: self.open_weapon_specific_window(r, choice_window))
 
             column += 1
-            if column > 4:
+            if column >= 5:
                 column = 0
                 row += 1
 
@@ -513,10 +523,10 @@ class ModSelectionWindow:
 
         root_list = [Root.from_data(data, WindowType.AMMO) for data in self.data_json_from_load_all_ammo]
 
-        if caliber_select == Caliber.SHOTGUN_12_70.code:
+        if caliber_select == Caliber.GRENADE_40x46.code:
             filtered_roots = [
                 root for root in root_list
-                if root.item.props.get_value_by_label("Caliber") in {caliber_select, "Caliber23x75"}
+                if root.item.props.get_value_by_label("Caliber") in {caliber_select, "Caliber30x29"}
             ]
 
         else:

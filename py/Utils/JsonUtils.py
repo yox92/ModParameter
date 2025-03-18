@@ -39,6 +39,22 @@ class JsonUtils:
             raise ValueError(f"Le fichier '{file_path}' contient un JSON invalide.")
 
     @staticmethod
+    def load_json_Weapon_or_Ammo(file_name):
+        json_dirs = [JSON_FILES_DIR_WEAPONS, JSON_FILES_DIR_AMMO]
+
+        for directory in json_dirs:
+            file_path = os.path.join(directory, file_name)
+
+            if os.path.exists(file_path):
+                try:
+                    with open(file_path, 'r', encoding="utf-8") as fileReadable:
+                        return json.load(fileReadable)
+                except json.JSONDecodeError:
+                    raise ValueError(f"Le fichier '{file_name}' contient un JSON invalide.")
+
+        raise FileNotFoundError(f"Le fichier '{file_name}' est introuvable dans les répertoires : {json_dirs}.")
+
+    @staticmethod
     def get_file_path_json_pmc():
         for filename in os.listdir(JSON_FILES_DIR_PMC):
             if filename.endswith('.json') and not filename.endswith('mod.json'):

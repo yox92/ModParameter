@@ -402,4 +402,4 @@ class CaliberWeaponsMod:
             self.apply_button.configure(fg_color="red", hover_color="red")
             self.detail_window.after(2000, lambda:
             WindowUtils.close_window(self.detail_window,
-                                     self.root))
+                                     self.root, self.main_instance))

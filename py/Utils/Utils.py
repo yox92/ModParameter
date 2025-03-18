@@ -34,16 +34,32 @@ class Utils:
             frame.grid_columnconfigure(j, weight=0)
 
     @staticmethod
-    def create_5x4_bottom(frame1, frame2):
+    def create_5x5_bottom(frame1, frame2, choice_window: WindowType):
         frame1.clear()
-        for i in range(4):
+        total_buttons: int
+        if choice_window == WindowType.AMMO:
+            total_buttons = 23
+        else:
+            total_buttons = 22
+        count = 0
+        for i in range(5):
             for y in range(5):
+                if count >= total_buttons:
+                    return
                 button = ctk.CTkFrame(frame2, fg_color="transparent")
                 button.grid(row=i, column=y, padx=5, pady=5)
                 frame1.append(button)
+                count += 1
 
     @staticmethod
     def create_grid_row_col_config(frames, number_row, number_column):
+        for i in range(number_row):
+            frames.grid_rowconfigure(i, weight=1)
+        for j in range(number_column):
+            frames.grid_columnconfigure(j, weight=1)
+
+    @staticmethod
+    def create_grid_row_col_config_limite(frames, number_row, number_column):
         for i in range(number_row):
             frames.grid_rowconfigure(i, weight=1)
         for j in range(number_column):
