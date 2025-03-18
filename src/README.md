@@ -152,7 +152,7 @@ Modify various PMC attributes to fine-tune gameplay. Changes only affect the **c
 ## ItemUpdaterService
 
 The **ItemUpdaterService** class is responsible for applying modifications to weapons and ammunition properties in the **SPT-AKI** game database. It ensures data validation and prevents invalid modifications by leveraging utility functions. This service retrieves item templates from the database, validates user-defined modifications, and applies changes only if all values are valid. The class supports updating key attributes such as recoil, damage, penetration power, ergonomics, and rate of fire while maintaining game integrity.
-
+ 
 ## ClonerUtils
 
 **ClonerUtils** is a utility class for **SPT** that manages the cloning and distribution of weapons and ammunition. It ensures that cloned items are correctly assigned to traders while preserving barter schemes and loyalty levels. Additionally, it propagates compatibility adjustments for cloned items, updating magazine and weapon slot filters to include the newly cloned IDs. This maintains consistency and seamless integration of cloned items within the game's ecosystem.
