@@ -7,6 +7,7 @@ import {LogBackgroundColor} from "@spt/models/spt/logging/LogBackgroundColor";
  */
 export const config = {
     jsonWeaponFolderPath: path.join(__dirname, "..", "py", "JsonFiles", "Weapons"),
+    jsonWeaponFolderPathNew: path.join(__dirname, "..", "py", "JsonFiles", "WeaponsNew"),
     jsonWCaliberFolderPath: path.join(__dirname, "..", "py", "JsonFiles", "Calibers"),
     jsonAimingFolderPath: path.join(__dirname, "..", "py", "JsonFiles", "PMC"),
     jsonAmmoFolderPath: path.join(__dirname, "..", "py", "JsonFiles", "Ammo"),

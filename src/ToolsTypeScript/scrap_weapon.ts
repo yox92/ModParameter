@@ -7,6 +7,8 @@ import path from 'path';
 import {Templates} from "../Entity/Templates";
 import PQueue from "p-queue";
 import {config} from "../config";
+import {EnumUtils} from "../Service/EnumUtils";
+import {WeaponEnum} from "../ListIdItem/WeaponEnum";
 
 const baseURL = 'https://db.sp-tarkov.com/api/item';
 
@@ -50,9 +52,8 @@ async function fetchItemData(id: string): Promise<Templates<any>> {
 }
 
 async function main() {
-    const weaponList = new WeaponList();
-    const ids = weaponList.getIds();
-    const basePath = config.jsonWeaponFolderPath;
+    const ids: string[] = EnumUtils.getAllValues(WeaponEnum)
+    const basePath = config.jsonWeaponFolderPathNew;
 
     if (!fs.existsSync(basePath)) {
         fs.mkdirSync(basePath, {recursive: true});
@@ -72,7 +73,7 @@ async function main() {
         try {
             await delay(500)
             const root = await fetchItemData(id);
-            const cleanName = root.locale.ShortName.replace(/\s+/g, '_').replace(/[^\w.-]/g, '');
+            const cleanName = root.locale.Name.replace(/\s+/g, '_').replace(/[^\w.-]/g, '');
             const filePath = path.join(basePath, `${cleanName}.json`);
 
             await fs.promises.writeFile(

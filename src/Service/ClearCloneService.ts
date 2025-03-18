@@ -29,7 +29,7 @@ export class ClearCloneService {
     }
 
     /**
-     * Removes unused cloned weapons and ammo from player inventories and insured items.
+     * Replace unused cloned weapons and ammo to original from player inventories and insured items.
      * First, it checks which cloned items are still present in the game and filters them out.
      * Then, it iterates over all player profiles to replace obsolete clones with their original IDs.
      */

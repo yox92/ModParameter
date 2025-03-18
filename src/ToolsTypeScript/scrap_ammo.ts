@@ -4,10 +4,11 @@ import {Locale} from '../Entity/Locale';
 import fs from 'fs';
 import path from 'path';
 import {Templates} from "../Entity/Templates";
-import {AmmoList} from "../ListIdItem/AmmoEnum";
+import {AmmoEnum} from "../ListIdItem/AmmoEnum";
 import PQueue from "p-queue";
 import {config} from "../config";
 import {Item} from "../Entity/Item";
+import {EnumUtils} from "../Service/EnumUtils";
 
 const baseURL = 'https://db.sp-tarkov.com/api/item';
 
@@ -52,8 +53,7 @@ async function fetchAmmoData(id: string): Promise<Templates<Ammo>> {
 }
 
 async function main() {
-    const ammoList = new AmmoList();
-    const ids = ammoList.getIds();
+    const ids: string[] = EnumUtils.getAllValues(AmmoEnum)
     const basePath = config.jsonAmmoFolderPathNew;
 
     if (!fs.existsSync(basePath)) {
