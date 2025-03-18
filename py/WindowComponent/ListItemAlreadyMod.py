@@ -1,7 +1,9 @@
 import customtkinter as ctk
 import tkinter
 
-from Entity import Logger, Root, Locale
+from Entity.Logger import Logger
+from Entity.Root import Root
+from Entity.Locale import Locale
 from Entity.WindowType import WindowType
 from Utils import WindowUtils, JsonUtils
 
@@ -34,15 +36,29 @@ class ListItemAlreadyMod:
         self.run()
 
     def create_json_name_button(self):
-        for json in self.weapon_list:
-            data = JsonUtils.load_json_Weapon_or_Ammo(json)
-            root: Root = Root.from_data(data, self.window_type)
-            local: Locale = root.locale
+        windowType: WindowType
 
-            if self.window_type == WindowType.AMMO:
-                self.json_path_name_button.append((json, local.name))
-            if self.window_type == WindowType.WEAPON:
-                self.json_path_name_button.append((json, local.short_name))
+        if self.window_type == WindowType.DELETE:
+            for [json, windowType] in self.weapon_list:
+                data = JsonUtils.load_json_Weapon_or_Ammo(json)
+                root: Root = Root.from_data(data, windowType)
+                local: Locale = root.locale
+
+                if windowType == WindowType.AMMO:
+                    self.json_path_name_button.append((json, local.name, windowType))
+                if windowType == WindowType.WEAPON:
+                    self.json_path_name_button.append((json, local.short_name, windowType))
+
+        else:
+            for json in self.weapon_list:
+                data = JsonUtils.load_json_Weapon_or_Ammo(json)
+                root: Root = Root.from_data(data, self.window_type)
+                local: Locale = root.locale
+
+                if self.window_type == WindowType.AMMO:
+                    self.json_path_name_button.append((json, local.name, self.window_type))
+                if self.window_type == WindowType.WEAPON:
+                    self.json_path_name_button.append((json, local.short_name, self.window_type))
 
 
 
@@ -86,26 +102,16 @@ class ListItemAlreadyMod:
 
 
     def create_frame_button(self):
+        sorted_items = sorted(self.json_path_name_button, key=lambda x: x[1].lower())
+
         for i in range(3):
             self.inner_frame.grid_columnconfigure(i, weight=1)
 
-        def custom_sort(item):
-            name = item.replace("_mod.json", "")
-            return (not name[0].isdigit(), name)
-
-        if self.window_type == WindowType.DELETE:
-            sorted_item = sorted(self.weapon_list, key=lambda x: x[0]) # tuple from delete
-        else:
-            sorted_item = sorted(self.weapon_list, key=custom_sort) # list str
-
-        for idx, item in enumerate(sorted_item):
-            file_name = item[0] if isinstance(item, tuple) else item
+        for idx, (json_name, name_button, windowsType) in enumerate(sorted_items):
             if self.window_type == WindowType.WEAPON:
-                itm_short = file_name.replace("_mod.json", "")[:10]
-            elif self.window_type == WindowType.AMMO:
-                itm_short = file_name.replace("_mod.json", "")[:20]
+                itm_short = name_button[:10]
             else:
-                itm_short = file_name.replace("_mod.json", "")[:20]
+                itm_short = name_button[:20]
 
             col = idx % 3
             button_weapon = ctk.CTkButton(
@@ -116,20 +122,21 @@ class ListItemAlreadyMod:
                 text_color="black",
                 hover_color="yellow",
                 font=("Arial", 15, "bold"),
-                command=lambda
-                    pname=item:
-                self.open_specific_window(pname))
+                command=lambda pname=json_name: self.open_specific_window(pname)
+            )
+
             button_weapon.grid(row=idx // 3,
                                column=col,
                                padx=5,
                                pady=5,
                                sticky="ew")
+
             if self.window_type != WindowType.WEAPON:
                 button_weapon.configure(font=("Arial", 11, "bold"))
             if self.window_type == WindowType.DELETE:
-                button_weapon.configure(command=lambda pname=item, short_name=itm_short:
-                self.delete_specific_mod(pname, short_name))
-                if item[1] == WindowType.AMMO:
+                button_weapon.configure(command=lambda pname=json_name, short_name=itm_short:
+                self.delete_specific(pname, short_name))
+                if windowsType == WindowType.AMMO:
                     button_weapon.configure(fg_color="dodgerblue")
                 else:
                     button_weapon.configure(fg_color="peru")
@@ -144,20 +151,25 @@ class ListItemAlreadyMod:
         WindowUtils.close_window(self.detail_window,
                                      self.root, self.main_instance)
 
+    def delete_specific(self, pname, short_name):
+        file_path = JsonUtils.find_json_file_with_name(pname, self.window_type)
 
-    def delete_specific_mod(self, pname, short_name):
-        file_path = JsonUtils.find_json_file_with_name(pname[0], self.window_type)
         if not file_path:
-            print(f"No mod find about : {pname[0]}")
+            print(f"No mod found for: {pname}")
         else:
             JsonUtils.delete_file_if_exists(file_path)
-            self.logger.log("info", f"{short_name} mod delete")
-            if not JsonUtils.file_exist(file_path):
-                if pname in self.weapon_list:
-                    self.weapon_list.remove(pname)
-                self.refresh_list_after_delete()
+            self.logger.log("info", f"{short_name} mod deleted")
 
-    def refresh_list_after_delete(self):
-        for widget in self.inner_frame.winfo_children():
-            widget.destroy()
-        self.create_frame_button()
+            if not JsonUtils.file_exist(file_path):
+
+                for idx, (json_name, _, _) in enumerate(self.json_path_name_button):
+                    if json_name == pname:
+                        self.json_path_name_button.pop(idx)
+                        break
+
+
+                for widget in self.inner_frame.winfo_children():
+                    if widget.cget("text") == short_name:
+                        widget.destroy()
+                        break
+
