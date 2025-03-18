@@ -12,6 +12,9 @@ export class Ammo {
     ProjectileCount: number;
     ammoAccr: number;
     ammoRec: number;
+    ExplosionStrength: number;
+    MaxExplosionDistance: number;
+    FuzeArmTimeSec: number;
 
     constructor(props: Partial<Ammo>) {
         Object.assign(this, props);
@@ -31,7 +34,10 @@ export function createItemAmmo(data: any): Ammo {
     BulletMassGram: data.BulletMassGram,
     ProjectileCount: data.ProjectileCount,
     ammoAccr: data.ammoAccr,
-    ammoRec: data.ammoRec
+    ammoRec: data.ammoRec,
+    ExplosionStrength: data.ExplosionStrength,
+    MaxExplosionDistance: data.MaxExplosionDistance,
+    FuzeArmTimeSec: data.FuzeArmTimeSec
 
     });
 }

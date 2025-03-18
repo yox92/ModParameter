@@ -15,11 +15,11 @@ from WindowComponent.SingleWeaponMod import SingleWeaponMod
 from WindowComponent.ListItemAlreadyMod import ListItemAlreadyMod
 
 WINDOW_TITLE = "ModParameter App"
-WINDOW_GEOMETRY = "800x600"
+WINDOW_GEOMETRY = "800x700"
 APPEARANCE_MODE = "dark"
 DETAIL_WINDOW_TITLE = "Detail windows"
 DETAIL_WINDOW_WIDTH = 900
-DETAIL_WINDOW_HEIGHT = 600
+DETAIL_WINDOW_HEIGHT = 700
 WINDOW_OFFSET = 10
 
 

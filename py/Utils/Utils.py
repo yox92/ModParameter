@@ -193,14 +193,17 @@ class Utils:
         limits = {
             EnumAmmo.ARMOR_DAMAGE.label: (1, 500),
             EnumAmmo.DAMAGE.label: (1, 450),
-            EnumAmmo.PENETRATION_POWER.label: (1, 70),
-            EnumAmmo.INITIAL_SPEED.label: (100, 2000),
-            EnumAmmo.BULLET_MASSGRAM.label: (5, 8001),
-            EnumAmmo.STACK_MAX_SIZE.label: (1, 9999),
-            EnumAmmo.BALLISTIC_COEFICIENT.label: (11, 500),
-            EnumAmmo.PROJECTILE_COUNT.label: (0, 51),
+            EnumAmmo.PENETRATION_POWER.label: (0, 81),
+            EnumAmmo.INITIAL_SPEED.label: (75, 2000),
+            EnumAmmo.BULLET_MASSGRAM.label: (8, 28000),
+            EnumAmmo.STACK_MAX_SIZE.label: (0, 9999),
+            EnumAmmo.BALLISTIC_COEFICIENT.label: (11, 624),
+            EnumAmmo.PROJECTILE_COUNT.label: (0, 101),
             EnumAmmo.AMMO_ACCR.label: (-201, 501),
             EnumAmmo.AMMO_REC.label: (-201, 101),
+            EnumAmmo.EXPLOSIONSTRENGTH.label: (0, 101),
+            EnumAmmo.FUZEARMTIMESEC.label: (40, 300),
+            EnumAmmo.MAXEXPLOSIONDISTANCE.label: (0, 10),
         }
         if name in limits:
             min_value, max_value = limits[name]
@@ -220,6 +223,9 @@ class Utils:
             EnumAmmo.AMMO_ACCR.label,
             EnumAmmo.BULLET_MASSGRAM.label,
             EnumAmmo.PROJECTILE_COUNT.label,
+            EnumAmmo.EXPLOSIONSTRENGTH.label,
+            EnumAmmo.FUZEARMTIMESEC.label,
+            EnumAmmo.MAXEXPLOSIONDISTANCE.label
         }
         return name in int_to_input_text
 

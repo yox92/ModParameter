@@ -55,6 +55,18 @@ class Ammo:
             props.get(EnumAmmo.AMMO_REC.label, None),
             EnumAmmo.AMMO_REC.label
         )
+        self._ExplosionStrength = (
+            props.get(EnumAmmo.EXPLOSIONSTRENGTH.label, None),
+            EnumAmmo.EXPLOSIONSTRENGTH.label
+        )
+        self._MaxExplosionDistance = (
+            props.get(EnumAmmo.MAXEXPLOSIONDISTANCE.label, None),
+            EnumAmmo.MAXEXPLOSIONDISTANCE.label
+        )
+        self._FuzeArmTimeSec = (
+            props.get(EnumAmmo.FUZEARMTIMESEC.label, None),
+            EnumAmmo.FUZEARMTIMESEC.label
+        )
 
     def convert_to_boolean(self, value):
         if isinstance(value, str):
@@ -114,6 +126,18 @@ class Ammo:
     def ammoRec(self):
         return self._ammoRec
 
+    @property
+    def ExplosionStrength(self):
+        return self._ExplosionStrength
+
+    @property
+    def MaxExplosionDistance(self):
+        return self._MaxExplosionDistance
+
+    @property
+    def FuzeArmTimeSec(self):
+        return self._FuzeArmTimeSec
+
     @classmethod
     def from_data(cls, data: dict):
         return cls(**data)
@@ -143,6 +167,9 @@ class Ammo:
                 f"StackMaxSize={self.StackMaxSize}, "
                 f"Tracer={self.Tracer}), "
                 f"BallisticCoeficient={self.BallisticCoeficient}), "
+                f"ExplosionStrength={self.ExplosionStrength}), "
+                f"MaxExplosionDistance={self.MaxExplosionDistance}), "
+                f"FuzeArmTimeSec={self.FuzeArmTimeSec}), "
                 f"BulletMassGram={self.BulletMassGram}), "
                 f"ProjectileCount={self.ProjectileCount}), "
                 f"ammoAccr={self.ammoAccr}), "
