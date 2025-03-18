@@ -222,6 +222,9 @@ class SingleWeaponMod:
         else:
             label.configure(text_color="white")
 
+        if name == EnumProps.FIRE_RATE.label:
+            adjusted_value = round(adjusted_value/ 50) * 50
+
         label.configure(text=f"{adjusted_value} ({percentage_change:+.0f}%)")
         self.data_from_json_no_save.update_from_props_json(name, adjusted_value)
         self.reset_apply_button()
