@@ -8,7 +8,7 @@ class EnumAmmo(Enum):
     STACK_MAX_SIZE = "StackMaxSize", "Maximum stack size in inventory 0-9999"
     TRACER = "Tracer", "Indicates (true, false) if the bullet is a tracer round"
     TRACERCOLOR = "TracerColor", "Color about tracer Green / Red"
-    INITIAL_SPEED = "InitialSpeed", "Projectile speed at firing 100-2000"
+    INITIAL_SPEED = "InitialSpeed", "Projectile speed at firing 70-2000"
     BALLISTIC_COEFICIENT = "BallisticCoeficient", "Ballistic coeficient 11-624"
     BULLET_MASSGRAM = "BulletMassGram", "Bullet mass in centigrams 8-28000"
     AMMO_ACCR = "ammoAccr", "Ammo accuracy (-200 - +500)"
@@ -16,7 +16,7 @@ class EnumAmmo(Enum):
     PROJECTILE_COUNT = "ProjectileCount", "Projectile count 1-100"
     EXPLOSIONSTRENGTH = "ExplosionStrength", "Explosion strength 0-100"
     MAXEXPLOSIONDISTANCE = "MaxExplosionDistance", "explosion radius (meters) 0-10"
-    FUZEARMTIMESEC = "FuzeArmTimeSec", "fuse delay before explosion (milliseconds) 40-300"
+    FUZEARMTIMESEC = "FuzeArmTimeSec", "fuse delay before explosion (milliseconds) 1-300"
 
 
     @property

@@ -73,12 +73,11 @@ export class ItemUpdaterService {
         updatedProps.ProjectileCount = validateUtils.validateAndCastInt(ammoProps.ProjectileCount);
         updatedProps.BackgroundColor = "blue";
 
-        if (
-            sptItemProps.HasGrenaderComponent &&
-            (updatedProps.ExplosionStrength !== undefined && updatedProps.ExplosionStrength !== null &&
-                updatedProps.MaxExplosionDistance !== undefined && updatedProps.MaxExplosionDistance !== null &&
-                updatedProps.FuzeArmTimeSec !== undefined && updatedProps.FuzeArmTimeSec !== null)
-        ) {
+        if (sptItemProps.HasGrenaderComponent &&
+            (ammoProps.ExplosionStrength !== undefined && ammoProps.ExplosionStrength !== null &&
+                ammoProps.MaxExplosionDistance !== undefined && ammoProps.MaxExplosionDistance !== null &&
+                ammoProps.FuzeArmTimeSec !== undefined && ammoProps.FuzeArmTimeSec !== null)
+        )  {
             updatedProps.ExplosionStrength = validateUtils.validateAndCastInt(ammoProps.ExplosionStrength);
             updatedProps.MaxExplosionDistance = validateUtils.validateAndCastInt(ammoProps.MaxExplosionDistance);
             updatedProps.FuzeArmTimeSec = validateUtils.validateIntToFloatFromValueWithThousandMulti(ammoProps.FuzeArmTimeSec);

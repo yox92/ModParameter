@@ -194,7 +194,7 @@ class Utils:
             EnumAmmo.ARMOR_DAMAGE.label: (0, 500),
             EnumAmmo.DAMAGE.label: (0, 450),
             EnumAmmo.PENETRATION_POWER.label: (-1, 81),
-            EnumAmmo.INITIAL_SPEED.label: (75, 2000),
+            EnumAmmo.INITIAL_SPEED.label: (70, 2000),
             EnumAmmo.BULLET_MASSGRAM.label: (7, 28000),
             EnumAmmo.STACK_MAX_SIZE.label: (-1, 9999),
             EnumAmmo.BALLISTIC_COEFICIENT.label: (10, 624),
@@ -202,7 +202,7 @@ class Utils:
             EnumAmmo.AMMO_ACCR.label: (-201, 501),
             EnumAmmo.AMMO_REC.label: (-201, 101),
             EnumAmmo.EXPLOSIONSTRENGTH.label: (-1, 101),
-            EnumAmmo.FUZEARMTIMESEC.label: (39, 301),
+            EnumAmmo.FUZEARMTIMESEC.label: (0, 301),
             EnumAmmo.MAXEXPLOSIONDISTANCE.label: (-1, 11),
         }
         if name in limits:

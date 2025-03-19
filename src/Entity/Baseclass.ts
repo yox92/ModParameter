@@ -1,6 +1,7 @@
  export enum Baseclass {
      ITEM = "54009119af1c881c07000029",
     MAGAZINE = "5448bc234bdc2d3c308b4569",
+     SPRING_DRIVEN_CYLINDER = "627a137bf21bc425b06ab944",
      WEAPON = "5422acb9af1c889c16000029",
      AMMO = "5485a8684bdc2da71d8b4567",
      PISTOL = "5447b5cf4bdc2d65278b4567",

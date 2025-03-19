@@ -169,7 +169,7 @@ export class ClonerUtils {
      */
     private updateMagazinesWithNewId(items: ITemplateItem[], itemHelper: ItemHelper, originalId: string, newId: string): void {
         const magazines: ITemplateItem[] = items.filter((item: ITemplateItem) =>
-            item?._id && itemHelper.isOfBaseclass(item._id, Baseclass.MAGAZINE));
+            item?._id && itemHelper.isOfBaseclass(item._id, Baseclass.MAGAZINE) || itemHelper.isOfBaseclass(item._id, Baseclass.SPRING_DRIVEN_CYLINDER));
         for (const magazine of magazines) {
             if (!magazine._props || !Array.isArray(magazine._props.Cartridges)) {
                 this.logger.debug(`[ModParameter] Warning: Magazine ${magazine._id} has no Cartridges property.`);
