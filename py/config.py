@@ -31,6 +31,7 @@ REQUIRED_DIRS = [JSON_FILES_DIR,
 def relatif_path(path):
     return path.relative_to(BASE_DIR)
 
+
 def check_empty_directories(directories):
     empty_dirs = []
     for directory in directories:
@@ -95,6 +96,7 @@ def check_and_fix_json_caliber_files():
     else:
         print("All caliber JSON files are already valid.")
 
+
 def check_project_structure():
     missing_dirs = [d for d in REQUIRED_DIRS if not d.exists()]
     empty_dirs = check_empty_directories(REQUIRED_DIRS)
@@ -126,6 +128,7 @@ def check_project_structure():
         print(f" JSON directory (JsonFiles): {JSON_FILES_DIR_AMMO}")
         print(f" Image directory (JsonFiles): {IMAGES_DIR}")
         print("------------------------------------------------------------\n")
+
 
 check_and_fix_json_caliber_files()
 check_project_structure()
