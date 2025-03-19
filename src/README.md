@@ -85,7 +85,11 @@ Hope this is clear enough! 😄
 - **Ammo Accuracy Bonus** – Bonus ammo , Modifies shot accuracy.
 - **Recoil Bonus ammo** : Adjusts weapon kickback for better control.
 - **Projectile Count** – Defines the number of pellets per shot (useful for shotguns)
-  * 💣 💣 💣 Be careful with this parameter 50 rounds can be fired at the same time with single bullet bullets. With tracers, it creates a beautiful fireworks display, but your RAM and CPU usage will suffer if the value is too high.
+  * 💣 💣 💣 Be careful with this parameter 50 rounds can be fired at the same time with single bullet bullets. 
+  * With tracers, it creates a beautiful fireworks display, but your RAM and CPU usage will suffer if the value is too high.
+- **ExplosionStrength** Explosion strength
+- **MaxExplosionDistance** explosion radius
+- **FuzeArmTimeSec** fuse delay before explosion. I take *1000 with python from database to do not work with float
 
 ### 3. Modify PMC Attributes in Escape from Tarkov
 Modify various PMC attributes to fine-tune gameplay. Changes only affect the **cloned versions** of related entities.
@@ -105,6 +109,11 @@ Modify various PMC attributes to fine-tune gameplay. Changes only affect the **c
   - **RecoilIntensityStanding**: Recoil while standing.
   - **RecoilIntensityCrouching**: Recoil while crouching.
   - **RecoilIntensityProne**: Recoil while prone.
+- **AimDrainRate** drain blue stamina value aiming
+- **SprintDrainRate** drain green stamina when sprint
+- **JumpConsumption** drain green stamina when jump
+- **BaseRestorationRate** green stamina restoration speed
+- **StandupConsumption** drain green stamina when stand up. two value from crunch and from prone. I use same value. i juste * 2 from prone
 
 ---
 
