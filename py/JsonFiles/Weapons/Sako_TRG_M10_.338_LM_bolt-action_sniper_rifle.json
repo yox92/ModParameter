@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "673cab3e03c6a20581028bc1",
+    "_name": "weapon_sako_trg_m10_86x70",
+    "_props": {
+      "CameraSnap": 3.5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 25,
+      "RecoilCamera": 0.11,
+      "RecoilForceBack": 924,
+      "RecoilForceUp": 428,
+      "RecolDispersion": 10,
+      "Weight": 0.78,
+      "ammoCaliber": "Caliber86x70",
+      "bFirerate": 30
+    }
+  },
+  "locale": {
+    "Name": "Sako TRG M10 .338 LM bolt-action sniper rifle",
+    "ShortName": "TRG M10"
+  }
+}

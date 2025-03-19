@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "676176d362e0497044079f4c",
+    "_name": "weapon_x_products_x17_scar_17_762x51",
+    "_props": {
+      "CameraSnap": 4,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 47,
+      "RecoilCamera": 0.06,
+      "RecoilForceBack": 404,
+      "RecoilForceUp": 162,
+      "RecolDispersion": 12,
+      "Weight": 0.81,
+      "ammoCaliber": "Caliber762x51",
+      "bFirerate": 600
+    }
+  },
+  "locale": {
+    "Name": "FN SCAR-H X-17 7.62x51 assault rifle",
+    "ShortName": "X-17"
+  }
+}

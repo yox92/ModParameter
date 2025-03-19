@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "623063e994fc3f7b302a9696",
+    "_name": "weapon_hk_g36_556x45",
+    "_props": {
+      "CameraSnap": 3.5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 60,
+      "RecoilCamera": 0.04,
+      "RecoilForceBack": 284,
+      "RecoilForceUp": 101,
+      "RecolDispersion": 8,
+      "Weight": 0.8,
+      "ammoCaliber": "Caliber556x45NATO",
+      "bFirerate": 750
+    }
+  },
+  "locale": {
+    "Name": "HK G36 5.56x45 assault rifle",
+    "ShortName": "G36"
+  }
+}

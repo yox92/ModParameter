@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "5df24cf80dee1b22f862e9bc",
+    "_name": "weapon_orsis_t5000_762x51",
+    "_props": {
+      "CameraSnap": 3.5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 35,
+      "RecoilCamera": 0.05,
+      "RecoilForceBack": 567,
+      "RecoilForceUp": 141,
+      "RecolDispersion": 10,
+      "Weight": 0.842,
+      "ammoCaliber": "Caliber762x51",
+      "bFirerate": 30
+    }
+  },
+  "locale": {
+    "Name": "ORSIS T-5000M 7.62x51 bolt-action sniper rifle",
+    "ShortName": "T-5000M"
+  }
+}

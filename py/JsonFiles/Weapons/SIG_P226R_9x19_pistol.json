@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "56d59856d2720bd8418b456a",
+    "_name": "weapon_sig_p226r_9x19",
+    "_props": {
+      "CameraSnap": 5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 80,
+      "RecoilCamera": 0.01,
+      "RecoilForceBack": 275,
+      "RecoilForceUp": 383,
+      "RecolDispersion": 8,
+      "Weight": 0.231,
+      "ammoCaliber": "Caliber9x19PARA",
+      "bFirerate": 30
+    }
+  },
+  "locale": {
+    "Name": "SIG P226R 9x19 pistol",
+    "ShortName": "P226R"
+  }
+}

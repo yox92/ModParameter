@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "66992b349950f5f4cd06029f",
+    "_name": "weapon_iwi_uzi_9x19",
+    "_props": {
+      "CameraSnap": 3.5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 65,
+      "RecoilCamera": 0.03,
+      "RecoilForceBack": 254,
+      "RecoilForceUp": 54,
+      "RecolDispersion": 10,
+      "Weight": 2.26,
+      "ammoCaliber": "Caliber9x19PARA",
+      "bFirerate": 600
+    }
+  },
+  "locale": {
+    "Name": "IWI UZI 9x19 submachine gun",
+    "ShortName": "UZI"
+  }
+}

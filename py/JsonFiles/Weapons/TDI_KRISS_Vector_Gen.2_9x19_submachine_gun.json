@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "5fc3f2d5900b1d5091531e57",
+    "_name": "weapon_tdi_kriss_vector_gen_2_9x19",
+    "_props": {
+      "CameraSnap": 4.7,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 65,
+      "RecoilCamera": 0.03,
+      "RecoilForceBack": 315,
+      "RecoilForceUp": 48,
+      "RecolDispersion": 20,
+      "Weight": 1.8,
+      "ammoCaliber": "Caliber9x19PARA",
+      "bFirerate": 950
+    }
+  },
+  "locale": {
+    "Name": "TDI KRISS Vector Gen.2 9x19 submachine gun",
+    "ShortName": "Vector 9x19"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "59f98b4986f7746f546d2cef",
+    "_name": "weapon_tochmash_sr1mp_9x21",
+    "_props": {
+      "CameraSnap": 5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 82,
+      "RecoilCamera": 0.01,
+      "RecoilForceBack": 325,
+      "RecoilForceUp": 442,
+      "RecolDispersion": 8,
+      "Weight": 0.79,
+      "ammoCaliber": "Caliber9x21",
+      "bFirerate": 30
+    }
+  },
+  "locale": {
+    "Name": "Serdyukov SR-1MP Gyurza 9x21 pistol",
+    "ShortName": "SR-1MP"
+  }
+}

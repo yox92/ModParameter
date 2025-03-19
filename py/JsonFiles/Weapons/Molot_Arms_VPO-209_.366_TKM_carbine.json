@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "59e6687d86f77411d949b251",
+    "_name": "weapon_molot_akm_vpo_209_366_TKM",
+    "_props": {
+      "CameraSnap": 3.5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 30,
+      "RecoilCamera": 0.05,
+      "RecoilForceBack": 386,
+      "RecoilForceUp": 154,
+      "RecolDispersion": 12,
+      "Weight": 2.092,
+      "ammoCaliber": "Caliber366TKM",
+      "bFirerate": 600
+    }
+  },
+  "locale": {
+    "Name": "Molot Arms VPO-209 .366 TKM carbine",
+    "ShortName": "VPO-209"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "674d6121c09f69dfb201a888",
+    "_name": "weapon_aklys_defense_velociraptor_762x35",
+    "_props": {
+      "CameraSnap": 3.5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 35,
+      "RecoilCamera": 0.04,
+      "RecoilForceBack": 310,
+      "RecoilForceUp": 115,
+      "RecolDispersion": 10,
+      "Weight": 2.21,
+      "ammoCaliber": "Caliber762x35",
+      "bFirerate": 600
+    }
+  },
+  "locale": {
+    "Name": "Aklys Defense Velociraptor .300 Blackout assault rifle",
+    "ShortName": "Velociraptor .300 BLK"
+  }
+}

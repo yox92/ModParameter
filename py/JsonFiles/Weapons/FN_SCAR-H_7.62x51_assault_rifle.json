@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "6183afd850224f204c1da514",
+    "_name": "weapon_fn_mk17_762x51",
+    "_props": {
+      "CameraSnap": 4,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 45,
+      "RecoilCamera": 0.05,
+      "RecoilForceBack": 404,
+      "RecoilForceUp": 162,
+      "RecolDispersion": 12,
+      "Weight": 0.85,
+      "ammoCaliber": "Caliber762x51",
+      "bFirerate": 600
+    }
+  },
+  "locale": {
+    "Name": "FN SCAR-H 7.62x51 assault rifle",
+    "ShortName": "Mk 17"
+  }
+}

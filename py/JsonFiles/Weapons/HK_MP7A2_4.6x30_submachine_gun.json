@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "5bd70322209c4d00d7167b8f",
+    "_name": "weapon_hk_mp7a2_46x30",
+    "_props": {
+      "CameraSnap": 3.5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 65,
+      "RecoilCamera": 0.03,
+      "RecoilForceBack": 178,
+      "RecoilForceUp": 50,
+      "RecolDispersion": 11,
+      "Weight": 1.58,
+      "ammoCaliber": "Caliber46x30",
+      "bFirerate": 950
+    }
+  },
+  "locale": {
+    "Name": "HK MP7A2 4.6x30 submachine gun",
+    "ShortName": "MP7A2"
+  }
+}

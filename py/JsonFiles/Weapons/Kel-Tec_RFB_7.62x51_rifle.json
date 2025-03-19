@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "5f2a9575926fd9352339381f",
+    "_name": "weapon_kel_tec_rfb_762x51",
+    "_props": {
+      "CameraSnap": 3.5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 48,
+      "RecoilCamera": 0.05,
+      "RecoilForceBack": 307,
+      "RecoilForceUp": 148,
+      "RecolDispersion": 11,
+      "Weight": 1.95,
+      "ammoCaliber": "Caliber762x51",
+      "bFirerate": 700
+    }
+  },
+  "locale": {
+    "Name": "Kel-Tec RFB 7.62x51 rifle",
+    "ShortName": "RFB"
+  }
+}

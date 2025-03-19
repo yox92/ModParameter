@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "65268d8ecb944ff1e90ea385",
+    "_name": "weapon_zid_rpdn_762x39",
+    "_props": {
+      "CameraSnap": 3.5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 36,
+      "RecoilCamera": 0.05,
+      "RecoilForceBack": 502,
+      "RecoilForceUp": 107,
+      "RecolDispersion": 10,
+      "Weight": 2.94,
+      "ammoCaliber": "Caliber762x39",
+      "bFirerate": 700
+    }
+  },
+  "locale": {
+    "Name": "Degtyarev RPDN 7.62x39 machine gun",
+    "ShortName": "RPDN"
+  }
+}

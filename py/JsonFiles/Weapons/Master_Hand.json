@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "5ae083b25acfc4001a5fc702",
+    "_name": "weapon_test_consumable_items",
+    "_props": {
+      "CameraSnap": 3.5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 50,
+      "RecoilCamera": 0.024,
+      "RecoilForceBack": 325,
+      "RecoilForceUp": 553,
+      "RecolDispersion": 10,
+      "Weight": 0.686,
+      "ammoCaliber": "Caliber9x18PM",
+      "bFirerate": 30
+    }
+  },
+  "locale": {
+    "Name": "Master Hand",
+    "ShortName": "Master Hand"
+  }
+}

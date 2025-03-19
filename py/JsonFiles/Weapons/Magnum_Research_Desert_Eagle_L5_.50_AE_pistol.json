@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "669fa3f88abd2662d80eee77",
+    "_name": "weapon_magnum_research_desert_eagle_l5_127x33",
+    "_props": {
+      "CameraSnap": 1,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 68,
+      "RecoilCamera": 0.05,
+      "RecoilForceBack": 330,
+      "RecoilForceUp": 465,
+      "RecolDispersion": 10,
+      "Weight": 0.55,
+      "ammoCaliber": "Caliber127x33",
+      "bFirerate": 30
+    }
+  },
+  "locale": {
+    "Name": "Magnum Research Desert Eagle L5 .50 AE pistol",
+    "ShortName": "Desert Eagle L5"
+  }
+}

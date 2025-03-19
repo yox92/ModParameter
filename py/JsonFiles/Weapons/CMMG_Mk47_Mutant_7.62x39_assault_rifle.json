@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "606587252535c57a13424cfd",
+    "_name": "weapon_cmmg_mk47_762x39",
+    "_props": {
+      "CameraSnap": 3.5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 42,
+      "RecoilCamera": 0.05,
+      "RecoilForceBack": 377,
+      "RecoilForceUp": 152,
+      "RecolDispersion": 11,
+      "Weight": 0.51,
+      "ammoCaliber": "Caliber762x39",
+      "bFirerate": 650
+    }
+  },
+  "locale": {
+    "Name": "CMMG Mk47 Mutant 7.62x39 assault rifle",
+    "ShortName": "Mk47"
+  }
+}

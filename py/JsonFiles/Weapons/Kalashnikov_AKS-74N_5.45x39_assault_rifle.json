@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "5ab8e9fcd8ce870019439434",
+    "_name": "weapon_izhmash_aks74n_545x39",
+    "_props": {
+      "CameraSnap": 3.5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 32,
+      "RecoilCamera": 0.04,
+      "RecoilForceBack": 322,
+      "RecoilForceUp": 120,
+      "RecolDispersion": 10,
+      "Weight": 2.092,
+      "ammoCaliber": "Caliber545x39",
+      "bFirerate": 650
+    }
+  },
+  "locale": {
+    "Name": "Kalashnikov AKS-74N 5.45x39 assault rifle",
+    "ShortName": "AKS-74N"
+  }
+}

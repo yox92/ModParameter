@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "5fb64bc92b1b027b1f50bcf2",
+    "_name": "weapon_tdi_kriss_vector_gen_2_1143x23",
+    "_props": {
+      "CameraSnap": 4.5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 65,
+      "RecoilCamera": 0.04,
+      "RecoilForceBack": 356,
+      "RecoilForceUp": 59,
+      "RecolDispersion": 22,
+      "Weight": 1.86,
+      "ammoCaliber": "Caliber1143x23ACP",
+      "bFirerate": 1100
+    }
+  },
+  "locale": {
+    "Name": "TDI KRISS Vector Gen.2 .45 ACP submachine gun",
+    "ShortName": "Vector .45ACP"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "5beed0f50db834001c062b12",
+    "_name": "weapon_izhmash_rpk16_545x39",
+    "_props": {
+      "CameraSnap": 3.5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 45,
+      "RecoilCamera": 0.04,
+      "RecoilForceBack": 333,
+      "RecoilForceUp": 112,
+      "RecolDispersion": 8,
+      "Weight": 1.5,
+      "ammoCaliber": "Caliber545x39",
+      "bFirerate": 650
+    }
+  },
+  "locale": {
+    "Name": "RPK-16 5.45x39 light machine gun",
+    "ShortName": "RPK-16"
+  }
+}

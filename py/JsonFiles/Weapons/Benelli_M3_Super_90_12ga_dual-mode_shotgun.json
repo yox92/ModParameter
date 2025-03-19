@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "6259b864ebedf17603599e88",
+    "_name": "weapon_benelli_m3_s90_12g",
+    "_props": {
+      "CameraSnap": 2.6,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 42,
+      "RecoilCamera": 0.06,
+      "RecoilForceBack": 595,
+      "RecoilForceUp": 336,
+      "RecolDispersion": 10,
+      "Weight": 1.22,
+      "ammoCaliber": "Caliber12g",
+      "bFirerate": 60
+    }
+  },
+  "locale": {
+    "Name": "Benelli M3 Super 90 12ga dual-mode shotgun",
+    "ShortName": "M3 Super 90"
+  }
+}

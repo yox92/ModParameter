@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "5c501a4d2e221602b412b540",
+    "_name": "weapon_molot_vepr_hunter_vpo-101_762x51",
+    "_props": {
+      "CameraSnap": 3.5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 29,
+      "RecoilCamera": 0.05,
+      "RecoilForceBack": 585,
+      "RecoilForceUp": 150,
+      "RecolDispersion": 12,
+      "Weight": 2.092,
+      "ammoCaliber": "Caliber762x51",
+      "bFirerate": 600
+    }
+  },
+  "locale": {
+    "Name": "Molot Arms VPO-101 Vepr-Hunter 7.62x51 carbine",
+    "ShortName": "VPO-101 Vepr-Hunter"
+  }
+}

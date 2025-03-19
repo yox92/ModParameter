@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "661ceb1b9311543c7104149b",
+    "_name": "weapon_usord_m60e6_762x51",
+    "_props": {
+      "CameraSnap": 3.5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 31,
+      "RecoilCamera": 0.05,
+      "RecoilForceBack": 502,
+      "RecoilForceUp": 107,
+      "RecolDispersion": 10,
+      "Weight": 5.378,
+      "ammoCaliber": "Caliber762x51",
+      "bFirerate": 550
+    }
+  },
+  "locale": {
+    "Name": "U.S. Ordnance M60E6 7.62x51 light machine gun",
+    "ShortName": "M60E6"
+  }
+}

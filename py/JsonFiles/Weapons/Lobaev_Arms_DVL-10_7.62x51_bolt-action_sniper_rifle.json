@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "588892092459774ac91d4b11",
+    "_name": "weapon_lobaev_dvl-10_308",
+    "_props": {
+      "CameraSnap": 3.5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 40,
+      "RecoilCamera": 0.05,
+      "RecoilForceBack": 585,
+      "RecoilForceUp": 111,
+      "RecolDispersion": 10,
+      "Weight": 1.12,
+      "ammoCaliber": "Caliber762x51",
+      "bFirerate": 30
+    }
+  },
+  "locale": {
+    "Name": "Lobaev Arms DVL-10 7.62x51 bolt-action sniper rifle",
+    "ShortName": "DVL-10"
+  }
+}

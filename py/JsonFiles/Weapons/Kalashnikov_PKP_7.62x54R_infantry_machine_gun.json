@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "64ca3d3954fc657e230529cc",
+    "_name": "weapon_zid_pkp_762x54r",
+    "_props": {
+      "CameraSnap": 3,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 35,
+      "RecoilCamera": 0.07,
+      "RecoilForceBack": 515,
+      "RecoilForceUp": 138,
+      "RecolDispersion": 16,
+      "Weight": 3.852,
+      "ammoCaliber": "Caliber762x54R",
+      "bFirerate": 650
+    }
+  },
+  "locale": {
+    "Name": "Kalashnikov PKP 7.62x54R infantry machine gun",
+    "ShortName": "PKP"
+  }
+}

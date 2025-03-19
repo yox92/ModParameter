@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "5d43021ca4b9362eab4b5e25",
+    "_name": "weapon_lone_star_tx15_designated_marksman_556x45",
+    "_props": {
+      "CameraSnap": 3.5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 50,
+      "RecoilCamera": 0.04,
+      "RecoilForceBack": 322,
+      "RecoilForceUp": 113,
+      "RecolDispersion": 10,
+      "Weight": 0.31,
+      "ammoCaliber": "Caliber556x45NATO",
+      "bFirerate": 800
+    }
+  },
+  "locale": {
+    "Name": "Lone Star TX-15 DML 5.56x45 carbine",
+    "ShortName": "TX-15 DML"
+  }
+}

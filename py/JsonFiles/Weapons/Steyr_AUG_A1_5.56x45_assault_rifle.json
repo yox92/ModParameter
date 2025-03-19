@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "62e7c4fba689e8c9c50dfc38",
+    "_name": "weapon_steyr_aug_a1_556x45",
+    "_props": {
+      "CameraSnap": 3.5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 83,
+      "RecoilCamera": 0.04,
+      "RecoilForceBack": 258,
+      "RecoilForceUp": 87,
+      "RecolDispersion": 10,
+      "Weight": 1.49,
+      "ammoCaliber": "Caliber556x45NATO",
+      "bFirerate": 715
+    }
+  },
+  "locale": {
+    "Name": "Steyr AUG A1 5.56x45 assault rifle",
+    "ShortName": "AUG A1"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "59ff346386f77477562ff5e2",
+    "_name": "weapon_izhmash_akms_762x39",
+    "_props": {
+      "CameraSnap": 3.5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 24,
+      "RecoilCamera": 0.05,
+      "RecoilForceBack": 378,
+      "RecoilForceUp": 149,
+      "RecolDispersion": 11,
+      "Weight": 2.092,
+      "ammoCaliber": "Caliber762x39",
+      "bFirerate": 600
+    }
+  },
+  "locale": {
+    "Name": "Kalashnikov AKMS 7.62x39 assault rifle",
+    "ShortName": "AKMS"
+  }
+}

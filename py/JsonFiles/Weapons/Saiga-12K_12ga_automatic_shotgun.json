@@ -1,0 +1,22 @@
+{
+  "item": {
+    "_id": "674fe9a75e51f1c47c04ec23",
+    "_name": "weapon_kiba_saiga12k_fa_12g",
+    "_props": {
+      "CameraSnap": 2.5,
+      "AimSensitivity": 0.65,
+      "Ergonomics": 35,
+      "RecoilCamera": 0.06,
+      "RecoilForceBack": 526,
+      "RecoilForceUp": 298,
+      "RecolDispersion": 15,
+      "Weight": 2.622,
+      "ammoCaliber": "Caliber12g",
+      "bFirerate": 450
+    }
+  },
+  "locale": {
+    "Name": "Saiga-12K 12ga automatic shotgun",
+    "ShortName": "Saiga-12K FA"
+  }
+}
