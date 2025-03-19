@@ -80,13 +80,17 @@ export class ItemService {
                 itemsJson._id,
                 locale.ShortName)
 
-            this.itemClonerService.applyClone(
-                partialWeaponProps,
-                itemsJson._id,
-                locale.Name,
-                locale.ShortName,
-                ItemTypeEnum.Weapon)
+            if (!partialWeaponProps) {
+                this.logger.debug(`[ModParameter] [ModParameter] No clone weapon will be generate for : ${fileName}`);
+            } else {
+                this.itemClonerService.applyClone(
+                    partialWeaponProps,
+                    itemsJson._id,
+                    locale.Name,
+                    locale.ShortName,
+                    ItemTypeEnum.Weapon)
 
+            }
         }
     }
 
@@ -129,7 +133,7 @@ export class ItemService {
             const ammoProps: Ammo = createItemAmmo(itemsPropsJson);
 
             if (!ammoProps) {
-                this.logger.debug(`[ModParameter] [AimingService] Invalid Json PMC update.`);
+                this.logger.debug(`[ModParameter] Invalid Json PMC update.`);
                 return;
             }
 
@@ -138,13 +142,17 @@ export class ItemService {
                 itemsJson._id,
                 locale.Name)
 
-            this.itemClonerService.applyClone(
-                partialAmmoProps,
-                itemsJson._id,
-                locale.Name,
-                locale.ShortName,
-                ItemTypeEnum.Ammo)
+            if (!partialAmmoProps) {
+                this.logger.debug(`[ModParameter] No clone ammo will be generate for : ${fileName}`);
+            } else {
+                this.itemClonerService.applyClone(
+                    partialAmmoProps,
+                    itemsJson._id,
+                    locale.Name,
+                    locale.ShortName,
+                    ItemTypeEnum.Ammo)
 
+            }
         }
     }
 

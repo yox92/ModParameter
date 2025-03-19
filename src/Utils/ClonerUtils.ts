@@ -104,15 +104,15 @@ export class ClonerUtils {
                 this.logger.debug(`[ModParameter] Item ${name} added to Trader: ${traderName} with ID: ${bestClonedId}`);
 
                 trader.assort.barter_scheme[bestItem._id] = structuredClone(trader.assort.barter_scheme[bestOriginalId]);
-                this.logger.debug(`Copy of the same structures for: ${bestClonedId} (Trader: ${traderName})`);
+                this.logger.debug(`[ModParameter] Copy of the same structures for: ${bestClonedId} (Trader: ${traderName})`);
 
                 trader.assort.loyal_level_items[bestItem._id] = bestLoyalLevel;
-                this.logger.debug(`Item ${name} added with Trader: ${traderName} and id: ${bestClonedId} with loyalty level ${bestLoyalLevel}`);
+                this.logger.debug(`[ModParameter] Item ${name} added with Trader: ${traderName} and id: ${bestClonedId} with loyalty level ${bestLoyalLevel}`);
             }
 
         }
         if (!objectFindTrader) {
-            this.logger.debug(`Item ${name} find no trader to add item (blackList ?)`);
+            this.logger.debug(`[ModParameter] Item ${name} find no trader to add item (blackList ?)`);
         }
 
     }
@@ -126,25 +126,25 @@ export class ClonerUtils {
      */
     public propagateAmmoCompatibility(originalId: string, newId: string, itemHelper: ItemHelper, dataService: DatabaseService): void {
         if (!originalId || !newId) {
-            this.logger.debug("Error: originalId or newId is empty.");
+            this.logger.debug("[ModParameter] Error: originalId or newId is empty.");
             return;
         }
 
         const tables: ITemplates = dataService.getTemplates();
         if (!tables || typeof tables !== "object") {
-            this.logger.debug("Error: Unable to retrieve templates (tables is undefined or invalid).");
+            this.logger.debug("[ModParameter] Error: Unable to retrieve templates (tables is undefined or invalid).");
             return;
         }
 
         const sptItems: Record<string, ITemplateItem> | undefined = tables.items;
         if (!sptItems || typeof sptItems !== "object") {
-            this.logger.debug("Error: Unable to retrieve items (sptItems is undefined or invalid).");
+            this.logger.debug("[ModParameter] Error: Unable to retrieve items (sptItems is undefined or invalid).");
             return;
         }
 
         const items: ITemplateItem[] = Object.values(sptItems);
         if (!Array.isArray(items) || items.length === 0) {
-            this.logger.debug("Error: No items found in sptItems.");
+            this.logger.debug("[ModParameter] Error: No items found in sptItems.");
             return;
         }
 
@@ -172,19 +172,19 @@ export class ClonerUtils {
             item?._id && itemHelper.isOfBaseclass(item._id, Baseclass.MAGAZINE));
         for (const magazine of magazines) {
             if (!magazine._props || !Array.isArray(magazine._props.Cartridges)) {
-                this.logger.debug(`Warning: Magazine ${magazine._id} has no Cartridges property.`);
+                this.logger.debug(`[ModParameter] Warning: Magazine ${magazine._id} has no Cartridges property.`);
                 continue;
             }
 
             for (const cartridge of magazine._props.Cartridges) {
                 if (!cartridge || !Array.isArray(cartridge._props?.filters)) {
-                    this.logger.debug(`Warning: A cartridge in ${magazine._id} is malformed.`);
+                    this.logger.debug(`[ModParameter] Warning: A cartridge in ${magazine._id} is malformed.`);
                     continue;
                 }
 
                 for (const filter of cartridge._props.filters) {
                     if (!filter || !Array.isArray(filter.Filter)) {
-                        this.logger.debug(`Warning: A filter in ${magazine._id} is malformed.`);
+                        this.logger.debug(`[ModParameter] Warning: A filter in ${magazine._id} is malformed.`);
                         continue;
                     }
 

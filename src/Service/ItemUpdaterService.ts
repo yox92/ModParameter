@@ -11,6 +11,9 @@ import {ItemService} from "./ItemService";
 export class ItemUpdaterService {
     private BUCKSHOT: string = "buckshot";
     private MACHINEGUN: string[] = ["5d70e500a4b9364de70d38ce", "5cde8864d7f00c0010373be1", "5d2f2ab648f03550091993ca"];
+    private readonly GREEN: string = "\x1b[32m";
+    private readonly RESET: string = "\x1b[0m";
+
     private readonly logger: ILogger;
     private readonly dataService: DatabaseService;
 
@@ -92,14 +95,19 @@ export class ItemUpdaterService {
             updatedProps.buckshotBullets = updatedProps.ProjectileCount
         }
 
-         //case nerf machine gun IA
+        //case nerf machine gun ammo IA
         if (this.MACHINEGUN.includes(sptItem._id)) {
+
+            if (Object.values(updatedProps).some(value => value !== undefined)) {
+                this.logger.info(`[ModParameter] Nerf : ${this.GREEN}'${sptItem._name}'${this.RESET}`);
+            }
+
             for (const key in updatedProps) {
                 if (updatedProps[key] !== undefined) {
                     (sptItemProps as any)[key] = updatedProps[key];
                 }
             }
-            return null
+            return null;
         }
         return updatedProps;
     }
@@ -150,7 +158,7 @@ export class ItemUpdaterService {
         updatedProps.RecoilForceBack = validateUtils.validateAndCastInt(weaponItem.RecoilForceBack);
         updatedProps.RecoilForceUp = validateUtils.validateAndCastInt(weaponItem.RecoilForceUp);
         updatedProps.Weight = validateUtils.validateAndCastFloatItem(weaponItem.Weight, 2);
-        updatedProps.bFirerate = validateUtils.validateAndCastInt(weaponItem.bFirerate);
+        updatedProps.bFirerate = validateUtils.validateValidationFireRate(weaponItem.bFirerate);
         updatedProps.BackgroundColor = "blue";
 
         const invalidProps = Object.entries(updatedProps).filter(([_, value]) => value === null);

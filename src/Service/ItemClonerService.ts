@@ -60,35 +60,29 @@ export class ItemClonerService {
 
         const iHandbookItems: IHandbookItem[] | undefined = handbook.Items;
         const foundItem: IHandbookItem | undefined = iHandbookItems.find(item => item.Id === id);
-        const handbookParentId: string | undefined = foundItem.ParentId
-        const handbookPrice: number | undefined = foundItem.Price
+        let handbookParentId: string | undefined;
+        let handbookPrice: number | undefined;
+        let sptItems: Record<string, ITemplateItem> | undefined;
+        let sptItem: ITemplateItem | undefined;
 
-        const sptItems: Record<string, ITemplateItem> | undefined = templates?.items;
-        const sptItem: ITemplateItem | undefined = sptItems[id];
+        if (!iHandbookItems || !foundItem) {
+            this.logger.debug(`no handbook found item : ${name} id :${id}`);
+        } else {
+            handbookParentId = foundItem.ParentId
+            handbookPrice = foundItem.Price
+        }
 
-        const checks = [
-            {name: "templates", value: this.dataService.getTables().templates},
-            {name: "handbook", value: this.dataService.getHandbook()},
-            {name: "iHandbookItems", value: this.dataService.getHandbook()?.Items},
-            {name: "foundItem", value: this.dataService.getHandbook()?.Items?.find(item => item.Id === id)},
-            {
-                name: "handbookParentId",
-                value: this.dataService.getHandbook()?.Items?.find(item => item.Id === id)?.ParentId
-            },
-            {name: "sptItems", value: this.dataService.getTables().templates?.items},
-            {name: "sptItem", value: this.dataService.getTables().templates?.items?.[id]}
-        ];
-
-        for (const check of checks) {
-            if (check.value === null || check.value === undefined) {
-                this.logger.debug(`[ModParameter] ERROR : ${check.name} are null or undefined`);
-            }
+        if (!templates) {
+            this.logger.debug(`no templates found item ${name} id :${id}`);
+        } else {
+            sptItems = templates?.items;
+            sptItem = sptItems[id];
         }
 
         const locales = Languages.generateLocales(name, shortName);
 
         if (!id || !sptItem._parent || !handbookParentId || !locales) {
-            this.logger.debug(`[ModParameter] can not clone ${name} : leak member parameters`)
+            this.logger.debug(`[ModParameter] can not clone ${name} : leak member parameters id :${id}`)
             return;
         }
 
@@ -115,8 +109,6 @@ export class ItemClonerService {
         } else {
             this.logger.debug("[ModParameter] No Type Item Find For Cloning")
         }
-
-
     }
 
     /**

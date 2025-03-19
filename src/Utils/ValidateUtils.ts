@@ -34,6 +34,29 @@ export class ValidateUtils {
         return Math.floor(value);
     }
 
+    public validateValidationFireRate(value: any): number | null {
+        let intValue = Number(value);
+        if (isNaN(intValue) || intValue < 0) {
+            return null;
+        }
+
+        intValue = Math.floor(intValue);
+
+        if (intValue === 0) {
+            return 50;
+        }
+
+        const remainder = intValue % 50;
+
+        if (remainder < 25) {
+            intValue -= remainder;
+        } else {
+            intValue += (50 - remainder);
+        }
+
+        return intValue;
+    }
+
     /**
      * Validates and casts a value to an integer **only if it's not already an integer**.
      * Returns null if the value is invalid.
