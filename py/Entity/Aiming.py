@@ -42,6 +42,26 @@ class Aiming:
             props.get(EnumAiming.AIM_PROCEDURAL_INTENSITY.label, None),
             EnumAiming.AIM_PROCEDURAL_INTENSITY.label
         )
+        self._AimDrainRate = (
+            props.get(EnumAiming.STAMINA_DRAIN.label, None),
+            EnumAiming.STAMINA_DRAIN.label
+        )
+        self._SprintDrainRate = (
+            props.get(EnumAiming.STAMINA_SPRINT.label, None),
+            EnumAiming.STAMINA_SPRINT.label
+        )
+        self._JumpConsumption = (
+            props.get(EnumAiming.STAMINA_JUMP.label, None),
+            EnumAiming.STAMINA_JUMP.label
+        )
+        self._StandupConsumption = (
+            props.get(EnumAiming.STAMINA_STANDUP.label, None),
+            EnumAiming.STAMINA_STANDUP.label
+        )
+        self._BaseRestorationRate = (
+            props.get(EnumAiming.STAMINA_RESTORATION.label, None),
+            EnumAiming.STAMINA_RESTORATION.label
+        )
 
     @property
     def AimPunchMagnitude(self):
@@ -82,6 +102,26 @@ class Aiming:
     @property
     def AimProceduralIntensity(self):
         return self._AimProceduralIntensity
+
+    @property
+    def AimDrainRate(self):
+        return self._AimDrainRate
+
+    @property
+    def SprintDrainRate(self):
+        return self._SprintDrainRate
+
+    @property
+    def JumpConsumption(self):
+        return self._JumpConsumption
+
+    @property
+    def StandupConsumption(self):
+        return self._StandupConsumption
+
+    @property
+    def BaseRestorationRate(self):
+        return self._BaseRestorationRate
 
     @classmethod
     def from_data(cls, data: dict):

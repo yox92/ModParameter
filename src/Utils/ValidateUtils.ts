@@ -59,7 +59,7 @@ export class ValidateUtils {
     /**
      * We deal with Ballistic * 1000 on Python GUI
      */
-    public validateBallistic(value: number): number | null {
+    public validateIntToFloatFromValueWithThousandMulti(value: number): number | null {
         if (typeof value !== "number" || isNaN(value)) {
             return null;
         }

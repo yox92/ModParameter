@@ -38,7 +38,7 @@ class Utils:
         frame1.clear()
         total_buttons: int
         if choice_window == WindowType.AMMO:
-            total_buttons = 23
+            total_buttons = 24
         else:
             total_buttons = 22
         count = 0
@@ -191,19 +191,19 @@ class Utils:
     @staticmethod
     def is_value_outside_limits_ammo(name, value):
         limits = {
-            EnumAmmo.ARMOR_DAMAGE.label: (1, 500),
-            EnumAmmo.DAMAGE.label: (1, 450),
-            EnumAmmo.PENETRATION_POWER.label: (0, 81),
+            EnumAmmo.ARMOR_DAMAGE.label: (0, 500),
+            EnumAmmo.DAMAGE.label: (0, 450),
+            EnumAmmo.PENETRATION_POWER.label: (-1, 81),
             EnumAmmo.INITIAL_SPEED.label: (75, 2000),
-            EnumAmmo.BULLET_MASSGRAM.label: (8, 28000),
-            EnumAmmo.STACK_MAX_SIZE.label: (0, 9999),
-            EnumAmmo.BALLISTIC_COEFICIENT.label: (11, 624),
-            EnumAmmo.PROJECTILE_COUNT.label: (0, 101),
+            EnumAmmo.BULLET_MASSGRAM.label: (7, 28000),
+            EnumAmmo.STACK_MAX_SIZE.label: (-1, 9999),
+            EnumAmmo.BALLISTIC_COEFICIENT.label: (10, 624),
+            EnumAmmo.PROJECTILE_COUNT.label: (-1, 101),
             EnumAmmo.AMMO_ACCR.label: (-201, 501),
             EnumAmmo.AMMO_REC.label: (-201, 101),
-            EnumAmmo.EXPLOSIONSTRENGTH.label: (0, 101),
-            EnumAmmo.FUZEARMTIMESEC.label: (40, 300),
-            EnumAmmo.MAXEXPLOSIONDISTANCE.label: (0, 10),
+            EnumAmmo.EXPLOSIONSTRENGTH.label: (-1, 101),
+            EnumAmmo.FUZEARMTIMESEC.label: (39, 301),
+            EnumAmmo.MAXEXPLOSIONDISTANCE.label: (-1, 11),
         }
         if name in limits:
             min_value, max_value = limits[name]
@@ -212,7 +212,7 @@ class Utils:
 
     @staticmethod
     def is_value_for_input_text(name):
-        int_to_input_text = {
+        x = {
             EnumAmmo.ARMOR_DAMAGE.label,
             EnumAmmo.DAMAGE.label,
             EnumAmmo.PENETRATION_POWER.label,
@@ -227,7 +227,88 @@ class Utils:
             EnumAmmo.FUZEARMTIMESEC.label,
             EnumAmmo.MAXEXPLOSIONDISTANCE.label
         }
-        return name in int_to_input_text
+        return name in x
+
+    @staticmethod
+    def is_value_under_one(name):
+        x = {
+            EnumAiming.PROCEDURAL_INTENSITY_BY_POSE_STANDING.label,
+            EnumAiming.PROCEDURAL_INTENSITY_BY_POSE_CROUCHING.label,
+            EnumAiming.PROCEDURAL_INTENSITY_BY_POSE_PRONE.label,
+            EnumAiming.RECOIL_DAMPING.label,
+            EnumAiming.RECOIL_HAND_DAMPING.label,
+            EnumAiming.RECOIL_INTENSITY_BY_POSE_PRONE.label,
+            EnumAiming.RECOIL_INTENSITY_BY_POSE_STANDING.label,
+            EnumAiming.RECOIL_INTENSITY_BY_POSE_CROUCHING.label,
+            EnumAiming.AIM_PROCEDURAL_INTENSITY.label,
+            EnumAiming.STAMINA_DRAIN.label,
+            EnumAiming.STAMINA_SPRINT.label
+        }
+        return name in x
+
+    @staticmethod
+    def pmc_color_olive(name):
+        x = {
+            EnumAiming.PROCEDURAL_INTENSITY_BY_POSE_CROUCHING.label,
+            EnumAiming.PROCEDURAL_INTENSITY_BY_POSE_PRONE.label,
+            EnumAiming.RECOIL_INTENSITY_BY_POSE_PRONE.label,
+            EnumAiming.RECOIL_INTENSITY_BY_POSE_CROUCHING.label,
+        }
+        return name in x
+
+    @staticmethod
+    def pmc_color_yellow(name):
+        x = {
+            EnumAiming.AIM_PUNCH_MAGNITUDE.label,
+            EnumAiming.RECOIL_DAMPING.label,
+            EnumAiming.RECOIL_HAND_DAMPING.label
+        }
+        return name in x
+
+    @staticmethod
+    def pmc_color_orange(name):
+        x = {
+            EnumAiming.PROCEDURAL_INTENSITY_BY_POSE_STANDING.label,
+            EnumAiming.RECOIL_INTENSITY_BY_POSE_STANDING.label,
+            EnumAiming.AIM_PROCEDURAL_INTENSITY.label
+        }
+        return name in x
+
+    def pmc_color_green(name):
+        x = {
+            EnumAiming.STAMINA_SPRINT.label,
+            EnumAiming.STAMINA_JUMP.label,
+            EnumAiming.STAMINA_STANDUP.label
+        }
+        return name in x
+
+    def pmc_color_cyan(name):
+        x = {
+            EnumAiming.STAMINA_DRAIN.label
+        }
+        return name in x
+
+    def pmc_color_lime(name):
+        x = {
+            EnumAiming.STAMINA_RESTORATION.label
+        }
+        return name in x
+
+    @staticmethod
+    def is_value_for_upper(name):
+        x = {
+            EnumAiming.STAMINA_RESTORATION.label
+        }
+        return name in x
+
+    @staticmethod
+    def is_value_for_under_big_number(name):
+        x = {
+            EnumAiming.STAMINA_STANDUP.label,
+            EnumAiming.STAMINA_JUMP.label,
+            EnumAiming.AIM_PUNCH_MAGNITUDE.label
+        }
+        return name in x
 
     @staticmethod
     def disable_all_buttons_recursive(frame_to_not_block, main_frame):

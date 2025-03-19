@@ -15,6 +15,8 @@ export class Ammo {
     ExplosionStrength: number;
     MaxExplosionDistance: number;
     FuzeArmTimeSec: number;
+    BackgroundColor: string;
+    buckshotBullets: number;
 
     constructor(props: Partial<Ammo>) {
         Object.assign(this, props);
@@ -38,6 +40,5 @@ export function createItemAmmo(data: any): Ammo {
     ExplosionStrength: data.ExplosionStrength,
     MaxExplosionDistance: data.MaxExplosionDistance,
     FuzeArmTimeSec: data.FuzeArmTimeSec
-
     });
 }

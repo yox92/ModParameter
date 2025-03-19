@@ -8,5 +8,10 @@
   "RecoilIntensityStanding": 1.0,
   "RecoilIntensityCrouching": 0.7,
   "RecoilIntensityProne": 0.6,
-  "AimProceduralIntensity": 0.7
+  "AimProceduralIntensity": 0.7,
+  "AimDrainRate": 1,
+  "SprintDrainRate": 4,
+  "JumpConsumption": 14,
+  "StandupConsumption": 10,
+  "BaseRestorationRate": 4
 }

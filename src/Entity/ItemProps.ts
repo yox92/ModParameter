@@ -9,6 +9,7 @@ export class ItemProps {
     Weight: number;
     ammoCaliber: string;
     bFirerate: number;
+    BackgroundColor: string;
 
     constructor(props: Partial<ItemProps>) {
         Object.assign(this, props);

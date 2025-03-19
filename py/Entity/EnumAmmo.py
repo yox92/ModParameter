@@ -18,6 +18,7 @@ class EnumAmmo(Enum):
     MAXEXPLOSIONDISTANCE = "MaxExplosionDistance", "explosion radius (meters) 0-10"
     FUZEARMTIMESEC = "FuzeArmTimeSec", "fuse delay before explosion (milliseconds) 40-300"
 
+
     @property
     def label(self):
         return self.value[0]

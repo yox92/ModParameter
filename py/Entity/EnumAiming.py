@@ -2,19 +2,25 @@ from enum import Enum
 
 
 class EnumAiming(Enum):
-    AIM_PUNCH_MAGNITUDE = "AimPunchMagnitude", "Lower value decrease aim displacement when hit."
-
     PROCEDURAL_INTENSITY_BY_POSE_STANDING = ("ProceduralIntensityByPoseStanding",
-                                             "Lower value reduces breathing sway when \n "
-                                             " aiming while standing")
+                                             "Lower value reduces BREATHING sway when \n "
+                                             " aiming while STANDING")
 
     PROCEDURAL_INTENSITY_BY_POSE_CROUCHING = ("ProceduralIntensityByPoseCrouching",
-                                              "Lower value reduces breathing sway when "
-                                              "\n aiming while crouching")
+                                              "Lower value reduces BREATHING sway when "
+                                              "\n aiming while CROUCHING")
 
     PROCEDURAL_INTENSITY_BY_POSE_PRONE = ("ProceduralIntensityByPoseProne",
-                                          ("Lower value reduces breathing sway "
-                                           "when \n aiming while prone"))
+                                          ("Lower value reduces BREATHING sway "
+                                           "when \n aiming while PRONE"))
+    RECOIL_INTENSITY_BY_POSE_STANDING = ("RecoilIntensityStanding",
+                                         "Lower value reduces RECOIL while STANDING")
+    RECOIL_INTENSITY_BY_POSE_CROUCHING = ("RecoilIntensityCrouching",
+                                          "Lower value reduces RECOIL while CROUCHING")
+    RECOIL_INTENSITY_BY_POSE_PRONE = ("RecoilIntensityProne",
+                                      "Lower value reduces RECOIL while PRONE")
+
+    AIM_PUNCH_MAGNITUDE = "AimPunchMagnitude", "Lower value decrease aim displacement when hit."
 
     RECOIL_DAMPING = ("RecoilDamping",
                       ("Lower value reduces vertical gun movement \n"
@@ -23,14 +29,18 @@ class EnumAiming(Enum):
                            ("Lower value reduces effect visual forward and \n "
                             "backward gun movement when firing"))
 
-    RECOIL_INTENSITY_BY_POSE_STANDING = ("RecoilIntensityStanding",
-                                         "Lower value reduces recoil while standing")
-    RECOIL_INTENSITY_BY_POSE_CROUCHING = ("RecoilIntensityCrouching",
-                                          "Lower value reduces recoil while crouching")
-    RECOIL_INTENSITY_BY_POSE_PRONE = ("RecoilIntensityProne",
-                                      "Lower value reduces recoil while prone")
     AIM_PROCEDURAL_INTENSITY = ("AimProceduralIntensity",
                                 "Lower value reduces movement \n while walking on aiming")
+    STAMINA_DRAIN = ("AimDrainRate",
+                                "Lower value reduces Consumption \n Blue stamina when you Aiming")
+    STAMINA_SPRINT = ("SprintDrainRate",
+                                "Lower value reduces Consumption \n Green stamina when you Sprint")
+    STAMINA_JUMP = ("JumpConsumption",
+                                "Lower value reduces Consumption \n Green stamina when you JumP")
+    STAMINA_STANDUP = ("StandupConsumption",
+                                "Lower value reduces Consumption \n Green stamina when you stand-uP")
+    STAMINA_RESTORATION = ("BaseRestorationRate",
+                                "Upper value improve  \n Green stamina Restoration")
 
     @property
     def label(self):

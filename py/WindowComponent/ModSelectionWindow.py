@@ -15,7 +15,7 @@ from WindowComponent.SingleWeaponMod import SingleWeaponMod
 from WindowComponent.ListItemAlreadyMod import ListItemAlreadyMod
 
 WINDOW_TITLE = "ModParameter App"
-WINDOW_GEOMETRY = "800x700"
+WINDOW_GEOMETRY = "800x650"
 APPEARANCE_MODE = "dark"
 DETAIL_WINDOW_TITLE = "Detail windows"
 DETAIL_WINDOW_WIDTH = 900
@@ -478,8 +478,29 @@ class ModSelectionWindow:
         row = 1
         column = 0
         available_frames = len(self.framesBotCaliber)
-        calibers_to_display = [caliber for caliber in Caliber.enumerate_calibers()
-                               if not (choice_window == WindowType.WEAPON and caliber == Caliber.GRENADE_40x46)]
+        # calibers_to_display = [caliber for caliber in Caliber.enumerate_calibers()
+        #                        if not (choice_window == WindowType.WEAPON
+        #                                and caliber == Caliber.GRENADE_40x46
+        #                                and caliber == Caliber.UTYOS_AGS)]
+        calibers_to_display = []
+        grenade_fusion_done = False
+        for label, code, categorie in Caliber.enumerate_calibers():
+            if choice_window == WindowType.WEAPON and label in {Caliber.GRENADE_40x46.label, Caliber.UTYOS_AGS.label, Caliber.Caliber40mmRU.label}:
+                continue
+            if label == Caliber.Caliber40mmRU.label:
+                continue
+            if label in {Caliber.GRENADE_40x46.label, Caliber.Caliber40mmRU.label}:
+                if not grenade_fusion_done:
+                    calibers_to_display.append((Caliber.to_tuple(Caliber.GRENADE_40x46)))
+                    grenade_fusion_done = True
+                continue
+            if label == Caliber.UTYOS_AGS.label:
+                calibers_to_display.append((label,code,categorie))
+
+            calibers_to_display.append((label, code, categorie))
+
+
+
         colors = ["dodgerblue", "peru", "mediumseagreen", "khaki"]
         CATEGORY_COLORS = {
             "pistol": colors[0],
@@ -526,7 +547,7 @@ class ModSelectionWindow:
         if caliber_select == Caliber.GRENADE_40x46.code:
             filtered_roots = [
                 root for root in root_list
-                if root.item.props.get_value_by_label("Caliber") in {caliber_select, "Caliber30x29"}
+                if root.item.props.get_value_by_label("Caliber") in {caliber_select, "Caliber40mmRU"}
             ]
 
         else:

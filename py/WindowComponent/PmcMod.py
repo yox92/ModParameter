@@ -7,7 +7,7 @@ from Entity.WindowType import WindowType
 from Utils import JsonUtils, Utils, WindowUtils
 from Entity.AimingManager import EnumAiming, AimingManager
 
-DETAIL_WINDOW = "800x500"
+DETAIL_WINDOW = "800x700"
 
 
 class PmcMod:
@@ -53,12 +53,28 @@ class PmcMod:
     def param_main_root(self):
         self.master.grid_columnconfigure(0, weight=1)
         self.master.grid_rowconfigure(0, weight=1)
-        self.close_button = ctk.CTkButton(self.master,
+        self.under_frame = ctk.CTkFrame(self.master, fg_color="transparent")
+        self.under_frame.grid(row=1, column=0, sticky="nsew")
+        self.under_frame.rowconfigure(0, weight=1)
+        self.under_frame.columnconfigure(0, weight=1)
+        self.under_frame.columnconfigure(1, weight=1)
+        self.under_frame.columnconfigure(2, weight=20)
+        self.close_button = ctk.CTkButton(self.under_frame,
                                           text="Close",
                                           command=lambda:
                                           WindowUtils.close_window(self.detail_window,
                                                                    self.root, self.main_instance))
-        self.close_button.grid(row=1, column=0)
+        self.close_button.grid(row=0, column=2)
+        self.note_label = ctk.CTkLabel(self.under_frame,
+                                   text="* 0 = Infinite :",
+                                    text_color="green",
+                                   font=("Arial", 11, "bold"))
+        self.note_label.grid(row=0, column=0)
+        self.note_label2 = ctk.CTkLabel(self.under_frame,
+                                   text="* 0 = Remove Effect :",
+                                    text_color="orange",
+                                   font=("Arial", 11, "bold"))
+        self.note_label2.grid(row=0, column=1)
 
     def create_frame_right(self):
         self.right_main = ctk.CTkFrame(self.master, fg_color="transparent")
@@ -106,17 +122,27 @@ class PmcMod:
                        column=0,
                        sticky="ew",
                        pady=10)
-            if any(word in props for word in {"RecoilIntensity", "ProceduralIntensityBy"}):
-                label.configure(font=("Arial", 14, "bold"), text_color="lightgreen")
-                if any(word in props for word in {"Crouching", "Prone"}):
-                    label.configure(font=("Arial", 10, "bold"), text_color="DarkOliveGreen")
-            else:
-                label.configure(font=("Arial", 14, "bold"), text_color="Green")
+            if Utils.pmc_color_orange(props):
+                label.configure(font=("Arial", 12, "bold"), text_color="orange")
+            elif Utils.pmc_color_olive(props):
+                label.configure(font=("Arial", 9, "bold"), text_color="darkOliveGreen")
+            elif Utils.pmc_color_yellow(props):
+                label.configure(font=("Arial", 9, "bold"), text_color="Peru")
+            elif Utils.pmc_color_green(props):
+                label.configure(font=("Arial", 12, "bold"), text_color="green")
+            elif Utils.pmc_color_cyan(props):
+                label.configure(font=("Arial", 12, "bold"), text_color="DodgerBlue")
+            elif Utils.pmc_color_lime(props):
+                label.configure(font=("Arial", 12, "bold"), text_color="Lime")
 
-            if props != EnumAiming.AIM_PUNCH_MAGNITUDE.label:
-                percent_label, slider = self.create_slider_down_two(row, props, number)
-            else:
+            if Utils.is_value_under_one(props):
+                percent_label, slider = self.create_slider_down_one_down_value(row, props, number)
+            elif Utils.is_value_for_upper(props):
+                percent_label, slider = self.create_slider_upper_value(row, props, number)
+            elif Utils.is_value_for_under_big_number(props):
                 percent_label, slider = self.create_slider_up_two(row, props, number)
+            else:
+                percent_label, slider = self.create_slider_down_one_down_value(row, props, number)
 
             self.prop_widgets[props] = (slider, percent_label)
 
@@ -131,14 +157,21 @@ class PmcMod:
         self.status_label = ctk.CTkLabel(self.right_main, text="")
         self.status_label.grid(row=row + 1, column=1, sticky="nsew")
 
-    def create_slider_down_two(self, row, props, number):
-
-        slider = ctk.CTkSlider(
-            self.right_main,
-            from_=0.1,
-            to=1.0,
-            command=lambda lambda_value, pname=props:
-            self.update_props_value(pname, lambda_value, number))
+    def create_slider_down_one_down_value(self, row, props, number):
+        if props == EnumAiming.STAMINA_SPRINT.label:
+            slider = ctk.CTkSlider(
+                self.right_main,
+                from_=0,
+                to=4,
+                command=lambda lambda_value, pname=props:
+                self.update_props_value(pname, lambda_value, number))
+        else:
+            slider = ctk.CTkSlider(
+                self.right_main,
+                from_=0,
+                to=1.0,
+                command=lambda lambda_value, pname=props:
+                self.update_props_value(pname, lambda_value, number))
 
         slider.grid(row=row, column=1, sticky=ctk.W, padx=10)
         slider.set(number)
@@ -160,10 +193,34 @@ class PmcMod:
 
         return percent_label, slider
 
+    def create_slider_upper_value(self, row, props, number):
+        slider = ctk.CTkSlider(
+            self.right_main,
+            from_=4,
+            to=20,
+            command=lambda lambda_value, pname=props:
+            self.update_props_value(pname, lambda_value, number))
+
+        slider.grid(row=row, column=1, sticky=ctk.W, padx=10)
+        slider.set(number)
+        percentage_change = ((number / number) - 1) * 100 if number != 0 else 0
+
+        percent_label = ctk.CTkLabel(self.right_main, text=f"{number:.1f} ({percentage_change:+.0f}%)",
+                                     font=("Arial", 15, "bold"))
+        percent_label.grid(row=row, column=2, sticky=ctk.W, padx=10)
+
+        reset_button = ctk.CTkButton(self.right_main, text="Reset",
+                                     command=lambda pname=props:
+                                     self.reset_slider(pname),
+                                     width=10)
+        reset_button.grid(row=row, column=3, sticky=ctk.W, padx=10)
+
+        return percent_label, slider
+
     def create_slider_up_two(self, row, props, number):
         slider = ctk.CTkSlider(
             self.right_main,
-            from_=1.0,
+            from_=0,
             to=14.4,
             command=lambda lambda_value, pname=props:
             self.update_props_value(pname, lambda_value, number))
@@ -267,3 +324,6 @@ class PmcMod:
             self.main_instance.root.attributes('-disabled', False)
             self.detail_window.after(3000, lambda: WindowUtils.close_window(self.detail_window,
                                                                             self.root, self.main_instance))
+
+    def lower_two_value(self):
+        return EnumAiming.AIM_PUNCH_MAGNITUDE.label

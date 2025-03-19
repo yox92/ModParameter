@@ -28,6 +28,8 @@ class Caliber(Enum):
     SHOTGUN_12_70 = "12x70mm", "Caliber12g", "explosive"
     SHOTGUN_23x75 = "23x75mm KS23", "Caliber23x75", "explosive"
     GRENADE_40x46 = "40x46mm HE + VOG", "Caliber40x46", "explosive"
+    Caliber40mmRU = "VOG", "Caliber40mmRU", "explosive"
+    UTYOS_AGS = "Utyos + AGS", "UTYOS_AGS", "explosive"
 
     @property
     def label(self):
@@ -52,3 +54,7 @@ class Caliber(Enum):
              caliber.code,
              caliber.categorie) for caliber in cls
         ]
+
+    def to_tuple(self):
+        return self.value
+

@@ -47,6 +47,8 @@ export class AimingService {
         aimingSpt.RecoilHandDamping = validateUtils.validateAndCastFloat(aimingJson.RecoilHandDamping, 2);
         aimingSpt.RecoilDamping = validateUtils.validateAndCastFloat(aimingJson.RecoilDamping, 1);
 
+
+
         if (aimingJson.AimPunchMagnitude !== undefined) {
             config.AimPunchMagnitude = validateUtils.validateAndCastFloat(aimingJson.AimPunchMagnitude, 1);}
 

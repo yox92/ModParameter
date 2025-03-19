@@ -5,17 +5,19 @@ import {ITemplates} from "@spt/models/spt/templates/ITemplates";
 import {IProps, ITemplateItem} from "@spt/models/eft/common/tables/ITemplateItem";
 import {ValidateUtils} from "../Utils/ValidateUtils";
 import {DatabaseService} from "@spt/services/DatabaseService";
+import {ItemService} from "./ItemService";
 
 
 export class ItemUpdaterService {
     private BUCKSHOT: string = "buckshot";
+    private MACHINEGUN: string[] = ["5d70e500a4b9364de70d38ce", "5cde8864d7f00c0010373be1", "5d2f2ab648f03550091993ca"];
     private readonly logger: ILogger;
     private readonly dataService: DatabaseService;
 
-
     constructor(logger: ILogger, dataService: DatabaseService) {
         this.logger = logger;
-        this.dataService = dataService
+        this.dataService = dataService;
+
     }
 
     /**
@@ -64,10 +66,17 @@ export class ItemUpdaterService {
         updatedProps.InitialSpeed = validateUtils.validateAndCastInt(ammoProps.InitialSpeed);
         updatedProps.ammoAccr = validateUtils.validateAndCastIntNegatifCase(ammoProps.ammoAccr);
         updatedProps.ammoRec = validateUtils.validateAndCastIntNegatifCase(ammoProps.ammoRec);
-        updatedProps.BallisticCoeficient = validateUtils.validateBallistic(ammoProps.BallisticCoeficient);
+        updatedProps.BallisticCoeficient = validateUtils.validateIntToFloatFromValueWithThousandMulti(ammoProps.BallisticCoeficient);
         updatedProps.BulletMassGram = validateUtils.validateBulletMassGram(ammoProps.BulletMassGram);
         updatedProps.ProjectileCount = validateUtils.validateAndCastInt(ammoProps.ProjectileCount);
         updatedProps.BackgroundColor = "blue";
+
+        if (sptItemProps.HasGrenaderComponent) {
+            updatedProps.ExplosionStrength = validateUtils.validateAndCastInt(ammoProps.ExplosionStrength)
+            updatedProps.MaxExplosionDistance = validateUtils.validateAndCastInt(ammoProps.MaxExplosionDistance)
+            updatedProps.FuzeArmTimeSec = validateUtils.validateIntToFloatFromValueWithThousandMulti(ammoProps.FuzeArmTimeSec)
+        }
+
 
         const invalidProps = Object.entries(updatedProps).filter(([_, value]) => value === null);
 
@@ -80,7 +89,17 @@ export class ItemUpdaterService {
         //case buckshot ammo
         if (sptItemProps.ProjectileCount !== updatedProps.ProjectileCount
             && sptItemProps.ammoType === this.BUCKSHOT) {
-            sptItemProps.buckshotBullets = updatedProps.ProjectileCount;
+            updatedProps.buckshotBullets = updatedProps.ProjectileCount
+        }
+
+         //case nerf machine gun IA
+        if (this.MACHINEGUN.includes(sptItem._id)) {
+            for (const key in updatedProps) {
+                if (updatedProps[key] !== undefined) {
+                    (sptItemProps as any)[key] = updatedProps[key];
+                }
+            }
+            return null
         }
         return updatedProps;
     }
