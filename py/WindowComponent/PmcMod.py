@@ -97,7 +97,8 @@ class PmcMod:
         for key, (numerical_value, code) in vars(aiming).items():
             self.aiming_manager_pmc.update_from_props_json(code, numerical_value)
 
-    def load_json_file(self, file_path):
+    @staticmethod
+    def load_json_file(file_path):
         data = JsonUtils.load_json(file_path)
         aiming: Aiming = Aiming.from_data(data)
         return aiming
@@ -325,5 +326,6 @@ class PmcMod:
             self.detail_window.after(3000, lambda: WindowUtils.close_window(self.detail_window,
                                                                             self.root, self.main_instance))
 
-    def lower_two_value(self):
+    @staticmethod
+    def lower_two_value():
         return EnumAiming.AIM_PUNCH_MAGNITUDE.label

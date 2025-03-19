@@ -62,7 +62,7 @@ class EnumAiming(Enum):
         for prop in cls:
             if prop.code == code:
                 return prop.label
-        raise ValueError(f"Aucun 'code' trouvé pour le label : {label}")
+        raise ValueError(f"Aucun 'code' trouvé pour le label : {code}")
 
     def __str__(self):
         return f"{self.label} ({self.code})"

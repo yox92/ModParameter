@@ -274,6 +274,7 @@ class Utils:
         }
         return name in x
 
+    @staticmethod
     def pmc_color_green(name):
         x = {
             EnumAiming.STAMINA_SPRINT.label,
@@ -282,12 +283,14 @@ class Utils:
         }
         return name in x
 
+    @staticmethod
     def pmc_color_cyan(name):
         x = {
             EnumAiming.STAMINA_DRAIN.label
         }
         return name in x
 
+    @staticmethod
     def pmc_color_lime(name):
         x = {
             EnumAiming.STAMINA_RESTORATION.label
