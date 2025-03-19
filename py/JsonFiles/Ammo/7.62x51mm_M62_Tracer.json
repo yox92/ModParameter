@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "5a608bf24f39f98ffc77720e",
+    "_name": "patron_762x51_M62",
+    "_props": {
+      "ArmorDamage": 65,
+      "Caliber": "Caliber762x51",
+      "Damage": 82,
+      "InitialSpeed": 838,
+      "PenetrationPower": 42,
+      "StackMaxSize": 40,
+      "Tracer": true,
+      "TracerColor": "green",
+      "BallisticCoeficient": 326,
+      "BulletMassGram": 920,
+      "ProjectileCount": 1,
+      "ammoAccr": -5,
+      "ammoRec": 1
+    }
+  },
+  "locale": {
+    "Name": "7.62x51mm M62 Tracer",
+    "ShortName": "M62"
+  }
+}

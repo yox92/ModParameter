@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "64b8725c4b75259c590fa899",
+    "_name": "patron_762x35_cbj",
+    "_props": {
+      "ArmorDamage": 57,
+      "Caliber": "Caliber762x35",
+      "Damage": 58,
+      "InitialSpeed": 725,
+      "PenetrationPower": 43,
+      "StackMaxSize": 60,
+      "Tracer": false,
+      "TracerColor": "red",
+      "BallisticCoeficient": 334,
+      "BulletMassGram": 930,
+      "ProjectileCount": 1,
+      "ammoAccr": 0,
+      "ammoRec": 5
+    }
+  },
+  "locale": {
+    "Name": ".300 Blackout CBJ",
+    "ShortName": "CBJ"
+  }
+}

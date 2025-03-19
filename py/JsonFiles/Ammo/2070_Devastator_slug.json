@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "5d6e6a5fa4b93614ec501745",
+    "_name": "patron_20x70_slug_broadhead",
+    "_props": {
+      "ArmorDamage": 13,
+      "Caliber": "Caliber20g",
+      "Damage": 198,
+      "InitialSpeed": 405,
+      "PenetrationPower": 5,
+      "StackMaxSize": 20,
+      "Tracer": false,
+      "TracerColor": "red",
+      "BallisticCoeficient": 32,
+      "BulletMassGram": 1940,
+      "ProjectileCount": 1,
+      "ammoAccr": 125,
+      "ammoRec": 30
+    }
+  },
+  "locale": {
+    "Name": "20/70 Devastator slug",
+    "ShortName": "Devastator"
+  }
+}

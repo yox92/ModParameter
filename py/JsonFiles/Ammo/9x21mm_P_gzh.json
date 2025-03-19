@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "5a26abfac4a28232980eabff",
+    "_name": "patron_9x21_sp11",
+    "_props": {
+      "ArmorDamage": 44,
+      "Caliber": "Caliber9x21",
+      "Damage": 65,
+      "InitialSpeed": 413,
+      "PenetrationPower": 18,
+      "StackMaxSize": 50,
+      "Tracer": false,
+      "TracerColor": "red",
+      "BallisticCoeficient": 138,
+      "BulletMassGram": 790,
+      "ProjectileCount": 1,
+      "ammoAccr": 1,
+      "ammoRec": -3
+    }
+  },
+  "locale": {
+    "Name": "9x21mm P gzh",
+    "ShortName": "P"
+  }
+}

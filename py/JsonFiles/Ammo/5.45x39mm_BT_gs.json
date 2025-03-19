@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "56dff061d2720bb5668b4567",
+    "_name": "patron_545x39_BT",
+    "_props": {
+      "ArmorDamage": 44,
+      "Caliber": "Caliber545x39",
+      "Damage": 54,
+      "InitialSpeed": 880,
+      "PenetrationPower": 37,
+      "StackMaxSize": 60,
+      "Tracer": true,
+      "TracerColor": "tracerRed",
+      "BallisticCoeficient": 209,
+      "BulletMassGram": 302,
+      "ProjectileCount": 1,
+      "ammoAccr": -4,
+      "ammoRec": 5
+    }
+  },
+  "locale": {
+    "Name": "5.45x39mm BT gs",
+    "ShortName": "BT"
+  }
+}

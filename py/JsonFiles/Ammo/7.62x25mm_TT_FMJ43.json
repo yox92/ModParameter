@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "5735ff5c245977640e39ba7e",
+    "_name": "patron_762x25tt_FMJ43",
+    "_props": {
+      "ArmorDamage": 29,
+      "Caliber": "Caliber762x25TT",
+      "Damage": 60,
+      "InitialSpeed": 427,
+      "PenetrationPower": 11,
+      "StackMaxSize": 50,
+      "Tracer": false,
+      "TracerColor": "red",
+      "BallisticCoeficient": 55,
+      "BulletMassGram": 720,
+      "ProjectileCount": 1,
+      "ammoAccr": 0,
+      "ammoRec": 0
+    }
+  },
+  "locale": {
+    "Name": "7.62x25mm TT FMJ43",
+    "ShortName": "FMJ43"
+  }
+}

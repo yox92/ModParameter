@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "6768c25aa7b238f14a08d3f6",
+    "_name": "patron_762x51_m80a1",
+    "_props": {
+      "ArmorDamage": 79,
+      "Caliber": "Caliber762x51",
+      "Damage": 73,
+      "InitialSpeed": 899,
+      "PenetrationPower": 60,
+      "StackMaxSize": 40,
+      "Tracer": false,
+      "TracerColor": "red",
+      "BallisticCoeficient": 335,
+      "BulletMassGram": 840,
+      "ProjectileCount": 1,
+      "ammoAccr": -1,
+      "ammoRec": 4
+    }
+  },
+  "locale": {
+    "Name": "7.62x51mm M80A1",
+    "ShortName": "M80A1"
+  }
+}

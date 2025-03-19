@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "660137ef76c1b56143052be8",
+    "_name": "patron_20x70_slug_dg",
+    "_props": {
+      "ArmorDamage": 47,
+      "Caliber": "Caliber20g",
+      "Damage": 143,
+      "InitialSpeed": 476,
+      "PenetrationPower": 25,
+      "StackMaxSize": 20,
+      "Tracer": false,
+      "TracerColor": "red",
+      "BallisticCoeficient": 32,
+      "BulletMassGram": 1940,
+      "ProjectileCount": 1,
+      "ammoAccr": 60,
+      "ammoRec": 40
+    }
+  },
+  "locale": {
+    "Name": "20/70 Dangerous Game Slug",
+    "ShortName": "DGS"
+  }
+}

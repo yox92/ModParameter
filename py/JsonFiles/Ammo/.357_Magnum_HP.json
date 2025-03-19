@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "62330bfadc5883093563729b",
+    "_name": "patron_9x33r_hp",
+    "_props": {
+      "ArmorDamage": 20,
+      "Caliber": "Caliber9x33R",
+      "Damage": 99,
+      "InitialSpeed": 481,
+      "PenetrationPower": 18,
+      "StackMaxSize": 30,
+      "Tracer": false,
+      "TracerColor": "red",
+      "BallisticCoeficient": 124,
+      "BulletMassGram": 1030,
+      "ProjectileCount": 1,
+      "ammoAccr": 15,
+      "ammoRec": 15
+    }
+  },
+  "locale": {
+    "Name": ".357 Magnum HP",
+    "ShortName": "HP"
+  }
+}

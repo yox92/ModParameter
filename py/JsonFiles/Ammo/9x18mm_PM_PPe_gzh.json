@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "57371b192459775a9f58a5e0",
+    "_name": "patron_9x18pm_PPE_gzh",
+    "_props": {
+      "ArmorDamage": 15,
+      "Caliber": "Caliber9x18PM",
+      "Damage": 61,
+      "InitialSpeed": 297,
+      "PenetrationPower": 7,
+      "StackMaxSize": 50,
+      "Tracer": false,
+      "TracerColor": "red",
+      "BallisticCoeficient": 92,
+      "BulletMassGram": 780,
+      "ProjectileCount": 1,
+      "ammoAccr": 0,
+      "ammoRec": 0
+    }
+  },
+  "locale": {
+    "Name": "9x18mm PM PPe gzh",
+    "ShortName": "PPe"
+  }
+}

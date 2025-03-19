@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "59e690b686f7746c9f75e848",
+    "_name": "patron_556x45_M995",
+    "_props": {
+      "ArmorDamage": 52,
+      "Caliber": "Caliber556x45NATO",
+      "Damage": 42,
+      "InitialSpeed": 1013,
+      "PenetrationPower": 53,
+      "StackMaxSize": 60,
+      "Tracer": false,
+      "TracerColor": "red",
+      "BallisticCoeficient": 196,
+      "BulletMassGram": 337,
+      "ProjectileCount": 1,
+      "ammoAccr": -7,
+      "ammoRec": 8
+    }
+  },
+  "locale": {
+    "Name": "5.56x45mm M995",
+    "ShortName": "M995"
+  }
+}

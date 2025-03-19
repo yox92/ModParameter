@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "5d6e6891a4b9361bd473feea",
+    "_name": "patron_12x70_slug_poleva_3",
+    "_props": {
+      "ArmorDamage": 40,
+      "Caliber": "Caliber12g",
+      "Damage": 140,
+      "InitialSpeed": 410,
+      "PenetrationPower": 17,
+      "StackMaxSize": 20,
+      "Tracer": false,
+      "TracerColor": "red",
+      "BallisticCoeficient": 116,
+      "BulletMassGram": 2800,
+      "ProjectileCount": 1,
+      "ammoAccr": 110,
+      "ammoRec": -15
+    }
+  },
+  "locale": {
+    "Name": "12/70 Poleva-3 slug",
+    "ShortName": "Poleva-3"
+  }
+}

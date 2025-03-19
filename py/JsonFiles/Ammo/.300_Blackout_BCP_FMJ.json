@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "5fbe3ffdf8b6a877a729ea82",
+    "_name": "patron_762x35_blackout",
+    "_props": {
+      "ArmorDamage": 36,
+      "Caliber": "Caliber762x35",
+      "Damage": 60,
+      "InitialSpeed": 605,
+      "PenetrationPower": 30,
+      "StackMaxSize": 60,
+      "Tracer": false,
+      "TracerColor": "red",
+      "BallisticCoeficient": 334,
+      "BulletMassGram": 930,
+      "ProjectileCount": 1,
+      "ammoAccr": 0,
+      "ammoRec": 0
+    }
+  },
+  "locale": {
+    "Name": ".300 Blackout BCP FMJ",
+    "ShortName": "BCP FMJ"
+  }
+}

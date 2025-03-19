@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "5efb0c1bd79ff02a1f5e68d9",
+    "_name": "patron_762x51_m993",
+    "_props": {
+      "ArmorDamage": 85,
+      "Caliber": "Caliber762x51",
+      "Damage": 70,
+      "InitialSpeed": 930,
+      "PenetrationPower": 65,
+      "StackMaxSize": 40,
+      "Tracer": false,
+      "TracerColor": "red",
+      "BallisticCoeficient": 291,
+      "BulletMassGram": 810,
+      "ProjectileCount": 1,
+      "ammoAccr": -4,
+      "ammoRec": 6
+    }
+  },
+  "locale": {
+    "Name": "7.62x51mm M993",
+    "ShortName": "M993"
+  }
+}

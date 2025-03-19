@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "5d6e68c4a4b9361b93413f79",
+    "_name": "patron_12x70_slug_50_bmg_m17_traccer",
+    "_props": {
+      "ArmorDamage": 57,
+      "Caliber": "Caliber12g",
+      "Damage": 197,
+      "InitialSpeed": 410,
+      "PenetrationPower": 26,
+      "StackMaxSize": 20,
+      "Tracer": false,
+      "TracerColor": "red",
+      "BallisticCoeficient": 582,
+      "BulletMassGram": 4500,
+      "ProjectileCount": 1,
+      "ammoAccr": 90,
+      "ammoRec": 25
+    }
+  },
+  "locale": {
+    "Name": "12/70 makeshift .50 BMG slug",
+    "ShortName": ".50 BMG"
+  }
+}

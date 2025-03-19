@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "56dff0bed2720bb0668b4567",
+    "_name": "patron_545x39_FMJ",
+    "_props": {
+      "ArmorDamage": 38,
+      "Caliber": "Caliber545x39",
+      "Damage": 55,
+      "InitialSpeed": 884,
+      "PenetrationPower": 24,
+      "StackMaxSize": 60,
+      "Tracer": false,
+      "TracerColor": "red",
+      "BallisticCoeficient": 266,
+      "BulletMassGram": 385,
+      "ProjectileCount": 1,
+      "ammoAccr": 0,
+      "ammoRec": 0
+    }
+  },
+  "locale": {
+    "Name": "5.45x39mm FMJ",
+    "ShortName": "FMJ"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "6576f96220d53a5b8f3e395e",
+    "_name": "patron_9x39_fmj",
+    "_props": {
+      "ArmorDamage": 28,
+      "Caliber": "Caliber9x39",
+      "Damage": 75,
+      "InitialSpeed": 330,
+      "PenetrationPower": 17,
+      "StackMaxSize": 50,
+      "Tracer": false,
+      "TracerColor": "red",
+      "BallisticCoeficient": 343,
+      "BulletMassGram": 1550,
+      "ProjectileCount": 1,
+      "ammoAccr": 5,
+      "ammoRec": -5
+    }
+  },
+  "locale": {
+    "Name": "9x39mm FMJ",
+    "ShortName": "FMJ"
+  }
+}

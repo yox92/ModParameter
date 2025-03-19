@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "573601b42459776410737435",
+    "_name": "patron_762x25tt_LRN",
+    "_props": {
+      "ArmorDamage": 28,
+      "Caliber": "Caliber762x25TT",
+      "Damage": 64,
+      "InitialSpeed": 375,
+      "PenetrationPower": 8,
+      "StackMaxSize": 50,
+      "Tracer": false,
+      "TracerColor": "red",
+      "BallisticCoeficient": 146,
+      "BulletMassGram": 635,
+      "ProjectileCount": 1,
+      "ammoAccr": 5,
+      "ammoRec": -5
+    }
+  },
+  "locale": {
+    "Name": "7.62x25mm TT LRN",
+    "ShortName": "LRN"
+  }
+}

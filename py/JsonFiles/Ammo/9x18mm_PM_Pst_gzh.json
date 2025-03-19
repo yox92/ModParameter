@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "5737201124597760fc4431f1",
+    "_name": "patron_9x18pm_PST_gzh",
+    "_props": {
+      "ArmorDamage": 26,
+      "Caliber": "Caliber9x18PM",
+      "Damage": 50,
+      "InitialSpeed": 298,
+      "PenetrationPower": 12,
+      "StackMaxSize": 50,
+      "Tracer": false,
+      "TracerColor": "red",
+      "BallisticCoeficient": 97,
+      "BulletMassGram": 590,
+      "ProjectileCount": 1,
+      "ammoAccr": 0,
+      "ammoRec": 0
+    }
+  },
+  "locale": {
+    "Name": "9x18mm PM Pst gzh",
+    "ShortName": "Pst"
+  }
+}

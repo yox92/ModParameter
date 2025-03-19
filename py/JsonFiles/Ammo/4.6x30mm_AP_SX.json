@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "5ba26835d4351e0035628ff5",
+    "_name": "patron_46x30_ap_sx",
+    "_props": {
+      "ArmorDamage": 46,
+      "Caliber": "Caliber46x30",
+      "Damage": 35,
+      "InitialSpeed": 680,
+      "PenetrationPower": 53,
+      "StackMaxSize": 70,
+      "Tracer": false,
+      "TracerColor": "red",
+      "BallisticCoeficient": 140,
+      "BulletMassGram": 160,
+      "ProjectileCount": 1,
+      "ammoAccr": 0,
+      "ammoRec": 10
+    }
+  },
+  "locale": {
+    "Name": "4.6x30mm AP SX",
+    "ShortName": "AP SX"
+  }
+}

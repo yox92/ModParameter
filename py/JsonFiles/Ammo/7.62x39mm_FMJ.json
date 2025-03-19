@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "64b7af5a8532cf95ee0a0dbd",
+    "_name": "patron_762x39_fmj",
+    "_props": {
+      "ArmorDamage": 33,
+      "Caliber": "Caliber762x39",
+      "Damage": 63,
+      "InitialSpeed": 775,
+      "PenetrationPower": 26,
+      "StackMaxSize": 60,
+      "Tracer": false,
+      "TracerColor": "red",
+      "BallisticCoeficient": 280,
+      "BulletMassGram": 790,
+      "ProjectileCount": 1,
+      "ammoAccr": 2,
+      "ammoRec": -2
+    }
+  },
+  "locale": {
+    "Name": "7.62x39mm FMJ",
+    "ShortName": "FMJ"
+  }
+}

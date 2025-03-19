@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "66a0d1f88486c69fce00fdf6",
+    "_name": "patron_127x33_jsp",
+    "_props": {
+      "ArmorDamage": 28,
+      "Caliber": "Caliber127x33",
+      "Damage": 122,
+      "InitialSpeed": 465,
+      "PenetrationPower": 26,
+      "StackMaxSize": 30,
+      "Tracer": false,
+      "TracerColor": "red",
+      "BallisticCoeficient": 166,
+      "BulletMassGram": 2640,
+      "ProjectileCount": 1,
+      "ammoAccr": -5,
+      "ammoRec": 2
+    }
+  },
+  "locale": {
+    "Name": ".50 AE Hawk JSP",
+    "ShortName": "Hawk JSP"
+  }
+}

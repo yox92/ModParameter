@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "5d6e68a8a4b9360b6c0d54e2",
+    "_name": "patron_12x70_slug_ap_20",
+    "_props": {
+      "ArmorDamage": 65,
+      "Caliber": "Caliber12g",
+      "Damage": 164,
+      "InitialSpeed": 510,
+      "PenetrationPower": 37,
+      "StackMaxSize": 20,
+      "Tracer": false,
+      "TracerColor": "red",
+      "BallisticCoeficient": 383,
+      "BulletMassGram": 2830,
+      "ProjectileCount": 1,
+      "ammoAccr": 80,
+      "ammoRec": 50
+    }
+  },
+  "locale": {
+    "Name": "12/70 AP-20 armor-piercing slug",
+    "ShortName": "AP-20"
+  }
+}

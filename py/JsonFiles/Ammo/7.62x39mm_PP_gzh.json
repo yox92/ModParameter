@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "64b7af434b75259c590fa893",
+    "_name": "patron_762x39_pp",
+    "_props": {
+      "ArmorDamage": 57,
+      "Caliber": "Caliber762x39",
+      "Damage": 59,
+      "InitialSpeed": 732,
+      "PenetrationPower": 41,
+      "StackMaxSize": 60,
+      "Tracer": false,
+      "TracerColor": "red",
+      "BallisticCoeficient": 280,
+      "BulletMassGram": 790,
+      "ProjectileCount": 1,
+      "ammoAccr": -1,
+      "ammoRec": 5
+    }
+  },
+  "locale": {
+    "Name": "7.62x39mm PP gzh",
+    "ShortName": "PP"
+  }
+}

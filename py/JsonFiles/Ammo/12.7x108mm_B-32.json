@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "5cde8864d7f00c0010373be1",
+    "_name": "patron_127x108",
+    "_props": {
+      "ArmorDamage": 88,
+      "Caliber": "UTYOS_AGS",
+      "Damage": 182,
+      "InitialSpeed": 818,
+      "PenetrationPower": 88,
+      "StackMaxSize": 20,
+      "Tracer": false,
+      "TracerColor": "red",
+      "BallisticCoeficient": 623,
+      "BulletMassGram": 4830,
+      "ProjectileCount": 1,
+      "ammoAccr": 0,
+      "ammoRec": 0
+    }
+  },
+  "locale": {
+    "Name": "12.7x108mm B-32",
+    "ShortName": "B-32"
+  }
+}

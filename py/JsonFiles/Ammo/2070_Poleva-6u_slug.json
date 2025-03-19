@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "5d6e6a42a4b9364f07165f52",
+    "_name": "patron_20x70_slug_poleva_6u",
+    "_props": {
+      "ArmorDamage": 40,
+      "Caliber": "Caliber20g",
+      "Damage": 135,
+      "InitialSpeed": 445,
+      "PenetrationPower": 17,
+      "StackMaxSize": 20,
+      "Tracer": false,
+      "TracerColor": "red",
+      "BallisticCoeficient": 144,
+      "BulletMassGram": 2870,
+      "ProjectileCount": 1,
+      "ammoAccr": 110,
+      "ammoRec": -10
+    }
+  },
+  "locale": {
+    "Name": "20/70 Poleva-6u slug",
+    "ShortName": "Poleva-6u"
+  }
+}

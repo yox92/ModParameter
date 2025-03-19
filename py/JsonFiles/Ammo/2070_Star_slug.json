@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "5d6e6a05a4b93618084f58d0",
+    "_name": "patron_20x70_slug_star",
+    "_props": {
+      "ArmorDamage": 42,
+      "Caliber": "Caliber20g",
+      "Damage": 154,
+      "InitialSpeed": 415,
+      "PenetrationPower": 16,
+      "StackMaxSize": 20,
+      "Tracer": false,
+      "TracerColor": "red",
+      "BallisticCoeficient": 121,
+      "BulletMassGram": 3120,
+      "ProjectileCount": 1,
+      "ammoAccr": 130,
+      "ammoRec": 5
+    }
+  },
+  "locale": {
+    "Name": "20/70 Star slug",
+    "ShortName": "Star"
+  }
+}

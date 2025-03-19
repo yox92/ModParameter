@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "56dff4a2d2720bbd668b456a",
+    "_name": "patron_545x39_T",
+    "_props": {
+      "ArmorDamage": 36,
+      "Caliber": "Caliber545x39",
+      "Damage": 59,
+      "InitialSpeed": 883,
+      "PenetrationPower": 20,
+      "StackMaxSize": 60,
+      "Tracer": true,
+      "TracerColor": "tracerRed",
+      "BallisticCoeficient": 223,
+      "BulletMassGram": 323,
+      "ProjectileCount": 1,
+      "ammoAccr": -3,
+      "ammoRec": 0
+    }
+  },
+  "locale": {
+    "Name": "5.45x39mm T gs",
+    "ShortName": "T"
+  }
+}

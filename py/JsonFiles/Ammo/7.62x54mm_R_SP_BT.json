@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "64b8f7b5389d7ffd620ccba2",
+    "_name": "patron_762x54r_spbt",
+    "_props": {
+      "ArmorDamage": 56,
+      "Caliber": "Caliber762x54R",
+      "Damage": 92,
+      "InitialSpeed": 703,
+      "PenetrationPower": 27,
+      "StackMaxSize": 40,
+      "Tracer": false,
+      "TracerColor": "red",
+      "BallisticCoeficient": 334,
+      "BulletMassGram": 960,
+      "ProjectileCount": 1,
+      "ammoAccr": 7,
+      "ammoRec": 0
+    }
+  },
+  "locale": {
+    "Name": "7.62x54mm R SP BT",
+    "ShortName": "SP BT"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "58dd3ad986f77403051cba8f",
+    "_name": "patron_762x51_M80",
+    "_props": {
+      "ArmorDamage": 67,
+      "Caliber": "Caliber762x51",
+      "Damage": 80,
+      "InitialSpeed": 838,
+      "PenetrationPower": 43,
+      "StackMaxSize": 40,
+      "Tracer": false,
+      "TracerColor": "red",
+      "BallisticCoeficient": 335,
+      "BulletMassGram": 950,
+      "ProjectileCount": 1,
+      "ammoAccr": -3,
+      "ammoRec": 1
+    }
+  },
+  "locale": {
+    "Name": "7.62x51mm M80",
+    "ShortName": "M80"
+  }
+}

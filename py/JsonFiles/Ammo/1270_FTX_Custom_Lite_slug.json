@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "5d6e68e6a4b9361c140bcfe0",
+    "_name": "patron_12x70_slug_ftx_custom_lite",
+    "_props": {
+      "ArmorDamage": 50,
+      "Caliber": "Caliber12g",
+      "Damage": 183,
+      "InitialSpeed": 480,
+      "PenetrationPower": 20,
+      "StackMaxSize": 20,
+      "Tracer": false,
+      "TracerColor": "red",
+      "BallisticCoeficient": 188,
+      "BulletMassGram": 1940,
+      "ProjectileCount": 1,
+      "ammoAccr": 135,
+      "ammoRec": -25
+    }
+  },
+  "locale": {
+    "Name": "12/70 FTX Custom Lite slug",
+    "ShortName": "FTX"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "59e77a2386f7742ee578960a",
+    "_name": "patron_762х54R_7N1",
+    "_props": {
+      "ArmorDamage": 84,
+      "Caliber": "Caliber762x54R",
+      "Damage": 84,
+      "InitialSpeed": 875,
+      "PenetrationPower": 45,
+      "StackMaxSize": 40,
+      "Tracer": false,
+      "TracerColor": "red",
+      "BallisticCoeficient": 342,
+      "BulletMassGram": 980,
+      "ProjectileCount": 1,
+      "ammoAccr": 10,
+      "ammoRec": 8
+    }
+  },
+  "locale": {
+    "Name": "7.62x54mm R PS gzh",
+    "ShortName": "PS"
+  }
+}

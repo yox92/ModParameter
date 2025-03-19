@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "5d6e695fa4b936359b35d852",
+    "_name": "patron_20x70_buckshot_56",
+    "_props": {
+      "ArmorDamage": 12,
+      "Caliber": "Caliber20g",
+      "Damage": 26,
+      "InitialSpeed": 340,
+      "PenetrationPower": 1,
+      "StackMaxSize": 20,
+      "Tracer": false,
+      "TracerColor": "red",
+      "BallisticCoeficient": 29,
+      "BulletMassGram": 100,
+      "ProjectileCount": 8,
+      "ammoAccr": -10,
+      "ammoRec": 10
+    }
+  },
+  "locale": {
+    "Name": "20/70 5.6mm buckshot",
+    "ShortName": "5.6mm"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "57a0e5022459774d1673f889",
+    "_name": "patron_9x39_sp6",
+    "_props": {
+      "ArmorDamage": 64,
+      "Caliber": "Caliber9x39",
+      "Damage": 60,
+      "InitialSpeed": 305,
+      "PenetrationPower": 48,
+      "StackMaxSize": 50,
+      "Tracer": false,
+      "TracerColor": "red",
+      "BallisticCoeficient": 414,
+      "BulletMassGram": 1620,
+      "ProjectileCount": 1,
+      "ammoAccr": 0,
+      "ammoRec": 5
+    }
+  },
+  "locale": {
+    "Name": "9x39mm SP-6 gs",
+    "ShortName": "SP-6"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "64b7af734b75259c590fa895",
+    "_name": "patron_762x39_sp",
+    "_props": {
+      "ArmorDamage": 27,
+      "Caliber": "Caliber762x39",
+      "Damage": 68,
+      "InitialSpeed": 772,
+      "PenetrationPower": 20,
+      "StackMaxSize": 60,
+      "Tracer": false,
+      "TracerColor": "red",
+      "BallisticCoeficient": 280,
+      "BulletMassGram": 790,
+      "ProjectileCount": 1,
+      "ammoAccr": 5,
+      "ammoRec": -5
+    }
+  },
+  "locale": {
+    "Name": "7.62x39mm SP",
+    "ShortName": "SP"
+  }
+}

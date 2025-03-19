@@ -1,0 +1,28 @@
+{
+  "item": {
+    "_id": "5ede4739e0350d05467f73e8",
+    "_name": "patron_40x46_m406",
+    "_props": {
+      "ArmorDamage": 95,
+      "Caliber": "Caliber40x46",
+      "Damage": 199,
+      "InitialSpeed": 76,
+      "PenetrationPower": 1,
+      "StackMaxSize": 1,
+      "Tracer": false,
+      "TracerColor": "green",
+      "BallisticCoeficient": 204,
+      "BulletMassGram": 23000,
+      "ProjectileCount": 1,
+      "ammoAccr": 15,
+      "ammoRec": -10,
+      "ExplosionStrength": 70,
+      "MaxExplosionDistance": 7,
+      "FuzeArmTimeSec": 260
+    }
+  },
+  "locale": {
+    "Name": "40x46mm M406 (HE) grenade",
+    "ShortName": "M406"
+  }
+}

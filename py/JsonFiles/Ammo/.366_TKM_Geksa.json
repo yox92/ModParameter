@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "59e6658b86f77411d949b250",
+    "_name": "patron_366_TKM_Geksa",
+    "_props": {
+      "ArmorDamage": 38,
+      "Caliber": "Caliber366TKM",
+      "Damage": 110,
+      "InitialSpeed": 550,
+      "PenetrationPower": 14,
+      "StackMaxSize": 50,
+      "Tracer": false,
+      "TracerColor": "red",
+      "BallisticCoeficient": 241,
+      "BulletMassGram": 1550,
+      "ProjectileCount": 1,
+      "ammoAccr": 0,
+      "ammoRec": 0
+    }
+  },
+  "locale": {
+    "Name": ".366 TKM Geksa",
+    "ShortName": "Geksa"
+  }
+}

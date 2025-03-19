@@ -1,0 +1,28 @@
+{
+  "item": {
+    "_id": "5d70e500a4b9364de70d38ce",
+    "_name": "patron_30x29_vog_30",
+    "_props": {
+      "ArmorDamage": 95,
+      "Caliber": "UTYOS_AGS",
+      "Damage": 199,
+      "InitialSpeed": 185,
+      "PenetrationPower": 1,
+      "StackMaxSize": 1,
+      "Tracer": false,
+      "TracerColor": "green",
+      "BallisticCoeficient": 316,
+      "BulletMassGram": 28000,
+      "ProjectileCount": 1,
+      "ammoAccr": 0,
+      "ammoRec": 0,
+      "ExplosionStrength": 100,
+      "MaxExplosionDistance": 10,
+      "FuzeArmTimeSec": 100
+    }
+  },
+  "locale": {
+    "Name": "30x29mm VOG-30",
+    "ShortName": "VOG-30"
+  }
+}

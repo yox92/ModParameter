@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "5c0d688c86f77413ae3407b2",
+    "_name": "patron_9x39_bp",
+    "_props": {
+      "ArmorDamage": 69,
+      "Caliber": "Caliber9x39",
+      "Damage": 58,
+      "InitialSpeed": 295,
+      "PenetrationPower": 54,
+      "StackMaxSize": 50,
+      "Tracer": false,
+      "TracerColor": "red",
+      "BallisticCoeficient": 395,
+      "BulletMassGram": 1550,
+      "ProjectileCount": 1,
+      "ammoAccr": 10,
+      "ammoRec": 15
+    }
+  },
+  "locale": {
+    "Name": "9x39mm BP gs",
+    "ShortName": "BP"
+  }
+}

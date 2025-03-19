@@ -1,0 +1,28 @@
+{
+  "item": {
+    "_id": "5656eb674bdc2d35148b457c",
+    "_name": "40 VOG-25",
+    "_props": {
+      "ArmorDamage": 68,
+      "Caliber": "Caliber40mmRU",
+      "Damage": 199,
+      "InitialSpeed": 76,
+      "PenetrationPower": 0,
+      "StackMaxSize": 1,
+      "Tracer": false,
+      "TracerColor": "red",
+      "BallisticCoeficient": 222,
+      "BulletMassGram": 25000,
+      "ProjectileCount": 1,
+      "ammoAccr": 0,
+      "ammoRec": 0,
+      "ExplosionStrength": 80,
+      "MaxExplosionDistance": 4,
+      "FuzeArmTimeSec": 50
+    }
+  },
+  "locale": {
+    "Name": "40mm VOG-25 grenade",
+    "ShortName": "VOG-25"
+  }
+}

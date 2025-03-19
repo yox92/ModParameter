@@ -1,0 +1,28 @@
+{
+  "item": {
+    "_id": "5ede475339ee016e8c534742",
+    "_name": "patron_40x46_m576",
+    "_props": {
+      "ArmorDamage": 95,
+      "Caliber": "Caliber40x46",
+      "Damage": 160,
+      "InitialSpeed": 269,
+      "PenetrationPower": 5,
+      "StackMaxSize": 1,
+      "Tracer": false,
+      "TracerColor": "green",
+      "BallisticCoeficient": 13,
+      "BulletMassGram": 9,
+      "ProjectileCount": 15,
+      "ammoAccr": 100,
+      "ammoRec": 0,
+      "ExplosionStrength": 100,
+      "MaxExplosionDistance": 10,
+      "FuzeArmTimeSec": 0
+    }
+  },
+  "locale": {
+    "Name": "40x46mm M576 (MP-APERS) grenade",
+    "ShortName": "M576"
+  }
+}

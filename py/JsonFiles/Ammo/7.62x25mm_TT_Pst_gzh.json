@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "573603562459776430731618",
+    "_name": "patron_762x25tt_Pst_gzh",
+    "_props": {
+      "ArmorDamage": 36,
+      "Caliber": "Caliber762x25TT",
+      "Damage": 50,
+      "InitialSpeed": 430,
+      "PenetrationPower": 25,
+      "StackMaxSize": 50,
+      "Tracer": false,
+      "TracerColor": "red",
+      "BallisticCoeficient": 126,
+      "BulletMassGram": 545,
+      "ProjectileCount": 1,
+      "ammoAccr": 0,
+      "ammoRec": 0
+    }
+  },
+  "locale": {
+    "Name": "7.62x25mm TT Pst gzh",
+    "ShortName": "Pst"
+  }
+}

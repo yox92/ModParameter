@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "5fc382a9d724d907e2077dab",
+    "_name": "patron_86x70_lapua_ap",
+    "_props": {
+      "ArmorDamage": 89,
+      "Caliber": "Caliber86x70",
+      "Damage": 115,
+      "InitialSpeed": 849,
+      "PenetrationPower": 79,
+      "StackMaxSize": 30,
+      "Tracer": false,
+      "TracerColor": "red",
+      "BallisticCoeficient": 477,
+      "BulletMassGram": 1610,
+      "ProjectileCount": 1,
+      "ammoAccr": 0,
+      "ammoRec": 10
+    }
+  },
+  "locale": {
+    "Name": ".338 Lapua Magnum AP",
+    "ShortName": "AP"
+  }
+}

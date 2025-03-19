@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "573602322459776445391df1",
+    "_name": "patron_762x25tt_LRNPC",
+    "_props": {
+      "ArmorDamage": 27,
+      "Caliber": "Caliber762x25TT",
+      "Damage": 66,
+      "InitialSpeed": 385,
+      "PenetrationPower": 7,
+      "StackMaxSize": 50,
+      "Tracer": false,
+      "TracerColor": "red",
+      "BallisticCoeficient": 119,
+      "BulletMassGram": 720,
+      "ProjectileCount": 1,
+      "ammoAccr": 10,
+      "ammoRec": -10
+    }
+  },
+  "locale": {
+    "Name": "7.62x25mm TT LRNPC",
+    "ShortName": "LRNPC"
+  }
+}

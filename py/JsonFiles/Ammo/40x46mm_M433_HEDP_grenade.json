@@ -1,0 +1,28 @@
+{
+  "item": {
+    "_id": "5f0c892565703e5c461894e9",
+    "_name": "patron_40x46_m433",
+    "_props": {
+      "ArmorDamage": 95,
+      "Caliber": "Caliber40x46",
+      "Damage": 199,
+      "InitialSpeed": 76,
+      "PenetrationPower": 1,
+      "StackMaxSize": 1,
+      "Tracer": false,
+      "TracerColor": "green",
+      "BallisticCoeficient": 204,
+      "BulletMassGram": 23000,
+      "ProjectileCount": 1,
+      "ammoAccr": 0,
+      "ammoRec": 0,
+      "ExplosionStrength": 90,
+      "MaxExplosionDistance": 5,
+      "FuzeArmTimeSec": 260
+    }
+  },
+  "locale": {
+    "Name": "40x46mm M433 (HEDP) grenade",
+    "ShortName": "M433"
+  }
+}

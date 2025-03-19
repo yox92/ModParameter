@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "6196365d58ef8c428c287da1",
+    "_name": "patron_762x35_whisper",
+    "_props": {
+      "ArmorDamage": 18,
+      "Caliber": "Caliber762x35",
+      "Damage": 90,
+      "InitialSpeed": 853,
+      "PenetrationPower": 14,
+      "StackMaxSize": 60,
+      "Tracer": false,
+      "TracerColor": "red",
+      "BallisticCoeficient": 334,
+      "BulletMassGram": 930,
+      "ProjectileCount": 1,
+      "ammoAccr": 5,
+      "ammoRec": -5
+    }
+  },
+  "locale": {
+    "Name": ".300 Whisper",
+    "ShortName": "Whisper"
+  }
+}

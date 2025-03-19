@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "6601380580e77cfd080e3418",
+    "_name": "patron_20x70_flechette",
+    "_props": {
+      "ArmorDamage": 24,
+      "Caliber": "Caliber20g",
+      "Damage": 20,
+      "InitialSpeed": 400,
+      "PenetrationPower": 24,
+      "StackMaxSize": 20,
+      "Tracer": false,
+      "TracerColor": "red",
+      "BallisticCoeficient": 57,
+      "BulletMassGram": 350,
+      "ProjectileCount": 8,
+      "ammoAccr": -10,
+      "ammoRec": 0
+    }
+  },
+  "locale": {
+    "Name": "20/70 flechette",
+    "ShortName": "Flechette"
+  }
+}

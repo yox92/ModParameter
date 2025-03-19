@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "5d2f2ab648f03550091993ca",
+    "_name": "patron_127x108_bzt",
+    "_props": {
+      "ArmorDamage": 95,
+      "Caliber": "UTYOS_AGS",
+      "Damage": 199,
+      "InitialSpeed": 818,
+      "PenetrationPower": 80,
+      "StackMaxSize": 20,
+      "Tracer": true,
+      "TracerColor": "green",
+      "BallisticCoeficient": 623,
+      "BulletMassGram": 4830,
+      "ProjectileCount": 1,
+      "ammoAccr": 0,
+      "ammoRec": 0
+    }
+  },
+  "locale": {
+    "Name": "12.7x108mm BZT-44M",
+    "ShortName": "BZT-44M"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "573719762459775a626ccbc1",
+    "_name": "patron_9x18pm_P_gzh",
+    "_props": {
+      "ArmorDamage": 16,
+      "Caliber": "Caliber9x18PM",
+      "Damage": 50,
+      "InitialSpeed": 302,
+      "PenetrationPower": 5,
+      "StackMaxSize": 50,
+      "Tracer": false,
+      "TracerColor": "red",
+      "BallisticCoeficient": 101,
+      "BulletMassGram": 610,
+      "ProjectileCount": 1,
+      "ammoAccr": 0,
+      "ammoRec": 0
+    }
+  },
+  "locale": {
+    "Name": "9x18mm PM P gzh",
+    "ShortName": "P"
+  }
+}

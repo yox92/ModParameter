@@ -1,0 +1,28 @@
+{
+  "item": {
+    "_id": "5ede474b0c226a66f5402622",
+    "_name": "patron_40x46_m381",
+    "_props": {
+      "ArmorDamage": 95,
+      "Caliber": "Caliber40x46",
+      "Damage": 199,
+      "InitialSpeed": 76,
+      "PenetrationPower": 1,
+      "StackMaxSize": 1,
+      "Tracer": false,
+      "TracerColor": "green",
+      "BallisticCoeficient": 204,
+      "BulletMassGram": 23000,
+      "ProjectileCount": 1,
+      "ammoAccr": 0,
+      "ammoRec": 0,
+      "ExplosionStrength": 70,
+      "MaxExplosionDistance": 7,
+      "FuzeArmTimeSec": 40
+    }
+  },
+  "locale": {
+    "Name": "40x46mm M381 (HE) grenade",
+    "ShortName": "M381"
+  }
+}

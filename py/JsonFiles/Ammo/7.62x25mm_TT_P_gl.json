@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "5736026a245977644601dc61",
+    "_name": "patron_762x25tt_P_Gl",
+    "_props": {
+      "ArmorDamage": 32,
+      "Caliber": "Caliber762x25TT",
+      "Damage": 58,
+      "InitialSpeed": 430,
+      "PenetrationPower": 14,
+      "StackMaxSize": 50,
+      "Tracer": false,
+      "TracerColor": "red",
+      "BallisticCoeficient": 127,
+      "BulletMassGram": 550,
+      "ProjectileCount": 1,
+      "ammoAccr": 0,
+      "ammoRec": 0
+    }
+  },
+  "locale": {
+    "Name": "7.62x25mm TT P gl",
+    "ShortName": "P"
+  }
+}

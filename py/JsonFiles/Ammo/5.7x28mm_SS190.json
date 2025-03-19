@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "5cc80f38e4a949001152b560",
+    "_name": "patron_57x28_ss190",
+    "_props": {
+      "ArmorDamage": 43,
+      "Caliber": "Caliber57x28",
+      "Damage": 49,
+      "InitialSpeed": 715,
+      "PenetrationPower": 37,
+      "StackMaxSize": 60,
+      "Tracer": false,
+      "TracerColor": "red",
+      "BallisticCoeficient": 233,
+      "BulletMassGram": 400,
+      "ProjectileCount": 1,
+      "ammoAccr": 0,
+      "ammoRec": 0
+    }
+  },
+  "locale": {
+    "Name": "5.7x28mm SS190",
+    "ShortName": "SS190"
+  }
+}

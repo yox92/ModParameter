@@ -1,0 +1,25 @@
+{
+  "item": {
+    "_id": "5a38ebd9c4a282000d722a5b",
+    "_name": "patron_20x70_buckshot",
+    "_props": {
+      "ArmorDamage": 14,
+      "Caliber": "Caliber20g",
+      "Damage": 25,
+      "InitialSpeed": 430,
+      "PenetrationPower": 3,
+      "StackMaxSize": 20,
+      "Tracer": false,
+      "TracerColor": "red",
+      "BallisticCoeficient": 57,
+      "BulletMassGram": 350,
+      "ProjectileCount": 8,
+      "ammoAccr": 0,
+      "ammoRec": 0
+    }
+  },
+  "locale": {
+    "Name": "20/70 7.5mm buckshot",
+    "ShortName": "7.5mm"
+  }
+}
