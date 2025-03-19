@@ -11,6 +11,7 @@ import {IPostSptLoadMod} from "@spt/models/external/IPostSptLoadMod";
 import {SaveServer} from "@spt/servers/SaveServer";
 import {ClearCloneService} from "./Service/ClearCloneService";
 import {LocaleService} from "@spt/services/LocaleService";
+import {PmcModify} from "Service/PmcModify";
 
 class ModParameter implements IPostDBLoadMod, PreSptModLoader, IPostSptLoadMod {
 
@@ -46,8 +47,9 @@ class ModParameter implements IPostDBLoadMod, PreSptModLoader, IPostSptLoadMod {
         const saveServer: SaveServer = container.resolve<SaveServer>("SaveServer");
         const itemHelper: ItemHelper = container.resolve<ItemHelper>("ItemHelper");
         const localeService: LocaleService = container.resolve<LocaleService>("LocaleService");
+        const dataService: DatabaseService = container.resolve<DatabaseService>("DatabaseService")
 
-        if (!logger || !saveServer || !localeService) {
+        if (!logger || !saveServer || !localeService || !dataService) {
             console.error(`[ModParameter] Critical error: Missing dependencies. Mod cannot function properly.`);
             return;
         }
@@ -58,20 +60,22 @@ class ModParameter implements IPostDBLoadMod, PreSptModLoader, IPostSptLoadMod {
         }
 
         const clearCloneService = new ClearCloneService(logger, saveServer, itemHelper, localeService);
+        const pmcModify = new PmcModify(logger, dataService);
+
         clearCloneService.clearAmmoWeaponNotUseAnymore()
+        pmcModify.displayLog()
     }
 
 
-
-    private overrideDebugMethod(logger: ILogger): void {
-        const originalDebugMethod = logger.debug.bind(logger);
-
-        logger.debug = (data: string | Record<string, unknown>, onlyShowInConsole?: boolean): void => {
-            if (!debug) return;
-
-            originalDebugMethod(data, false);
-        };
-    }
+    // private overrideDebugMethod(logger: ILogger): void {
+    //     const originalDebugMethod = logger.debug.bind(logger);
+    //
+    //     logger.debug = (data: string | Record<string, unknown>, onlyShowInConsole?: boolean): void => {
+    //         if (!debug) return;
+    //
+    //         originalDebugMethod(data, false);
+    //     };
+    // }
 
 
 }

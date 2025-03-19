@@ -38,7 +38,7 @@ export class ItemService {
             itemHelper);
     }
 
-    private caseWeapons(jsonWeaponsFiles:{ fileName: string; json: any }[], clone: boolean): void {
+    private caseWeapons(jsonWeaponsFiles: { fileName: string; json: any }[]): void {
         for (const {fileName, json} of jsonWeaponsFiles) {
             if (!json) {
                 this.logger.debug(`[ModParameter] Skipping invalid or missing weapon JSON data: ${fileName}`);
@@ -90,7 +90,7 @@ export class ItemService {
         }
     }
 
-    private caseAmmo(jsonAmmoFiles:{ fileName: string; json: any }[], clone: boolean) {
+    private caseAmmo(jsonAmmoFiles: { fileName: string; json: any }[]) {
         for (const {fileName, json} of jsonAmmoFiles) {
             if (!json) {
                 this.logger.debug(`[ModParameter] Skipping invalid or missing ammo JSON data: ${fileName}`);
@@ -152,12 +152,12 @@ export class ItemService {
      * clone Items : First Weapons because new ammo need compatibility with new weapon ofc
      */
     public cloneItems(): void {
-        this.caseWeapons(this.loadJsonFiles(ItemTypeEnum.Weapon), true);
-        this.caseAmmo(this.loadJsonFiles(ItemTypeEnum.Ammo), true);
+        this.caseWeapons(this.loadJsonFiles(ItemTypeEnum.Weapon));
+        this.caseAmmo(this.loadJsonFiles(ItemTypeEnum.Ammo));
     }
 
     private loadJsonFiles(itemType: ItemTypeEnum): any {
-        const jsonFiles:{ fileName: string; json: any }[] = this.jsonFileService.loadJsonFiles(itemType);
+        const jsonFiles: { fileName: string; json: any }[] = this.jsonFileService.loadJsonFiles(itemType);
 
         if (jsonFiles.length === 0) {
             this.logger.debug(`[ModParameter] No ${itemType} mod found. Skipping ${itemType} updates.`);

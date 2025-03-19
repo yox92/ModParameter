@@ -56,8 +56,8 @@ export class ClearCloneService {
 
             // INVENTORY
             let serialisedInventory: string = JSON.stringify(inventoryItems);
-            let modificationsWeapon:{value: number} = { value: 0 };  // mutable
-            let modificationsAmmo:{value: number} = { value: 0 };  // mutable
+            let modificationsWeapon: { value: number } = {value: 0};  // mutable
+            let modificationsAmmo: { value: number } = {value: 0};  // mutable
             // 🔫
             serialisedInventory = this.clearWeaponClone(map_weapon_idOriginal_vs_idClone, serialisedInventory, modificationsWeapon, this.INVENTORY)
             // 🔥
@@ -67,11 +67,11 @@ export class ClearCloneService {
 
             // INSURANCE
             let serialisedInsuredItems: string = JSON.stringify(insuredItems);
-            let clearCountInsurance:{value: number} = { value: 0 };
+            let clearCountInsurance: { value: number } = {value: 0};
             // 🔫
             serialisedInsuredItems = this.clearWeaponClone(map_weapon_idOriginal_vs_idClone, serialisedInsuredItems, clearCountInsurance, this.INSURED)
             // 🔥
-           serialisedInsuredItems = this.clearAmmoClone(map_ammo_idOriginal_vs_idClone, serialisedInsuredItems, clearCountInsurance, this.INSURED)
+            serialisedInsuredItems = this.clearAmmoClone(map_ammo_idOriginal_vs_idClone, serialisedInsuredItems, clearCountInsurance, this.INSURED)
             profile.characters.pmc.InsuredItems = JSON.parse(serialisedInsuredItems);
 
             // DEBUG des modifications
@@ -111,14 +111,16 @@ export class ClearCloneService {
      * @param location -  Inventory / Assurance
      * @returns json because MUTABLE.
      */
-    private clearWeaponClone(map: Map<string, string>, json: string, index: { value: number }, location: string): string {
+    private clearWeaponClone(map: Map<string, string>, json: string, index: {
+        value: number
+    }, location: string): string {
         for (const [originalId, cloneId] of map) {
 
             if (json.includes(`"${cloneId}"`)) {
-                 const localeDb = this.localeService.getLocaleDb();
+                const localeDb = this.localeService.getLocaleDb();
                 const result = localeDb[`${originalId} Name`];
 
-               this.logger.info(`[ModParameter] ${this.CYAN}Cloned WEAPON detected in ${this.RESET}${this.RED}${location}${this.RESET} : ${this.RESET}${this.GREEN}${result}${this.RESET} → Replaced with the Orignal`);
+                this.logger.info(`[ModParameter] ${this.CYAN}Cloned WEAPON detected in ${this.RESET}${this.RED}${location}${this.RESET} : ${this.RESET}${this.GREEN}${result}${this.RESET} → Replaced with the Orignal`);
                 const regex = new RegExp(`"${cloneId}"`, "g");
                 json = json.replace(regex, `"${originalId}"`);
                 index.value++;
@@ -134,9 +136,9 @@ export class ClearCloneService {
      * @param clearCountInsurance - Number of insured item modifications.
      * @param profileName - The name of the profile being processed.
      */
-    private debugLog(modificationsWeapon: {value: number},
-                     modificationsAmmo: {value: number},
-                     clearCountInsurance: {value: number},
+    private debugLog(modificationsWeapon: { value: number },
+                     modificationsAmmo: { value: number },
+                     clearCountInsurance: { value: number },
                      profileName: string): void {
         if (modificationsWeapon.value > 0) {
             this.logger.debug(`[ModParameter] ${modificationsWeapon.value} weapons corrected for ${profileName}`);

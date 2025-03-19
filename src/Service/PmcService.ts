@@ -3,6 +3,7 @@ import {AimingService} from "./AimingService";
 import {ILogger} from "@spt/models/spt/utils/ILogger";
 import {Aiming, createAiming} from "../Entity/Aiming";
 import {DatabaseService} from "@spt/services/DatabaseService";
+import {createStamina, Stamina} from "../Entity/Stamina";
 
 
 export class PmcService {
@@ -34,8 +35,9 @@ export class PmcService {
             this.logger.debug(`[ModParameter] Invalid Json PMC update.`);
             return;
         }
+        const staminaJson: Stamina = createStamina(jsonData);
 
-        this.aimingService.applyModifications(aimingJson, this.dataService);
+        this.aimingService.applyModifications(aimingJson, staminaJson, this.dataService);
     }
 
 }

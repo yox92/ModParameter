@@ -2,7 +2,7 @@ import customtkinter as ctk
 from customtkinter import CTkImage
 from CTkMessagebox import CTkMessagebox
 
-from Entity import Caliber, Root, Logger
+from Entity import Caliber, Root, Logger, CategoryColor
 from Entity.WindowType import WindowType
 from Utils import WindowUtils
 from Utils.ImageUtils import ImageUtils
@@ -478,14 +478,11 @@ class ModSelectionWindow:
         row = 1
         column = 0
         available_frames = len(self.framesBotCaliber)
-        # calibers_to_display = [caliber for caliber in Caliber.enumerate_calibers()
-        #                        if not (choice_window == WindowType.WEAPON
-        #                                and caliber == Caliber.GRENADE_40x46
-        #                                and caliber == Caliber.UTYOS_AGS)]
         calibers_to_display = []
         grenade_fusion_done = False
         for label, code, categorie in Caliber.enumerate_calibers():
-            if choice_window == WindowType.WEAPON and label in {Caliber.GRENADE_40x46.label, Caliber.UTYOS_AGS.label, Caliber.Caliber40mmRU.label}:
+            if choice_window == WindowType.WEAPON and label in {Caliber.GRENADE_40x46.label, Caliber.UTYOS_AGS.label,
+                                                                Caliber.Caliber40mmRU.label}:
                 continue
             if label == Caliber.Caliber40mmRU.label:
                 continue
@@ -495,25 +492,16 @@ class ModSelectionWindow:
                     grenade_fusion_done = True
                 continue
             if label == Caliber.UTYOS_AGS.label:
-                calibers_to_display.append((label,code,categorie))
+                calibers_to_display.append((label, code, categorie))
 
             calibers_to_display.append((label, code, categorie))
 
-
-
-        colors = ["dodgerblue", "peru", "mediumseagreen", "khaki"]
-        CATEGORY_COLORS = {
-            "pistol": colors[0],
-            "rifle": colors[1],
-            "heavy": colors[2],
-            "explosive": colors[3],
-        }
         if len(calibers_to_display) != available_frames:
             calibers_to_display = calibers_to_display[:available_frames]
 
         for idx, (label, code, categorie) in enumerate(calibers_to_display):
 
-            color = CATEGORY_COLORS[categorie]
+            color = CategoryColor.get(categorie)
             idx: int
 
             button = ctk.CTkButton(

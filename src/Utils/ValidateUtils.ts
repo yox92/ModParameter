@@ -33,6 +33,7 @@ export class ValidateUtils {
 
         return Math.floor(value);
     }
+
     /**
      * Validates and casts a value to an integer **only if it's not already an integer**.
      * Returns null if the value is invalid.
@@ -44,7 +45,7 @@ export class ValidateUtils {
         if (typeof value !== "number" || isNaN(value)) {
             return null;
         }
-        if ( value === 0) {
+        if (value === 0) {
             return 0;
         }
 
@@ -57,16 +58,17 @@ export class ValidateUtils {
 
 
     /**
-     * We deal with Ballistic * 1000 on Python GUI
+     * Converts an integer value into a float by applying a division factor.
+     * - Ensures the input is valid before processing.
+     * - Applies a division by a thousand multiplier to obtain the float value.
+     * - Adjusts precision if needed to maintain expected formatting.
      */
     public validateIntToFloatFromValueWithThousandMulti(value: number): number | null {
         if (typeof value !== "number" || isNaN(value)) {
             return null;
-        }
-        else if (value < 10) {
+        } else if (value < 10) {
             return 0.01
-        }
-        else if (value > 501) {
+        } else if (value > 501) {
             return 0.501
         }
 
@@ -93,16 +95,18 @@ export class ValidateUtils {
     }
 
     /**
-     * We deal with BulletMassGram * 100 on Python GUI
+     * Validates and adjusts the mass of a bullet in grams.
+     * - Returns `null` if the input is not a number.
+     * - Limits the value to a minimum of 0.08 and a maximum of 80.0.
+     * - Converts the value to grams by dividing by 100.
+     * - Adjusts decimal precision based on input value.
      */
     public validateBulletMassGram(value: number): number | null {
         if (typeof value !== "number" || isNaN(value)) {
             return null;
-        }
-        else if (value > 8001) {
+        } else if (value > 8001) {
             return 80.0
-        }
-        else if (value <= 8) {
+        } else if (value <= 8) {
             return 0.08
         }
 
