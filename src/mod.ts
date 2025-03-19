@@ -11,7 +11,7 @@ import {IPostSptLoadMod} from "@spt/models/external/IPostSptLoadMod";
 import {SaveServer} from "@spt/servers/SaveServer";
 import {ClearCloneService} from "./Service/ClearCloneService";
 import {LocaleService} from "@spt/services/LocaleService";
-import {PmcModify} from "Service/PmcModify";
+import {PmcModifyService} from "./Service/PmcModifyService";
 
 class ModParameter implements IPostDBLoadMod, PreSptModLoader, IPostSptLoadMod {
 
@@ -60,7 +60,7 @@ class ModParameter implements IPostDBLoadMod, PreSptModLoader, IPostSptLoadMod {
         }
 
         const clearCloneService = new ClearCloneService(logger, saveServer, itemHelper, localeService);
-        const pmcModify = new PmcModify(logger, dataService);
+        const pmcModify = new PmcModifyService(logger, dataService);
 
         clearCloneService.clearAmmoWeaponNotUseAnymore()
         pmcModify.displayLog()

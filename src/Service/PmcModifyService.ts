@@ -2,12 +2,11 @@ import {DatabaseService} from "@spt/services/DatabaseService";
 import {ILogger} from "@spt/models/spt/utils/ILogger";
 import {IAiming, IConfig, IGlobals, IStamina} from "@spt/models/eft/common/IGlobals";
 
-export class PmcModify {
+export class PmcModifyService {
     private readonly logger: ILogger;
     private readonly dataService: DatabaseService;
     private readonly GREEN: string = "\x1b[32m";
     private readonly RESET: string = "\x1b[0m";
-
 
     constructor(logger: ILogger, dataService: DatabaseService) {
         this.dataService = dataService;
@@ -28,11 +27,11 @@ export class PmcModify {
             this.logger.debug(`[ModParameter] can not display PMC value`);
         }
 
-        if (this.staminaIsOriginal(staminaSpt)) {
+        if (!this.staminaIsOriginal(staminaSpt)) {
             this.logger.info(`[ModParameter] PMC ${this.GREEN}Stamina${this.RESET} properties(s) change`);
         }
 
-        if (this.aimingIsOriginal(aimingSpt)) {
+        if (!this.aimingIsOriginal(aimingSpt)) {
             this.logger.info(`[ModParameter] PMC ${this.GREEN}Aiming${this.RESET} properties(s) change`);
         }
     }
