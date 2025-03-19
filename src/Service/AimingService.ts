@@ -22,6 +22,7 @@ export class AimingService {
      */
     public applyModifications(aimingJson: Aiming, staminaJson: Stamina, dataService: DatabaseService): boolean {
 
+        const validateUtils = new ValidateUtils();
         this.logger.debug(`[ModParameter] Starting Aiming modifications...`);
 
         const globals: IGlobals | undefined = dataService.getGlobals();
@@ -36,75 +37,82 @@ export class AimingService {
             return false;
         }
 
-        this.assigneAttributsAiming(aimingJson, aimingSpt, config);
-        this.assigneAttributsStamina(staminaJson, staminaSpt);
+        if (!validateUtils.aimingIsOriginal(aimingJson)) {
+            this.logger.debug(`[ModParameter] modifications aiming.`)
+            this.assigneAttributsAiming(aimingJson, aimingSpt, config);
+        }
+        if (!validateUtils.staminaIsOriginal(staminaJson)) {
+             this.logger.debug(`[ModParameter] modifications stamina.`)
+            this.assigneAttributsStamina(staminaJson, staminaSpt);
+        }
 
         this.logger.debug(`[ModParameter] Successfully applied PMC modifications.`);
         return true;
     }
 
     private assigneAttributsStamina(staminaJson: Stamina, staminaSpt: IStamina): void {
+
         const validateUtils = new ValidateUtils();
-        staminaSpt.SprintDrainRate = validateUtils.validateAndCastInt(staminaJson.SprintDrainRate)
-        staminaSpt.JumpConsumption = validateUtils.validateAndCastInt(staminaJson.JumpConsumption)
-        staminaSpt.StandupConsumption.x = validateUtils.validateAndCastInt(staminaJson.StandupConsumption)
-        staminaSpt.StandupConsumption.y = validateUtils.validateAndCastInt(staminaJson.StandupConsumption * 2)
+        staminaSpt.SprintDrainRate = validateUtils.validateAndCastIntPmc(staminaJson.SprintDrainRate)
+        staminaSpt.JumpConsumption = validateUtils.validateAndCastIntPmc(staminaJson.JumpConsumption)
+        staminaSpt.StandupConsumption.x = validateUtils.validateAndCastIntPmc(staminaJson.StandupConsumption)
+        staminaSpt.StandupConsumption.y = validateUtils.validateAndCastIntPmc(staminaJson.StandupConsumption * 2)
 
-        if (staminaSpt.AimDrainRate != (validateUtils.validateAndCastInt(staminaJson.AimDrainRate) + 0.1))
-        staminaSpt.AimDrainRate = validateUtils.validateAndCastFloat(staminaJson.AimDrainRate, 1)
+        if (staminaSpt.AimDrainRate != (validateUtils.validateAndCastIntPmc(staminaJson.AimDrainRate) + 0.1))
+            staminaSpt.AimDrainRate = validateUtils.validateAndCastFloatPmc(staminaJson.AimDrainRate, 1)
 
-        if (staminaSpt.BaseRestorationRate != (validateUtils.validateAndCastInt(staminaJson.BaseRestorationRate) + 0.5)) {
-            staminaSpt.BaseRestorationRate = validateUtils.validateAndCastFloat(staminaJson.BaseRestorationRate, 1);
+        if (staminaSpt.BaseRestorationRate != (validateUtils.validateAndCastIntPmc(staminaJson.BaseRestorationRate) + 0.5)) {
+            staminaSpt.BaseRestorationRate = validateUtils.validateAndCastFloatPmc(staminaJson.BaseRestorationRate, 1);
         }
     }
 
     private assigneAttributsAiming(aimingJson: Aiming, aimingSpt: IAiming, config: IConfig): void {
         const validateUtils = new ValidateUtils();
 
-        aimingSpt.AimProceduralIntensity = validateUtils.validateAndCastFloat(aimingJson.AimProceduralIntensity, 1)
-        aimingSpt.RecoilHandDamping = validateUtils.validateAndCastFloat(aimingJson.RecoilHandDamping, 2);
-        aimingSpt.RecoilDamping = validateUtils.validateAndCastFloat(aimingJson.RecoilDamping, 1);
+        aimingSpt.AimProceduralIntensity = validateUtils.validateAndCastFloatPmc(aimingJson.AimProceduralIntensity, 1)
+        aimingSpt.RecoilHandDamping = validateUtils.validateAndCastFloatPmc(aimingJson.RecoilHandDamping, 2);
+        aimingSpt.RecoilDamping = validateUtils.validateAndCastFloatPmc(aimingJson.RecoilDamping, 1);
 
         if (aimingJson.AimPunchMagnitude !== undefined) {
-            config.AimPunchMagnitude = validateUtils.validateAndCastFloat(aimingJson.AimPunchMagnitude, 1);
+            config.AimPunchMagnitude = validateUtils.validateAndCastFloatPmc(aimingJson.AimPunchMagnitude, 1);
         }
 
         if (aimingJson.RecoilHandDamping !== undefined) {
-            aimingSpt.RecoilHandDamping = validateUtils.validateAndCastFloat(aimingJson.RecoilHandDamping, 2);
+            aimingSpt.RecoilHandDamping = validateUtils.validateAndCastFloatPmc(aimingJson.RecoilHandDamping, 2);
         }
 
         if (aimingJson.RecoilDamping !== undefined) {
-            aimingSpt.RecoilDamping = validateUtils.validateAndCastFloat(aimingJson.RecoilDamping, 1);
+            aimingSpt.RecoilDamping = validateUtils.validateAndCastFloatPmc(aimingJson.RecoilDamping, 1);
         }
 
         if (aimingJson.ProceduralIntensityByPoseStanding !== undefined) {
-            aimingSpt.ProceduralIntensityByPose.z = validateUtils.validateAndCastFloat(aimingJson.ProceduralIntensityByPoseStanding, 1);
+            aimingSpt.ProceduralIntensityByPose.z = validateUtils.validateAndCastFloatPmc(aimingJson.ProceduralIntensityByPoseStanding, 1);
         }
 
         if (aimingJson.ProceduralIntensityByPoseCrouching !== undefined) {
-            aimingSpt.ProceduralIntensityByPose.y = validateUtils.validateAndCastFloat(aimingJson.ProceduralIntensityByPoseCrouching, 1);
+            aimingSpt.ProceduralIntensityByPose.y = validateUtils.validateAndCastFloatPmc(aimingJson.ProceduralIntensityByPoseCrouching, 1);
         }
 
         if (aimingJson.ProceduralIntensityByPoseProne !== undefined) {
-            aimingSpt.ProceduralIntensityByPose.x = validateUtils.validateAndCastFloat(aimingJson.ProceduralIntensityByPoseProne, 1);
+            aimingSpt.ProceduralIntensityByPose.x = validateUtils.validateAndCastFloatPmc(aimingJson.ProceduralIntensityByPoseProne, 1);
         }
 
         if (aimingJson.RecoilIntensityStanding !== undefined) {
-            aimingSpt.RecoilXIntensityByPose.z = validateUtils.validateAndCastFloat(aimingJson.RecoilIntensityStanding, 1);
-            aimingSpt.RecoilYIntensityByPose.z = validateUtils.validateAndCastFloat(aimingJson.RecoilIntensityStanding, 1);
-            aimingSpt.RecoilZIntensityByPose.z = validateUtils.validateAndCastFloat(aimingJson.RecoilIntensityStanding, 1);
+            aimingSpt.RecoilXIntensityByPose.z = validateUtils.validateAndCastFloatPmc(aimingJson.RecoilIntensityStanding, 1);
+            aimingSpt.RecoilYIntensityByPose.z = validateUtils.validateAndCastFloatPmc(aimingJson.RecoilIntensityStanding, 1);
+            aimingSpt.RecoilZIntensityByPose.z = validateUtils.validateAndCastFloatPmc(aimingJson.RecoilIntensityStanding, 1);
         }
 
         if (aimingJson.RecoilIntensityCrouching !== undefined) {
-            aimingSpt.RecoilXIntensityByPose.y = validateUtils.validateAndCastFloat(aimingJson.RecoilIntensityCrouching, 1);
-            aimingSpt.RecoilYIntensityByPose.y = validateUtils.validateAndCastFloat(aimingJson.RecoilIntensityCrouching, 1);
-            aimingSpt.RecoilZIntensityByPose.y = validateUtils.validateAndCastFloat(aimingJson.RecoilIntensityCrouching, 1);
+            aimingSpt.RecoilXIntensityByPose.y = validateUtils.validateAndCastFloatPmc(aimingJson.RecoilIntensityCrouching, 1);
+            aimingSpt.RecoilYIntensityByPose.y = validateUtils.validateAndCastFloatPmc(aimingJson.RecoilIntensityCrouching, 1);
+            aimingSpt.RecoilZIntensityByPose.y = validateUtils.validateAndCastFloatPmc(aimingJson.RecoilIntensityCrouching, 1);
         }
 
         if (aimingJson.RecoilIntensityProne !== undefined) {
-            aimingSpt.RecoilXIntensityByPose.x = validateUtils.validateAndCastFloat(aimingJson.RecoilIntensityProne, 1);
-            aimingSpt.RecoilYIntensityByPose.x = validateUtils.validateAndCastFloat(aimingJson.RecoilIntensityProne, 1);
-            aimingSpt.RecoilZIntensityByPose.x = validateUtils.validateAndCastFloat(aimingJson.RecoilIntensityProne, 1);
+            aimingSpt.RecoilXIntensityByPose.x = validateUtils.validateAndCastFloatPmc(aimingJson.RecoilIntensityProne, 1);
+            aimingSpt.RecoilYIntensityByPose.x = validateUtils.validateAndCastFloatPmc(aimingJson.RecoilIntensityProne, 1);
+            aimingSpt.RecoilZIntensityByPose.x = validateUtils.validateAndCastFloatPmc(aimingJson.RecoilIntensityProne, 1);
         }
     }
 

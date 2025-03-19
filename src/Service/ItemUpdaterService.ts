@@ -5,7 +5,6 @@ import {ITemplates} from "@spt/models/spt/templates/ITemplates";
 import {IProps, ITemplateItem} from "@spt/models/eft/common/tables/ITemplateItem";
 import {ValidateUtils} from "../Utils/ValidateUtils";
 import {DatabaseService} from "@spt/services/DatabaseService";
-import {ItemService} from "./ItemService";
 
 
 export class ItemUpdaterService {
@@ -74,12 +73,16 @@ export class ItemUpdaterService {
         updatedProps.ProjectileCount = validateUtils.validateAndCastInt(ammoProps.ProjectileCount);
         updatedProps.BackgroundColor = "blue";
 
-        if (sptItemProps.HasGrenaderComponent) {
-            updatedProps.ExplosionStrength = validateUtils.validateAndCastInt(ammoProps.ExplosionStrength)
-            updatedProps.MaxExplosionDistance = validateUtils.validateAndCastInt(ammoProps.MaxExplosionDistance)
-            updatedProps.FuzeArmTimeSec = validateUtils.validateIntToFloatFromValueWithThousandMulti(ammoProps.FuzeArmTimeSec)
+        if (
+            sptItemProps.HasGrenaderComponent &&
+            (updatedProps.ExplosionStrength !== undefined && updatedProps.ExplosionStrength !== null &&
+                updatedProps.MaxExplosionDistance !== undefined && updatedProps.MaxExplosionDistance !== null &&
+                updatedProps.FuzeArmTimeSec !== undefined && updatedProps.FuzeArmTimeSec !== null)
+        ) {
+            updatedProps.ExplosionStrength = validateUtils.validateAndCastInt(ammoProps.ExplosionStrength);
+            updatedProps.MaxExplosionDistance = validateUtils.validateAndCastInt(ammoProps.MaxExplosionDistance);
+            updatedProps.FuzeArmTimeSec = validateUtils.validateIntToFloatFromValueWithThousandMulti(ammoProps.FuzeArmTimeSec);
         }
-
 
         const invalidProps = Object.entries(updatedProps).filter(([_, value]) => value === null);
 

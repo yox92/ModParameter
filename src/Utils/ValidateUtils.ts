@@ -1,3 +1,7 @@
+import {IAiming, IStamina} from "@spt/models/eft/common/IGlobals";
+import {Aiming} from "../Entity/Aiming";
+import {Stamina} from "../Entity/Stamina";
+
 export class ValidateUtils {
 
     /**
@@ -9,7 +13,7 @@ export class ValidateUtils {
      */
     public validateAndCastFloat(value: any, decimal: number): number | null {
 
-        if (typeof value !== "number" || isNaN(value) || value <= 0) {
+        if (typeof value !== "number" || isNaN(value)) {
             return null;
         }
 
@@ -22,9 +26,43 @@ export class ValidateUtils {
      * @param value The value to check
      * @returns The formatted integer or `null` if invalid
      */
-    public validateAndCastInt(value: any): number | null {
-        if (typeof value !== "number" || isNaN(value) || value === 0) {
+    public validateAndCastInt(value: any): number {
+        if (typeof value !== "number" || isNaN(value)) {
             return null; // Mark as invalid
+        }
+
+        if (Number.isInteger(value)) {
+            return value;
+        }
+
+        return Math.floor(value);
+    }
+
+    /**
+     * Validates and casts a value to a float with a specified number of decimal places.
+     * Returns `null` if the value is invalid, zero, or not a number.
+     * @param value The value to check
+     * @param decimal Number of decimal places
+     * @returns The formatted float or 1 if invalid
+     */
+    public validateAndCastFloatPmc(value: any, decimal: number): number | null {
+
+        if (typeof value !== "number" || isNaN(value)) {
+            return 1;
+        }
+
+        return parseFloat(value.toFixed(decimal));
+    }
+
+    /**
+     * Validates and casts a value to an integer **only if it's not already an integer**.
+     * Returns null if the value is invalid or zero.
+     * @param value The value to check
+     * @returns The formatted integer or 1 if invalid
+     */
+    public validateAndCastIntPmc(value: any): number {
+        if (typeof value !== "number" || isNaN(value)) {
+            return 1; // Mark as invalid
         }
 
         if (Number.isInteger(value)) {
@@ -179,5 +217,63 @@ export class ValidateUtils {
 
         return parseFloat(value.toFixed(decimal));
     }
+
+    /**
+     * PMC aiming by default ?
+     */
+    public iaimingIsOriginal(aimingSpt: IAiming): boolean {
+        return (
+            aimingSpt.AimProceduralIntensity === 0.75 &&
+            aimingSpt.RecoilHandDamping === 0.45 &&
+            aimingSpt.RecoilDamping === 0.7 &&
+            aimingSpt.ProceduralIntensityByPose.x === 0.6 &&
+            aimingSpt.ProceduralIntensityByPose.y === 0.7 &&
+            aimingSpt.ProceduralIntensityByPose.z === 1 &&
+            aimingSpt.RecoilXIntensityByPose.x === 0.6 &&
+            aimingSpt.RecoilXIntensityByPose.y === 0.7 &&
+            aimingSpt.RecoilXIntensityByPose.z === 1
+        );
+    }
+    /**
+     * PMC aiming by default ?
+     */
+    public aimingIsOriginal(aimingSpt: Aiming): boolean {
+        return (
+            aimingSpt.AimProceduralIntensity === 0.7 &&
+            aimingSpt.RecoilHandDamping === 0.45 &&
+            aimingSpt.RecoilDamping === 0.7 &&
+            aimingSpt.ProceduralIntensityByPoseProne === 0.6 &&
+            aimingSpt.ProceduralIntensityByPoseCrouching === 0.7 &&
+            aimingSpt.ProceduralIntensityByPoseStanding === 1 &&
+            aimingSpt.RecoilIntensityProne === 0.6 &&
+            aimingSpt.RecoilIntensityCrouching === 0.7 &&
+            aimingSpt.RecoilIntensityStanding === 1
+        );
+    }
+
+    /**
+     * PMC stamina DB by default ?
+     */
+    public istaminaIsOriginal(staminaSpt: IStamina): boolean {
+        return (
+            staminaSpt.SprintDrainRate === 4 &&
+            staminaSpt.JumpConsumption === 14 &&
+            staminaSpt.StandupConsumption.x === 10 &&
+            staminaSpt.AimDrainRate === 1.1 &&
+            staminaSpt.BaseRestorationRate === 4.5
+
+        );
+    }
+    public staminaIsOriginal(staminaSpt: Stamina): boolean {
+        return (
+            staminaSpt.SprintDrainRate === 4 &&
+            staminaSpt.JumpConsumption === 14 &&
+            staminaSpt.StandupConsumption === 10 &&
+            staminaSpt.AimDrainRate === 1.1 &&
+            staminaSpt.BaseRestorationRate === 4.5
+
+        );
+    }
+
 
 }

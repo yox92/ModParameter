@@ -252,7 +252,10 @@ export class ClonerUtils {
             Baseclass.SNIPER_RIFLE,
             Baseclass.MACHINE_GUN,
             Baseclass.REVOLVER,
-            Baseclass.SPECIAL_WEAPON
+            Baseclass.SPECIAL_WEAPON,
+            Baseclass.GRENADE_LAUNCHER,
+            Baseclass.WEAPON,
+            Baseclass.UBGL
         ].some(baseclass => itemHelper.isOfBaseclass(itemId, baseclass));
     }
 
