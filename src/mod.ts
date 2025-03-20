@@ -12,6 +12,7 @@ import {SaveServer} from "@spt/servers/SaveServer";
 import {ClearCloneService} from "./Service/ClearCloneService";
 import {LocaleService} from "@spt/services/LocaleService";
 import {PmcModifyService} from "./Service/PmcModifyService";
+import {MedicalService} from "./Service/MedicalService";
 
 class ModParameter implements IPostDBLoadMod, PreSptModLoader, IPostSptLoadMod {
 
@@ -24,7 +25,7 @@ class ModParameter implements IPostDBLoadMod, PreSptModLoader, IPostSptLoadMod {
         const customItemService: CustomItemService = container.resolve<CustomItemService>("CustomItemService");
         const logger: ILogger = container.resolve<ILogger>("WinstonLogger");
         const itemHelper: ItemHelper = container.resolve<ItemHelper>("ItemHelper");
-
+        dataService.getGlobals()
         if (!dataService || !logger || !itemHelper || !customItemService) {
             console.error(`[ModParameter] Critical error: Missing dependencies. Mod cannot function properly.`);
             return;
@@ -36,9 +37,12 @@ class ModParameter implements IPostDBLoadMod, PreSptModLoader, IPostSptLoadMod {
             itemHelper);
 
         const pmcService = new PmcService(logger, dataService);
+        const medicalService = new MedicalService(logger, itemHelper, dataService);
 
         itemService.cloneItems();
         pmcService.updatePmc();
+        medicalService.applyMedicalBuff()
+
 
     }
 
