@@ -426,3 +426,12 @@ class Utils:
                                                               value_to_apply,
                                                               data_json_to_modify,
                                                               WindowType.AMMO)
+    @staticmethod
+    def case_fire_rate(adjusted_value, name):
+        if name == EnumProps.FIRE_RATE.label:
+            if adjusted_value < 300:
+                adjusted_value = round(adjusted_value / 10) * 10
+            else:
+                adjusted_value = round(adjusted_value / 50) * 50
+
+        return adjusted_value

@@ -72,8 +72,19 @@ export class ValidateUtils {
         return Math.floor(value);
     }
 
+    /**
+     * Validates and adjusts the fire rate according to specific rules:
+     * - If the value is invalid (NaN or negative), returns `null`.
+     * - If the value is `0`, it is replaced with `50`.
+     * - If the value is less than `300`, it is rounded to the nearest multiple of `10`.
+     * - Otherwise, it is rounded to the nearest multiple of `50`.
+     *
+     * @param value - The value to validate and adjust.
+     * @returns The adjusted number based on the defined rules, or `null` if the value is invalid.
+     */
     public validateValidationFireRate(value: any): number | null {
         let intValue = Number(value);
+
         if (isNaN(intValue) || intValue < 0) {
             return null;
         }
@@ -84,16 +95,13 @@ export class ValidateUtils {
             return 50;
         }
 
-        const remainder = intValue % 50;
-
-        if (remainder < 25) {
-            intValue -= remainder;
+        if (intValue < 300) {
+            return Math.round(intValue / 10) * 10;
         } else {
-            intValue += (50 - remainder);
+            return Math.round(intValue / 50) * 50;
         }
-
-        return intValue;
     }
+
 
     /**
      * Validates and casts a value to an integer **only if it's not already an integer**.
@@ -234,6 +242,7 @@ export class ValidateUtils {
             aimingSpt.RecoilXIntensityByPose.z === 1
         );
     }
+
     /**
      * PMC aiming by default ?
      */
@@ -264,6 +273,7 @@ export class ValidateUtils {
 
         );
     }
+
     public staminaIsOriginal(staminaSpt: Stamina): boolean {
         return (
             staminaSpt.SprintDrainRate === 4 &&
