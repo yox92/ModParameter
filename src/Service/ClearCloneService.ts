@@ -49,33 +49,39 @@ export class ClearCloneService {
 
         for (const profileId in profiles) {
             const profile: ISptProfile = profiles[profileId];
-            const inventoryItems: IItem[] = profile.characters.pmc.Inventory.items;
-            const insuredItems: IInsuredItem[] = profile.characters.pmc.InsuredItems;
+            if (profile) {
+                if (profile.characters.pmc.Inventory && profile.characters.pmc.InsuredItems) {
+                    const inventoryItems: IItem[] = profile.characters.pmc.Inventory.items;
+                    const insuredItems: IInsuredItem[] = profile.characters.pmc.InsuredItems;
 
-            this.logger.debug(`[ModParameter] Processing profile: ${profile.info.username} (ID: ${profileId})`);
+                    this.logger.debug(`[ModParameter] Processing profile: ${profile.info.username} (ID: ${profileId})`);
 
-            // INVENTORY
-            let serialisedInventory: string = JSON.stringify(inventoryItems);
-            let modificationsWeapon: { value: number } = {value: 0};  // mutable
-            let modificationsAmmo: { value: number } = {value: 0};  // mutable
-            // 🔫
-            serialisedInventory = this.clearWeaponClone(map_weapon_idOriginal_vs_idClone, serialisedInventory, modificationsWeapon, this.INVENTORY)
-            // 🔥
-            serialisedInventory = this.clearAmmoClone(map_ammo_idOriginal_vs_idClone, serialisedInventory, modificationsAmmo, this.INVENTORY)
-            profile.characters.pmc.Inventory.items = JSON.parse(serialisedInventory);
+                    // INVENTORY
+                    let serialisedInventory: string = JSON.stringify(inventoryItems);
+                    let modificationsWeapon: { value: number } = {value: 0};  // mutable
+                    let modificationsAmmo: { value: number } = {value: 0};  // mutable
+                    // 🔫
+                    serialisedInventory = this.clearWeaponClone(map_weapon_idOriginal_vs_idClone, serialisedInventory, modificationsWeapon, this.INVENTORY)
+                    // 🔥
+                    serialisedInventory = this.clearAmmoClone(map_ammo_idOriginal_vs_idClone, serialisedInventory, modificationsAmmo, this.INVENTORY)
+                    profile.characters.pmc.Inventory.items = JSON.parse(serialisedInventory);
 
 
-            // INSURANCE
-            let serialisedInsuredItems: string = JSON.stringify(insuredItems);
-            let clearCountInsurance: { value: number } = {value: 0};
-            // 🔫
-            serialisedInsuredItems = this.clearWeaponClone(map_weapon_idOriginal_vs_idClone, serialisedInsuredItems, clearCountInsurance, this.INSURED)
-            // 🔥
-            serialisedInsuredItems = this.clearAmmoClone(map_ammo_idOriginal_vs_idClone, serialisedInsuredItems, clearCountInsurance, this.INSURED)
-            profile.characters.pmc.InsuredItems = JSON.parse(serialisedInsuredItems);
+                    // INSURANCE
+                    let serialisedInsuredItems: string = JSON.stringify(insuredItems);
+                    let clearCountInsurance: { value: number } = {value: 0};
+                    // 🔫
+                    serialisedInsuredItems = this.clearWeaponClone(map_weapon_idOriginal_vs_idClone, serialisedInsuredItems, clearCountInsurance, this.INSURED)
+                    // 🔥
+                    serialisedInsuredItems = this.clearAmmoClone(map_ammo_idOriginal_vs_idClone, serialisedInsuredItems, clearCountInsurance, this.INSURED)
+                    profile.characters.pmc.InsuredItems = JSON.parse(serialisedInsuredItems);
 
-            // DEBUG des modifications
-            this.debugLog(modificationsWeapon, modificationsAmmo, clearCountInsurance, profile.info.username)
+                    // DEBUG des modifications
+                    this.debugLog(modificationsWeapon, modificationsAmmo, clearCountInsurance, profile.info.username)
+                }
+
+            }
+
         }
     }
 
