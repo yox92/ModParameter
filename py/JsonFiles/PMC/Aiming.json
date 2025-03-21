@@ -9,7 +9,7 @@
   "RecoilIntensityCrouching": 0.7,
   "RecoilIntensityProne": 0.6,
   "AimProceduralIntensity": 0.7,
-  "AimDrainRate": 1,
+  "AimDrainRate": 1.0,
   "SprintDrainRate": 4,
   "JumpConsumption": 14,
   "StandupConsumption": 10,
