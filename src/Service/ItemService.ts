@@ -175,14 +175,12 @@ export class ItemService {
     }
 
     public allTracer(): void {
-        const jsonTracer: { fileName: string; json: any }[] = this.jsonFileService.loadJsonFiles(ItemTypeEnum.Ammo)
-        if (!jsonTracer) {
+        const jsonTracer: { fileName: string; json: any }[] = this.jsonFileService.loadJsonFiles(ItemTypeEnum.Tracer)
+        if (jsonTracer) {
             const tracer: Tracer = creatTracer(jsonTracer);
-            if (tracer) {
-                this.itemUpdaterService.applyAllTracerAllAmmoDB(tracer)
-            }
+            this.itemUpdaterService.applyAllTracerAllAmmoDB(tracer)
+
         }
 
     }
-
 }

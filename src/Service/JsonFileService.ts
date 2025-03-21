@@ -71,7 +71,7 @@ export class JsonFileService {
 
     public loadJsonFiles(itemType: ItemTypeEnum): { fileName: string; json: any }[] {
         let folderPath: string;
-        if (itemType === ItemTypeEnum.Ammo) {
+        if (itemType === ItemTypeEnum.Ammo || itemType === ItemTypeEnum.Tracer) {
             folderPath = this.jsonAmmoFolderPath
         }
         else if (itemType === ItemTypeEnum.Weapon) {
@@ -88,7 +88,12 @@ export class JsonFileService {
 
         try {
             const files = fs.readdirSync(folderPath);
-            const jsonFiles = files.filter(file => file.endsWith("mod.json"));
+            let jsonFiles: string[];
+            if (itemType === ItemTypeEnum.Tracer) {
+                jsonFiles = files.filter(file => file.includes("tracer.json"));
+            } else {
+                jsonFiles = files.filter(file => file.endsWith("mod.json"));
+            }
 
             if (jsonFiles.length === 0) {
                 this.logger.debug("[ModParameter] No JSON files found");

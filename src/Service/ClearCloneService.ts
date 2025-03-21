@@ -120,12 +120,11 @@ export class ClearCloneService {
             }
             const ammoProps = ammo._props;
 
-            if (!ammoProps.Tracer) {
+            if (ammoProps.Tracer === undefined || ammoProps.Tracer == null) {
                 this.logger.debug(`[ModParameter] Warning: Ammo ${ammo._id} is missing Tracer property.`);
                 continue;
             }
-
-            if (ammoProps.Tracer !== true) {
+            if (!ammoProps.Tracer) {
                 allHaveTracer = false;
                 break;
             }

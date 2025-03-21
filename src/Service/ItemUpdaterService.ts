@@ -29,8 +29,13 @@ export class ItemUpdaterService {
     public applyAllTracerAllAmmoDB(tracer: Tracer): void {
          const validateUtils = new ValidateUtils();
 
-        if (!tracer.Tracer || !tracer.TracerColor) {
+        if (tracer.Tracer === undefined || tracer.TracerColor === undefined) {
             this.logger.debug(`[ModParameter] Warning: no Tracer or TracerColor about json Tracer`);
+            return;
+        }
+
+        if (tracer.Tracer === false) {
+            this.logger.debug(`[ModParameter] No Tracer action required`);
             return;
         }
 
@@ -41,12 +46,12 @@ export class ItemUpdaterService {
         );
 
         for (const ammo of ammos) {
-            if (!ammo._props) {
+            if (ammo._props === undefined || ammo._props === null) {
                 this.logger.debug(`[ModParameter] Warning: one ammo leak _props`);
                 continue;
             }
 
-            if (ammo._props.Tracer === undefined || ammo._props.TracerColor === undefined) {
+            if (ammo._props.Tracer === undefined || ammo._props.Tracer === null || ammo._props.TracerColor === undefined || ammo._props.TracerColor === null) {
                 this.logger.debug(`[ModParameter] Warning: Ammo ${ammo._name} is missing Tracer or TracerColor property.`);
                 continue;
             }
