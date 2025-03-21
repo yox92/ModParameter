@@ -406,18 +406,6 @@ class Utils:
             file_path = file_path.replace("_mod.json", ".json")
             JsonUtils.save_json_as_new_file(data_json_to_modify, file_path)
 
-    @staticmethod
-    def apply_tracer_to_ammo_no_mod_again(list_path_ammo, color):
-        from Utils.JsonUtils import JsonUtils
-        for file_path in list_path_ammo:
-            data_json_to_modify = JsonUtils.load_json(file_path)
-            data_json_to_modify = Utils.modify_json_value(EnumAmmo.TRACER.label,
-                                                          True,
-                                                          data_json_to_modify)
-            data_json_to_modify = Utils.modify_json_value(EnumAmmo.TRACERCOLOR.label,
-                                                          color,
-                                                          data_json_to_modify)
-            JsonUtils.save_json_as_new_file(data_json_to_modify, file_path)
 
     @staticmethod
     def modify_json_value(attribut, value_to_apply, data_json_to_modify):

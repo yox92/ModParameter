@@ -7,12 +7,17 @@ import {IItem} from "@spt/models/eft/common/tables/IItem";
 import {IInsuredItem} from "@spt/models/eft/common/tables/IBotBase";
 import {ItemHelper} from "@spt/helpers/ItemHelper";
 import {LocaleService} from "@spt/services/LocaleService";
+import {ValidateUtils} from "../Utils/ValidateUtils";
+import {ITemplateItem} from "@spt/models/eft/common/tables/ITemplateItem";
+import {Baseclass} from "../Entity/Baseclass";
+import {DatabaseService} from "@spt/services/DatabaseService";
 
 export class ClearCloneService {
     private readonly logger: ILogger;
     private readonly saveServer: SaveServer;
     private readonly itemHelper: ItemHelper;
     private readonly localeService: LocaleService;
+    private readonly dataService: DatabaseService;
     private readonly GREEN: string = "\x1b[32m";
     private readonly RESET: string = "\x1b[0m";
     private readonly RED: string = "\x1b[31m";
@@ -21,11 +26,16 @@ export class ClearCloneService {
     private readonly INSURED: string = "insured";
 
 
-    constructor(logger: ILogger, saveServer: SaveServer, itemHelper: ItemHelper, localeService: LocaleService) {
+    constructor(logger: ILogger,
+                saveServer: SaveServer,
+                itemHelper: ItemHelper,
+                localeService: LocaleService,
+                dataService: DatabaseService) {
         this.logger = logger;
         this.saveServer = saveServer;
         this.itemHelper = itemHelper;
-        this.localeService = localeService
+        this.localeService = localeService;
+        this.dataService = dataService
     }
 
     /**
@@ -83,6 +93,47 @@ export class ClearCloneService {
 
             }
 
+        }
+    }
+
+    /**
+     * Check ig all Ammo Are Tracer or Not
+     */
+    public checkTracerAllAmmoDB(): void {
+        let allHaveTracer = true;
+        const validateUtils = new ValidateUtils();
+
+        const items: ITemplateItem[] = validateUtils.checkTemplateItems(this.dataService, this.logger)
+
+        if (!items) {
+            return;
+        }
+
+        const ammos: ITemplateItem[] = items.filter(item =>
+            item?._id && this.itemHelper.isOfBaseclass(item._id, Baseclass.AMMO)
+        );
+
+        for (const ammo of ammos) {
+            if (!ammo._props) {
+                this.logger.debug(`[ModParameter] Warning: Ammo ${ammo._id} has no _props.`);
+                continue;
+            }
+            const ammoProps = ammo._props;
+
+            if (!ammoProps.Tracer) {
+                this.logger.debug(`[ModParameter] Warning: Ammo ${ammo._id} is missing Tracer property.`);
+                continue;
+            }
+
+            if (ammoProps.Tracer !== true) {
+                allHaveTracer = false;
+                break;
+            }
+        }
+        if (allHaveTracer) {
+            this.logger.info(`[ModParameter] All ammo are ${this.GREEN}Tracer${this.RESET}`);
+        } else {
+            this.logger.debug("[ModParameter] At least one ammo object is missing Tracer or has it set to false.");
         }
     }
 

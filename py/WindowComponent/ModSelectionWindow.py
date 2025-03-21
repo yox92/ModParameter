@@ -189,11 +189,9 @@ class ModSelectionWindow:
             if data["file_path"] not in list_path_ammo_mod_without_mod_at_the_end:
                 list_path_ammo.append(data["file_path"])
 
-        if list_path_ammo:
-            Utils.apply_tracer_to_ammo_no_mod_again(list_path_ammo, color)
-
         if list_path_ammo_mod_without_mod_at_the_end:
             Utils.apply_tracer_to_ammo_with_mod_exist_already(color)
+        JsonUtils.update_tracer(color)
 
     def all_mod_to_delete(self):
         msg_choice = CTkMessagebox(title="All Delete Or Choice Which One?",

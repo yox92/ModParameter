@@ -39,6 +39,7 @@ class ModParameter implements IPostDBLoadMod, PreSptModLoader, IPostSptLoadMod {
 
         itemService.cloneItems();
         pmcService.updatePmc();
+        itemService.allTracer();
     }
 
     public postSptLoad(container: DependencyContainer): void {
@@ -58,24 +59,13 @@ class ModParameter implements IPostDBLoadMod, PreSptModLoader, IPostSptLoadMod {
             return;
         }
 
-        const clearCloneService = new ClearCloneService(logger, saveServer, itemHelper, localeService);
+        const clearCloneService = new ClearCloneService(logger, saveServer, itemHelper, localeService, dataService);
         const pmcModify = new PmcModifyService(logger, dataService);
 
-        clearCloneService.clearAmmoWeaponNotUseAnymore()
-        pmcModify.displayLog()
+        clearCloneService.clearAmmoWeaponNotUseAnymore();
+        clearCloneService.checkTracerAllAmmoDB();
+        pmcModify.displayLog();
     }
-
-
-    // private overrideDebugMethod(logger: ILogger): void {
-    //     const originalDebugMethod = logger.debug.bind(logger);
-    //
-    //     logger.debug = (data: string | Record<string, unknown>, onlyShowInConsole?: boolean): void => {
-    //         if (!debug) return;
-    //
-    //         originalDebugMethod(data, false);
-    //     };
-    // }
-
 
 }
 

@@ -5,6 +5,9 @@ import {ITemplates} from "@spt/models/spt/templates/ITemplates";
 import {IProps, ITemplateItem} from "@spt/models/eft/common/tables/ITemplateItem";
 import {ValidateUtils} from "../Utils/ValidateUtils";
 import {DatabaseService} from "@spt/services/DatabaseService";
+import {Tracer} from "../Entity/Tracer";
+import {Baseclass} from "../Entity/Baseclass";
+import {ItemHelper} from "@spt/helpers/ItemHelper";
 
 
 export class ItemUpdaterService {
@@ -15,11 +18,42 @@ export class ItemUpdaterService {
 
     private readonly logger: ILogger;
     private readonly dataService: DatabaseService;
+    private readonly itemHelper: ItemHelper;
 
-    constructor(logger: ILogger, dataService: DatabaseService) {
+    constructor(logger: ILogger, dataService: DatabaseService, itemHelper: ItemHelper) {
         this.logger = logger;
         this.dataService = dataService;
+        this.itemHelper = itemHelper;
+    }
 
+    public applyAllTracerAllAmmoDB(tracer: Tracer): void {
+         const validateUtils = new ValidateUtils();
+
+        if (!tracer.Tracer || !tracer.TracerColor) {
+            this.logger.debug(`[ModParameter] Warning: no Tracer or TracerColor about json Tracer`);
+            return;
+        }
+
+        const items: ITemplateItem[] = validateUtils.checkTemplateItems(this.dataService, this.logger)
+
+        const ammos: ITemplateItem[] = items.filter(item =>
+            item?._id && this.itemHelper.isOfBaseclass(item._id, Baseclass.AMMO)
+        );
+
+        for (const ammo of ammos) {
+            if (!ammo._props) {
+                this.logger.debug(`[ModParameter] Warning: one ammo leak _props`);
+                continue;
+            }
+
+            if (ammo._props.Tracer === undefined || ammo._props.TracerColor === undefined) {
+                this.logger.debug(`[ModParameter] Warning: Ammo ${ammo._name} is missing Tracer or TracerColor property.`);
+                continue;
+            }
+
+            ammo._props.Tracer = tracer.Tracer;
+            ammo._props.TracerColor = tracer.TracerColor;
+        }
     }
 
     /**
@@ -77,7 +111,7 @@ export class ItemUpdaterService {
             (ammoProps.ExplosionStrength !== undefined && ammoProps.ExplosionStrength !== null &&
                 ammoProps.MaxExplosionDistance !== undefined && ammoProps.MaxExplosionDistance !== null &&
                 ammoProps.FuzeArmTimeSec !== undefined && ammoProps.FuzeArmTimeSec !== null)
-        )  {
+        ) {
             updatedProps.ExplosionStrength = validateUtils.validateAndCastInt(ammoProps.ExplosionStrength);
             updatedProps.MaxExplosionDistance = validateUtils.validateAndCastInt(ammoProps.MaxExplosionDistance);
             updatedProps.FuzeArmTimeSec = validateUtils.validateIntToFloatFromValueWithThousandMulti(ammoProps.FuzeArmTimeSec);

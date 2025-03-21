@@ -11,6 +11,7 @@ import {CustomItemService} from "@spt/services/mod/CustomItemService";
 import {ItemClonerService} from "./ItemClonerService";
 import {ItemHelper} from "@spt/helpers/ItemHelper";
 import {DatabaseService} from "@spt/services/DatabaseService";
+import {creatTracer, Tracer} from "../Entity/Tracer";
 
 export class ItemService {
     private readonly logger: ILogger;
@@ -31,7 +32,7 @@ export class ItemService {
         this.itemHelper = itemHelper;
 
         this.jsonFileService = new JsonFileService(logger);
-        this.itemUpdaterService = new ItemUpdaterService(logger, dataService);
+        this.itemUpdaterService = new ItemUpdaterService(logger, dataService, itemHelper);
         this.itemClonerService = new ItemClonerService(logger,
             dataService,
             customItemService,
@@ -171,6 +172,17 @@ export class ItemService {
             this.logger.debug(`[ModParameter] No ${itemType} mod found. Skipping ${itemType} updates.`);
         }
         return jsonFiles;
+    }
+
+    public allTracer(): void {
+        const jsonTracer: { fileName: string; json: any }[] = this.jsonFileService.loadJsonFiles(ItemTypeEnum.Ammo)
+        if (!jsonTracer) {
+            const tracer: Tracer = creatTracer(jsonTracer);
+            if (tracer) {
+                this.itemUpdaterService.applyAllTracerAllAmmoDB(tracer)
+            }
+        }
+
     }
 
 }

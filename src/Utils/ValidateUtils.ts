@@ -1,6 +1,10 @@
 import {IAiming, IStamina} from "@spt/models/eft/common/IGlobals";
 import {Aiming} from "../Entity/Aiming";
 import {Stamina} from "../Entity/Stamina";
+import {ITemplates} from "@spt/models/spt/templates/ITemplates";
+import {ITemplateItem} from "@spt/models/eft/common/tables/ITemplateItem";
+import {DatabaseService} from "@spt/services/DatabaseService";
+import {ILogger} from "@spt/models/spt/utils/ILogger";
 
 export class ValidateUtils {
 
@@ -283,6 +287,31 @@ export class ValidateUtils {
             staminaSpt.BaseRestorationRate === 4.5
 
         );
+    }
+
+    public checkTemplateItems(dataService: DatabaseService, logger: ILogger): ITemplateItem[] {
+        const tables: ITemplates = dataService.getTemplates();
+
+        if (!tables || typeof tables !== "object") {
+            logger.debug("[ModParameter] Error: Unable to retrieve templates (tables is undefined or invalid).");
+            return null;
+        }
+
+        const sptItems: Record<string, ITemplateItem> = tables.items;
+
+        if (!sptItems || typeof sptItems !== "object") {
+            logger.debug("[ModParameter] Error: Unable to retrieve items (sptItems is undefined or invalid).");
+            return null;
+        }
+
+        const items: ITemplateItem[] = Object.values(sptItems);
+
+        if (!Array.isArray(items) || items.length === 0) {
+            logger.debug("[ModParameter] Error: No items found in sptItems.");
+            return ;
+        }
+        return items
+
     }
 
 

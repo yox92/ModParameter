@@ -1,6 +1,6 @@
 {
   "name": "modparameter",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "A custom mod for weapons / ammo / PMC stats in SPT",
   "main": "src/mod.js",
   "type": "commonjs",
