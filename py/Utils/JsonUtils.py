@@ -367,7 +367,7 @@ class JsonUtils:
     @staticmethod
     def update_tracer(color):
         for file_name in os.listdir(JSON_FILES_DIR_AMMO):
-            if file_name == 'tracer.json':
+            if file_name == 'tracer_mod.json':
                 file_path = os.path.join(JSON_FILES_DIR_AMMO, file_name)
                 with open(file_path, "r", encoding="utf-8") as path:
                     data = json.load(path)
