@@ -12,6 +12,7 @@ import {SaveServer} from "@spt/servers/SaveServer";
 import {ClearCloneService} from "./Service/ClearCloneService";
 import {LocaleService} from "@spt/services/LocaleService";
 import {PmcModifyService} from "./Service/PmcModifyService";
+import {MedicalService} from "./Service/MedicalService";
 
 class ModParameter implements IPostDBLoadMod, PreSptModLoader, IPostSptLoadMod {
 
@@ -36,10 +37,12 @@ class ModParameter implements IPostDBLoadMod, PreSptModLoader, IPostSptLoadMod {
             itemHelper);
 
         const pmcService = new PmcService(logger, dataService);
+        const medicalService = new MedicalService(logger, itemHelper, dataService);
 
         itemService.cloneItems();
         pmcService.updatePmc();
         itemService.allTracer();
+        medicalService.applyMedicalBuff()
     }
 
     public postSptLoad(container: DependencyContainer): void {
