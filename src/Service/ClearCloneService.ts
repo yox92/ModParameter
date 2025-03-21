@@ -49,6 +49,7 @@ export class ClearCloneService {
 
         for (const profileId in profiles) {
             const profile: ISptProfile = profiles[profileId];
+            // Server dedicace no profil
             if (profile) {
                 if (profile.characters.pmc.Inventory && profile.characters.pmc.InsuredItems) {
                     const inventoryItems: IItem[] = profile.characters.pmc.Inventory.items;

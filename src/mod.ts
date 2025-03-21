@@ -39,8 +39,6 @@ class ModParameter implements IPostDBLoadMod, PreSptModLoader, IPostSptLoadMod {
 
         itemService.cloneItems();
         pmcService.updatePmc();
-
-
     }
 
     public postSptLoad(container: DependencyContainer): void {
