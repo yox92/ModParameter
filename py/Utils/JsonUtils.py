@@ -365,18 +365,21 @@ class JsonUtils:
         return JsonUtils.update_json_value(data, path_props_json, new_value, window_type)
 
     @staticmethod
-    def update_tracer(color):
+    def update_tracer(tracer: bool, color: bool):
         for file_name in os.listdir(JSON_FILES_DIR_AMMO):
             if file_name == 'tracer.json':
                 file_path = os.path.join(JSON_FILES_DIR_AMMO, file_name)
                 with open(file_path, "r", encoding="utf-8") as path:
                     data = json.load(path)
 
-                data["Tracer"] = True
+                data["Tracer"] = tracer
                 data["TracerColor"] = "tracerGreen" if color else "red"
                 with open(file_path, "w", encoding="utf-8") as path:
                     json.dump(data, path, indent=4)
-                print(f"all ammo are now Tracer with color : {color}")
+                if tracer:
+                    print(f"all ammo are now Tracer with color : {color}")
+                else:
+                    print(f"delete tracer properties")
 
     @staticmethod
     def update_json_in_new_file_aiming(key, new_value, data, window_type):

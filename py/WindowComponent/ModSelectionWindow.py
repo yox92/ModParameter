@@ -179,7 +179,10 @@ class ModSelectionWindow:
             else:
                 print("Too bad, wise decision")
         elif response == "No":
-            print("Too bad, wise decision")
+            self.remove_tracer()
+
+    def remove_tracer(self):
+        JsonUtils.update_tracer(False, False)
 
     def apply_all_ammo_tracer(self, color: bool):
         list_path_ammo: list = []
@@ -191,7 +194,7 @@ class ModSelectionWindow:
 
         if list_path_ammo_mod_without_mod_at_the_end:
             Utils.apply_tracer_to_ammo_with_mod_exist_already(color)
-        JsonUtils.update_tracer(color)
+        JsonUtils.update_tracer(True, color)
 
     def all_mod_to_delete(self):
         msg_choice = CTkMessagebox(title="All Delete Or Choice Which One?",

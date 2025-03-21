@@ -175,12 +175,12 @@ export class ItemService {
     }
 
     public allTracer(): void {
-        const jsonTracer: { fileName: string; json: any }[] = this.jsonFileService.loadJsonFiles(ItemTypeEnum.Tracer)
-        if (jsonTracer) {
-            const tracer: Tracer = creatTracer(jsonTracer);
-            this.itemUpdaterService.applyAllTracerAllAmmoDB(tracer)
-
+        const jsonTracer: { fileName: string; json: any }[] = this.jsonFileService.loadJsonFiles(ItemTypeEnum.Tracer);
+        if (jsonTracer.length > 0 && jsonTracer[0].json) {
+            const tracer: Tracer = creatTracer(jsonTracer[0].json);
+            this.itemUpdaterService.applyAllTracerAllAmmoDB(tracer);
+        } else {
+            this.logger.debug("[ModParameter] No tracer JSON data found.");
         }
-
     }
 }
