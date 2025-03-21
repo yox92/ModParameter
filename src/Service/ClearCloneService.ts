@@ -130,7 +130,7 @@ export class ClearCloneService {
             }
         }
         if (allHaveTracer) {
-            this.logger.info(`[ModParameter] All ammo are ${this.GREEN}Tracer${this.RESET}`);
+            this.logger.info(`[ModParameter] ${this.CYAN}All ammo are${this.RESET} ${this.GREEN}Tracer${this.RESET}`);
         } else {
             this.logger.debug("[ModParameter] At least one ammo object is missing Tracer or has it set to false.");
         }
