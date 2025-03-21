@@ -52,7 +52,7 @@ export class ItemUpdaterService {
             }
 
             ammo._props.Tracer = tracer.Tracer;
-            ammo._props.TracerColor = tracer.TracerColor;
+            ammo._props.TracerColor = validateUtils.validateTracerColor(tracer.TracerColor);
         }
     }
 
