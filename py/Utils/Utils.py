@@ -50,6 +50,19 @@ class Utils:
                 button.grid(row=i, column=y, padx=5, pady=5)
                 frame1.append(button)
                 count += 1
+    @staticmethod
+    def create_1x3_bottom(frame1, frame2):
+        frame1.clear()
+        total_buttons: int
+        total_buttons = 3
+        count = 0
+        for y in range(3):
+                if count >= total_buttons:
+                    return
+                button = ctk.CTkFrame(frame2, fg_color="transparent")
+                button.grid(row=0, column=y, padx=5, pady=5)
+                frame1.append(button)
+                count += 1
 
     @staticmethod
     def create_grid_row_col_config(frames, number_row, number_column):
