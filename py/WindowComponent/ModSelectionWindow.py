@@ -3,6 +3,7 @@ from customtkinter import CTkImage
 from CTkMessagebox import CTkMessagebox
 
 from Entity import Caliber, Root, Logger, CategoryColor
+from Entity.MedicCat import MedicalCat
 from Entity.WindowType import WindowType
 from Utils import WindowUtils
 from Utils.ImageUtils import ImageUtils
@@ -25,6 +26,7 @@ WINDOW_OFFSET = 10
 
 class ModSelectionWindow:
     def __init__(self, root):
+        self.frame_top_5 = None
         self.entry = None
         self.loaded_data_ammo = None
         self.button_delete_mod = None
@@ -85,6 +87,7 @@ class ModSelectionWindow:
         self.weapon_image: CTkImage = ImageUtils.create_image_var("weapon")
         self.pmc_image: CTkImage = ImageUtils.create_image_var("pmc")
         self.ammo_image: CTkImage = ImageUtils.create_image_var("ammo")
+        self.medic_image: CTkImage = ImageUtils.create_image_var("ammo")
 
     def create_frame_main(self):
         self.root.grid_rowconfigure(0, weight=1)
@@ -226,16 +229,20 @@ class ModSelectionWindow:
         self.main_frame_top.grid_columnconfigure(0, weight=1)
         self.main_frame_top.grid_columnconfigure(1, weight=1)
         self.main_frame_top.grid_columnconfigure(2, weight=1)
+        self.main_frame_top.grid_columnconfigure(3, weight=1)
+        self.main_frame_top.grid_columnconfigure(4, weight=1)
         self.main_frame_top.grid_rowconfigure(0, weight=1)
 
         self.frame_top_1 = ctk.CTkFrame(self.main_frame_top, fg_color="transparent")
         self.frame_top_2 = ctk.CTkFrame(self.main_frame_top, fg_color="transparent")
         self.frame_top_3 = ctk.CTkFrame(self.main_frame_top, fg_color="transparent")
         self.frame_top_4 = ctk.CTkFrame(self.main_frame_top, fg_color="transparent")
+        self.frame_top_5 = ctk.CTkFrame(self.main_frame_top, fg_color="transparent")
         self.frame_top_1.grid(row=0, column=0, sticky="nsew")
         self.frame_top_2.grid(row=0, column=1, sticky="nsew")
         self.frame_top_3.grid(row=0, column=2, sticky="nsew")
         self.frame_top_4.grid(row=0, column=3, sticky="nsew")
+        self.frame_top_5.grid(row=0, column=4, sticky="nsew")
 
     def show_all_weapons_mod(self):
         self.list_json_name_mod_weapons = JsonUtils.load_all_json_files_weapons_mod()
@@ -321,11 +328,25 @@ class ModSelectionWindow:
         )
         self.button_pmc.pack(side="top", anchor="center",
                              expand=True, fill="both")
+        self.button_medic = ctk.CTkButton(
+            self.frame_top_5,
+            image=self.medic_image,
+            text="PMC Attributes",
+            compound="bottom",
+            fg_color="transparent",
+            text_color="green",
+            hover_color="whitesmoke",
+            font=("Arial", 18, "bold"),
+            command=self.generate_list_button_caliber_ammo(WindowType.MEDIC)
+        )
+        self.button_medic.pack(side="top", anchor="center",
+                             expand=True, fill="both")
         self.frames_buttons = {
             "weapon": self.buttonWeapon,
             "caliber": self.button_caliber,
             "pmc": self.button_pmc,
-            "ammo": self.button_ammo
+            "ammo": self.button_ammo,
+            "medic" : self.button_medic
         }
 
     def generate_list_button_caliber_ammo(self, choice_window: WindowType):
@@ -333,12 +354,20 @@ class ModSelectionWindow:
             WindowUtils.lock_choice_frame("ammo", self.frames_buttons)
         elif choice_window == WindowType.CALIBER:
             WindowUtils.lock_choice_frame("caliber", self.frames_buttons)
+        elif choice_window == WindowType.MEDIC:
+            WindowUtils.lock_choice_frame("medic",self.frames_buttons)
 
         Utils.clear_frame(self.main_frame_bot)
-        Utils.create_grid_row_col_config(self.main_frame_bot, 5, 5)
-        Utils.create_5x5_bottom(self.framesBotCaliber, self.main_frame_bot, choice_window)
+        if choice_window == WindowType.AMMO or choice_window == WindowType.CALIBER:
+            Utils.create_grid_row_col_config(self.main_frame_bot, 5, 5)
+            Utils.create_5x5_bottom(self.framesBotCaliber, self.main_frame_bot, choice_window)
+            self.create_buttons_for_calibers_ammo(choice_window)
+        elif choice_window == WindowType.MEDIC:
+            Utils.create_grid_row_col_config(self.main_frame_bot, 1, 3)
+            Utils.create_1x3_bottom(self.framesBotCaliber, self.main_frame_bot)
+            self.create_buttons_for_medic(choice_window)
 
-        self.create_buttons_for_calibers_ammo(choice_window)
+
 
     def pmc_window(self):
         WindowUtils.lock_choice_frame("pmc", self.frames_buttons)
@@ -383,6 +412,10 @@ class ModSelectionWindow:
     def ammo_window(self):
         WindowUtils.lock_choice_frame("ammo", self.frames_buttons)
         self.generate_list_button_caliber_ammo(WindowType.AMMO)
+
+    def medic_window(self):
+        WindowUtils.lock_choice_frame("medic", self.frames_buttons)
+        self.generate_list_button_caliber_ammo(WindowType.MEDIC)
 
     def search_name(self, event=None):
         name_to_search = self.entry.get()
@@ -533,8 +566,49 @@ class ModSelectionWindow:
             if column >= 5:
                 column = 0
                 row += 1
+    def create_buttons_for_medic(self, choice_window: WindowType):
+        row = 1
+        column = 0
+
+        for idx, (label, code) in enumerate(MedicalCat.enumerate_medical()):
+
+            idx: int
+
+            button = ctk.CTkButton(
+                self.framesBotCaliber[idx],
+                text=label,
+                width=150,
+                text_color="black",
+                fg_color="red",
+                font=("Arial", 15, "bold")
+            )
+            button.pack(side="top", anchor="center")
+            button.configure(command=lambda r=code: self.ammo_button_press(r, choice_window))
+            column += 1
 
     def ammo_button_press(self, caliber_select, choice_window):
+        if not self.data_json_from_load_all_ammo:
+            (self.data_json_from_load_all_ammo,
+             self.file_path_from_load_all_ammo) = JsonUtils.load_all_json_ammo()
+
+        root_list = [Root.from_data(data, WindowType.AMMO) for data in self.data_json_from_load_all_ammo]
+
+        if caliber_select == Caliber.GRENADE_40x46.code:
+            filtered_roots = [
+                root for root in root_list
+                if root.item.props.get_value_by_label("Caliber") in {caliber_select, "Caliber40mmRU"}
+            ]
+
+        else:
+            filtered_roots = [
+                root for root in root_list
+                if root.item.props.get_value_by_label("Caliber") == caliber_select
+            ]
+        self.list_ammo_select = filtered_roots
+
+        self.generate_bot_frame_weapon_and_ammo(choice_window)
+
+    def medic_button_press(self, caliber_select, choice_window):
         if not self.data_json_from_load_all_ammo:
             (self.data_json_from_load_all_ammo,
              self.file_path_from_load_all_ammo) = JsonUtils.load_all_json_ammo()
