@@ -101,7 +101,7 @@ export class ItemClonerService {
                 props,
                 sptItem._parent,
                 WeaponCloneRegistry.getClonedId(id),
-                price,
+                this.applyPriceFactor(price, props.priceFactor),
                 handbookPrice,
                 handbookParentId,
                 locales,
