@@ -14,6 +14,7 @@ class CaliberWeaponsMod:
     def __init__(self, master, root, detail_window, caliber, main_instance):
         self.logger = Logger()
         self.close_button = None
+        self.block_system_error_detect = False
         self.root = root
         self.master = master
         self.caliber = caliber
@@ -232,26 +233,29 @@ class CaliberWeaponsMod:
                     label.configure(font=("Arial", 16, "bold"), text_color="Peru")
                 else:
                     label.configure(font=("Arial", 12, "bold"), text_color="white")
+                if props == EnumProps.PRICEFACTOR.label:
+                    self.entry_input(number, row, props)
 
-                slider = ctk.CTkSlider(
-                    self.right_main,
-                    from_=-99,
-                    to=+99,
-                    command=lambda lambda_value, pname=props:
-                    self.update_props_value(pname, lambda_value)
-                )
-                slider.set(number)
-                slider.grid(row=row, column=1, sticky=ctk.W, padx=10)
-                percent_label = ctk.CTkLabel(self.right_main, text=f"{number}%", font=("Arial", 15, "bold"))
-                percent_label.grid(row=row, column=2, sticky=ctk.W, padx=10)
+                else:
+                    slider = ctk.CTkSlider(
+                        self.right_main,
+                        from_=-99,
+                        to=+99,
+                        command=lambda lambda_value, pname=props:
+                        self.update_props_value(pname, lambda_value)
+                    )
+                    slider.set(number)
+                    slider.grid(row=row, column=1, sticky=ctk.W, padx=10)
+                    percent_label = ctk.CTkLabel(self.right_main, text=f"{number}%", font=("Arial", 15, "bold"))
+                    percent_label.grid(row=row, column=2, sticky=ctk.W, padx=10)
 
-                self.prop_widgets[props] = (slider, percent_label)
+                    self.prop_widgets[props] = (slider, percent_label)
 
-                reset_button = ctk.CTkButton(self.right_main, text="Reset",
+                    reset_button = ctk.CTkButton(self.right_main, text="Reset",
                                              command=lambda pname=props:
                                              self.reset_slider(pname),
                                              width=10)
-                reset_button.grid(row=row, column=3, sticky=ctk.W, padx=10)
+                    reset_button.grid(row=row, column=3, sticky=ctk.W, padx=10)
 
                 WindowUtils.frame_color_risky_range(props, number, percent_label)
                 row += 1
@@ -265,6 +269,74 @@ class CaliberWeaponsMod:
         self.status_label.grid(row=row + 1, column=1, sticky="nsew")
         if not self.no_save:
             self.status_label.configure(text="Existing data has been found and loaded")
+
+    def entry_input(self, value, row, prop_value: EnumProps):
+        if value == 0 :
+            value = 1.0
+        entry = ctk.CTkEntry(
+            self.right_main,
+            placeholder_text="Enter value...",
+            width=70,
+            font=("Arial", 14, "bold"),
+            justify="center"
+        )
+        entry.bind("<KeyRelease>", lambda event: self.get_entry_value(event, prop_value, value))
+        entry.insert(0, str(value))
+        entry.grid(row=row, column=1, padx=10, pady=5, sticky="ew")
+        entry_label = ctk.CTkLabel(
+            self.right_main, text=f"{value}", font=("Arial", 15, "bold"))
+        entry_label.grid(row=row, column=2, sticky=ctk.W, padx=10)
+        reset_button = ctk.CTkButton(self.right_main,
+                                     text="Reset", command=lambda pname=prop_value: self.reset_entry(pname, entry),
+                                     width=10)
+        reset_button.grid(row=row, column=2, padx=5, pady=5, sticky="w")
+        self.prop_widgets[prop_value] = (entry, entry_label)
+
+    def get_entry_value(self, event, prop_value, value):
+        input_text = self.prop_widgets[prop_value][0].get()
+        try:
+            int_input_text = float(input_text)
+        except ValueError:
+            self.error_number_prompt()
+            self.logger.log("warning", "Number please ...")
+            self.block_system_error_detect = True
+            Utils.block_all_input_before_correction(self.close_button,
+                                                    self.master,
+                                                    self.apply_button,
+                                                    self.prop_widgets[prop_value][0])
+            return
+        if isinstance(int_input_text, (int,float)):
+            if not Utils.is_value_outside_limits_weapon(prop_value, int_input_text):
+                self.reset_apply_button()
+                self.manager.update_from_props_json(prop_value, int_input_text)
+                if self.block_system_error_detect:
+                    Utils.unlock_all(self.master, self.apply_button)
+                    self.block_system_error_detect = False
+            else:
+                self.error_number_out_limit(prop_value)
+                self.block_system_error_detect = True
+                Utils.block_all_input_before_correction(self.close_button,
+                                                        self.master,
+                                                        self.apply_button,
+                                                        self.prop_widgets[prop_value][0])
+
+    def reset_entry(self, pname, entry):
+        entry = self.prop_widgets[pname][0]
+        self.prop_widgets[pname][0].delete(0, 'end')
+        entry.insert(0, str(1.0))
+        self.manager.update_from_props_json(pname, 1.0)
+        self.reset_apply_button()
+        self.verify_all_sliders_reset()
+
+    def error_number_out_limit(self, name):
+        self.logger.log("error",
+                        f"Error with one value load from save ('error_number_out_limit'), Originale value put for : {name}")
+        self.status_label.configure(text="Error ! This is the maximum/minimum \n value allowed", text_color="red")
+        self.apply_button.configure(fg_color="red", state="disabled")
+
+    def error_number_prompt(self):
+        self.status_label.configure(text="Error ! : Valide number please ", text_color="red")
+        self.apply_button.configure(fg_color="red", state="disabled")
 
     def update_props_value(self, name, value):
         slider, label = self.prop_widgets[name]
@@ -318,38 +390,39 @@ class CaliberWeaponsMod:
         self.status_label.configure(text="Ready to apply changes")
 
     def apply_changes_to_all(self):
-        if not self.no_save and self.manager.all_values_are_one():
-            for file_path in self.all_path:
-                JsonUtils.delete_file_mod_if_exists(file_path)
-            self.modify_save_json_file_caliber()
-            self.wait_modify_json()
-            self.check_wait_delete_json()
-            self.main_instance.list_json_name_mod_weapons = JsonUtils.load_all_json_files_weapons_mod()
-            if self.main_instance.list_json_name_mod_weapons:
-                self.main_instance.button_view_all_weapons_mod.configure(text="All Saved Weapons Mod")
+        if not self.block_system_error_detect:
+            if not self.no_save and self.manager.all_values_are_one():
+                for file_path in self.all_path:
+                    JsonUtils.delete_file_mod_if_exists(file_path)
+                self.modify_save_json_file_caliber()
+                self.wait_modify_json()
+                self.check_wait_delete_json()
+                self.main_instance.list_json_name_mod_weapons = JsonUtils.load_all_json_files_weapons_mod()
+                if self.main_instance.list_json_name_mod_weapons:
+                    self.main_instance.button_view_all_weapons_mod.configure(text="All Saved Weapons Mod")
+                else:
+                    self.main_instance.button_view_all_weapons_mod.configure(text="No weapons mod find")
+
             else:
-                self.main_instance.button_view_all_weapons_mod.configure(text="No weapons mod find")
+                list_path_new_json = []
+                for file_path in self.all_path:
+                    data_json_to_update = JsonUtils.load_json(file_path)
+                    for key, value in self.manager.iterate_key_values_where_key_ve_change(self.originale_value_from_JSON):
+                        data_json_to_update = JsonUtils.update_json_in_new_file_multi_choice(key,
+                                                                                             value,
+                                                                                             data_json_to_update,
+                                                                                             WindowType.CALIBER)
 
-        else:
-            list_path_new_json = []
-            for file_path in self.all_path:
-                data_json_to_update = JsonUtils.load_json(file_path)
-                for key, value in self.manager.iterate_key_values_where_key_ve_change(self.originale_value_from_JSON):
-                    data_json_to_update = JsonUtils.update_json_in_new_file_multi_choice(key,
-                                                                                         value,
-                                                                                         data_json_to_update,
-                                                                                         WindowType.CALIBER)
+                    list_path_new_json.append(JsonUtils.save_json_as_new_file(data_json_to_update, file_path))
 
-                list_path_new_json.append(JsonUtils.save_json_as_new_file(data_json_to_update, file_path))
-
-            self.modify_save_json_file_caliber()
-            self.wait_modify_json()
-            self.check_wait_modify_json(list_path_new_json)
-            self.main_instance.list_json_name_mod_weapons = JsonUtils.load_all_json_files_weapons_mod()
-            if self.main_instance.list_json_name_mod_weapons:
-                self.main_instance.button_view_all_weapons_mod.configure(text="All Saved Weapons Mod")
-            else:
-                self.main_instance.button_view_all_weapons_mod.configure(text="No weapons mod find")
+                self.modify_save_json_file_caliber()
+                self.wait_modify_json()
+                self.check_wait_modify_json(list_path_new_json)
+                self.main_instance.list_json_name_mod_weapons = JsonUtils.load_all_json_files_weapons_mod()
+                if self.main_instance.list_json_name_mod_weapons:
+                    self.main_instance.button_view_all_weapons_mod.configure(text="All Saved Weapons Mod")
+                else:
+                    self.main_instance.button_view_all_weapons_mod.configure(text="No weapons mod find")
 
     def modify_save_json_file_caliber(self):
         data_json_to_update = dict(

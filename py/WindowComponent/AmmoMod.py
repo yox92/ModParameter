@@ -73,7 +73,6 @@ class AmmoMod:
                             entry.insert(0, str(original_value))
                             entry_label.configure(text=str(original_value))
 
-
         if Utils.no_all_value_are_load_from_save(self.data_from_json_no_save, self.data_from_json_mod_save_user):
             self.apply_button.configure(fg_color="blue", hover_color="lightblue", border_color="red",
                                         state="enable")
@@ -172,7 +171,7 @@ class AmmoMod:
                         self.entry_input(value, row, prop_value)
 
                 elif isinstance(value, float):
-                    self.logger.log("info", f" Aucun slider float implémenté.")
+                    self.entry_input(value, row, prop_value)
                 row += 1
 
         self.apply_button = ctk.CTkButton(
@@ -230,7 +229,7 @@ class AmmoMod:
             font=("Arial", 14, "bold"),
             justify="center"
         )
-        entry.bind("<KeyRelease>", lambda event: self.get_entry_value(event, prop_value))
+        entry.bind("<KeyRelease>", lambda event: self.get_entry_value(event, prop_value, value))
         entry.insert(0, str(value))
         entry.grid(row=row, column=1, padx=10, pady=5, sticky="ew")
         entry_label = ctk.CTkLabel(
@@ -242,11 +241,13 @@ class AmmoMod:
         reset_button.grid(row=row, column=2, padx=5, pady=5, sticky="w")
         self.prop_widgets[prop_value] = (entry, entry_label)
 
-    def get_entry_value(self, event, prop_value):
+    def get_entry_value(self, event, prop_value, value):
         input_text = self.prop_widgets[prop_value][0].get()
-        int_input_text: int
         try:
-            int_input_text = int(input_text)
+            if prop_value == EnumAmmo.PRICEFACTOR.label:
+                int_input_text = float(input_text)
+            else:
+                int_input_text = int(input_text)
         except ValueError:
             self.error_number_prompt()
             self.logger.log("warning", "Number please ...")
@@ -256,7 +257,7 @@ class AmmoMod:
                                                     self.apply_button,
                                                     self.prop_widgets[prop_value][0])
             return
-        if isinstance(int_input_text, int):
+        if isinstance(int_input_text, (int,float)):
             if not Utils.is_value_outside_limits_ammo(prop_value, int_input_text):
                 self.reset_apply_button()
                 self.data_from_json_no_save.update_from_props_json(prop_value, int_input_text)
@@ -343,7 +344,8 @@ class AmmoMod:
 
             for name_props_to_modify, value_modify in self.data_from_json_no_save.iterate_key_and_values():
                 data_json_to_update = JsonUtils.update_json_in_new_file_multi_choice(name_props_to_modify, value_modify,
-                                                                                     data_json_to_update, WindowType.AMMO)
+                                                                                     data_json_to_update,
+                                                                                     WindowType.AMMO)
             file_path_update = JsonUtils.save_json_as_new_file(data_json_to_update, self.file_path)
             self.check_for_file(file_path_update)
             self.change_list_ammo_mod()
@@ -390,7 +392,8 @@ class AmmoMod:
         self.apply_button.configure(fg_color="red", state="disabled")
 
     def error_number_out_limit(self, name):
-        self.logger.log("error", f"Error with one value load from save ('error_number_out_limit'), Originale value put for : {name}")
+        self.logger.log("error",
+                        f"Error with one value load from save ('error_number_out_limit'), Originale value put for : {name}")
         self.status_label.configure(text="Error ! This is the maximum/minimum \n value allowed", text_color="red")
         self.apply_button.configure(fg_color="red", state="disabled")
 

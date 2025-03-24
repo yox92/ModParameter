@@ -12,11 +12,12 @@
       "RecolDispersion": 11,
       "Weight": 2.9,
       "ammoCaliber": "Caliber86x70",
-      "bFirerate": 30
+      "bFirerate": 30,
+      "priceFactor": 1.0
     }
   },
   "locale": {
     "Name": "SWORD International Mk-18 .338 LM marksman rifle",
-    "ShortName": "Mk-18 Mjölnir"
+    "ShortName": "Mk-18 Mj\u00f6lnir"
   }
 }

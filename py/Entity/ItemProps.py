@@ -42,6 +42,14 @@ class ItemProps:
             props.get(EnumProps.FIRE_RATE.label, None),
             EnumProps.FIRE_RATE.label
         )
+        self._bFirerate = (
+            props.get(EnumProps.FIRE_RATE.label, None),
+            EnumProps.FIRE_RATE.label
+        )
+        self._priceFactor = (
+            props.get(EnumProps.PRICEFACTOR.label, None),
+            EnumProps.PRICEFACTOR.label
+    )
 
     @property
     def CameraSnap(self):
@@ -83,6 +91,10 @@ class ItemProps:
     def bFirerate(self):
         return self._bFirerate
 
+    @property
+    def priceFactor(self):
+        return self._priceFactor
+
     @classmethod
     def from_data(cls, data: dict):
         return cls(**data)
@@ -106,6 +118,7 @@ class ItemProps:
         return (f"ItemProps("
                 f"CameraSnap={self.CameraSnap}, "
                 f"AimSensitivity={self.AimSensitivity}, "
+                f"priceFactor={self.priceFactor}, "
                 f"Ergonomics={self.Ergonomics}, "
                 f"RecoilCamera={self.CameraSnap}, "
                 f"RecoilForceBack={self.RecoilForceBack}, "

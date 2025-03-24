@@ -18,7 +18,8 @@
       "ammoRec": 0,
       "ExplosionStrength": 100,
       "MaxExplosionDistance": 10,
-      "FuzeArmTimeSec": 100
+      "FuzeArmTimeSec": 100,
+      "priceFactor": 1.0
     }
   },
   "locale": {

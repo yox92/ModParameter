@@ -10,11 +10,13 @@ export class ItemProps {
     ammoCaliber: string;
     bFirerate: number;
     BackgroundColor: string;
+    priceFactor: number;
 
     constructor(props: Partial<ItemProps>) {
         Object.assign(this, props);
     }
 }
+
 export function createItemProps(data: any): ItemProps {
     return new ItemProps({
         CameraSnap: data.CameraSnap,
@@ -26,6 +28,7 @@ export function createItemProps(data: any): ItemProps {
         RecolDispersion: data.RecolDispersion,
         Weight: data.Weight,
         ammoCaliber: data.ammoCaliber,
-        bFirerate: data.bFirerate
+        bFirerate: data.bFirerate,
+        priceFactor: data.priceFactor,
     });
 }

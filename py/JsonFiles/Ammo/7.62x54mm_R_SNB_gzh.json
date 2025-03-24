@@ -1,7 +1,7 @@
 {
   "item": {
     "_id": "560d61e84bdc2da74d8b4571",
-    "_name": "patron_762х54R_SNB",
+    "_name": "patron_762\u044554R_SNB",
     "_props": {
       "ArmorDamage": 87,
       "Caliber": "Caliber762x54R",
@@ -15,7 +15,8 @@
       "BulletMassGram": 980,
       "ProjectileCount": 1,
       "ammoAccr": 0,
-      "ammoRec": 10
+      "ammoRec": 10,
+      "priceFactor": 1.0
     }
   },
   "locale": {

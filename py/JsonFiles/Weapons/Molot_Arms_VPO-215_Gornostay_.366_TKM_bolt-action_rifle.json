@@ -12,7 +12,8 @@
       "RecolDispersion": 10,
       "Weight": 0.55,
       "ammoCaliber": "Caliber366TKM",
-      "bFirerate": 30
+      "bFirerate": 30,
+      "priceFactor": 1.0
     }
   },
   "locale": {

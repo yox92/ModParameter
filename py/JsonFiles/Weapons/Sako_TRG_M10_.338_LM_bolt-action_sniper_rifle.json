@@ -12,7 +12,8 @@
       "RecolDispersion": 10,
       "Weight": 0.78,
       "ammoCaliber": "Caliber86x70",
-      "bFirerate": 30
+      "bFirerate": 30,
+      "priceFactor": 1.0
     }
   },
   "locale": {

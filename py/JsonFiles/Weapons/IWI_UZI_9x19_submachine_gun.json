@@ -12,7 +12,8 @@
       "RecolDispersion": 10,
       "Weight": 2.26,
       "ammoCaliber": "Caliber9x19PARA",
-      "bFirerate": 600
+      "bFirerate": 600,
+      "priceFactor": 1.0
     }
   },
   "locale": {

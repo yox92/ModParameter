@@ -98,6 +98,7 @@ export class ItemUpdaterService {
 
         let updatedProps: Partial<Ammo> = {};
 
+        updatedProps.priceFactor = validateUtils.validatePriceProps(ammoProps.priceFactor);
         updatedProps.ArmorDamage = validateUtils.validateAndCastInt(ammoProps.ArmorDamage);
         updatedProps.Damage = validateUtils.validateAndCastInt(ammoProps.Damage);
         updatedProps.PenetrationPower = validateUtils.validateAndCastInt(ammoProps.PenetrationPower);
@@ -191,6 +192,8 @@ export class ItemUpdaterService {
 
         let updatedProps: Partial<ItemProps> = {};
 
+        updatedProps.priceFactor = validateUtils.validatePriceProps(weaponItem.priceFactor);
+        updatedProps.priceFactor = validateUtils.validateAndCastFloat(weaponItem.priceFactor, 2);
         updatedProps.CameraSnap = validateUtils.validateAndCastFloatItem(weaponItem.CameraSnap, 2);
         updatedProps.AimSensitivity = validateUtils.validateAndCastFloatItem(weaponItem.AimSensitivity, 2);
         updatedProps.Ergonomics = validateUtils.validateAndCastInt(weaponItem.Ergonomics);

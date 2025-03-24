@@ -204,6 +204,17 @@ class Utils:
             EnumAmmo.EXPLOSIONSTRENGTH.label: (-1, 101),
             EnumAmmo.FUZEARMTIMESEC.label: (0, 301),
             EnumAmmo.MAXEXPLOSIONDISTANCE.label: (-1, 11),
+            EnumAmmo.PRICEFACTOR.label: (0.009, 101)
+        }
+        if name in limits:
+            min_value, max_value = limits[name]
+            return value <= min_value or value >= max_value
+        return False
+
+    @staticmethod
+    def is_value_outside_limits_weapon(name, value):
+        limits = {
+            EnumProps.PRICEFACTOR.label: (0.009, 101)
         }
         if name in limits:
             min_value, max_value = limits[name]

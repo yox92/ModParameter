@@ -15,7 +15,8 @@
       "BulletMassGram": 3120,
       "ProjectileCount": 1,
       "ammoAccr": 130,
-      "ammoRec": 5
+      "ammoRec": 5,
+      "priceFactor": 1.0
     }
   },
   "locale": {

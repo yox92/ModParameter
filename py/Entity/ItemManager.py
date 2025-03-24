@@ -84,12 +84,15 @@ class ItemManager:
 
         for key, value in self.iterate_key_and_values():
             if isinstance(value, (int, float)):
-                if 0.01 <= value <= 2.0:
-                    target_manager.key_value[key] = int(100 * value - 100)
-                else:
-                    raise ValueError(
-                        f"La valeur '{value}' pour la clé '{key}' est hors des limites autorisées (0.01 à 2.0)."
-                    )
+                if key == EnumProps.PRICEFACTOR.label:
+                    target_manager.key_value[key] = value
+                else :
+                    if 0.01 <= value <= 2.0:
+                        target_manager.key_value[key] = int(100 * value - 100)
+                    else:
+                        raise ValueError(
+                            f"La valeur '{value}' pour la clé '{key}' est hors des limites autorisées (0.01 à 2.0)."
+                        )
 
     def lambda_value(self, item_manager):
         result_manager = ItemManager(EnumProps)

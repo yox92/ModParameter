@@ -12,7 +12,8 @@
       "RecolDispersion": 22,
       "Weight": 0.76,
       "ammoCaliber": "Caliber762x54R",
-      "bFirerate": 10
+      "bFirerate": 10,
+      "priceFactor": 1.0
     }
   },
   "locale": {

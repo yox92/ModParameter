@@ -259,5 +259,4 @@ export class ClonerUtils {
         ].some(baseclass => itemHelper.isOfBaseclass(itemId, baseclass));
     }
 
-
 }
