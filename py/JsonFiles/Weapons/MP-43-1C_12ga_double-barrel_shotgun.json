@@ -12,7 +12,8 @@
       "RecolDispersion": 23,
       "Weight": 1.88,
       "ammoCaliber": "Caliber12g",
-      "bFirerate": 900
+      "bFirerate": 900,
+      "priceFactor": 1.0
     }
   },
   "locale": {

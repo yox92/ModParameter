@@ -8,5 +8,6 @@
     "RecolDispersion": 1.0,
     "Weight": 1.0,
     "ammoCaliber": "Caliber762x25TT",
-    "bFirerate": 1.0
+    "bFirerate": 1.0,
+    "priceFactor": 0.1
 }

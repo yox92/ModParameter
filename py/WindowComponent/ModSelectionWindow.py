@@ -453,7 +453,7 @@ class ModSelectionWindow:
             else:
                 self.logger.log("info", f"File ignore : {result}")
         elif window_type == WindowType.AMMO:
-            json_filename = f"{result.replace('(', '').replace(')', '').replace(' ', '_').replace('/', '').replace('\\', '')}.json"
+            json_filename = self.sanitize_filename(result)
             matching_file = next(
                 (fp for fp in self.file_path_from_load_all_ammo if fp.endswith(json_filename)),
                 None)
@@ -461,6 +461,14 @@ class ModSelectionWindow:
                 self.open_weapon_specific_window(matching_file, WindowType.AMMO)
             else:
                 raise FileNotFoundError(f"File '{json_filename}' do not existe / not find")
+
+    @staticmethod
+    def sanitize_filename(name: str) -> str:
+        return name.replace('(', '') \
+            .replace(')', '') \
+            .replace(' ', '_') \
+            .replace('/', '') \
+            .replace('\\', '') + ".json"
 
     def find_name_in_loaded_data(self, name):
         matches = []

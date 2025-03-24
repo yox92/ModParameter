@@ -67,6 +67,10 @@ class Ammo:
             props.get(EnumAmmo.FUZEARMTIMESEC.label, None),
             EnumAmmo.FUZEARMTIMESEC.label
         )
+        self._priceFactor = (
+            props.get(EnumAmmo.PRICEFACTOR.label, None),
+            EnumAmmo.PRICEFACTOR.label
+        )
 
     def convert_to_boolean(self, value):
         if isinstance(value, str):
@@ -138,6 +142,10 @@ class Ammo:
     def FuzeArmTimeSec(self):
         return self._FuzeArmTimeSec
 
+    @property
+    def priceFactor(self):
+        return self._priceFactor
+
     @classmethod
     def from_data(cls, data: dict):
         return cls(**data)
@@ -160,6 +168,7 @@ class Ammo:
     def __repr__(self):
         return (f"Ammo("
                 f"ArmorDamage={self.ArmorDamage}, "
+                f"priceFactor={self.priceFactor}, "
                 f"Caliber={self.Caliber}, "
                 f"Damage={self.Damage}, "
                 f"InitialSpeed={self.InitialSpeed}, "

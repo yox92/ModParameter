@@ -12,7 +12,8 @@
       "RecolDispersion": 11,
       "Weight": 1.58,
       "ammoCaliber": "Caliber46x30",
-      "bFirerate": 950
+      "bFirerate": 950,
+      "priceFactor": 1.0
     }
   },
   "locale": {

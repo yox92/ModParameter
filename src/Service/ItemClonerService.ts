@@ -55,7 +55,7 @@ export class ItemClonerService {
         }
 
         const templates: ITemplates | undefined = this.dataService.getTables().templates;
-        const price: number | undefined = this.dataService.getTemplates().prices[id];
+        let price: number | undefined = this.dataService.getTemplates().prices[id];
         const handbook: IHandbookBase | undefined = this.dataService.getHandbook();
 
         const iHandbookItems: IHandbookItem[] | undefined = handbook.Items;
@@ -91,7 +91,7 @@ export class ItemClonerService {
                 props,
                 sptItem._parent,
                 AmmoCloneRegistry.getClonedId(id),
-                price,
+                this.applyPriceFactor(price, props.priceFactor), // price
                 handbookPrice,
                 handbookParentId,
                 locales,
@@ -101,7 +101,7 @@ export class ItemClonerService {
                 props,
                 sptItem._parent,
                 WeaponCloneRegistry.getClonedId(id),
-                price,
+                this.applyPriceFactor(price, props.priceFactor),
                 handbookPrice,
                 handbookParentId,
                 locales,
@@ -200,6 +200,11 @@ export class ItemClonerService {
         } else {
             this.logger.debug(`[ModParameter] Clone do not work for ${shortName} `)
         }
+    }
+
+    public applyPriceFactor(price: number, priceFactor: number): number {
+        price = price * priceFactor;
+        return price;
     }
 
 

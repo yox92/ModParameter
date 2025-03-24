@@ -24,6 +24,7 @@ class SingleWeaponMod:
         self.apply_button = None
         self.json_mod_user_save_exist = False
         self.reset_after_load_save_and_value_reset = False
+        self.block_system_error_detect = False
 
         self.detail_window = detail_window
         self.root = root
@@ -60,10 +61,16 @@ class SingleWeaponMod:
                     slider.set(value)
 
                 elif isinstance(value, float):
-                    scale_factor = getattr(slider, "scale_factor", 1)
+                    if key == EnumProps.PRICEFACTOR.label:
+                        entry = self.prop_widgets[key][0]
+                        self.prop_widgets[key][0].delete(0, 'end')
+                        entry.insert(0, str(value))
+                        self.data_from_json_mod_save_user.update_from_props_json(key, value)
+                    else:
+                        scale_factor = getattr(slider, "scale_factor", 1)
 
-                    slider.set(value * scale_factor)
-                    self.update_prop_value_float(key, value * scale_factor, scale_factor)
+                        slider.set(value * scale_factor)
+                        self.update_prop_value_float(key, value * scale_factor, scale_factor)
 
     def param_main_root(self):
         self.detail_window.grid_columnconfigure(0, weight=0)
@@ -150,16 +157,18 @@ class SingleWeaponMod:
                     label.configure(font=("Arial", 16, "bold"), text_color="Peru")
                 else:
                     label.configure(font=("Arial", 12, "bold"), text_color="white")
-
-                if isinstance(number, int):
-                    percent_label, slider = self.slider_integer(number, row, prop_value)
-
+                if prop_value == EnumProps.PRICEFACTOR.label:
+                    self.entry_input(number, row, prop_value)
                 else:
-                    percent_label, slider = self.slider_float(number, row, prop_value)
+                    if isinstance(number, int):
+                        percent_label, slider = self.slider_integer(number, row, prop_value)
 
-                percent_label.grid(row=row, column=2, sticky=ctk.W, padx=10)
-                self.prop_widgets[prop_value] = (slider, percent_label)
-                row += 1
+                    else:
+                        percent_label, slider = self.slider_float(number, row, prop_value)
+
+                    percent_label.grid(row=row, column=2, sticky=ctk.W, padx=10)
+                    self.prop_widgets[prop_value] = (slider, percent_label)
+                    row += 1
             row += 1
 
         self.apply_button = ctk.CTkButton(self.right_main,
@@ -170,6 +179,73 @@ class SingleWeaponMod:
         self.apply_button.grid(row=row, column=1, sticky="nsew")
         self.status_label = ctk.CTkLabel(self.right_main, text="")
         self.status_label.grid(row=row + 1, column=1, sticky="nsew")
+
+    def entry_input(self, value, row, prop_value: EnumProps):
+        if value == 0 :
+            value = 1.0
+        entry = ctk.CTkEntry(
+            self.right_main,
+            placeholder_text="Enter value...",
+            width=70,
+            font=("Arial", 14, "bold"),
+            justify="center"
+        )
+        entry.bind("<KeyRelease>", lambda event: self.get_entry_value(event, prop_value, value))
+        entry.insert(0, str(value))
+        entry.grid(row=row, column=1, padx=10, pady=5, sticky="ew")
+        entry_label = ctk.CTkLabel(
+            self.right_main, text=f"{value}", font=("Arial", 15, "bold"))
+        entry_label.grid(row=row, column=2, sticky=ctk.W, padx=10)
+        reset_button = ctk.CTkButton(self.right_main,
+                                     text="Reset", command=lambda pname=prop_value: self.reset_entry(pname, entry),
+                                     width=10)
+        reset_button.grid(row=row, column=2, padx=5, pady=5, sticky="w")
+        self.prop_widgets[prop_value] = (entry, entry_label)
+
+    def reset_entry(self, pname, entry):
+        entry = self.prop_widgets[pname][0]
+        self.prop_widgets[pname][0].delete(0, 'end')
+        entry.insert(0, str(1.0))
+        self.data_from_json_no_save.update_from_props_json(pname, 1.0)
+        self.reset_apply_button()
+        self.verify_all_sliders_reset()
+
+    def get_entry_value(self, event, prop_value, value):
+        input_text = self.prop_widgets[prop_value][0].get()
+        try:
+            int_input_text = float(input_text)
+        except ValueError:
+            self.error_number_prompt()
+            self.logger.log("warning", "Number please ...")
+            self.block_system_error_detect = True
+            Utils.block_all_input_before_correction(self.close_button,
+                                                    self.detail_window,
+                                                    self.apply_button,
+                                                    self.prop_widgets[prop_value][0])
+            return
+        if isinstance(int_input_text, (int,float)):
+            if not Utils.is_value_outside_limits_weapon(prop_value, int_input_text):
+                self.reset_apply_button()
+                self.data_from_json_no_save.update_from_props_json(prop_value, int_input_text)
+                if self.block_system_error_detect:
+                    Utils.unlock_all(self.detail_window, self.apply_button)
+                    self.block_system_error_detect = False
+            else:
+                self.error_number_out_limit(prop_value)
+                self.block_system_error_detect = True
+                Utils.block_all_input_before_correction(self.close_button,
+                                                        self.detail_window,
+                                                        self.apply_button,
+                                                        self.prop_widgets[prop_value][0])
+    def error_number_out_limit(self, name):
+        self.logger.log("error",
+                        f"Error with one value load from save ('error_number_out_limit'), Originale value put for : {name}")
+        self.status_label.configure(text="Error ! This is the maximum/minimum \n value allowed", text_color="red")
+        self.apply_button.configure(fg_color="red", state="disabled")
+
+    def error_number_prompt(self):
+        self.status_label.configure(text="Error ! : Valide number please ", text_color="red")
+        self.apply_button.configure(fg_color="red", state="disabled")
 
     def slider_integer(self, number, row, prop_value: EnumProps):
         one_percent = max(number * 0.01, 1)

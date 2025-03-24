@@ -313,6 +313,21 @@ export class ValidateUtils {
         return items
 
     }
+    public validatePriceProps(value: any): number | null {
+        if (value === undefined || value === null || typeof value !== "number") {
+            return null;
+        }
+
+        if (value >= 0.01 && value <= 0.09) {
+            return parseFloat(value.toFixed(2));
+        } else if (value >= 0.1 && value <= 0.9) {
+            return parseFloat(value.toFixed(1));
+        } else if (value >= 1 && value <= 10) {
+            return Math.round(value);
+        }
+
+        return null;
+    }
 
 
 }

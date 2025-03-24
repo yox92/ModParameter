@@ -260,32 +260,34 @@ class JsonUtils:
 
         if window_type == window_type.CALIBER:
             original_value = current[final_key]
+            if final_key == EnumAmmo.PRICEFACTOR.label:
+                current[final_key] = new_value
+            else :
+                if isinstance(original_value, int):
+                    min_value = 1
+                    new_value_calculated = int(original_value * new_value)
+                    if new_value_calculated < min_value:
+                        new_value_calculated = min_value
+                    current[final_key] = new_value_calculated
 
-            if isinstance(original_value, int):
-                min_value = 1
-                new_value_calculated = int(original_value * new_value)
-                if new_value_calculated < min_value:
-                    new_value_calculated = min_value
-                current[final_key] = new_value_calculated
+                elif isinstance(original_value, float):
+                    if not (0.01 <= new_value <= 2.0):
+                        return
 
-            elif isinstance(original_value, float):
-                if not (0.01 <= new_value <= 2.0):
-                    return
+                    original_str = str(original_value).rstrip("0")
+                    decimal_places = len(original_str.split(".")[1]) if "." in original_str else 2
+                    decimal_places = max(decimal_places, 1)
 
-                original_str = str(original_value).rstrip("0")
-                decimal_places = len(original_str.split(".")[1]) if "." in original_str else 2
-                decimal_places = max(decimal_places, 1)
+                    min_value = round(10 ** -decimal_places, decimal_places)
 
-                min_value = round(10 ** -decimal_places, decimal_places)
+                    new_value_calculated = original_value * new_value
 
-                new_value_calculated = original_value * new_value
+                    if 0 < new_value_calculated < min_value:
+                        new_value_calculated = min_value
 
-                if 0 < new_value_calculated < min_value:
-                    new_value_calculated = min_value
+                    new_value_calculated = round(new_value_calculated, decimal_places)
 
-                new_value_calculated = round(new_value_calculated, decimal_places)
-
-                current[final_key] = new_value_calculated
+                    current[final_key] = new_value_calculated
 
         elif window_type == window_type.WEAPON or window_type == window_type.PMC:
             current[final_key] = (
@@ -300,9 +302,9 @@ class JsonUtils:
                 else:
                     current[final_key] = new_value
             elif isinstance(new_value, int):
-                current[final_key] = new_value
-            elif isinstance(new_value, float):
                 current[final_key] = int(new_value)
+            elif isinstance(new_value, float):
+                current[final_key] = float(new_value)
             else:
                 raise KeyError(f"Error on apply app. {new_value} need to be boolean or number to be update")
 

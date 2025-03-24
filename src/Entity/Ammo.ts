@@ -17,28 +17,31 @@ export class Ammo {
     FuzeArmTimeSec: number;
     BackgroundColor: string;
     buckshotBullets: number;
+    priceFactor: number
 
     constructor(props: Partial<Ammo>) {
         Object.assign(this, props);
     }
 }
+
 export function createItemAmmo(data: any): Ammo {
     return new Ammo({
-    ArmorDamage: data.ArmorDamage,
-    Caliber: data.Caliber,
-    Damage: data.Damage,
-    InitialSpeed: data.InitialSpeed,
-    PenetrationPower: data.PenetrationPower,
-    StackMaxSize: data.StackMaxSize,
-    Tracer: data.Tracer,
-    TracerColor: data.TracerColor,
-    BallisticCoeficient: data.BallisticCoeficient,
-    BulletMassGram: data.BulletMassGram,
-    ProjectileCount: data.ProjectileCount,
-    ammoAccr: data.ammoAccr,
-    ammoRec: data.ammoRec,
-    ExplosionStrength: data.ExplosionStrength,
-    MaxExplosionDistance: data.MaxExplosionDistance,
-    FuzeArmTimeSec: data.FuzeArmTimeSec
+        ArmorDamage: data.ArmorDamage,
+        Caliber: data.Caliber,
+        Damage: data.Damage,
+        InitialSpeed: data.InitialSpeed,
+        PenetrationPower: data.PenetrationPower,
+        StackMaxSize: data.StackMaxSize,
+        Tracer: data.Tracer,
+        TracerColor: data.TracerColor,
+        BallisticCoeficient: data.BallisticCoeficient,
+        BulletMassGram: data.BulletMassGram,
+        ProjectileCount: data.ProjectileCount,
+        ammoAccr: data.ammoAccr,
+        ammoRec: data.ammoRec,
+        ExplosionStrength: data.ExplosionStrength,
+        MaxExplosionDistance: data.MaxExplosionDistance,
+        FuzeArmTimeSec: data.FuzeArmTimeSec,
+        priceFactor: data.PriceFactor
     });
 }

@@ -8,5 +8,6 @@
     "RecolDispersion": 1.0,
     "Weight": 1.0,
     "ammoCaliber": "Caliber1143x23ACP",
-    "bFirerate": 1.0
+    "bFirerate": 1.0,
+    "priceFactor": 4.0
 }

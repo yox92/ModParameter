@@ -12,7 +12,8 @@
       "RecolDispersion": 12,
       "Weight": 2.192,
       "ammoCaliber": "Caliber545x39",
-      "bFirerate": 650
+      "bFirerate": 650,
+      "priceFactor": 1.0
     }
   },
   "locale": {

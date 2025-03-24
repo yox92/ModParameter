@@ -12,7 +12,8 @@
       "RecolDispersion": 10,
       "Weight": 0.52,
       "ammoCaliber": "Caliber556x45NATO",
-      "bFirerate": 850
+      "bFirerate": 850,
+      "priceFactor": 1.0
     }
   },
   "locale": {
