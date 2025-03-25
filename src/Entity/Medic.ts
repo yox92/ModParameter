@@ -22,7 +22,7 @@ export function createMedic(data: any): Medic {
         hpResourceRate: data.hpResourceRate,
         medUseTime: data.medUseTime,
         effects_damage: data.effects_damage,
-        priceFactor: data.PriceFactor
+        priceFactor: data.priceFactor
     })
 }
 

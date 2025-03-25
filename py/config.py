@@ -114,7 +114,7 @@ def check_project_structure():
             print(f"   - {d}")
         sys.exit(1)
 
-    for directory in [JSON_FILES_DIR_WEAPONS, JSON_FILES_DIR_CALIBER, JSON_FILES_DIR_PMC, JSON_FILES_DIR_AMMO]:
+    for directory in [JSON_FILES_DIR_WEAPONS, JSON_FILES_DIR_CALIBER, JSON_FILES_DIR_PMC, JSON_FILES_DIR_AMMO, JSON_FILES_DIR_MEDIC]:
         invalid_json_files = check_json_files(directory)
         if invalid_json_files:
             print(f"ERROR: Invalid JSON files found in {directory}:")
@@ -128,6 +128,7 @@ def check_project_structure():
         print(f" JSON directory (JsonFiles): {JSON_FILES_DIR_CALIBER}")
         print(f" JSON directory (JsonFiles): {JSON_FILES_DIR_PMC}")
         print(f" JSON directory (JsonFiles): {JSON_FILES_DIR_AMMO}")
+        print(f" JSON directory (JsonFiles): {JSON_FILES_DIR_MEDIC}")
         print(f" Image directory (JsonFiles): {IMAGES_DIR}")
         print("------------------------------------------------------------\n")
 

@@ -216,7 +216,7 @@ export class ItemService {
                     medicItem._id,
                     locale.Name,
                     locale.ShortName,
-                    ItemTypeEnum.Ammo)
+                    ItemTypeEnum.Medic)
 
             }
         }

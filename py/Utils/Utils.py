@@ -504,3 +504,13 @@ class Utils:
                 adjusted_value = round(adjusted_value / 50) * 50
 
         return adjusted_value
+
+    @staticmethod
+    def enum_to_lock(parent_id, label_name):
+        if label_name == EnumMedic.EFFECTS_DAMAGE.label:
+            return False
+
+        if label_name == EnumMedic.HPRESOURCERATE.label:
+            return parent_id == "5448f39d4bdc2d0a728b4568"
+
+        return True

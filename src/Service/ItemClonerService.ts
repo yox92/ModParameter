@@ -248,6 +248,7 @@ export class ItemClonerService {
             handbookParentId,
             locales
         );
+         this.logger.debug(`[ModParameter] creation clone with : ${price} and handbookPrice : ${handbookPrice}`);
         const result: CreateItemResult = this.customItemService.createItemFromClone(clone);
         if (result.success) {
             clonerUtils.addToTrader(id, result.itemId, this.dataService, shortName, ItemTypeEnum.Medic);

@@ -141,7 +141,7 @@ class MedicMod:
         for enum_field in EnumMedic:
             label_name = enum_field.label
             value = getattr(medic, label_name, None)
-            if label_name != EnumMedic.EFFECTS_DAMAGE.label:
+            if Utils.enum_to_lock(self.root_item.item.parent, label_name):
                 if isinstance(value, tuple) and len(value) == 2:
                     raw_value = value[0]
                 else:

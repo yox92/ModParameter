@@ -239,11 +239,11 @@ export class ItemUpdaterService {
         const invalidProps = Object.entries(updatedProps).filter(([_, value]) => value === null);
 
         if (invalidProps.length > 0) {
-            this.logger.debug(`[ModParameter] Skipping ammo: ${name_item_to_modify} due to invalid values: ${invalidProps.map(([key]) => key).join(", ")}`);
+            this.logger.debug(`[ModParameter] Skipping medic: ${name_item_to_modify} due to invalid values: ${invalidProps.map(([key]) => key).join(", ")}`);
             return null;
         }
 
-        if (clone) {
+        if (!clone) {
             for (const key in updatedProps) {
                 const value = updatedProps[key];
 

@@ -63,7 +63,7 @@ class ModParameter implements IPostDBLoadMod, PreSptModLoader, IPostSptLoadMod {
         const clearCloneService = new ClearCloneService(logger, saveServer, itemHelper, localeService, dataService);
         const pmcModify = new PmcModifyService(logger, dataService);
 
-        clearCloneService.clearAmmoWeaponNotUseAnymore();
+        clearCloneService.clearAmmoWeaponMedicNotUseAnymore();
         clearCloneService.checkTracerAllAmmoDB();
         pmcModify.displayLog();
     }

@@ -17,7 +17,11 @@ from WindowComponent.SingleWeaponMod import SingleWeaponMod
 from WindowComponent.ListItemAlreadyMod import ListItemAlreadyMod
 
 WINDOW_TITLE = "ModParameter App"
-WINDOW_GEOMETRY = "800x650"
+POP_UP_DELETE_TITLE = "All Delete Or Choice Which One?"
+POP_UP_CATEGORIES_TITLE = "Categorie to Delete?"
+MESSAGE_DELETE = "Choose an option: Delete All Item By categories or Select a Mod to Delete"
+MESSAGE_CATEGORIES_DELETE = "Choose an option: Delete All Ammo/Weapons/Medical"
+WINDOW_GEOMETRY = "870x650"
 APPEARANCE_MODE = "dark"
 DETAIL_WINDOW_TITLE = "Detail windows"
 DETAIL_WINDOW_WIDTH = 900
@@ -224,14 +228,23 @@ class ModSelectionWindow:
         JsonUtils.update_tracer(True, color)
 
     def all_mod_to_delete(self):
-        msg_choice = CTkMessagebox(title="All Delete Or Choice Which One?",
-                                   message="Choose an option: Delete All Ammo / Delete All Weapons / Select a Mod to Delete",
-                                   icon="warning", option_1="All Ammo", option_2="All Weapons", option_3="Select One")
+        msg_choice = CTkMessagebox(title=POP_UP_DELETE_TITLE,
+                                   message=MESSAGE_DELETE,
+                                   icon="warning", option_1="Select categories", option_2="Select One")
         response = msg_choice.get()
-        if response == "All Ammo":
-            ModSelectionWindow.delete_all_weapons(WindowType.AMMO)
-        elif response == "All Weapons":
-            ModSelectionWindow.delete_all_weapons(WindowType.WEAPON)
+        if response == "Select categories":
+            msg_choice_bis = CTkMessagebox(title=POP_UP_CATEGORIES_TITLE,
+                                       message=MESSAGE_CATEGORIES_DELETE,
+                                       icon="warning", option_1="All Ammos", option_2="All Weapons", option_3="All medicals")
+            responseBis = msg_choice_bis.get()
+            if responseBis == "ALl Ammo":
+                ModSelectionWindow.delete_all_items(WindowType.AMMO)
+            elif responseBis == "All Weapons":
+                ModSelectionWindow.delete_all_items(WindowType.WEAPON)
+            elif responseBis == "All medicals":
+                ModSelectionWindow.delete_all_items(WindowType.MEDIC)
+            else:
+                print("no choice")
         elif response == "Select One":
             self.list_json_name_all_mod = JsonUtils.load_all_name_json_mod()
             if self.list_json_name_all_mod:
@@ -759,5 +772,5 @@ class ModSelectionWindow:
         self.root.attributes('-disabled', True)
 
     @staticmethod
-    def delete_all_weapons(window_type: WindowType):
+    def delete_all_items(window_type: WindowType):
         JsonUtils.delete_all_mod(window_type)

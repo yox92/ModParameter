@@ -466,3 +466,8 @@ class JsonUtils:
                 if file_name.endswith('_mod.json'):
                     file_path = os.path.join(JSON_FILES_DIR_WEAPONS, file_name)
                     JsonUtils.delete_file(file_path)
+        elif window_type == WindowType.MEDIC:
+            for file_name in os.listdir(JSON_FILES_DIR_MEDIC):
+                if file_name.endswith('_mod.json'):
+                    file_path = os.path.join(JSON_FILES_DIR_MEDIC, file_name)
+                    JsonUtils.delete_file(file_path)

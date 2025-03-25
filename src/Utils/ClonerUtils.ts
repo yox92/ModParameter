@@ -84,6 +84,7 @@ export class ClonerUtils {
                         clonedId = WeaponCloneRegistry.getClonedTpl(tplOldItem);
                     } else if (itemTypeEnum === ItemTypeEnum.Medic) {
                         clonedId = MedicCloneRegistry.getClonedTpl(tplOldItem);
+                        this.logger.debug(`[ModParameter] clonedId: ${clonedId}`);
                     }
 
                     if (!clonedId) {
@@ -92,6 +93,7 @@ export class ClonerUtils {
                     }
 
                     if (!trader.assort.barter_scheme[tplOldItem] || !trader.assort.loyal_level_items[tplOldItem]) {
+                         this.logger.debug(`[ModParameter] barter_scheme or loyal_level_items null pour  ${name}`);
                         continue;
                     }
 
