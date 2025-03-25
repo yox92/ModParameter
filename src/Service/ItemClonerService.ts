@@ -259,7 +259,9 @@ export class ItemClonerService {
     }
 
     public applyPriceFactor(price: number, priceFactor: number): number {
+        this.logger.debug(`[ModParameter] Original price : ${price}`);
         price = price * priceFactor;
+         this.logger.debug(`[ModParameter] New price with priceFactor : ${price}`);
         return price;
     }
 
