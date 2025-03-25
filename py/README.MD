@@ -26,7 +26,7 @@
 
 ## Project Overview
 1. **ModParameter App** is a Python application designed to create and manage “mod” files (`*_mod.json`) 
-related to various game elements (weapons, ammo, PMC). It uses **[customtkinter](https://github.com/TomSchimansky/CustomTkinter)** 
+related to various game elements (weapons, ammo, medical, PMC). It uses **[customtkinter](https://github.com/TomSchimansky/CustomTkinter)** 
 for its graphical interface and manipulates **JSON files** to load, modify, or delete configuration values.
 2. The `*_mod.json` files are later retrieved by the TypeScript project to be mapped into the `SPT Database` objects.
 
@@ -34,7 +34,7 @@ for its graphical interface and manipulates **JSON files** to load, modify, or d
 ## Main Features
 
 1. **Intuitive Graphical Interface**  
-   - Main menu with modification options (weapons, ammo, PMC).  
+   - Main menu with modification options (weapons, ammo, medical, PMC).  
    - Dedicated windows for configuring a single object or a group of objects.
 
 2. **Centralized Mod Management**  
@@ -43,16 +43,19 @@ for its graphical interface and manipulates **JSON files** to load, modify, or d
      - JsonFiles/Weapons
      - JsonFiles/Ammo
      - JsonFiles/PMC
+     - JsonFiles/Medical
    - Targeted or global deletion of `*_mod.json` files, allowing a return to the “vanilla” state.
 
 3. **Search and Sorting**  
    - Filter weapons by name.  
    - Select all weapons of the same caliber.
    - Select bullets by their caliber.
+   - Select medic by their categories.
    - List all modified weapons and ammo.
+   - List all modified medicals.
 
 4. **Deletion**  
-   - Delete `*_mod.json` files for weapons/ammo/PMC:
+   - Delete `*_mod.json` files for weapons/ammo/PMC/medic:
      - Global deletion.
      - Targeted deletion.
      - Restore original values = delete `*_mod.json`.
@@ -91,6 +94,7 @@ for its graphical interface and manipulates **JSON files** to load, modify, or d
         - Ammo     **(JSON Files Here)**
         - Calibers **(JSON Files Here)**
         - PMC      **(JSON Files Here)**
+        - Medic    **(JSON Files Here)**
     - **src** (TypeScript SPT)
 🛠️ Use console `cmd`/ `PowerShell` to show terminal to execute *.exe 🛠️
 ---
@@ -116,13 +120,14 @@ for its graphical interface and manipulates **JSON files** to load, modify, or d
 │   ├── JsonUtils.py
 │   ├── Utils.py
 │   └── WindowUtils.py
-├── WindowComponent/
+├── Images/
 ├── JsonFiles/
 │   ├── Ammo/
 │   ├── Calibers/
 │   ├── PMC/
 │   ├── Weapons/
-├── Images/
+│   ├── Medic/
+├── WindowComponent/
 │   ├── AmmoMod.py            
 │   ├── CaliberWeaponsMod.py  
 │   ├── ListItemAlreadyMod.py s
@@ -130,6 +135,7 @@ for its graphical interface and manipulates **JSON files** to load, modify, or d
 │   ├── ModSelectionWindow.py     
 │   ├── ProgressBar.py
 │   └── SingleWeaponMod.py    
+│   └── MedicMod.py    
 ├── requirements.txt
 └── main.py                   
 ```
@@ -142,6 +148,7 @@ for its graphical interface and manipulates **JSON files** to load, modify, or d
 - **One Specific Weapon**: Find and adjust a single weapon.
 - **Weapons by Ballistics**: Sort weapons by caliber.
 - **Ammo Attributes**: Modify ammunition attributes.
+- **Medical Attributes**: Modify medical items attributes.
 - **PMC Attributes**: Adjust character attributes.
 
 ### Modification
