@@ -4,7 +4,8 @@ from enum import Enum
 class MedicalCat(Enum):
     MEDKIT = "MedKit","5448f39d4bdc2d0a728b4568"
     DRUGS = "Drugs","5448f3a14bdc2d27728b4569"
-    STIMULATOR = "Stimulator" ,"5448f3a64bdc2d60728b456a"
+    STIMULATOR = "Stimulator" ,"5448f3a64bdc2d60728b456a",
+    MEDICAL = "Medical" ,"5448f3ac4bdc2dce718b4569",
 
     @property
     def label(self):

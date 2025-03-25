@@ -1,59 +1,60 @@
-from msilib.schema import Property
-
+from Entity.EffectDamage import EffectDamage
 from Entity.EnumMedic import EnumMedic
 
 
 class Medic:
-    def __init__(self, **props):
+    def __init__(self, effects_damage=None, **props):
         self._StackMaxSize = (
-            props.get(EnumMedic.StackMaxSize.label, None),
-            EnumMedic.StackMaxSize.label
+            props.get(EnumMedic.STACKMAXSIZE.label, None),
+            EnumMedic.STACKMAXSIZE.label
         )
         self._StackObjectsCount = (
-            props.get(EnumMedic.StackObjectsCount.label, None),
-            EnumMedic.StackObjectsCount.label
+            props.get(EnumMedic.STACKOBJECTSCOUNT.label, None),
+            EnumMedic.STACKOBJECTSCOUNT.label
         )
         self._MaxHpResource = (
-            props.get(EnumMedic.MaxHpResource.label, None),
-            EnumMedic.MaxHpResource.label
+            props.get(EnumMedic.MAXHPRESOURCE.label, None),
+            EnumMedic.MAXHPRESOURCE.label
         )
         self._hpResourceRate = (
-            props.get(EnumMedic.hpResourceRate.label, None),
-            EnumMedic.hpResourceRate.label
+            props.get(EnumMedic.HPRESOURCERATE.label, None),
+            EnumMedic.HPRESOURCERATE.label
         )
         self._medUseTime = (
-            props.get(EnumMedic.medUseTime.label, None),
-            EnumMedic.medUseTime.label
+            props.get(EnumMedic.MEDUSETIME.label, None),
+            EnumMedic.MEDUSETIME.label
         )
-        self._medUseTime = (
-            props.get(EnumMedic.effects_damage.label, None),
-            EnumMedic.effects_damage.label
-        )
+        self._effects_damage = EffectDamage.from_data(effects_damage)
 
-        @property
-        def StackMaxSize(self):
-            return self._StackMaxSize
+    @property
+    def StackMaxSize(self):
+        return self._StackMaxSize
 
-        @property
-        def StackObjectsCount(self):
-            return self._StackObjectsCount
+    @property
+    def StackObjectsCount(self):
+        return self._StackObjectsCount
 
-        @property
-        def MaxHpResource(self):
-            return self._MaxHpResource
+    @property
+    def MaxHpResource(self):
+        return self._MaxHpResource
 
-        @property
-        def hpResourceRate(self):
-            return self._hpResourceRate
+    @property
+    def hpResourceRate(self):
+        return self._hpResourceRate
 
-        @property
-        def medUseTime(self):
-            return self._medUseTime
+    @property
+    def medUseTime(self):
+        return self._medUseTime
 
-        @property
-        def medUseTime(self):
-            return self._medUseTime
+    @property
+    def effects_damage(self):
+        return self._effects_damage
 
+    @classmethod
+    def from_data(cls, data: dict):
+        effects_damage = data.get("effects_damage", {})
+        props = {k: v for k, v in data.items() if k != "effects_damage"}
+        return cls(effects_damage=effects_damage, **props)
     def get_instance_attributes(self):
         return vars(self)
 
@@ -67,7 +68,7 @@ class Medic:
                 numeric_value, attr_label = attr_value
                 if attr_label == label:
                     return numeric_value
-        raise ValueError(f"Le label '{label}' n'a pas été trouvé dans Ammo.")
+        raise ValueError(f"Le label '{label}' n'a pas été trouvé dans Medic.")
 
     def __iter__(self):
         return (key for key in self.__dict__.keys())

@@ -1,6 +1,9 @@
 import customtkinter as ctk
 
 from Entity import EnumProps, EnumAiming, EnumAmmo, ItemManager
+from Entity.EnumEffect import EnumEffect
+from Entity.EnumEffectName import EnumEffectName
+from Entity.EnumMedic import EnumMedic
 from Entity.WindowType import WindowType
 
 
@@ -51,12 +54,12 @@ class Utils:
                 frame1.append(button)
                 count += 1
     @staticmethod
-    def create_1x3_bottom(frame1, frame2):
+    def create_1x4_bottom(frame1, frame2):
         frame1.clear()
         total_buttons: int
-        total_buttons = 3
+        total_buttons = 4
         count = 0
-        for y in range(3):
+        for y in range(4):
                 if count >= total_buttons:
                     return
                 button = ctk.CTkFrame(frame2, fg_color="transparent")
@@ -201,6 +204,47 @@ class Utils:
             return value < min_value or value > max_value
         return False
 
+    @staticmethod
+    def is_value_outside_limits_effect(prop: int, value: int) -> bool:
+        limits = {
+            EnumMedic.STACKMAXSIZE: (-1, 100),
+            EnumEffect.DURATION: (-1, 2000),
+            EnumEffect.FADEOUT: (-1, 100),
+            EnumEffect.COST: (-1, 250),
+            EnumEffect.HEALTHPENALTYMAX: (2, 101),
+            EnumEffect.HEALTHPENALTYMIN: (1, 100)
+        }
+
+        if prop in limits:
+            min_val, max_val = limits[prop]
+            return value < min_val or value > max_val
+
+    @staticmethod
+    def is_value_outside_hpMax(hp_max: int, value: int) -> bool:
+        return value <  hp_max
+
+    @staticmethod
+    def select_effect_value(effect_name: str) -> list[EnumEffect]:
+        excluded_fields = set()
+
+        if effect_name != "DestroyedPart":
+            excluded_fields.update({EnumEffect.HEALTHPENALTYMIN, EnumEffect.HEALTHPENALTYMAX})
+
+        if (effect_name == EnumEffectName.DESTROYED_PART.value
+            or effect_name == EnumEffectName.HEAVY_BLEEDING.value
+            or effect_name == EnumEffectName.LIGHT_BLEEDING.value
+            or effect_name == EnumEffectName.FRACTURE.value
+        ):
+            excluded_fields.add(EnumEffect.DURATION)
+
+        if effect_name == EnumEffectName.PAIN.value or effect_name == EnumEffectName.INTOXICATION.value:
+            excluded_fields.add(EnumEffect.COST)
+
+        # Retourne tous les champs sauf ceux exclus
+        return [field for field in EnumEffect if field not in excluded_fields]
+
+
+        return False
     @staticmethod
     def is_value_outside_limits_ammo(name, value):
         limits = {

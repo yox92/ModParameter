@@ -25,7 +25,8 @@ REQUIRED_DIRS = [JSON_FILES_DIR,
                  JSON_FILES_DIR_WEAPONS,
                  JSON_FILES_DIR_CALIBER,
                  JSON_FILES_DIR_PMC,
-                 JSON_FILES_DIR_AMMO
+                 JSON_FILES_DIR_AMMO,
+                 JSON_FILES_DIR_MEDIC
                  ]
 
 

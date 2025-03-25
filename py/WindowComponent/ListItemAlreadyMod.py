@@ -40,7 +40,7 @@ class ListItemAlreadyMod:
 
         if self.window_type == WindowType.DELETE:
             for [json, windowType] in self.weapon_list:
-                data = JsonUtils.load_json_Weapon_or_Ammo(json)
+                data = JsonUtils.load_json_Weapon_Ammo_Medic(json)
                 root: Root = Root.from_data(data, windowType)
                 local: Locale = root.locale
 
@@ -51,7 +51,7 @@ class ListItemAlreadyMod:
 
         else:
             for json in self.weapon_list:
-                data = JsonUtils.load_json_Weapon_or_Ammo(json)
+                data = JsonUtils.load_json_Weapon_Ammo_Medic(json)
                 root: Root = Root.from_data(data, self.window_type)
                 local: Locale = root.locale
 

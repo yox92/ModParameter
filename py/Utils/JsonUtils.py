@@ -3,7 +3,7 @@ import os
 
 from Entity import EnumAmmo, Logger
 from Entity.WindowType import WindowType
-from config import JSON_FILES_DIR_WEAPONS, JSON_FILES_DIR_CALIBER, JSON_FILES_DIR_PMC, JSON_FILES_DIR_AMMO
+from config import JSON_FILES_DIR_WEAPONS, JSON_FILES_DIR_CALIBER, JSON_FILES_DIR_PMC, JSON_FILES_DIR_AMMO, JSON_FILES_DIR_MEDIC
 
 
 class JsonUtils:
@@ -39,8 +39,8 @@ class JsonUtils:
             raise ValueError(f"Le fichier '{file_path}' contient un JSON invalide.")
 
     @staticmethod
-    def load_json_Weapon_or_Ammo(file_name):
-        json_dirs = [JSON_FILES_DIR_WEAPONS, JSON_FILES_DIR_AMMO]
+    def load_json_Weapon_Ammo_Medic(file_name):
+        json_dirs = [JSON_FILES_DIR_WEAPONS, JSON_FILES_DIR_AMMO, JSON_FILES_DIR_MEDIC]
 
         for directory in json_dirs:
             file_path = os.path.join(directory, file_name)
@@ -174,6 +174,23 @@ class JsonUtils:
     @staticmethod
     def load_all_json_ammo():
         json_dir_path = JSON_FILES_DIR_AMMO
+        data: list[dict] = []
+        file_paths: list[str] = []
+
+        for filename in os.listdir(json_dir_path):
+            if filename.endswith('.json') and not filename.endswith('mod.json'):
+                file_path = os.path.join(json_dir_path, filename)
+                file_paths.append(file_path)
+                data.append(JsonUtils.load_json(file_path))
+
+        if not data:
+            raise FileNotFoundError(f"Ammo JSON files not found in '{json_dir_path}'.")
+
+        return data, file_paths
+
+    @staticmethod
+    def load_all_json_medic():
+        json_dir_path = JSON_FILES_DIR_MEDIC
         data: list[dict] = []
         file_paths: list[str] = []
 

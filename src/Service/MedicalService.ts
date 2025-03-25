@@ -31,17 +31,17 @@ export class MedicalService {
             const etgc = etgcTemplate._props
             etgc.MaxHpResource = 5
         }
-        const [boolzagustin, zagustinTemplate] = this.itemHelper.getItem('5c0e534186f7747fa1419867')
+        const [boolzagustin, zagustinTemplate] = this.itemHelper.getItem("5c0e533786f7747fa23f4d47")
         if (boolzagustin) {
             const zagustin = zagustinTemplate._props
             zagustin.MaxHpResource = 5
         }
-        const [boolAfak, afakTemplate] = this.itemHelper.getItem('5c0e534186f7747fa1419867')
+        const [boolAfak, afakTemplate] = this.itemHelper.getItem('60098ad7c2240c0fe85c570a')
         if (boolAfak) {
             const afak = afakTemplate._props
             afak.MaxHpResource = 3000
             afak.hpResourceRate = 100
-            afak.medUseTime = 1
+            afak.medUseTime = 2
             afak.effects_damage.DestroyedPart = {
                 "delay": 0,
                 "duration": 0,
@@ -55,8 +55,24 @@ export class MedicalService {
                 const salewa = salewaTemplate._props
                 salewa.MaxHpResource = 5000
                 salewa.hpResourceRate = 100
-                salewa.medUseTime = 1
+                salewa.medUseTime = 2
                 salewa.effects_damage.DestroyedPart = {
+                    "delay": 0,
+                    "duration": 0,
+                    "fadeOut": 0,
+                    "cost": 50,
+                    "healthPenaltyMin": 80,
+                    "healthPenaltyMax": 100
+                };
+
+            }
+            const [boolifak, ifakTemplate] = this.itemHelper.getItem("590c678286f77426c9660122")
+            if (boolifak) {
+                const ifak = ifakTemplate._props
+                ifak.MaxHpResource = 2000
+                ifak.hpResourceRate = 100
+                ifak.medUseTime = 2
+                ifak.effects_damage.DestroyedPart = {
                     "delay": 0,
                     "duration": 0,
                     "fadeOut": 0,

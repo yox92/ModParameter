@@ -10,6 +10,7 @@ from Utils.ImageUtils import ImageUtils
 from Utils.JsonUtils import JsonUtils
 from Utils.Utils import Utils
 from WindowComponent.AmmoMod import AmmoMod
+from WindowComponent.MedicMod import MedicMod
 from WindowComponent.PmcMod import PmcMod
 from WindowComponent.CaliberWeaponsMod import CaliberWeaponsMod
 from WindowComponent.SingleWeaponMod import SingleWeaponMod
@@ -26,6 +27,9 @@ WINDOW_OFFSET = 10
 
 class ModSelectionWindow:
     def __init__(self, root):
+        self.list_medic_select = None
+        self.medic_image = None
+        self.button_medic = None
         self.frame_top_5 = None
         self.entry = None
         self.loaded_data_ammo = None
@@ -38,7 +42,9 @@ class ModSelectionWindow:
         self.button_view_all_weapons_mod = None
         self.list_json_name_mod_ammo = None
         self.file_path_from_load_all_ammo = None
+        self.file_path_from_load_all_medic = None
         self.data_json_from_load_all_ammo = None
+        self.data_json_from_load_all_medic = None
         self.list_ammo_select = None
         self.root = root
         self.frame_top_2 = None
@@ -87,7 +93,11 @@ class ModSelectionWindow:
         self.weapon_image: CTkImage = ImageUtils.create_image_var("weapon")
         self.pmc_image: CTkImage = ImageUtils.create_image_var("pmc")
         self.ammo_image: CTkImage = ImageUtils.create_image_var("ammo")
-        self.medic_image: CTkImage = ImageUtils.create_image_var("ammo")
+        self.medic_image: CTkImage = ImageUtils.create_image_var("medic")
+        self.stim_image: CTkImage = ImageUtils.create_image_var("stim")
+        self.painkiller_image: CTkImage = ImageUtils.create_image_var("painkiller")
+        self.salewa_image: CTkImage = ImageUtils.create_image_var("salewa")
+        self.bandage_image: CTkImage = ImageUtils.create_image_var("bandage")
 
     def create_frame_main(self):
         self.root.grid_rowconfigure(0, weight=1)
@@ -298,7 +308,7 @@ class ModSelectionWindow:
             text_color="Crimson",
             hover_color="whitesmoke",
             font=("Arial", 18, "bold"),
-            command=lambda: self.generate_list_button_caliber_ammo(WindowType.CALIBER)
+            command=lambda: self.generate_list_button(WindowType.CALIBER)
         )
         self.button_caliber.pack(side="top", anchor="center",
                                  expand=True, fill="both")
@@ -337,25 +347,25 @@ class ModSelectionWindow:
             text_color="green",
             hover_color="whitesmoke",
             font=("Arial", 18, "bold"),
-            command=self.generate_list_button_caliber_ammo(WindowType.MEDIC)
+            command=lambda: self.generate_list_button(WindowType.MEDIC)
         )
         self.button_medic.pack(side="top", anchor="center",
-                             expand=True, fill="both")
+                               expand=True, fill="both")
         self.frames_buttons = {
             "weapon": self.buttonWeapon,
             "caliber": self.button_caliber,
             "pmc": self.button_pmc,
             "ammo": self.button_ammo,
-            "medic" : self.button_medic
+            "medic": self.button_medic
         }
 
-    def generate_list_button_caliber_ammo(self, choice_window: WindowType):
+    def generate_list_button(self, choice_window: WindowType):
         if choice_window == WindowType.AMMO:
             WindowUtils.lock_choice_frame("ammo", self.frames_buttons)
         elif choice_window == WindowType.CALIBER:
             WindowUtils.lock_choice_frame("caliber", self.frames_buttons)
         elif choice_window == WindowType.MEDIC:
-            WindowUtils.lock_choice_frame("medic",self.frames_buttons)
+            WindowUtils.lock_choice_frame("medic", self.frames_buttons)
 
         Utils.clear_frame(self.main_frame_bot)
         if choice_window == WindowType.AMMO or choice_window == WindowType.CALIBER:
@@ -363,11 +373,9 @@ class ModSelectionWindow:
             Utils.create_5x5_bottom(self.framesBotCaliber, self.main_frame_bot, choice_window)
             self.create_buttons_for_calibers_ammo(choice_window)
         elif choice_window == WindowType.MEDIC:
-            Utils.create_grid_row_col_config(self.main_frame_bot, 1, 3)
-            Utils.create_1x3_bottom(self.framesBotCaliber, self.main_frame_bot)
+            Utils.create_grid_row_col_config(self.main_frame_bot, 1, 4)
+            Utils.create_1x4_bottom(self.framesBotCaliber, self.main_frame_bot)
             self.create_buttons_for_medic(choice_window)
-
-
 
     def pmc_window(self):
         WindowUtils.lock_choice_frame("pmc", self.frames_buttons)
@@ -408,14 +416,16 @@ class ModSelectionWindow:
             self.entry.bind("<KeyRelease>", self.search_name)
         elif choice_window == WindowType.AMMO:
             self.populate_buttons(self.list_ammo_select, choice_window)
+        elif choice_window == WindowType.MEDIC:
+            self.populate_buttons(self.list_medic_select, choice_window)
 
     def ammo_window(self):
         WindowUtils.lock_choice_frame("ammo", self.frames_buttons)
-        self.generate_list_button_caliber_ammo(WindowType.AMMO)
+        self.generate_list_button(WindowType.AMMO)
 
     def medic_window(self):
         WindowUtils.lock_choice_frame("medic", self.frames_buttons)
-        self.generate_list_button_caliber_ammo(WindowType.MEDIC)
+        self.generate_list_button(WindowType.MEDIC)
 
     def search_name(self, event=None):
         name_to_search = self.entry.get()
@@ -441,7 +451,7 @@ class ModSelectionWindow:
             rows=total_rows,
             cols=items_per_row,
             weight=1)
-        if window_type == WindowType.AMMO:
+        if window_type == WindowType.AMMO or window_type == WindowType.MEDIC:
             results = [{"short_name": root.locale.ShortName, "name": root.locale.Name} for root in results]
 
             button = ctk.CTkButton(self.frame_bot_top,
@@ -474,6 +484,10 @@ class ModSelectionWindow:
                 button.configure(text=result["short_name"],
                                  command=lambda r=result: self.on_click_result(r["name"],
                                                                                window_type))
+            elif window_type == WindowType.MEDIC:
+                button.configure(text=result["short_name"],
+                                 command=lambda r=result: self.on_click_result(r["name"],
+                                                                               window_type))
             self.framesButtonRecherche.append(button)
 
     def on_click_result(self, result, window_type: WindowType):
@@ -481,7 +495,7 @@ class ModSelectionWindow:
             for data in self.loaded_data:
                 if data['locale']['ShortName'] == result:
                     file_path = data['file_path']
-                    self.open_weapon_specific_window(file_path, WindowType.WEAPON)
+                    self.open_specific_window(file_path, WindowType.WEAPON)
                     break
             else:
                 self.logger.log("info", f"File ignore : {result}")
@@ -491,7 +505,16 @@ class ModSelectionWindow:
                 (fp for fp in self.file_path_from_load_all_ammo if fp.endswith(json_filename)),
                 None)
             if matching_file:
-                self.open_weapon_specific_window(matching_file, WindowType.AMMO)
+                self.open_specific_window(matching_file, WindowType.AMMO)
+            else:
+                raise FileNotFoundError(f"File '{json_filename}' do not existe / not find")
+        elif window_type == WindowType.MEDIC:
+            json_filename = self.sanitize_filename(result)
+            matching_file = next(
+                (fp for fp in self.file_path_from_load_all_medic if fp.endswith(json_filename)),
+                None)
+            if matching_file:
+                self.open_specific_window(matching_file, WindowType.MEDIC)
             else:
                 raise FileNotFoundError(f"File '{json_filename}' do not existe / not find")
 
@@ -560,30 +583,38 @@ class ModSelectionWindow:
             if choice_window == WindowType.AMMO:
                 button.configure(command=lambda r=code: self.ammo_button_press(r, choice_window))
             elif choice_window == WindowType.CALIBER:
-                button.configure(command=lambda r=code: self.open_weapon_specific_window(r, choice_window))
+                button.configure(command=lambda r=code: self.open_specific_window(r, choice_window))
 
             column += 1
             if column >= 5:
                 column = 0
                 row += 1
+
     def create_buttons_for_medic(self, choice_window: WindowType):
-        row = 1
         column = 0
-
         for idx, (label, code) in enumerate(MedicalCat.enumerate_medical()):
-
             idx: int
-
             button = ctk.CTkButton(
                 self.framesBotCaliber[idx],
+                image="",
                 text=label,
                 width=150,
-                text_color="black",
-                fg_color="red",
-                font=("Arial", 15, "bold")
+                compound="bottom",
+                fg_color="transparent",
+                text_color="white",
+                font=("Arial", 20, "bold")
             )
+            if label == MedicalCat.STIMULATOR.label:
+                button.configure(image=self.stim_image)
+            elif label == MedicalCat.DRUGS.label:
+                button.configure(image=self.painkiller_image)
+            elif label == MedicalCat.MEDKIT.label:
+                button.configure(image=self.salewa_image)
+            elif label == MedicalCat.MEDICAL.label:
+                button.configure(image=self.bandage_image)
+
             button.pack(side="top", anchor="center")
-            button.configure(command=lambda r=code: self.ammo_button_press(r, choice_window))
+            button.configure(command=lambda parent=code: self.medic_button_press(parent, choice_window))
             column += 1
 
     def ammo_button_press(self, caliber_select, choice_window):
@@ -605,29 +636,20 @@ class ModSelectionWindow:
                 if root.item.props.get_value_by_label("Caliber") == caliber_select
             ]
         self.list_ammo_select = filtered_roots
-
         self.generate_bot_frame_weapon_and_ammo(choice_window)
 
-    def medic_button_press(self, caliber_select, choice_window):
-        if not self.data_json_from_load_all_ammo:
-            (self.data_json_from_load_all_ammo,
-             self.file_path_from_load_all_ammo) = JsonUtils.load_all_json_ammo()
+    def medic_button_press(self, parent, choice_window):
 
-        root_list = [Root.from_data(data, WindowType.AMMO) for data in self.data_json_from_load_all_ammo]
+        if not self.data_json_from_load_all_medic:
+            (self.data_json_from_load_all_medic,
+             self.file_path_from_load_all_medic) = JsonUtils.load_all_json_medic()
 
-        if caliber_select == Caliber.GRENADE_40x46.code:
-            filtered_roots = [
-                root for root in root_list
-                if root.item.props.get_value_by_label("Caliber") in {caliber_select, "Caliber40mmRU"}
-            ]
-
-        else:
-            filtered_roots = [
-                root for root in root_list
-                if root.item.props.get_value_by_label("Caliber") == caliber_select
-            ]
-        self.list_ammo_select = filtered_roots
-
+        root_list = [Root.from_data(data, WindowType.MEDIC) for data in self.data_json_from_load_all_medic]
+        filtered_roots = [
+            root for root in root_list
+            if root.item.parent == parent
+        ]
+        self.list_medic_select = filtered_roots
         self.generate_bot_frame_weapon_and_ammo(choice_window)
 
     def clear_recherche_frame(self):
@@ -641,7 +663,7 @@ class ModSelectionWindow:
         self.framesButtonRecherche.clear()
         self.message_not_find.clear()
 
-    def open_weapon_specific_window(self, send_value, window_type: WindowType):
+    def open_specific_window(self, send_value, window_type: WindowType):
         self.detail_window = ctk.CTkToplevel(self.root)
 
         self.detail_window.title(DETAIL_WINDOW_TITLE)
@@ -668,6 +690,12 @@ class ModSelectionWindow:
                     self.detail_window,
                     send_value,
                     self)
+        elif window_type == WindowType.MEDIC:
+            MedicMod(self.detail_window,
+                    self.root,
+                    self.detail_window,
+                    send_value,
+                    self)
 
     def open_weapon_specific_window_from_list(self, name, windowType):
         list_for_data = None
@@ -679,7 +707,7 @@ class ModSelectionWindow:
         for data in list_for_data:
             if data['file_path'].endswith(name_without_mod):
                 file_path = data['file_path']
-                self.open_weapon_specific_window(file_path, windowType)
+                self.open_specific_window(file_path, windowType)
 
     def calculate_window_position(self, window_width, window_height):
         root_x = self.root.winfo_x()
