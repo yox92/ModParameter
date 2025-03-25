@@ -1,0 +1,27 @@
+{
+  "item": {
+    "_id": "544fb3364bdc2d34748b456a",
+    "_name": "splint",
+    "_parent": "5448f3ac4bdc2dce718b4569",
+    "_props": {
+      "StackMaxSize": 1,
+      "StackObjectsCount": 1,
+      "MaxHpResource": 0,
+      "hpResourceRate": 0,
+      "medUseTime": 5,
+      "effects_damage": {
+        "Fracture": {
+          "delay": 0,
+          "duration": 0,
+          "fadeOut": 0
+        }
+      },
+      "priceFactor": 1.0
+    }
+  },
+  "locale": {
+    "Name": "Immobilizing splint",
+    "ShortName": "Splint"
+  },
+  "clone": true
+}

@@ -3,13 +3,11 @@ import copy
 import customtkinter as ctk
 from tkinter import messagebox
 
-from Entity import Logger, Root, Item, Medic, WindowType, Locale
-from Entity.EffectDamage import EffectDamage
+from Entity import Logger, Root, Item, Medic, WindowType
 from Entity.EnumEffect import EnumEffect
 from Entity.EnumEffectName import EnumEffectName
 from Entity.EnumMedic import EnumMedic
 from Utils import WindowUtils, JsonUtils, Utils
-from Utils.addValueJson import file_path
 
 
 class MedicMod:
@@ -153,7 +151,7 @@ class MedicMod:
 
                 label.configure(font=("Arial", 14, "bold"), text_color="Peru")
 
-                if isinstance(raw_value, int):
+                if isinstance(raw_value, (int, float)):
                     self.entry_input(raw_value, row, label_name)
 
                     row += 1
@@ -323,6 +321,16 @@ class MedicMod:
                                      width=10)
         reset_button.grid(row=row, column=2, padx=5, pady=5, sticky="w")
         self.prop_widgets[prop_value] = (entry, entry_label)
+
+    def reset_entry(self, pname, entry):
+        original_value = self.original_value_copy.get_attribute_value(pname)[0]
+        entry = self.prop_widgets[pname][0]
+        self.prop_widgets[pname][0].delete(0, 'end')
+        entry.insert(0, str(original_value))
+        self.data_from_json_no_save.set_value(pname, original_value)
+        self.reset_apply_button()
+        self.verify_all_sliders_reset()
+
 
     def get_entry_value(self, event, prop_value, value):
         input_text = self.prop_widgets[prop_value][0].get()

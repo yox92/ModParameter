@@ -1,0 +1,27 @@
+{
+  "item": {
+    "_id": "544fb25a4bdc2dfb738b4567",
+    "_name": "bandage",
+    "_parent": "5448f3ac4bdc2dce718b4569",
+    "_props": {
+      "StackMaxSize": 1,
+      "StackObjectsCount": 1,
+      "MaxHpResource": 0,
+      "hpResourceRate": 0,
+      "medUseTime": 2,
+      "effects_damage": {
+        "LightBleeding": {
+          "delay": 0,
+          "duration": 0,
+          "fadeOut": 0
+        }
+      },
+      "priceFactor": 1.0
+    }
+  },
+  "locale": {
+    "Name": "Aseptic bandage",
+    "ShortName": "Bandage"
+  },
+  "clone": true
+}

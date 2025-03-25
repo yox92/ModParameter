@@ -1,0 +1,27 @@
+{
+  "item": {
+    "_id": "5ed515e03a40a50460332579",
+    "_name": "L1",
+    "_parent": "5448f3a64bdc2d60728b456a",
+    "_props": {
+      "StackMaxSize": 1,
+      "StackObjectsCount": 1,
+      "MaxHpResource": 0,
+      "hpResourceRate": 0,
+      "medUseTime": 2,
+      "effects_damage": {
+        "Pain": {
+          "delay": 0,
+          "duration": 120,
+          "fadeOut": 0
+        }
+      },
+      "priceFactor": 1.0
+    }
+  },
+  "locale": {
+    "Name": "L1 (Norepinephrine) injector",
+    "ShortName": "L1"
+  },
+  "clone": true
+}

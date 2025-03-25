@@ -1,0 +1,21 @@
+{
+  "item": {
+    "_id": "5fca138c2a7b221b2852a5c6",
+    "_name": "x-TG-12_antidote",
+    "_parent": "5448f3a64bdc2d60728b456a",
+    "_props": {
+      "StackMaxSize": 1,
+      "StackObjectsCount": 1,
+      "MaxHpResource": 0,
+      "hpResourceRate": 0,
+      "medUseTime": 2,
+      "effects_damage": [],
+      "priceFactor": 1.0
+    }
+  },
+  "locale": {
+    "Name": "xTG-12 antidote injector",
+    "ShortName": "xTG-12"
+  },
+  "clone": true
+}

@@ -1,0 +1,34 @@
+{
+  "item": {
+    "_id": "544fb45d4bdc2dee738b4568",
+    "_name": "salewa",
+    "_parent": "5448f39d4bdc2d0a728b4568",
+    "_props": {
+      "StackMaxSize": 2,
+      "StackObjectsCount": 1,
+      "MaxHpResource": 1000,
+      "hpResourceRate": 60,
+      "medUseTime": 2,
+      "effects_damage": {
+        "LightBleeding": {
+          "cost": 45,
+          "delay": 0,
+          "duration": 0,
+          "fadeOut": 0
+        },
+        "HeavyBleeding": {
+          "cost": 175,
+          "delay": 0,
+          "duration": 0,
+          "fadeOut": 0
+        }
+      },
+      "priceFactor": 1.0
+    }
+  },
+  "locale": {
+    "Name": "Salewa first aid kit",
+    "ShortName": "Salewa"
+  },
+  "clone": true
+}

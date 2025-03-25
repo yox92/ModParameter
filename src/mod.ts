@@ -12,7 +12,6 @@ import {SaveServer} from "@spt/servers/SaveServer";
 import {ClearCloneService} from "./Service/ClearCloneService";
 import {LocaleService} from "@spt/services/LocaleService";
 import {PmcModifyService} from "./Service/PmcModifyService";
-import {MedicalService} from "./Service/MedicalService";
 
 class ModParameter implements IPostDBLoadMod, PreSptModLoader, IPostSptLoadMod {
 

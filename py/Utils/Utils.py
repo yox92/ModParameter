@@ -208,7 +208,6 @@ class Utils:
     @staticmethod
     def is_value_outside_limits_effect(prop: int, value: int) -> bool:
         limits = {
-            EnumMedic.STACKMAXSIZE: (-1, 101),
             EnumEffect.DURATION: (-1, 2001),
             EnumEffect.FADEOUT: (-1, 101),
             EnumEffect.COST: (-1, 251),
@@ -272,7 +271,6 @@ class Utils:
     @staticmethod
     def is_value_outside_limits_medic(name, value):
         limits = {
-            EnumMedic.STACKMAXSIZE.label: (-1, 101),
             EnumMedic.MEDUSETIME.label: (0, 21),
             EnumMedic.HPRESOURCERATE.label: (-1, 1001),
             EnumMedic.MAXHPRESOURCE.label: (1, 10001)

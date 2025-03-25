@@ -4,14 +4,6 @@ from Entity.EnumMedic import EnumMedic
 
 class Medic:
     def __init__(self, effects_damage=None, **props):
-        self._StackMaxSize = (
-            props.get(EnumMedic.STACKMAXSIZE.label, None),
-            EnumMedic.STACKMAXSIZE.label
-        )
-        self._StackObjectsCount = (
-            props.get(EnumMedic.STACKOBJECTSCOUNT.label, None),
-            EnumMedic.STACKOBJECTSCOUNT.label
-        )
         self._MaxHpResource = (
             props.get(EnumMedic.MAXHPRESOURCE.label, None),
             EnumMedic.MAXHPRESOURCE.label
@@ -24,15 +16,11 @@ class Medic:
             props.get(EnumMedic.MEDUSETIME.label, None),
             EnumMedic.MEDUSETIME.label
         )
+        self._priceFactor = (
+            props.get(EnumMedic.PRICEFACTOR.label, None),
+            EnumMedic.PRICEFACTOR.label
+        )
         self._effects_damage = EffectDamage.from_data(effects_damage)
-
-    @property
-    def StackMaxSize(self):
-        return self._StackMaxSize
-
-    @property
-    def StackObjectsCount(self):
-        return self._StackObjectsCount
 
     @property
     def MaxHpResource(self):

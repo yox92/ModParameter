@@ -1,0 +1,37 @@
+{
+  "item": {
+    "_id": "5751a89d24597722aa0e8db0",
+    "_name": "golden_star_balm",
+    "_parent": "5448f3a14bdc2d27728b4569",
+    "_props": {
+      "StackMaxSize": 1,
+      "StackObjectsCount": 1,
+      "MaxHpResource": 10,
+      "hpResourceRate": 0,
+      "medUseTime": 7,
+      "effects_damage": {
+        "Pain": {
+          "delay": 0,
+          "duration": 350,
+          "fadeOut": 20
+        },
+        "Contusion": {
+          "delay": 0,
+          "duration": 0,
+          "fadeOut": 0
+        },
+        "RadExposure": {
+          "delay": 0,
+          "duration": 400,
+          "fadeOut": 20
+        }
+      },
+      "priceFactor": 1.0
+    }
+  },
+  "locale": {
+    "Name": "Golden Star balm",
+    "ShortName": "GoldenStar"
+  },
+  "clone": true
+}
