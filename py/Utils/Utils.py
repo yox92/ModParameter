@@ -221,7 +221,7 @@ class Utils:
 
     @staticmethod
     def is_value_outside_hpMax(hp_max: int, value: int) -> bool:
-        return value <  hp_max
+        return value >  hp_max
 
     @staticmethod
     def select_effect_value(effect_name: str) -> list[EnumEffect]:

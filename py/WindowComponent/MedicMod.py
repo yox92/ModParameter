@@ -200,7 +200,7 @@ class MedicMod:
         row_edit = 0
 
         for enum_effect in Utils.select_effect_value(effect_name):
-            label = enum_effect.label
+            label = enum_effect.code
 
             lbl_widget = ctk.CTkLabel(self.effect_edit_frame, text=label)
             lbl_widget.grid(row=row_edit, column=0, padx=10, pady=2, sticky="w")
@@ -223,13 +223,20 @@ class MedicMod:
                 text = entry.get().strip()
 
                 if text == "":
-                    continue
-
-                try:
-                    val = int(text)
-                except ValueError:
-                    messagebox.showerror("Erreur", f"Le champ '{prop}' doit être un nombre.")
-                    return
+                    if prop in EnumEffect.HEALTHPENALTYMIN.label:
+                        val = 99
+                    if prop in EnumEffect.DURATION.label:
+                        val = 100
+                    elif prop in EnumEffect.HEALTHPENALTYMAX.label:
+                        val = 100
+                    else:
+                        val = 0
+                else:
+                    try:
+                        val = int(text)
+                    except ValueError:
+                        messagebox.showerror("Erreur", f"Le champ '{prop}' doit être un nombre.")
+                        return
 
                 if Utils.is_value_outside_limits_effect(prop, val):
                     messagebox.showerror("Erreur", f"La valeur pour '{prop}' est hors limites autorisées.")
