@@ -251,7 +251,7 @@ class MedicMod:
                 if text == "":
                     if prop in EnumEffect.HEALTHPENALTYMIN.label:
                         val = 99
-                    if prop in EnumEffect.DURATION.label:
+                    elif prop in EnumEffect.DURATION.label:
                         val = 100
                     elif prop in EnumEffect.HEALTHPENALTYMAX.label:
                         val = 100
@@ -414,10 +414,8 @@ class MedicMod:
     def apply_changes(self):
         if not self.block_system_error_detect:
             if not self.data_save_load:
-                print(self.data_from_json_save)
                 self.apply_save_data_from_change_by_user()
             else:
-                print(self.data_from_json_no_save)
                 self.apply_case_save_detect()
         else:
             self.status_label.configure(text="Error detect, \n can't Apply change ", text_color="red")

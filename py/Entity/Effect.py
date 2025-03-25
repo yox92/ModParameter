@@ -1,9 +1,9 @@
 class Effect:
     def __init__(self,
-                 delay=None,
-                 duration=None,
-                 fadeOut=None,
-                 cost=None,
+                 delay=0,
+                 duration=0,
+                 fadeOut=0,
+                 cost=0,
                  healthPenaltyMin=None,
                  healthPenaltyMax=None):
         self.delay = delay

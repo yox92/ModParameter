@@ -3,6 +3,8 @@ import os
 
 from Entity import EnumAmmo, Logger
 from Entity.EffectDamage import EffectDamage
+from Entity.EnumEffect import EnumEffect
+from Entity.EnumMedic import EnumMedic
 from Entity.WindowType import WindowType
 from config import JSON_FILES_DIR_WEAPONS, JSON_FILES_DIR_CALIBER, JSON_FILES_DIR_PMC, JSON_FILES_DIR_AMMO, JSON_FILES_DIR_MEDIC
 
@@ -292,6 +294,11 @@ class JsonUtils:
 
     @staticmethod
     def update_json_value(data, path_for_attribut_json, new_value, window_type: WindowType):
+        if window_type == WindowType.MEDIC and isinstance(new_value, EffectDamage):
+            current = JsonUtils.get_nested_value(data, path_for_attribut_json)
+            final_key = path_for_attribut_json[-1]
+            JsonUtils.update_effect_medical(current, final_key, new_value, window_type)
+            return data
         if isinstance(new_value, (int, float, bool)):
             current = JsonUtils.get_nested_value(data, path_for_attribut_json)
 
@@ -369,6 +376,22 @@ class JsonUtils:
                     raise ValueError("Invalid value for effects_damage")
             if isinstance(new_value, int):
                 current[final_key] = int(new_value)
+
+    @staticmethod
+    def update_effect_medical(current, final_key, new_value, window_type):
+        if window_type == window_type.MEDIC:
+            if final_key == EnumMedic.EFFECTS_DAMAGE.label:
+                def clean_none_values(data):
+                    return {
+                        effect_name: {k: v for k, v in attributes.items() if v is not None}
+                        for effect_name, attributes in data.items()
+                    }
+                if isinstance(new_value, EffectDamage):
+                    current["effects_damage"] = clean_none_values(new_value.to_dict())
+                elif isinstance(new_value, dict):
+                    current["effects_damage"] = clean_none_values(new_value)
+                else:
+                    raise ValueError("Invalid value for effects_damage")
 
     @staticmethod
     def get_nested_value(data, path_for_attribut_json):
