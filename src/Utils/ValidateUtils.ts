@@ -308,11 +308,12 @@ export class ValidateUtils {
 
         if (!Array.isArray(items) || items.length === 0) {
             logger.debug("[ModParameter] Error: No items found in sptItems.");
-            return ;
+            return;
         }
         return items
 
     }
+
     public validatePriceProps(value: any): number | null {
         if (value === undefined || value === null || typeof value !== "number") {
             return null;
@@ -322,7 +323,7 @@ export class ValidateUtils {
             return parseFloat(value.toFixed(2));
         } else if (value >= 0.1 && value <= 0.9) {
             return parseFloat(value.toFixed(1));
-        } else if (value >= 1 && value <= 10) {
+        } else if (value >= 1 && value <= 100) {
             return Math.round(value);
         }
 
