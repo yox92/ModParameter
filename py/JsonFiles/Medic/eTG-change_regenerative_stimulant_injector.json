@@ -1,0 +1,27 @@
+{
+  "item": {
+    "_id": "5c0e534186f7747fa1419867",
+    "_name": "eTG_change",
+    "_parent": "5448f3a64bdc2d60728b456a",
+    "_props": {
+      "StackMaxSize": 1,
+      "StackObjectsCount": 1,
+      "MaxHpResource": 0,
+      "hpResourceRate": 0,
+      "medUseTime": 2,
+      "effects_damage": {
+        "Contusion": {
+          "delay": 0,
+          "duration": 0,
+          "fadeOut": 0
+        }
+      },
+      "priceFactor": 1.0
+    }
+  },
+  "locale": {
+    "Name": "eTG-change regenerative stimulant injector",
+    "ShortName": "eTG-c"
+  },
+  "clone": true
+}

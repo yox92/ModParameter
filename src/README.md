@@ -6,10 +6,11 @@
 - [📝Note](#Notes)
 - [📌Features](#Features)  
   - [Assign Tracers to Bullets]()
-  - [Search for a Weapon](#1-search-for-a-weapon-by-its-name-using-a-search-bar-to-mod-it)  
-  - [Modify Weapons by Caliber](#2-select-a-group-of-weapons-based-on-their-calibers-to-mod-all)  
-  - [Modify Ammunition](#3-organize-bullet-search-based-on-their-caliber-categories-to-allow-modifications)  
-  - [Modify PMC Attributes](#4-modifying-pmc-attributes-in-eft)
+  - [Search for a Weapon](Search-and-Modify-Weapons)  
+  - [Modify Weapons by Caliber](#1-Search-and-Modify-Weapons)  
+  - [Modify Ammunition](#2-Modify-Ammunition-Attributes)  
+  - [Modify PMC Attributes](#3-Modify-PMC-Attributes-in-Escape-from-Tarkov)
+  - [Modify Medical](#4-Modify-Medicals-Attributes)
   - [Save Modifications](#6-saving-your-modifications-made-to)  
   - [Deletion Options](#7-deletion)
 - [🎯 Main Classe](#Main-Classe)
@@ -115,6 +116,30 @@ Modify various PMC attributes to fine-tune gameplay. Changes only affect the **c
 - **BaseRestorationRate** green stamina restoration speed
 - **StandupConsumption** drain green stamina when stand up. two value from crunch and from prone. I use same value. i juste * 2 from prone
 
+### 4. Modify Medicals Attributes
+Modify various PMC attributes to fine-tune gameplay. Changes can be affect the **cloned versions** of related entities or original.
+By select option : "Clone/Override"
+True = clone while be create
+False = Replace Originale
+
+#### 📌 **Medicals Attributes**
+- **MaxHpResource**: Usage number 0 single usage, for other one usage number capacity.
+- **hpResourceRate**: Hp regen on usage. This value equal MaxHpResource remove with one single usage.
+- **medUseTime**: time to use medic (seconds). low value can cancel MaxHpResource usage
+- **priceFactor**: multiply price for flea market / trader seller.
+- **effects_damage**: "Effect medic item. https://escapefromtarkov.fandom.com/wiki/Health_system#Part_specific_status_effects
+  - **Fracture**: 
+  - **Pain**
+  - **LightBleeding**
+  - **HeavyBleeding**
+  - **DestroyedPart**
+  - **Contusion**
+  - **Intoxication**
+    * **duration**: "Duration of the effect (seconds) like painkiller effect" 
+    * **fadeOut**: "Time it takes for the debuff to fade out like tremor effect with propital" 
+    * **cost**: "Resource cost to remove the effect like remove bleeding with Medkit" 
+    * **healthPenaltyMin**: "Minimum % of health removed with DestroyPart when you restore member was 0% HP" 
+    * **healthPenaltyMax**: "Maximum % of health removed with DestroyPart when you restore member was 0% HP" 
 ---
 
 ## Installation
@@ -133,10 +158,11 @@ Modify various PMC attributes to fine-tune gameplay. Changes only affect the **c
 - When you return to modify an item / PMC, your changes are saved. If you delete the modification, the save is removed.
 
 ### 7. Deletion
-- Reset to default values ==> removes the save and all modifications (Weapons / Bullets / PMC)
+- Reset to default values ==> removes the save and all modifications (Weapons / Bullets / Medic / PMC)
 - Delete a specific item
 - Delete all weapon modifications
 - Delete all bullet modifications
+- Delete all medic modifications
 ---
 ## Schéma fonctionnement
 ````
@@ -267,7 +293,7 @@ DatabaseServer
 │   │   │   │   ├── RecoilIntensity: Same pattern than RecoilIntensityByPose
 ```
 ---
-# Weapon & Ammo Data Fetcher
+# Weapon, Ammo, Medical Data Fetcher
 #### MongoDB ID Generator simple ID
 This TypeScript module generates unique MongoDB ObjectIDs for weapons and ammunition in the SPT modding environment. It ensures that each item in predefined lists (WeaponEnum, AmmoEnum) receives a unique identifier while maintaining consistency across sessions by storing the mappings in JSON files. The script verifies existing mappings, generates new IDs if necessary, and saves them persistently. This utility facilitates data management by preventing duplicate ID assignments and ensuring reliable referencing of cloned game items.
 #### MongoDB ID Generator ipl trader

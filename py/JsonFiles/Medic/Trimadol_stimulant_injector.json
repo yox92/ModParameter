@@ -1,0 +1,32 @@
+{
+  "item": {
+    "_id": "637b620db7afa97bfc3d7009",
+    "_name": "Trimadol",
+    "_parent": "5448f3a64bdc2d60728b456a",
+    "_props": {
+      "StackMaxSize": 1,
+      "StackObjectsCount": 1,
+      "MaxHpResource": 0,
+      "hpResourceRate": 0,
+      "medUseTime": 2,
+      "effects_damage": {
+        "Pain": {
+          "delay": 0,
+          "duration": 180,
+          "fadeOut": 5
+        },
+        "Contusion": {
+          "delay": 0,
+          "duration": 180,
+          "fadeOut": 0
+        }
+      },
+      "priceFactor": 1.0
+    }
+  },
+  "locale": {
+    "Name": "Trimadol stimulant injector",
+    "ShortName": "Trimadol"
+  },
+  "clone": true
+}

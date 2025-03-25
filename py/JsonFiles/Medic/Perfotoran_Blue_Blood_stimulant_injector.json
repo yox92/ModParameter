@@ -1,0 +1,32 @@
+{
+  "item": {
+    "_id": "637b6251104668754b72f8f9",
+    "_name": "Perfotoran",
+    "_parent": "5448f3a64bdc2d60728b456a",
+    "_props": {
+      "StackMaxSize": 1,
+      "StackObjectsCount": 1,
+      "MaxHpResource": 0,
+      "hpResourceRate": 0,
+      "medUseTime": 2,
+      "effects_damage": {
+        "Intoxication": {
+          "delay": 0,
+          "duration": 60,
+          "fadeOut": 0
+        },
+        "RadExposure": {
+          "delay": 0,
+          "duration": 60,
+          "fadeOut": 0
+        }
+      },
+      "priceFactor": 1.0
+    }
+  },
+  "locale": {
+    "Name": "Perfotoran (Blue Blood) stimulant injector",
+    "ShortName": "Perfotoran"
+  },
+  "clone": true
+}

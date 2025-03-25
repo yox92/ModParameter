@@ -1,0 +1,32 @@
+{
+  "item": {
+    "_id": "5c10c8fd86f7743d7d706df3",
+    "_name": "Adrenaline",
+    "_parent": "5448f3a64bdc2d60728b456a",
+    "_props": {
+      "StackMaxSize": 1,
+      "StackObjectsCount": 1,
+      "MaxHpResource": 0,
+      "hpResourceRate": 0,
+      "medUseTime": 2,
+      "effects_damage": {
+        "Pain": {
+          "delay": 0,
+          "duration": 60,
+          "fadeOut": 5
+        },
+        "Contusion": {
+          "delay": 0,
+          "duration": 60,
+          "fadeOut": 0
+        }
+      },
+      "priceFactor": 1.0
+    }
+  },
+  "locale": {
+    "Name": "Adrenaline injector",
+    "ShortName": "Adrenaline"
+  },
+  "clone": true
+}

@@ -1,0 +1,27 @@
+{
+  "item": {
+    "_id": "5e831507ea0a7c419c2f9bd9",
+    "_name": "item_meds_esmarch",
+    "_parent": "5448f3ac4bdc2dce718b4569",
+    "_props": {
+      "StackMaxSize": 1,
+      "StackObjectsCount": 1,
+      "MaxHpResource": 0,
+      "hpResourceRate": 0,
+      "medUseTime": 5,
+      "effects_damage": {
+        "HeavyBleeding": {
+          "delay": 0,
+          "duration": 0,
+          "fadeOut": 0
+        }
+      },
+      "priceFactor": 1.0
+    }
+  },
+  "locale": {
+    "Name": "Esmarch tourniquet",
+    "ShortName": "Esmarch"
+  },
+  "clone": true
+}

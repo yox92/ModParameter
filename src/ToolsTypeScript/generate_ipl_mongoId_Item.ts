@@ -3,11 +3,13 @@ import * as path from "path";
 import {WeaponEnum} from "../ListIdItem/WeaponEnum";
 import {EnumUtils} from "../Service/EnumUtils";
 import {mongoid} from "mongoid-js";
+import {MedicEnum} from "../ListIdItem/MedicEnum";
 
-const path_to_directory_trader = path.resolve(__dirname, "external/server/project/assets/database/traders");
+const path_to_directory_trader = path.resolve(__dirname, "../external/server/project/assets/database/traders");
 const file_name_where_find = "assort.json";
 const outputFileAmmo = path.resolve(__dirname, "ipl_mongo_ipl_clone_ammo.json");
 const outputFileWeapon = path.resolve(__dirname, "ipl_mongo_ipl_clone_weapon.json");
+const outputFileMedic = path.resolve(__dirname, "ipl_mongo_ipl_clone_medic.json");
 
 /**
  * 📌 Fonction pour générer un identifiant MongoDB-like
@@ -21,12 +23,12 @@ return mongoid()
  */
 function loadExistingMappings(): Record<string, string> {
     try {
-        if (!fs.existsSync(outputFileWeapon)) {
-            console.warn(`⚠️ Fichier ${outputFileWeapon} introuvable, création d'un nouveau.`);
+        if (!fs.existsSync(outputFileMedic)) {
+            console.warn(`⚠️ Fichier ${outputFileMedic} introuvable, création d'un nouveau.`);
             return {};
         }
 
-        const data = fs.readFileSync(outputFileWeapon, "utf-8").trim();
+        const data = fs.readFileSync(outputFileMedic, "utf-8").trim();
         return data ? JSON.parse(data) : {};
     } catch (error) {
         console.error("❌ Erreur lors du chargement du fichier JSON :", error);
@@ -39,8 +41,8 @@ function loadExistingMappings(): Record<string, string> {
  */
 function saveMappings(mappings: Record<string, string>) {
     try {
-        fs.writeFileSync(outputFileWeapon, JSON.stringify(mappings, null, 4), "utf-8");
-        console.log(`✅ Fichier mis à jour : ${outputFileWeapon}`);
+        fs.writeFileSync(outputFileMedic, JSON.stringify(mappings, null, 4), "utf-8");
+        console.log(`✅ Fichier mis à jour : ${outputFileMedic}`);
     } catch (error) {
         console.error("❌ Erreur lors de l'écriture du fichier JSON :", error);
     }
@@ -114,8 +116,11 @@ async function main() {
      // const idsAmmos: string[] = EnumUtils.getAllValues(AmmoEnum)
     // await fetchData(idsAmmos);
 
-    const idsWeapon: string[] = EnumUtils.getAllValues(WeaponEnum)
-    await fetchData(idsWeapon);
+    // const idsWeapon: string[] = EnumUtils.getAllValues(WeaponEnum)
+    // await fetchData(idsWeapon);
+
+    const idsMedic: string[] = EnumUtils.getAllValues(MedicEnum)
+    await fetchData(idsMedic);
 }
 
 main().catch(console.error);

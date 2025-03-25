@@ -1,0 +1,27 @@
+{
+  "item": {
+    "_id": "544fb37f4bdc2dee738b4567",
+    "_name": "painkiller",
+    "_parent": "5448f3a14bdc2d27728b4569",
+    "_props": {
+      "StackMaxSize": 1,
+      "StackObjectsCount": 1,
+      "MaxHpResource": 4,
+      "hpResourceRate": 0,
+      "medUseTime": 3,
+      "effects_damage": {
+        "Pain": {
+          "delay": 0,
+          "duration": 80,
+          "fadeOut": 15
+        }
+      },
+      "priceFactor": 1.0
+    }
+  },
+  "locale": {
+    "Name": "Analgin painkillers",
+    "ShortName": "Analgin"
+  },
+  "clone": true
+}

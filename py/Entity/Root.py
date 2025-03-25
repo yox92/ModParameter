@@ -26,6 +26,10 @@ class Root:
             return Root(
                 locale=Locale.from_data(data.get("locale", {})),
                 item=Item.from_data_ammo(data.get("item", {})))
+        elif wt == WindowType.MEDIC:
+            return Root(
+                locale=Locale.from_data(data.get("locale", {})),
+                item=Item.from_data_medic(data.get("item", {})))
 
     def __repr__(self):
         return f"Root(locale={self.locale}, item={self.item})"

@@ -11,6 +11,7 @@ import {ValidateUtils} from "../Utils/ValidateUtils";
 import {ITemplateItem} from "@spt/models/eft/common/tables/ITemplateItem";
 import {Baseclass} from "../Entity/Baseclass";
 import {DatabaseService} from "@spt/services/DatabaseService";
+import {MedicCloneRegistry} from "../Entity/MedicCloneRegistry";
 
 export class ClearCloneService {
     private readonly logger: ILogger;
@@ -43,18 +44,21 @@ export class ClearCloneService {
      * First, it checks which cloned items are still present in the game and filters them out.
      * Then, it iterates over all player profiles to replace obsolete clones with their original IDs.
      */
-    public clearAmmoWeaponNotUseAnymore(): void {
+    public clearAmmoWeaponMedicNotUseAnymore(): void {
         const map_weapon_idOriginal_vs_idClone = new Map(Object.entries(WeaponCloneRegistry.id_and_cloneId));
         const map_ammo_idOriginal_vs_idClone = new Map(Object.entries(AmmoCloneRegistry.id_and_cloneId));
-        const {ammoStatusMap, weaponStatusMap} = this.differentiateClones();
+        const map_medic_idOriginal_vs_idClone = new Map(Object.entries(MedicCloneRegistry.id_and_cloneId));
+
+        const {ammoStatusMap, weaponStatusMap, medicStatusMap} = this.differentiateClones();
         const profiles: Record<string, ISptProfile> = this.saveServer.getProfiles();
 
         // 🔍 Filtrer les clones encore en jeu
         this.filterExistingClones(map_ammo_idOriginal_vs_idClone, ammoStatusMap);
         this.filterExistingClones(map_weapon_idOriginal_vs_idClone, weaponStatusMap);
+        this.filterExistingClones(map_medic_idOriginal_vs_idClone, medicStatusMap);
 
         // LOG
-        this.logExistingClones(weaponStatusMap, ammoStatusMap)
+        this.logExistingClones(weaponStatusMap, ammoStatusMap, medicStatusMap)
         this.logger.debug(`Starting cleanup of cloned weapons and ammo... ${Object.keys(profiles).length} profiles detected.`);
 
         for (const profileId in profiles) {
@@ -71,10 +75,14 @@ export class ClearCloneService {
                     let serialisedInventory: string = JSON.stringify(inventoryItems);
                     let modificationsWeapon: { value: number } = {value: 0};  // mutable
                     let modificationsAmmo: { value: number } = {value: 0};  // mutable
+                    let modificationsMedic: { value: number } = {value: 0};  // mutable
                     // 🔫
                     serialisedInventory = this.clearWeaponClone(map_weapon_idOriginal_vs_idClone, serialisedInventory, modificationsWeapon, this.INVENTORY)
                     // 🔥
                     serialisedInventory = this.clearAmmoClone(map_ammo_idOriginal_vs_idClone, serialisedInventory, modificationsAmmo, this.INVENTORY)
+                    // 💉
+                    serialisedInventory = this.clearMedicClone(map_medic_idOriginal_vs_idClone, serialisedInventory, modificationsMedic, this.INVENTORY)
+
                     profile.characters.pmc.Inventory.items = JSON.parse(serialisedInventory);
 
 
@@ -85,10 +93,13 @@ export class ClearCloneService {
                     serialisedInsuredItems = this.clearWeaponClone(map_weapon_idOriginal_vs_idClone, serialisedInsuredItems, clearCountInsurance, this.INSURED)
                     // 🔥
                     serialisedInsuredItems = this.clearAmmoClone(map_ammo_idOriginal_vs_idClone, serialisedInsuredItems, clearCountInsurance, this.INSURED)
+                    // 💉
+                    serialisedInsuredItems = this.clearMedicClone(map_medic_idOriginal_vs_idClone, serialisedInsuredItems, clearCountInsurance, this.INSURED)
+
                     profile.characters.pmc.InsuredItems = JSON.parse(serialisedInsuredItems);
 
                     // DEBUG des modifications
-                    this.debugLog(modificationsWeapon, modificationsAmmo, clearCountInsurance, profile.info.username)
+                    this.debugLog(modificationsWeapon, modificationsAmmo, modificationsMedic, clearCountInsurance, profile.info.username)
                 }
 
             }
@@ -159,6 +170,29 @@ export class ClearCloneService {
         }
         return json;
     }
+    /**
+     * Replaces cloned medic with their original counterparts in the provided JSON string.
+     * @param map - A map containing original IDs mapped to their cloned versions.
+     * @param json - The JSON string representing the inventory or insured items.
+     * @param index - The counter for the number of replacements made. MUTABLE
+     * @param location -  Inventory / Assurance
+     * @returns json because MUTABLE.
+     */
+    private clearMedicClone(map: Map<string, string>, json: string, index: { value: number }, location: string): string {
+        for (const [originalId, cloneId] of map) {
+
+            if (json.includes(`"${cloneId}"`)) {
+                const localeDb = this.localeService.getLocaleDb();
+                const result = localeDb[`${originalId} Name`];
+
+                this.logger.info(`[ModParameter] ${this.CYAN}Cloned MEDIC detected in ${this.RESET}${this.RED}${location}${this.RESET} : ${this.RESET}${this.GREEN}${result}${this.RESET} → Replaced with the Orignal`);
+                const regex = new RegExp(`"${cloneId}"`, "g");
+                json = json.replace(regex, `"${originalId}"`);
+                index.value++;
+            }
+        }
+        return json;
+    }
 
     /**
      * Replaces cloned weapons with their original counterparts in the provided JSON string.
@@ -190,11 +224,13 @@ export class ClearCloneService {
      * Logs the number of modifications made during the cleanup process.
      * @param modificationsWeapon - Number of weapon modifications.
      * @param modificationsAmmo - Number of ammo modifications.
+     * @param modificationsMedic - Number of medic modifications.
      * @param clearCountInsurance - Number of insured item modifications.
      * @param profileName - The name of the profile being processed.
      */
     private debugLog(modificationsWeapon: { value: number },
                      modificationsAmmo: { value: number },
+                     modificationsMedic: { value: number },
                      clearCountInsurance: { value: number },
                      profileName: string): void {
         if (modificationsWeapon.value > 0) {
@@ -209,8 +245,14 @@ export class ClearCloneService {
             this.logger.debug(`[ModParameter] No cloned ammo found for ${profileName}`);
         }
 
+        if (modificationsMedic.value > 0) {
+            this.logger.debug(`[ModParameter] ${modificationsMedic.value} ammo corrected for ${profileName}`);
+        } else {
+            this.logger.debug(`[ModParameter] No cloned ammo found for ${profileName}`);
+        }
+
         if (clearCountInsurance.value > 0) {
-            this.logger.debug(`[ModParameter] ${clearCountInsurance.value} insured items (weapons + ammo) corrected for ${profileName}`);
+            this.logger.debug(`[ModParameter] ${clearCountInsurance.value} insured items (weapons + ammo + medic) corrected for ${profileName}`);
         } else {
             this.logger.debug(`[ModParameter] No cloned insured items found for ${profileName}`);
         }
@@ -223,10 +265,12 @@ export class ClearCloneService {
      */
     private differentiateClones(): {
         ammoStatusMap: Map<string, "existing" | "missing">,
-        weaponStatusMap: Map<string, "existing" | "missing">
+        weaponStatusMap: Map<string, "existing" | "missing">,
+        medicStatusMap: Map<string, "existing" | "missing">
     } {
         const ammoStatusMap = new Map<string, "existing" | "missing">();
         const weaponStatusMap = new Map<string, "existing" | "missing">();
+        const medicStatusMap = new Map<string, "existing" | "missing">();
 
         // 🔥
         for (const cloneId of Object.values(AmmoCloneRegistry.id_and_cloneId)) {
@@ -239,8 +283,12 @@ export class ClearCloneService {
             const [exists] = this.itemHelper.getItem(cloneId);
             weaponStatusMap.set(cloneId, exists ? "existing" : "missing");
         }
+        for (const cloneId of Object.values(MedicCloneRegistry.id_and_cloneId)) {
+            const [exists] = this.itemHelper.getItem(cloneId);
+            medicStatusMap.set(cloneId, exists ? "existing" : "missing");
+        }
 
-        return {ammoStatusMap, weaponStatusMap};
+        return {ammoStatusMap, weaponStatusMap, medicStatusMap};
     }
 
     /**
@@ -264,8 +312,11 @@ export class ClearCloneService {
      *
      * @param weaponStatusMap - A map indicating whether each weapon clone is "existing" or "missing".
      * @param ammoStatusMap - A map indicating whether each ammo clone is "existing" or "missing".
+     * @param medicStatusMap - A map indicating whether each medic clone is "existing" or "missing".
      */
-    private logExistingClones(weaponStatusMap: Map<string, "existing" | "missing">, ammoStatusMap: Map<string, "existing" | "missing">): void {
+    private logExistingClones(weaponStatusMap: Map<string, "existing" | "missing">,
+                              ammoStatusMap: Map<string, "existing" | "missing">,
+                              medicStatusMap: Map<string, "existing" | "missing">): void {
         for (const [originalId, cloneId] of Object.entries(WeaponCloneRegistry.id_and_cloneId)) {
 
             if (weaponStatusMap.get(cloneId) === "existing") {
@@ -283,6 +334,15 @@ export class ClearCloneService {
                 const result = localeDb[`${originalId} Name`];
 
                 this.logger.info(`[ModParameter] ${this.CYAN}Ammo MOD and Clone in game: ${this.RESET}${this.GREEN}${result}${this.RESET}`);
+            }
+        }
+        for (const [originalId, cloneId] of Object.entries(MedicCloneRegistry.id_and_cloneId)) {
+
+            if (medicStatusMap.get(cloneId) === "existing") {
+                const localeDb = this.localeService.getLocaleDb();
+                const result = localeDb[`${originalId} Name`];
+
+                this.logger.info(`[ModParameter] ${this.CYAN}Medic MOD and Clone in game: ${this.RESET}${this.GREEN}${result}${this.RESET}`);
             }
         }
     }

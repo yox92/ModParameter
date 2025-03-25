@@ -1,0 +1,27 @@
+{
+  "item": {
+    "_id": "5af0454c86f7746bf20992e8",
+    "_name": "item_meds_alusplint",
+    "_parent": "5448f3ac4bdc2dce718b4569",
+    "_props": {
+      "StackMaxSize": 1,
+      "StackObjectsCount": 1,
+      "MaxHpResource": 5,
+      "hpResourceRate": 0,
+      "medUseTime": 3,
+      "effects_damage": {
+        "Fracture": {
+          "delay": 0,
+          "duration": 0,
+          "fadeOut": 0
+        }
+      },
+      "priceFactor": 1.0
+    }
+  },
+  "locale": {
+    "Name": "Aluminum splint",
+    "ShortName": "Alu splint"
+  },
+  "clone": true
+}

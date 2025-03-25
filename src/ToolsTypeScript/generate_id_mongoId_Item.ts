@@ -4,9 +4,11 @@ import {mongoid} from "mongoid-js";
 import {EnumUtils} from "../Service/EnumUtils";
 import {AmmoEnum} from "../ListIdItem/AmmoEnum";
 import {WeaponEnum} from "../ListIdItem/WeaponEnum";
+import {MedicEnum} from "../ListIdItem/MedicEnum";
 
 const outputFileAmmo = path.resolve(__dirname, "id_mongo_new_id_clone_ammo_.json"); // Fichier de sortie
 const outputFileWeapon = path.resolve(__dirname, "id_mongo_new_id_clone_weapon_.json"); // Fichier de sortie
+const outputFileMedic = path.resolve(__dirname, "id_mongo_new_id_clone_medic_.json"); // Fichier de sortie
 
 /**
  * Fonction pour générer un identifiant MongoDB
@@ -20,12 +22,12 @@ function generateMongoObjectId(): string {
  */
 function loadExistingMappings(): Record<string, string> {
     try {
-        if (!fs.existsSync(outputFileWeapon)) {
-            console.warn(`⚠️ Fichier ${outputFileWeapon} introuvable, création d'un nouveau.`);
+        if (!fs.existsSync(outputFileMedic)) {
+            console.warn(`⚠️ Fichier ${outputFileMedic} introuvable, création d'un nouveau.`);
             return {};
         }
 
-        const data = fs.readFileSync(outputFileWeapon, "utf-8");
+        const data = fs.readFileSync(outputFileMedic, "utf-8");
         return data.trim() ? JSON.parse(data) : {};
     } catch (error) {
         console.error("❌ Erreur lors du chargement du fichier JSON :", error);
@@ -38,8 +40,8 @@ function loadExistingMappings(): Record<string, string> {
  */
 function saveMappings(mappings: Record<string, string>) {
     try {
-        fs.writeFileSync(outputFileWeapon, JSON.stringify(mappings, null, 4), "utf-8");
-        console.log(`✅ Fichier mis à jour : ${outputFileWeapon}`);
+        fs.writeFileSync(outputFileMedic, JSON.stringify(mappings, null, 4), "utf-8");
+        console.log(`✅ Fichier mis à jour : ${outputFileMedic}`);
     } catch (error) {
         console.error("❌ Erreur lors de l'écriture du fichier JSON :", error);
     }
@@ -89,9 +91,12 @@ async function generateAllIds(ids: string[]): Promise<void> {
 async function main() {
     // const idsAmmos: string[] = EnumUtils.getAllValues(AmmoEnum)
     // await generateAllIds(idsAmmos);
+    //
+    // const idsWeapon: string[] = EnumUtils.getAllValues(WeaponEnum)
+    // await generateAllIds(idsWeapon);
 
-    const idsWeapon: string[] = EnumUtils.getAllValues(WeaponEnum)
-    await generateAllIds(idsWeapon);
+    const idsMedic: string[] = EnumUtils.getAllValues(MedicEnum)
+    await generateAllIds(idsMedic);
 }
 
 main().catch(console.error);

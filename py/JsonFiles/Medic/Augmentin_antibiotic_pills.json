@@ -1,0 +1,27 @@
+{
+  "item": {
+    "_id": "590c695186f7741e566b64a2",
+    "_name": "augmentin",
+    "_parent": "5448f3a14bdc2d27728b4569",
+    "_props": {
+      "StackMaxSize": 1,
+      "StackObjectsCount": 1,
+      "MaxHpResource": 0,
+      "hpResourceRate": 0,
+      "medUseTime": 5,
+      "effects_damage": {
+        "Pain": {
+          "delay": 0,
+          "duration": 150,
+          "fadeOut": 5
+        }
+      },
+      "priceFactor": 1.0
+    }
+  },
+  "locale": {
+    "Name": "Augmentin antibiotic pills",
+    "ShortName": "Augmentin"
+  },
+  "clone": true
+}

@@ -387,7 +387,7 @@ class CaliberWeaponsMod:
     def reset_apply_button(self):
         self.apply_button.configure(fg_color="blue", hover_color="lightblue", border_color="red",
                                     state="enable")  # Remettre la couleur d'origine
-        self.status_label.configure(text="Ready to apply changes")
+        self.status_label.configure(text="Ready to apply changes", text_color="white")
 
     def apply_changes_to_all(self):
         if not self.block_system_error_detect:

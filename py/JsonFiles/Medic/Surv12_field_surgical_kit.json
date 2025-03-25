@@ -1,0 +1,36 @@
+{
+  "item": {
+    "_id": "5d02797c86f774203f38e30a",
+    "_name": "survival_first_aid_rollup_kit",
+    "_parent": "5448f3ac4bdc2dce718b4569",
+    "_props": {
+      "StackMaxSize": 1,
+      "StackObjectsCount": 1,
+      "MaxHpResource": 15,
+      "hpResourceRate": 0,
+      "medUseTime": 20,
+      "effects_damage": {
+        "Fracture": {
+          "delay": 0,
+          "duration": 0,
+          "fadeOut": 0,
+          "healthPenaltyMax": 0,
+          "healthPenaltyMin": 0
+        },
+        "DestroyedPart": {
+          "delay": 0,
+          "duration": 0,
+          "fadeOut": 0,
+          "healthPenaltyMax": 72,
+          "healthPenaltyMin": 60
+        }
+      },
+      "priceFactor": 1.0
+    }
+  },
+  "locale": {
+    "Name": "Surv12 field surgical kit",
+    "ShortName": "Surv12"
+  },
+  "clone": true
+}

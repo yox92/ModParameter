@@ -42,6 +42,6 @@ export function createItemAmmo(data: any): Ammo {
         ExplosionStrength: data.ExplosionStrength,
         MaxExplosionDistance: data.MaxExplosionDistance,
         FuzeArmTimeSec: data.FuzeArmTimeSec,
-        priceFactor: data.PriceFactor
+        priceFactor: data.priceFactor
     });
 }

@@ -17,7 +17,7 @@ class EnumAmmo(Enum):
     EXPLOSIONSTRENGTH = "ExplosionStrength", "Explosion strength 0-100"
     MAXEXPLOSIONDISTANCE = "MaxExplosionDistance", "explosion radius (meters) 0-10"
     FUZEARMTIMESEC = "FuzeArmTimeSec", "fuse delay before explosion (milliseconds) 1-300"
-    PRICEFACTOR = "priceFactor", "multiply price. (2 = x2 etc)  (0,01-100)"
+    PRICEFACTOR = "priceFactor", "multiply price. (2 = x2 or 0.1 = x0.1)  (0,01-100)"
 
     @property
     def label(self):

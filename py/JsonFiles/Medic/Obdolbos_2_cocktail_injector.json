@@ -1,0 +1,21 @@
+{
+  "item": {
+    "_id": "637b60c3b7afa97bfc3d7001",
+    "_name": "Obdolbos2",
+    "_parent": "5448f3a64bdc2d60728b456a",
+    "_props": {
+      "StackMaxSize": 1,
+      "StackObjectsCount": 1,
+      "MaxHpResource": 0,
+      "hpResourceRate": 0,
+      "medUseTime": 2,
+      "effects_damage": [],
+      "priceFactor": 1.0
+    }
+  },
+  "locale": {
+    "Name": "Obdolbos 2 cocktail injector",
+    "ShortName": "Dolbos 2"
+  },
+  "clone": true
+}

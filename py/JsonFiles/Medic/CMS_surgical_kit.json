@@ -1,0 +1,29 @@
+{
+  "item": {
+    "_id": "5d02778e86f774203e7dedbe",
+    "_name": "core_medical_surgical_kit",
+    "_parent": "5448f3ac4bdc2dce718b4569",
+    "_props": {
+      "StackMaxSize": 1,
+      "StackObjectsCount": 1,
+      "MaxHpResource": 5,
+      "hpResourceRate": 0,
+      "medUseTime": 16,
+      "effects_damage": {
+        "DestroyedPart": {
+          "delay": 0,
+          "duration": 0,
+          "fadeOut": 0,
+          "healthPenaltyMax": 45,
+          "healthPenaltyMin": 25
+        }
+      },
+      "priceFactor": 1.0
+    }
+  },
+  "locale": {
+    "Name": "CMS surgical kit",
+    "ShortName": "CMS"
+  },
+  "clone": true
+}

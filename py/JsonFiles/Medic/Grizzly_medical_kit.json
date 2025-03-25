@@ -1,0 +1,52 @@
+{
+  "item": {
+    "_id": "590c657e86f77412b013051d",
+    "_name": "AMK_Grizzly",
+    "_parent": "5448f39d4bdc2d0a728b4568",
+    "_props": {
+      "StackMaxSize": 1,
+      "StackObjectsCount": 1,
+      "MaxHpResource": 1800,
+      "hpResourceRate": 175,
+      "medUseTime": 5,
+      "effects_damage": {
+        "LightBleeding": {
+          "cost": 40,
+          "delay": 0,
+          "duration": 0,
+          "fadeOut": 0
+        },
+        "HeavyBleeding": {
+          "cost": 130,
+          "delay": 0,
+          "duration": 0,
+          "fadeOut": 0
+        },
+        "Fracture": {
+          "cost": 50,
+          "delay": 0,
+          "duration": 0,
+          "fadeOut": 0
+        },
+        "Contusion": {
+          "cost": 0,
+          "delay": 0,
+          "duration": 0,
+          "fadeOut": 0
+        },
+        "RadExposure": {
+          "cost": 0,
+          "delay": 0,
+          "duration": 0,
+          "fadeOut": 0
+        }
+      },
+      "priceFactor": 1.0
+    }
+  },
+  "locale": {
+    "Name": "Grizzly medical kit",
+    "ShortName": "Grizzly"
+  },
+  "clone": true
+}

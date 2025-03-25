@@ -2,8 +2,11 @@ import json
 import os
 
 from Entity import EnumAmmo, Logger
+from Entity.EffectDamage import EffectDamage
+from Entity.EnumEffect import EnumEffect
+from Entity.EnumMedic import EnumMedic
 from Entity.WindowType import WindowType
-from config import JSON_FILES_DIR_WEAPONS, JSON_FILES_DIR_CALIBER, JSON_FILES_DIR_PMC, JSON_FILES_DIR_AMMO
+from config import JSON_FILES_DIR_WEAPONS, JSON_FILES_DIR_CALIBER, JSON_FILES_DIR_PMC, JSON_FILES_DIR_AMMO, JSON_FILES_DIR_MEDIC
 
 
 class JsonUtils:
@@ -39,8 +42,8 @@ class JsonUtils:
             raise ValueError(f"Le fichier '{file_path}' contient un JSON invalide.")
 
     @staticmethod
-    def load_json_Weapon_or_Ammo(file_name):
-        json_dirs = [JSON_FILES_DIR_WEAPONS, JSON_FILES_DIR_AMMO]
+    def load_json_Weapon_Ammo_Medic(file_name):
+        json_dirs = [JSON_FILES_DIR_WEAPONS, JSON_FILES_DIR_AMMO, JSON_FILES_DIR_MEDIC]
 
         for directory in json_dirs:
             file_path = os.path.join(directory, file_name)
@@ -82,6 +85,16 @@ class JsonUtils:
                     file_name_correct = file_name
                 file_paths.append(os.path.join(JSON_FILES_DIR_AMMO, file_name_correct))
         return file_paths
+
+    @staticmethod
+    def change_clone_statut(file_path, new_value: bool):
+        import json
+        with open(file_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        data["clone"] = new_value
+
+        with open(file_path, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2, ensure_ascii=False)
 
     @staticmethod
     def write_json(data, file_path):
@@ -140,10 +153,31 @@ class JsonUtils:
                 data_list.append(JsonUtils.load_json_and_add_path(file_path))
 
         return data_list
+    @staticmethod
+    def load_all_json_files_without_mod_medic():
+        json_dir_path = JSON_FILES_DIR_MEDIC
+        data_list = []
+        for filename in os.listdir(json_dir_path):
+
+            if filename.endswith('.json') and not filename.endswith('mod.json'):
+                file_path = json_dir_path / filename
+                data_list.append(JsonUtils.load_json_and_add_path(file_path))
+
+        return data_list
 
     @staticmethod
     def load_all_json_files_weapons_mod():
         json_dir_path = JSON_FILES_DIR_WEAPONS
+        data_list = []
+        for filename in os.listdir(json_dir_path):
+
+            if filename.endswith('_mod.json'):
+                data_list.append(filename)
+        return data_list
+
+    @staticmethod
+    def load_all_json_files_medic_mod():
+        json_dir_path = JSON_FILES_DIR_MEDIC
         data_list = []
         for filename in os.listdir(json_dir_path):
 
@@ -189,8 +223,25 @@ class JsonUtils:
         return data, file_paths
 
     @staticmethod
+    def load_all_json_medic():
+        json_dir_path = JSON_FILES_DIR_MEDIC
+        data: list[dict] = []
+        file_paths: list[str] = []
+
+        for filename in os.listdir(json_dir_path):
+            if filename.endswith('.json') and not filename.endswith('mod.json'):
+                file_path = os.path.join(json_dir_path, filename)
+                file_paths.append(file_path)
+                data.append(JsonUtils.load_json(file_path))
+
+        if not data:
+            raise FileNotFoundError(f"Ammo JSON files not found in '{json_dir_path}'.")
+
+        return data, file_paths
+
+    @staticmethod
     def load_all_name_json_mod():
-        json_dirs = [JSON_FILES_DIR_WEAPONS, JSON_FILES_DIR_AMMO]
+        json_dirs = [JSON_FILES_DIR_WEAPONS, JSON_FILES_DIR_AMMO, JSON_FILES_DIR_MEDIC]
         file_name: list[tuple[str, WindowType]] = []
 
         for json_dir in json_dirs:
@@ -201,8 +252,10 @@ class JsonUtils:
                 if filename.endswith('mod.json'):
                     if json_dir == JSON_FILES_DIR_AMMO:
                         file_name.append((filename, WindowType.AMMO))
-                    else:
+                    elif json_dir == JSON_FILES_DIR_WEAPONS:
                         file_name.append((filename, WindowType.WEAPON))
+                    elif json_dir == JSON_FILES_DIR_MEDIC:
+                        file_name.append((filename, WindowType.MEDIC))
 
         if not file_name:
             print("No file mod found")
@@ -214,7 +267,7 @@ class JsonUtils:
     def find_json_file_with_name(file_name: str, window_type: WindowType):
         json_dirs: list = []
         if window_type == WindowType.DELETE:
-            json_dirs = [JSON_FILES_DIR_WEAPONS, JSON_FILES_DIR_AMMO]
+            json_dirs = [JSON_FILES_DIR_WEAPONS, JSON_FILES_DIR_AMMO, JSON_FILES_DIR_MEDIC]
         elif window_type == WindowType.AMMO:
             json_dirs = [JSON_FILES_DIR_AMMO]
         elif window_type == WindowType.WEAPON:
@@ -241,6 +294,11 @@ class JsonUtils:
 
     @staticmethod
     def update_json_value(data, path_for_attribut_json, new_value, window_type: WindowType):
+        if window_type == WindowType.MEDIC and isinstance(new_value, EffectDamage):
+            current = JsonUtils.get_nested_value(data, path_for_attribut_json)
+            final_key = path_for_attribut_json[-1]
+            JsonUtils.update_effect_medical(current, final_key, new_value, window_type)
+            return data
         if isinstance(new_value, (int, float, bool)):
             current = JsonUtils.get_nested_value(data, path_for_attribut_json)
 
@@ -307,6 +365,33 @@ class JsonUtils:
                 current[final_key] = float(new_value)
             else:
                 raise KeyError(f"Error on apply app. {new_value} need to be boolean or number to be update")
+
+        elif window_type == window_type.MEDIC:
+            if final_key == "effects_damage":
+                if isinstance(new_value, EffectDamage):
+                    current["effects_damage"] = new_value.to_dict()
+                elif isinstance(new_value, dict):
+                    current["effects_damage"] = new_value
+                else:
+                    raise ValueError("Invalid value for effects_damage")
+            if isinstance(new_value, int):
+                current[final_key] = int(new_value)
+
+    @staticmethod
+    def update_effect_medical(current, final_key, new_value, window_type):
+        if window_type == window_type.MEDIC:
+            if final_key == EnumMedic.EFFECTS_DAMAGE.label:
+                def clean_none_values(data):
+                    return {
+                        effect_name: {k: v for k, v in attributes.items() if v is not None}
+                        for effect_name, attributes in data.items()
+                    }
+                if isinstance(new_value, EffectDamage):
+                    current["effects_damage"] = clean_none_values(new_value.to_dict())
+                elif isinstance(new_value, dict):
+                    current["effects_damage"] = clean_none_values(new_value)
+                else:
+                    raise ValueError("Invalid value for effects_damage")
 
     @staticmethod
     def get_nested_value(data, path_for_attribut_json):
@@ -403,4 +488,9 @@ class JsonUtils:
             for file_name in os.listdir(JSON_FILES_DIR_WEAPONS):
                 if file_name.endswith('_mod.json'):
                     file_path = os.path.join(JSON_FILES_DIR_WEAPONS, file_name)
+                    JsonUtils.delete_file(file_path)
+        elif window_type == WindowType.MEDIC:
+            for file_name in os.listdir(JSON_FILES_DIR_MEDIC):
+                if file_name.endswith('_mod.json'):
+                    file_path = os.path.join(JSON_FILES_DIR_MEDIC, file_name)
                     JsonUtils.delete_file(file_path)

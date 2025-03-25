@@ -1,0 +1,32 @@
+{
+  "item": {
+    "_id": "544fb3f34bdc2d03748b456a",
+    "_name": "morphine",
+    "_parent": "5448f3a14bdc2d27728b4569",
+    "_props": {
+      "StackMaxSize": 1,
+      "StackObjectsCount": 1,
+      "MaxHpResource": 0,
+      "hpResourceRate": 0,
+      "medUseTime": 2,
+      "effects_damage": {
+        "Pain": {
+          "delay": 0,
+          "duration": 300,
+          "fadeOut": 5
+        },
+        "Contusion": {
+          "delay": 0,
+          "duration": 0,
+          "fadeOut": 0
+        }
+      },
+      "priceFactor": 1.0
+    }
+  },
+  "locale": {
+    "Name": "Morphine injector",
+    "ShortName": "Morphine"
+  },
+  "clone": true
+}

@@ -8,6 +8,7 @@ import {DatabaseService} from "@spt/services/DatabaseService";
 import {Tracer} from "../Entity/Tracer";
 import {Baseclass} from "../Entity/Baseclass";
 import {ItemHelper} from "@spt/helpers/ItemHelper";
+import {IEffectDamageProps, Medic} from "../Entity/Medic";
 
 
 export class ItemUpdaterService {
@@ -27,7 +28,7 @@ export class ItemUpdaterService {
     }
 
     public applyAllTracerAllAmmoDB(tracer: Tracer): void {
-         const validateUtils = new ValidateUtils();
+        const validateUtils = new ValidateUtils();
 
         if (tracer.Tracer === undefined || tracer.TracerColor === undefined) {
             this.logger.debug(`[ModParameter] Warning: no Tracer or TracerColor about json Tracer`);
@@ -152,6 +153,117 @@ export class ItemUpdaterService {
             return null;
         }
         return updatedProps;
+    }
+
+    public applyMedicModifications(medic: Medic,
+                                   clone: boolean,
+                                   id_item_to_modify: string,
+                                   name_item_to_modify: string): Partial<Medic> | null {
+        const validateUtils = new ValidateUtils();
+
+        const templates: ITemplates | undefined = this.dataService.getTemplates();
+        const items: Record<string, ITemplateItem> | undefined = templates?.items;
+
+        if (!templates || !items) {
+            this.logger.debug("[ModParameter] Invalid dataService structure. Modification aborted");
+            return null;
+        }
+
+        const sptItem: ITemplateItem | undefined = items[id_item_to_modify];
+
+        if (!sptItem) {
+            this.logger.debug(`[ModParameter] Item with ID '${id_item_to_modify}' not found in templates DB.`);
+            return null;
+        }
+
+        const sptItemProps: IProps | undefined = sptItem._props;
+
+        if (!sptItemProps) {
+            this.logger.debug(`[ModParameter] Item with ID '${id_item_to_modify}' has no _props on DB`);
+            return null;
+        }
+
+        let updatedProps: Partial<Medic> = {};
+
+        updatedProps.priceFactor = validateUtils.validatePriceProps(medic.priceFactor);
+        updatedProps.hpResourceRate = validateUtils.validateAndCastInt(medic.hpResourceRate);
+        updatedProps.MaxHpResource = validateUtils.validateAndCastInt(medic.MaxHpResource);
+        updatedProps.StackMaxSize = validateUtils.validateAndCastInt(medic.StackMaxSize);
+        updatedProps.medUseTime = validateUtils.validateAndCastInt(medic.medUseTime);
+        updatedProps.StackObjectsCount = validateUtils.validateAndCastInt(medic.StackObjectsCount);
+        updatedProps.BackgroundColor = "blue";
+
+        if (medic.effects_damage && Object.keys(medic.effects_damage).length > 0) {
+            const validatedEffects: Record<string, IEffectDamageProps> = {};
+
+
+            for (const [effectName, effectProps] of Object.entries(medic.effects_damage)) {
+                const validatedEffect: Partial<IEffectDamageProps> = {};
+                this.logger.debug(`[ModParameter] Contains effect: '${effectName}' about '${name_item_to_modify}'`);
+
+                validatedEffect.delay = validateUtils.validateAndCastInt(effectProps.delay) ?? 0;
+                validatedEffect.duration = validateUtils.validateAndCastInt(effectProps.duration) ?? 0;
+                validatedEffect.fadeOut = validateUtils.validateAndCastInt(effectProps.fadeOut) ?? 0;
+                validatedEffect.cost = validateUtils.validateAndCastInt(effectProps.cost) ?? 0;
+
+                const validatedHealthPenaltyMin = validateUtils.validateAndCastInt(effectProps.healthPenaltyMin);
+                const validatedHealthPenaltyMax = validateUtils.validateAndCastInt(effectProps.healthPenaltyMax);
+
+                if (validatedHealthPenaltyMin !== null
+                    && validatedHealthPenaltyMin !== undefined
+                    && validatedHealthPenaltyMax !== null
+                    && validatedHealthPenaltyMax !== undefined) {
+
+                    validatedEffect.healthPenaltyMin = validatedHealthPenaltyMin;
+                    validatedEffect.healthPenaltyMax = validatedHealthPenaltyMax;
+                } else {
+                    this.logger.debug(`[ModParameter] no healthPenalty`);
+                }
+
+                const hasValidCore = ["delay", "duration", "fadeOut", "cost"].every(
+                    key => validatedEffect[key as keyof IEffectDamageProps] !== null
+                );
+
+                if (hasValidCore) {
+                    validatedEffects[effectName] = validatedEffect as IEffectDamageProps;
+                } else {
+                    this.logger.debug(`[ModParameter] Invalid core values for effect '${effectName}' – skipping`);
+                }
+            }
+
+            if (Object.keys(validatedEffects).length > 0) {
+                updatedProps.effects_damage = validatedEffects;
+            }
+        }
+
+        const invalidProps = Object.entries(updatedProps).filter(([_, value]) => value === null);
+
+        if (invalidProps.length > 0) {
+            this.logger.debug(`[ModParameter] Skipping medic: ${name_item_to_modify} due to invalid values: ${invalidProps.map(([key]) => key).join(", ")}`);
+            return null;
+        }
+
+        if (!clone) {
+            for (const key in updatedProps) {
+                const value = updatedProps[key];
+
+                if (key === "effects_damage") {
+                    if (value && Object.keys(value).length > 0) {
+                        this.logger.debug(`[ModParameter] Overwriting 'effects_damage' with ${Object.keys(value).length} effect(s).`);
+                        (sptItemProps as any)[key] = value;
+                    } else {
+                        this.logger.debug("[ModParameter] 'effects_damage' is empty → removing from item.");
+                        (sptItemProps as any)[key] = [];
+                    }
+                } else if (value !== undefined) {
+                    this.logger.debug(`[ModParameter] Setting '${key}' = ${value}`);
+                    (sptItemProps as any)[key] = value;
+                }
+            }
+
+        } else {
+            return updatedProps
+        }
     }
 
     /**

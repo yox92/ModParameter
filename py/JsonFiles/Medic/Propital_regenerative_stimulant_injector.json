@@ -1,0 +1,32 @@
+{
+  "item": {
+    "_id": "5c0e530286f7747fa1419862",
+    "_name": "Propital",
+    "_parent": "5448f3a64bdc2d60728b456a",
+    "_props": {
+      "StackMaxSize": 1,
+      "StackObjectsCount": 1,
+      "MaxHpResource": 0,
+      "hpResourceRate": 0,
+      "medUseTime": 2,
+      "effects_damage": {
+        "Pain": {
+          "delay": 0,
+          "duration": 240,
+          "fadeOut": 5
+        },
+        "Contusion": {
+          "delay": 0,
+          "duration": 240,
+          "fadeOut": 0
+        }
+      },
+      "priceFactor": 1.0
+    }
+  },
+  "locale": {
+    "Name": "Propital regenerative stimulant injector",
+    "ShortName": "Propital"
+  },
+  "clone": true
+}

@@ -11,7 +11,7 @@ class EnumProps(Enum):
     WEIGHT = "Weight", "Weapon Weight"
     AMMO_CALIBER = "ammoCaliber", "Calibers of Ammo"
     FIRE_RATE = "bFirerate", "Rate of Fire"
-    PRICEFACTOR = "priceFactor", "multiply price. (2 = x2 etc)  (0,01-100)"
+    PRICEFACTOR = "priceFactor", "multiply price. (2 = x2 or 0.1 = x0.1)  (0,01-100)"
 
     @property
     def label(self):

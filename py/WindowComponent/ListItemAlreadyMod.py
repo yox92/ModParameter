@@ -40,7 +40,7 @@ class ListItemAlreadyMod:
 
         if self.window_type == WindowType.DELETE:
             for [json, windowType] in self.weapon_list:
-                data = JsonUtils.load_json_Weapon_or_Ammo(json)
+                data = JsonUtils.load_json_Weapon_Ammo_Medic(json)
                 root: Root = Root.from_data(data, windowType)
                 local: Locale = root.locale
 
@@ -48,10 +48,12 @@ class ListItemAlreadyMod:
                     self.json_path_name_button.append((json, local.name, windowType))
                 if windowType == WindowType.WEAPON:
                     self.json_path_name_button.append((json, local.short_name, windowType))
+                if windowType == WindowType.MEDIC:
+                    self.json_path_name_button.append((json, local.short_name, windowType))
 
         else:
             for json in self.weapon_list:
-                data = JsonUtils.load_json_Weapon_or_Ammo(json)
+                data = JsonUtils.load_json_Weapon_Ammo_Medic(json)
                 root: Root = Root.from_data(data, self.window_type)
                 local: Locale = root.locale
 
@@ -59,9 +61,8 @@ class ListItemAlreadyMod:
                     self.json_path_name_button.append((json, local.name, self.window_type))
                 if self.window_type == WindowType.WEAPON:
                     self.json_path_name_button.append((json, local.short_name, self.window_type))
-
-
-
+                if self.window_type == WindowType.MEDIC:
+                    self.json_path_name_button.append((json, local.short_name, self.window_type))
 
     def run(self):
         self.master.grid_rowconfigure(0, weight=8)
@@ -76,9 +77,9 @@ class ListItemAlreadyMod:
         if self.window_type == WindowType.DELETE:
             self.master.grid_rowconfigure(2, weight=1)
             title_label = ctk.CTkLabel(self.master,
-                                        text="Click on Ammo/Weapon to Delete :",
-                                        font=("Arial", 15, "bold"),
-                                        text_color="red")
+                                       text="Click on Ammo/Weapon to Delete :",
+                                       font=("Arial", 15, "bold"),
+                                       text_color="red")
             title_label.grid(row=2, column=0, pady=0, sticky="n")
 
         self.frame = ctk.CTkFrame(self.master, fg_color="#242424")
@@ -99,7 +100,6 @@ class ListItemAlreadyMod:
         self.canvas.create_window((0, 0), window=self.inner_frame, anchor="n")
 
         self.create_frame_button()
-
 
     def create_frame_button(self):
         sorted_items = sorted(self.json_path_name_button, key=lambda x: x[1].lower())
@@ -138,8 +138,10 @@ class ListItemAlreadyMod:
                 self.delete_specific(pname, short_name))
                 if windowsType == WindowType.AMMO:
                     button_weapon.configure(fg_color="dodgerblue")
-                else:
+                elif windowsType == WindowType.WEAPON:
                     button_weapon.configure(fg_color="peru")
+                elif windowsType == WindowType.MEDIC:
+                    button_weapon.configure(fg_color="green")
 
         self.inner_frame.update_idletasks()
         self.canvas.config(scrollregion=self.canvas.bbox("all"))
@@ -149,7 +151,7 @@ class ListItemAlreadyMod:
     def open_specific_window(self, pname):
         self.main_instance.open_weapon_specific_window_from_list(pname, self.window_type)
         WindowUtils.close_window(self.detail_window,
-                                     self.root, self.main_instance)
+                                 self.root, self.main_instance)
 
     def delete_specific(self, pname, short_name):
         file_path = JsonUtils.find_json_file_with_name(pname, self.window_type)
@@ -167,9 +169,7 @@ class ListItemAlreadyMod:
                         self.json_path_name_button.pop(idx)
                         break
 
-
                 for widget in self.inner_frame.winfo_children():
                     if widget.cget("text") == short_name:
                         widget.destroy()
                         break
-

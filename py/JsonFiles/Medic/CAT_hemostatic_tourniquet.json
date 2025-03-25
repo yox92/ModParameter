@@ -1,0 +1,27 @@
+{
+  "item": {
+    "_id": "60098af40accd37ef2175f27",
+    "_name": "item_meds_cat",
+    "_parent": "5448f3ac4bdc2dce718b4569",
+    "_props": {
+      "StackMaxSize": 1,
+      "StackObjectsCount": 1,
+      "MaxHpResource": 0,
+      "hpResourceRate": 0,
+      "medUseTime": 3,
+      "effects_damage": {
+        "HeavyBleeding": {
+          "delay": 0,
+          "duration": 0,
+          "fadeOut": 0
+        }
+      },
+      "priceFactor": 1.0
+    }
+  },
+  "locale": {
+    "Name": "CAT hemostatic tourniquet",
+    "ShortName": "CAT"
+  },
+  "clone": true
+}

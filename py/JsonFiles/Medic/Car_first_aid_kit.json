@@ -1,0 +1,28 @@
+{
+  "item": {
+    "_id": "590c661e86f7741e566b646a",
+    "_name": "item_meds_automedkit",
+    "_parent": "5448f39d4bdc2d0a728b4568",
+    "_props": {
+      "StackMaxSize": 1,
+      "StackObjectsCount": 1,
+      "MaxHpResource": 220,
+      "hpResourceRate": 70,
+      "medUseTime": 3,
+      "effects_damage": {
+        "LightBleeding": {
+          "cost": 50,
+          "delay": 0,
+          "duration": 0,
+          "fadeOut": 0
+        }
+      },
+      "priceFactor": 1.0
+    }
+  },
+  "locale": {
+    "Name": "Car first aid kit",
+    "ShortName": "Car"
+  },
+  "clone": true
+}

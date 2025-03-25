@@ -6,4 +6,5 @@ class WindowType(Enum):
     CALIBER = "caliber"
     AMMO = "ammo"
     PMC = "pmc"
+    MEDIC = "medic"
     DELETE = "delete"

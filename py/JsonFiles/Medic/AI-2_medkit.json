@@ -1,0 +1,28 @@
+{
+  "item": {
+    "_id": "5755356824597772cb798962",
+    "_name": "medkit",
+    "_parent": "5448f39d4bdc2d0a728b4568",
+    "_props": {
+      "StackMaxSize": 1,
+      "StackObjectsCount": 1,
+      "MaxHpResource": 100,
+      "hpResourceRate": 50,
+      "medUseTime": 2,
+      "effects_damage": {
+        "RadExposure": {
+          "cost": 0,
+          "delay": 0,
+          "duration": 0,
+          "fadeOut": 0
+        }
+      },
+      "priceFactor": 1.0
+    }
+  },
+  "locale": {
+    "Name": "AI-2 medkit",
+    "ShortName": "AI-2"
+  },
+  "clone": true
+}

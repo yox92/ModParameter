@@ -1,0 +1,21 @@
+{
+  "item": {
+    "_id": "5ed515f6915ec335206e4152",
+    "_name": "AHF1-M",
+    "_parent": "5448f3a64bdc2d60728b456a",
+    "_props": {
+      "StackMaxSize": 1,
+      "StackObjectsCount": 1,
+      "MaxHpResource": 0,
+      "hpResourceRate": 0,
+      "medUseTime": 2,
+      "effects_damage": [],
+      "priceFactor": 1.0
+    }
+  },
+  "locale": {
+    "Name": "AHF1-M stimulant injector",
+    "ShortName": "AHF1-M"
+  },
+  "clone": true
+}

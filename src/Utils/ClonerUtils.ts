@@ -1,6 +1,7 @@
 import {Baseclass} from "../Entity/Baseclass";
 import {AmmoCloneRegistry} from "../Entity/AmmoCloneRegistry";
 import {TradersAmmoWeapon} from "../Entity/TradersAmmoWeapon";
+import {TradersMedic} from "../Entity/TradersMedic";
 import {ITemplates} from "@spt/models/spt/templates/ITemplates";
 import {DatabaseService} from "@spt/services/DatabaseService";
 import {ILogger} from "@spt/models/spt/utils/ILogger";
@@ -10,6 +11,7 @@ import {ITrader} from "@spt/models/eft/common/tables/ITrader";
 import {IItem} from "@spt/models/eft/common/tables/IItem";
 import {ItemTypeEnum} from "../Entity/ItemTypeEnum";
 import {WeaponCloneRegistry} from "../Entity/WeaponCloneRegistry";
+import {MedicCloneRegistry} from "../Entity/MedicCloneRegistry";
 
 export class ClonerUtils {
     private readonly logger: ILogger;
@@ -36,8 +38,14 @@ export class ClonerUtils {
                        dataService: DatabaseService,
                        name: string,
                        itemTypeEnum: ItemTypeEnum): void {
+        let traderEnum: typeof TradersMedic | typeof TradersAmmoWeapon;
+        if (itemTypeEnum === ItemTypeEnum.Medic) {
+            traderEnum = TradersMedic
+        } else {
+             traderEnum = TradersAmmoWeapon
+        }
         let objectFindTrader = false;
-        for (const [traderName, traderId] of Object.entries(TradersAmmoWeapon)) {
+        for (const [traderName, traderId] of Object.entries(traderEnum)) {
             const trader: ITrader = dataService.getTraders()[traderId];
             if (!trader) {
                 this.logger.debug(`[ModParameter] Trader ${traderId} are undefined, SKIP.`);
@@ -74,6 +82,9 @@ export class ClonerUtils {
                         clonedId = AmmoCloneRegistry.getClonedTpl(tplOldItem);
                     } else if (itemTypeEnum === ItemTypeEnum.Weapon) {
                         clonedId = WeaponCloneRegistry.getClonedTpl(tplOldItem);
+                    } else if (itemTypeEnum === ItemTypeEnum.Medic) {
+                        clonedId = MedicCloneRegistry.getClonedTpl(tplOldItem);
+                        this.logger.debug(`[ModParameter] clonedId: ${clonedId}`);
                     }
 
                     if (!clonedId) {
@@ -82,6 +93,7 @@ export class ClonerUtils {
                     }
 
                     if (!trader.assort.barter_scheme[tplOldItem] || !trader.assort.loyal_level_items[tplOldItem]) {
+                         this.logger.debug(`[ModParameter] barter_scheme or loyal_level_items null pour  ${name}`);
                         continue;
                     }
 

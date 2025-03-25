@@ -1,0 +1,21 @@
+{
+  "item": {
+    "_id": "637b612fb7afa97bfc3d7005",
+    "_name": "SJ12_TGLabs",
+    "_parent": "5448f3a64bdc2d60728b456a",
+    "_props": {
+      "StackMaxSize": 1,
+      "StackObjectsCount": 1,
+      "MaxHpResource": 0,
+      "hpResourceRate": 0,
+      "medUseTime": 2,
+      "effects_damage": [],
+      "priceFactor": 1.0
+    }
+  },
+  "locale": {
+    "Name": "SJ12 TGLabs combat stimulant injector",
+    "ShortName": "SJ12"
+  },
+  "clone": true
+}
