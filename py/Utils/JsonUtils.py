@@ -2,6 +2,7 @@ import json
 import os
 
 from Entity import EnumAmmo, Logger
+from Entity.EffectDamage import EffectDamage
 from Entity.WindowType import WindowType
 from config import JSON_FILES_DIR_WEAPONS, JSON_FILES_DIR_CALIBER, JSON_FILES_DIR_PMC, JSON_FILES_DIR_AMMO, JSON_FILES_DIR_MEDIC
 
@@ -82,6 +83,16 @@ class JsonUtils:
                     file_name_correct = file_name
                 file_paths.append(os.path.join(JSON_FILES_DIR_AMMO, file_name_correct))
         return file_paths
+
+    @staticmethod
+    def change_clone_statut(file_path, new_value: bool):
+        import json
+        with open(file_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        data["clone"] = new_value
+
+        with open(file_path, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2, ensure_ascii=False)
 
     @staticmethod
     def write_json(data, file_path):
@@ -324,6 +335,17 @@ class JsonUtils:
                 current[final_key] = float(new_value)
             else:
                 raise KeyError(f"Error on apply app. {new_value} need to be boolean or number to be update")
+
+        elif window_type == window_type.MEDIC:
+            if final_key == "effects_damage":
+                if isinstance(new_value, EffectDamage):
+                    current["effects_damage"] = new_value.to_dict()
+                elif isinstance(new_value, dict):
+                    current["effects_damage"] = new_value
+                else:
+                    raise ValueError("Invalid value for effects_damage")
+            if isinstance(new_value, int):
+                current[final_key] = int(new_value)
 
     @staticmethod
     def get_nested_value(data, path_for_attribut_json):

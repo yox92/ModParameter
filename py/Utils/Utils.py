@@ -53,6 +53,7 @@ class Utils:
                 button.grid(row=i, column=y, padx=5, pady=5)
                 frame1.append(button)
                 count += 1
+
     @staticmethod
     def create_1x4_bottom(frame1, frame2):
         frame1.clear()
@@ -60,12 +61,12 @@ class Utils:
         total_buttons = 4
         count = 0
         for y in range(4):
-                if count >= total_buttons:
-                    return
-                button = ctk.CTkFrame(frame2, fg_color="transparent")
-                button.grid(row=0, column=y, padx=5, pady=5)
-                frame1.append(button)
-                count += 1
+            if count >= total_buttons:
+                return
+            button = ctk.CTkFrame(frame2, fg_color="transparent")
+            button.grid(row=0, column=y, padx=5, pady=5)
+            frame1.append(button)
+            count += 1
 
     @staticmethod
     def create_grid_row_col_config(frames, number_row, number_column):
@@ -207,10 +208,10 @@ class Utils:
     @staticmethod
     def is_value_outside_limits_effect(prop: int, value: int) -> bool:
         limits = {
-            EnumMedic.STACKMAXSIZE: (-1, 100),
-            EnumEffect.DURATION: (-1, 2000),
-            EnumEffect.FADEOUT: (-1, 100),
-            EnumEffect.COST: (-1, 250),
+            EnumMedic.STACKMAXSIZE: (-1, 101),
+            EnumEffect.DURATION: (-1, 2001),
+            EnumEffect.FADEOUT: (-1, 101),
+            EnumEffect.COST: (-1, 251),
             EnumEffect.HEALTHPENALTYMAX: (2, 101),
             EnumEffect.HEALTHPENALTYMIN: (1, 100)
         }
@@ -220,8 +221,8 @@ class Utils:
             return value < min_val or value > max_val
 
     @staticmethod
-    def is_value_outside_hpMax(hp_max: int, value: int) -> bool:
-        return value >  hp_max
+    def is_value_outside_hpMax(hp_max: int, value: int, prop: str) -> bool:
+        return value > hp_max
 
     @staticmethod
     def select_effect_value(effect_name: str) -> list[EnumEffect]:
@@ -231,9 +232,9 @@ class Utils:
             excluded_fields.update({EnumEffect.HEALTHPENALTYMIN, EnumEffect.HEALTHPENALTYMAX})
 
         if (effect_name == EnumEffectName.DESTROYED_PART.value
-            or effect_name == EnumEffectName.HEAVY_BLEEDING.value
-            or effect_name == EnumEffectName.LIGHT_BLEEDING.value
-            or effect_name == EnumEffectName.FRACTURE.value
+                or effect_name == EnumEffectName.HEAVY_BLEEDING.value
+                or effect_name == EnumEffectName.LIGHT_BLEEDING.value
+                or effect_name == EnumEffectName.FRACTURE.value
         ):
             excluded_fields.add(EnumEffect.DURATION)
 
@@ -243,8 +244,8 @@ class Utils:
         # Retourne tous les champs sauf ceux exclus
         return [field for field in EnumEffect if field not in excluded_fields]
 
-
         return False
+
     @staticmethod
     def is_value_outside_limits_ammo(name, value):
         limits = {
@@ -262,6 +263,19 @@ class Utils:
             EnumAmmo.FUZEARMTIMESEC.label: (0, 301),
             EnumAmmo.MAXEXPLOSIONDISTANCE.label: (-1, 11),
             EnumAmmo.PRICEFACTOR.label: (0.009, 101)
+        }
+        if name in limits:
+            min_value, max_value = limits[name]
+            return value <= min_value or value >= max_value
+        return False
+
+    @staticmethod
+    def is_value_outside_limits_medic(name, value):
+        limits = {
+            EnumMedic.STACKMAXSIZE.label: (-1, 101),
+            EnumMedic.MEDUSETIME.label: (0, 21),
+            EnumMedic.HPRESOURCERATE.label: (-1, 1001),
+            EnumMedic.MAXHPRESOURCE.label: (1, 10001)
         }
         if name in limits:
             min_value, max_value = limits[name]
@@ -474,7 +488,6 @@ class Utils:
             file_path = file_path.replace("_mod.json", ".json")
             JsonUtils.save_json_as_new_file(data_json_to_modify, file_path)
 
-
     @staticmethod
     def modify_json_value(attribut, value_to_apply, data_json_to_modify):
         from Utils.JsonUtils import JsonUtils
@@ -482,6 +495,7 @@ class Utils:
                                                               value_to_apply,
                                                               data_json_to_modify,
                                                               WindowType.AMMO)
+
     @staticmethod
     def case_fire_rate(adjusted_value, name):
         if name == EnumProps.FIRE_RATE.label:

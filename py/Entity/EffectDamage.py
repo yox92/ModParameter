@@ -31,3 +31,22 @@ class EffectDamage:
 
     def __iter__(self):
         return iter(self.effects.items())
+
+    def __eq__(self, other):
+        if not isinstance(other, EffectDamage):
+            return False
+
+        self_effects = getattr(self, "effects", {})
+        other_effects = getattr(other, "effects", {})
+
+        if set(self_effects.keys()) != set(other_effects.keys()):
+            return False
+
+        for name in self_effects:
+            effect_self = self_effects.get(name)
+            effect_other = other_effects.get(name)
+
+            if effect_self != effect_other:
+                return False
+
+        return True

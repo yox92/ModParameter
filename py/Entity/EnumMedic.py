@@ -1,12 +1,12 @@
 from enum import Enum
 
 class EnumMedic(Enum):
-    STACKMAXSIZE = ("StackMaxSize","Max number")
+    STACKMAXSIZE = ("StackMaxSize","Max number (0-100)")
     STACKOBJECTSCOUNT = ("StackObjectsCount","??")
-    MAXHPRESOURCE = ("MaxHpResource","Usage number")
-    HPRESOURCERATE = ("hpResourceRate","Hp regen on usage")
-    MEDUSETIME = ("medUseTime","time to use medic (seconds)")
-    EFFECTS_DAMAGE = ("effects_damage","")
+    MAXHPRESOURCE = ("MaxHpResource","Usage number (0-10000)")
+    HPRESOURCERATE = ("hpResourceRate","Hp regen on usage (0-1000)")
+    MEDUSETIME = ("medUseTime","time to use medic (seconds) (1-20)")
+    EFFECTS_DAMAGE = ("effects_damage","Effect medic item :")
 
     @property
     def label(self):

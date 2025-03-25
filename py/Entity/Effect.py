@@ -24,5 +24,10 @@ class Effect:
             healthPenaltyMax=data.get("healthPenaltyMax")
         )
 
-def __repr__(self):
+    def __repr__(self):
         return f"Effect(delay={self.delay}, duration={self.duration}, fadeOut={self.fadeOut}, cost={self.cost}, healthPenaltyMin={self.healthPenaltyMin}, healthPenaltyMax={self.healthPenaltyMax})"
+
+    def __eq__(self, other):
+        if not isinstance(other, Effect):
+            return False
+        return vars(self) == vars(other)

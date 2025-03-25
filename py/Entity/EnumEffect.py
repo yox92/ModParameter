@@ -1,11 +1,11 @@
 from enum import Enum
 
 class EnumEffect(Enum):
-    DURATION = ("duration","Duration of the effect (seconds)")
-    FADEOUT = ("fadeOut","Time it takes for the debuff to fade out(seconds)")
-    COST = ("cost","Resource cost to remove the effect (e.g., stop bleeding with a Salewa)")
-    HEALTHPENALTYMIN = ("healthPenaltyMin","Minimum % of health removed from the treated body part")
-    HEALTHPENALTYMAX = ("healthPenaltyMax","Maximum percentage of health removed from the treated body part")
+    DURATION = ("duration","Duration of the effect (seconds) (0, 2000) ")
+    FADEOUT = ("fadeOut","Time it takes for the debuff to fade out(seconds) (0-100)")
+    COST = ("cost","Resource cost to remove the effect (e.g., stop bleeding with a Salewa) (0-250)")
+    HEALTHPENALTYMIN = ("healthPenaltyMin","Minimum % of health removed from the treated body part (0-100)")
+    HEALTHPENALTYMAX = ("healthPenaltyMax","Maximum percentage of health removed from the treated body part (1-99)")
 
     @property
     def label(self):
