@@ -37,12 +37,11 @@ class ModParameter implements IPostDBLoadMod, PreSptModLoader, IPostSptLoadMod {
             itemHelper);
 
         const pmcService = new PmcService(logger, dataService);
-        const medicalService = new MedicalService(logger, itemHelper, dataService);
+        // const medicalService = new MedicalService(logger, itemHelper, dataService);
 
         itemService.allTracer();
         itemService.cloneItems();
         pmcService.updatePmc();
-        medicalService.applyMedicalBuff()
     }
 
     public postSptLoad(container: DependencyContainer): void {

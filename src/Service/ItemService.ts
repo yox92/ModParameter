@@ -12,6 +12,7 @@ import {ItemClonerService} from "./ItemClonerService";
 import {ItemHelper} from "@spt/helpers/ItemHelper";
 import {DatabaseService} from "@spt/services/DatabaseService";
 import {creatTracer, Tracer} from "../Entity/Tracer";
+import {createMedic, Medic} from "../Entity/Medic";
 
 export class ItemService {
     private readonly logger: ILogger;
@@ -110,7 +111,7 @@ export class ItemService {
             }
 
             if (!templateJson.locale) {
-                this.logger.debug(`[ModParameter] Skipping invalid or missing template Weapon: ${fileName}`);
+                this.logger.debug(`[ModParameter] Skipping invalid or missing template Ammo: ${fileName}`);
                 continue;
             }
 
@@ -134,7 +135,7 @@ export class ItemService {
             const ammoProps: Ammo = createItemAmmo(itemsPropsJson);
 
             if (!ammoProps) {
-                this.logger.debug(`[ModParameter] Invalid Json PMC update.`);
+                this.logger.debug(`[ModParameter] Invalid Json Ammo update.`);
                 return;
             }
 
@@ -157,12 +158,77 @@ export class ItemService {
         }
     }
 
+    private caseMedic(jsonMedicFiles: { fileName: string; json: any }[]) {
+        for (const {fileName, json} of jsonMedicFiles) {
+            if (!json) {
+                this.logger.debug(`[ModParameter] Skipping invalid or missing Medic JSON data: ${fileName}`);
+                continue;
+            }
+
+            const templateJson: Templates<Medic> = json;
+            const clone: boolean = typeof json.clone === "boolean" ? json.clone : false;
+
+            if (!templateJson.item) {
+                this.logger.debug(`[ModParameter] Skipping invalid or missing template Medic: ${fileName}`);
+                continue;
+            }
+
+            if (!templateJson.locale) {
+                this.logger.debug(`[ModParameter] Skipping invalid or missing template Medic: ${fileName}`);
+                continue;
+            }
+
+            const locale: Locale = templateJson.locale
+
+
+            const medicItem: Item<Medic> = templateJson.item;
+
+            if (!medicItem._props) {
+                this.logger.debug(`[ModParameter] Skipping invalid or missing item Medic: ${fileName}`);
+                continue;
+            }
+
+            const itemsPropsJson: Medic = medicItem._props;
+
+            if (!itemsPropsJson) {
+                this.logger.debug(`[ModParameter] Skipping invalid or missing ItemProps Medic: ${fileName}`);
+                continue;
+            }
+
+            const medic: Medic = createMedic(itemsPropsJson);
+
+            if (!medic) {
+                this.logger.debug(`[ModParameter] Invalid Json Medic update.`);
+                return;
+            }
+
+            const partialAmmoProps = this.itemUpdaterService.applyMedicModifications(
+                medic,
+                clone,
+                medicItem._id,
+                locale.Name)
+
+            if (!partialAmmoProps) {
+                this.logger.debug(`[ModParameter] No clone Medic will be generate for : ${fileName}`);
+            } else {
+                this.itemClonerService.applyClone(
+                    partialAmmoProps,
+                    medicItem._id,
+                    locale.Name,
+                    locale.ShortName,
+                    ItemTypeEnum.Ammo)
+
+            }
+        }
+    }
+
     /**
      * clone Items : First Weapons because new ammo need compatibility with new weapon ofc
      */
     public cloneItems(): void {
         this.caseWeapons(this.loadJsonFiles(ItemTypeEnum.Weapon));
         this.caseAmmo(this.loadJsonFiles(ItemTypeEnum.Ammo));
+        this.caseMedic(this.loadJsonFiles(ItemTypeEnum.Medic))
     }
 
     private loadJsonFiles(itemType: ItemTypeEnum): any {

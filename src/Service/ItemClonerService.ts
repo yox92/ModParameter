@@ -13,6 +13,8 @@ import {ItemTypeEnum} from "../Entity/ItemTypeEnum";
 import {WeaponCloneRegistry} from "../Entity/WeaponCloneRegistry";
 import {ItemProps} from "../Entity/ItemProps";
 import {Ammo} from "../Entity/Ammo";
+import {Medic} from "../Entity/Medic";
+import {MedicCloneRegistry} from "../Entity/MedicCloneRegistry";
 
 export class ItemClonerService {
     private readonly logger: ILogger;
@@ -43,7 +45,7 @@ export class ItemClonerService {
      * @param shortName The short name of the cloned item.
      * @param itemTypeEnum The type of the item (Ammo or Weapon).
      */
-    public applyClone(props: Partial<ItemProps> | Partial<Ammo>,
+    public applyClone(props: Partial<ItemProps> | Partial<Ammo>| Partial<Medic>,
                       id: string,
                       name: string,
                       shortName: string,
@@ -101,7 +103,17 @@ export class ItemClonerService {
                 props,
                 sptItem._parent,
                 WeaponCloneRegistry.getClonedId(id),
-                this.applyPriceFactor(price, props.priceFactor),
+                this.applyPriceFactor(price, props.priceFactor), // price
+                handbookPrice,
+                handbookParentId,
+                locales,
+                shortName)
+        } else if (itemTypeEnum === ItemTypeEnum.Medic) {
+            this.creatMedicClone(id,
+                props,
+                sptItem._parent,
+                MedicCloneRegistry.getClonedId(id),
+                this.applyPriceFactor(price, props.priceFactor), // price
                 handbookPrice,
                 handbookParentId,
                 locales,
@@ -196,6 +208,49 @@ export class ItemClonerService {
         const result: CreateItemResult = this.customItemService.createItemFromClone(clone);
         if (result.success) {
             clonerUtils.addToTrader(id, result.itemId, this.dataService, shortName, ItemTypeEnum.Weapon);
+            this.logger.debug(`[ModParameter] ${shortName} have new clone ! `);
+        } else {
+            this.logger.debug(`[ModParameter] Clone do not work for ${shortName} `)
+        }
+    }
+    /**
+     * Creates a cloned medic item with the given properties.
+     * Ensures that the cloned medic is properly assigned a new template ID,
+     * integrated with the trader system, and maintains appropriate pricing and classification.
+     *
+     * @param id The original medic template ID.
+     * @param cloneSptProps The properties of the cloned medic.
+     * @param parentId The parent ID of the cloned medic.
+     * @param cloneId The new unique ID assigned to the cloned medic.
+     * @param price The in-game price of the cloned medic.
+     * @param handbookPrice The handbook reference price.
+     * @param handbookParentId The parent category ID in the handbook.
+     * @param locales The localized names and descriptions.
+     * @param shortName The short name of the cloned medic.
+     */
+    private creatMedicClone(id: string,
+                             cloneSptProps: IProps,
+                             parentId: string,
+                             cloneId: string,
+                             price: number,
+                             handbookPrice: number,
+                             handbookParentId: string,
+                             locales,
+                             shortName: string): void {
+        const clonerUtils = new ClonerUtils(this.logger);
+        const clone: ItemClone = new ItemClone(
+            id,
+            cloneSptProps,
+            parentId,
+            cloneId,
+            price && price > 0 ? price : this.defaultPrice,
+            handbookPrice && handbookPrice > 0 ? handbookPrice : this.defaultHandbookPrice,
+            handbookParentId,
+            locales
+        );
+        const result: CreateItemResult = this.customItemService.createItemFromClone(clone);
+        if (result.success) {
+            clonerUtils.addToTrader(id, result.itemId, this.dataService, shortName, ItemTypeEnum.Medic);
             this.logger.debug(`[ModParameter] ${shortName} have new clone ! `);
         } else {
             this.logger.debug(`[ModParameter] Clone do not work for ${shortName} `)
