@@ -76,7 +76,7 @@ class AmmoMod:
         if Utils.no_all_value_are_load_from_save(self.data_from_json_no_save, self.data_from_json_mod_save_user):
             self.apply_button.configure(fg_color="blue", hover_color="lightblue", border_color="red",
                                         state="enable")
-            self.status_label.configure(text="Ready to apply changes")
+            self.status_label.configure(text="Ready to apply changes", text_color="white")
         else:
             self.apply_button.configure(state="disabled", fg_color="white")
             self.status_label.configure(text="")
@@ -284,7 +284,7 @@ class AmmoMod:
     def reset_apply_button(self):
         self.apply_button.configure(fg_color="blue", hover_color="lightblue",
                                     state="enable")
-        self.status_label.configure(text="Ready to apply changes", text_color="black")
+        self.status_label.configure(text="Ready to apply changes", text_color="white")
         self.verify_all_sliders_reset()
 
     def verify_all_sliders_reset(self):

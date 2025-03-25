@@ -59,6 +59,9 @@ class MedicMod:
             root: Root = Root.from_data(data_save, WindowType.MEDIC)
             item: Item = root.item
             medic: Medic = item.props
+            price = medic.get_value_by_label(EnumMedic.PRICEFACTOR.label)
+            if isinstance(price, int):
+               medic.set_value(EnumMedic.PRICEFACTOR.label, float(price))
             return medic
         else:
             return None
@@ -106,9 +109,9 @@ class MedicMod:
         id_button.pack(side="top", anchor="center")
         id_label = ctk.CTkLabel(self.left_main,
                                 text="Clone/Override ? :",
-                                font=("Arial", 18, "bold"))
+                                font=("Arial", 18, "bold",))
         id_label.pack(side="top",
-                      anchor="center")
+                      anchor="center" ,pady=(100, 0))
 
         clone_text = "New Clone" if self.is_clone else "Replace Original"
         clone_color = "blue" if self.is_clone else "red"
@@ -160,7 +163,7 @@ class MedicMod:
                 self.left_main,
                 text="Apply",
                 command=self.apply_changes,
-                state="normal",
+                state="disabled",
                 fg_color="white"
             )
         self.apply_button.pack(side="bottom", anchor="center")
@@ -280,6 +283,17 @@ class MedicMod:
             self.effect_edit_frame.destroy()
             self.reset_apply_button()
 
+        def cancel_edit():
+            self.effect_edit_frame.destroy()
+            self.reset_apply_button()
+            if hasattr(self, 'current_open_button'):
+                self.current_open_button.configure(
+                    fg_color="green" if effect_name not in self.data_from_json_no_save.effects_damage.effects else None)
+                self.current_open_button = None
+
+        cancel_btn = ctk.CTkButton(self.effect_edit_frame, text="Cancel", fg_color="gray", command=cancel_edit)
+        cancel_btn.grid(row=row_edit, column=1, pady=10, padx=10)
+
         def delete_effect():
             if effect_name in self.data_from_json_no_save.effects_damage.effects:
                 del self.data_from_json_no_save.effects_damage.effects[effect_name]
@@ -335,7 +349,10 @@ class MedicMod:
     def get_entry_value(self, event, prop_value, value):
         input_text = self.prop_widgets[prop_value][0].get()
         try:
-            int_input_text = int(input_text)
+            if prop_value == EnumMedic.PRICEFACTOR.label:
+                int_input_text = float(input_text)
+            else:
+                int_input_text = int(input_text)
         except ValueError:
             self.error_number_prompt()
             self.logger.log("warning", "Number please ...")
@@ -373,7 +390,7 @@ class MedicMod:
     def reset_apply_button(self):
         self.apply_button.configure(fg_color="blue", hover_color="lightblue",
                                     state="enable")
-        self.status_label.configure(text="Ready to apply changes", text_color="black")
+        self.status_label.configure(text="Ready to apply changes", text_color="white")
         self.verify_all_sliders_reset()
 
     def verify_all_sliders_reset(self):

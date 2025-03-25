@@ -81,6 +81,7 @@ class ModSelectionWindow:
     def run(self):
         self.loaded_data = JsonUtils.load_all_json_files_without_mod()
         self.loaded_data_ammo = JsonUtils.load_all_json_files_without_mod_ammo()
+        self.loaded_data_medic = JsonUtils.load_all_json_files_without_mod_medic()
         self.list_json_name_mod_weapons = JsonUtils.load_all_json_files_weapons_mod()
         self.list_json_name_mod_ammo = JsonUtils.load_all_name_json_files_ammo_mod()
         self.create_frame_main()
@@ -127,6 +128,19 @@ class ModSelectionWindow:
             self.button_view_all_weapons_mod.configure(text="All Saved Weapons Mod")
         else:
             self.button_view_all_weapons_mod.configure(text="No weapons mod find")
+        self.button_view_all_medic_mod = ctk.CTkButton(
+            self.button_frame,
+            text="All Saved Medic Mod",
+            compound="top",
+            fg_color="cyan",
+            text_color="black",
+            hover_color="white",
+            font=("Arial", 15, "bold"),
+            height=10,
+            width=10,
+            command=self.show_all_medic_mod
+        )
+        self.button_view_all_medic_mod.grid(row=0, column=2, padx=10)
 
     def active_window_list_ammo_already_mod(self):
         self.button_view_all_ammo_mod = ctk.CTkButton(
@@ -154,7 +168,7 @@ class ModSelectionWindow:
             width=10,
             command=self.all_ammo_tracer
         )
-        self.button_all_ammo_tracer.grid(row=0, column=2, padx=10)
+        self.button_all_ammo_tracer.grid(row=0, column=3, padx=10)
         self.button_delete_mod = ctk.CTkButton(
             self.button_frame,
             text="Select mod to DELETE",
@@ -167,7 +181,7 @@ class ModSelectionWindow:
             width=10,
             command=self.all_mod_to_delete
         )
-        self.button_delete_mod.grid(row=0, column=3, padx=10)
+        self.button_delete_mod.grid(row=0, column=4, padx=10)
         if self.list_json_name_mod_ammo:
             self.button_view_all_ammo_mod.configure(text="All Saved Ammo Mod")
         else:
@@ -268,6 +282,20 @@ class ModSelectionWindow:
                                self, WindowType.WEAPON)
         else:
             self.buttonWeapon.configure(text="No weapons mod find")
+    def show_all_medic_mod(self):
+        self.list_json_name_mod_medic = JsonUtils.load_all_json_files_medic_mod()
+        if self.list_json_name_mod_medic:
+            self.detail_window = ctk.CTkToplevel(self.root)
+
+            self.focus_new_window()
+
+            ListItemAlreadyMod(self.detail_window,
+                               self.root,
+                               self.detail_window,
+                               self.list_json_name_mod_medic,
+                               self, WindowType.MEDIC)
+        else:
+            self.buttonWeapon.configure(text="No medic mod find")
 
     def show_all_ammo_mod(self):
         self.list_json_name_mod_ammo = JsonUtils.load_all_name_json_files_ammo_mod()
@@ -293,7 +321,7 @@ class ModSelectionWindow:
             fg_color="transparent",
             text_color="orange",
             hover_color="whitesmoke",
-            font=("Arial", 18, "bold"),
+            font=("Arial", 16, "bold"),
             command=lambda: self.generate_bot_frame_weapon_and_ammo(WindowType.WEAPON)
         )
         self.buttonWeapon.pack(side="top", anchor="center",
@@ -307,7 +335,7 @@ class ModSelectionWindow:
             fg_color="transparent",
             text_color="Crimson",
             hover_color="whitesmoke",
-            font=("Arial", 18, "bold"),
+            font=("Arial", 16, "bold"),
             command=lambda: self.generate_list_button(WindowType.CALIBER)
         )
         self.button_caliber.pack(side="top", anchor="center",
@@ -320,7 +348,7 @@ class ModSelectionWindow:
             fg_color="transparent",
             text_color="FireBrick",
             hover_color="whitesmoke",
-            font=("Arial", 18, "bold"),
+            font=("Arial", 16, "bold"),
             command=self.ammo_window
         )
         self.button_ammo.pack(side="top", anchor="center",
@@ -333,7 +361,7 @@ class ModSelectionWindow:
             fg_color="transparent",
             text_color="green",
             hover_color="whitesmoke",
-            font=("Arial", 18, "bold"),
+            font=("Arial", 16, "bold"),
             command=self.pmc_window
         )
         self.button_pmc.pack(side="top", anchor="center",
@@ -341,12 +369,12 @@ class ModSelectionWindow:
         self.button_medic = ctk.CTkButton(
             self.frame_top_5,
             image=self.medic_image,
-            text="PMC Attributes",
+            text="Medical Attributes",
             compound="bottom",
             fg_color="transparent",
-            text_color="green",
+            text_color="red",
             hover_color="whitesmoke",
-            font=("Arial", 18, "bold"),
+            font=("Arial", 16, "bold"),
             command=lambda: self.generate_list_button(WindowType.MEDIC)
         )
         self.button_medic.pack(side="top", anchor="center",
@@ -453,7 +481,6 @@ class ModSelectionWindow:
             weight=1)
         if window_type == WindowType.AMMO or window_type == WindowType.MEDIC:
             results = [{"short_name": root.locale.ShortName, "name": root.locale.Name} for root in results]
-
             button = ctk.CTkButton(self.frame_bot_top,
                                    text="<== BACK ==>",
                                    command=self.ammo_window,
@@ -461,6 +488,10 @@ class ModSelectionWindow:
                                    font=("Arial", 20, "bold"),
                                    text_color="black")
             button.grid(row=2, column=0, padx=5, pady=5)
+            if window_type == WindowType.AMMO:
+                button.configure(command=self.ammo_window)
+            elif window_type == WindowType.MEDIC:
+                button.configure(command=self.medic_window)
 
         for idx, result in enumerate(results[:max_items]):
             frame_recherche_m = ctk.CTkFrame(self.frame_bot_bot, fg_color="transparent")
@@ -596,7 +627,7 @@ class ModSelectionWindow:
             idx: int
             button = ctk.CTkButton(
                 self.framesBotCaliber[idx],
-                image="",
+                image=self.stim_image,
                 text=label,
                 width=150,
                 compound="bottom",
@@ -697,17 +728,19 @@ class ModSelectionWindow:
                     send_value,
                     self)
 
-    def open_weapon_specific_window_from_list(self, name, windowType):
+    def open_weapon_specific_window_from_list(self, name, window_type):
         list_for_data = None
         name_without_mod = name.replace("_mod.json", ".json")
-        if windowType == WindowType.AMMO:
+        if window_type == WindowType.AMMO:
             list_for_data = self.loaded_data_ammo
-        elif windowType == windowType.WEAPON:
+        elif window_type == window_type.WEAPON:
             list_for_data = self.loaded_data
+        elif window_type == window_type.MEDIC:
+            list_for_data = self.loaded_data_medic
         for data in list_for_data:
             if data['file_path'].endswith(name_without_mod):
                 file_path = data['file_path']
-                self.open_specific_window(file_path, windowType)
+                self.open_specific_window(file_path, window_type)
 
     def calculate_window_position(self, window_width, window_height):
         root_x = self.root.winfo_x()

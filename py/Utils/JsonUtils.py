@@ -151,10 +151,31 @@ class JsonUtils:
                 data_list.append(JsonUtils.load_json_and_add_path(file_path))
 
         return data_list
+    @staticmethod
+    def load_all_json_files_without_mod_medic():
+        json_dir_path = JSON_FILES_DIR_MEDIC
+        data_list = []
+        for filename in os.listdir(json_dir_path):
+
+            if filename.endswith('.json') and not filename.endswith('mod.json'):
+                file_path = json_dir_path / filename
+                data_list.append(JsonUtils.load_json_and_add_path(file_path))
+
+        return data_list
 
     @staticmethod
     def load_all_json_files_weapons_mod():
         json_dir_path = JSON_FILES_DIR_WEAPONS
+        data_list = []
+        for filename in os.listdir(json_dir_path):
+
+            if filename.endswith('_mod.json'):
+                data_list.append(filename)
+        return data_list
+
+    @staticmethod
+    def load_all_json_files_medic_mod():
+        json_dir_path = JSON_FILES_DIR_MEDIC
         data_list = []
         for filename in os.listdir(json_dir_path):
 
@@ -218,7 +239,7 @@ class JsonUtils:
 
     @staticmethod
     def load_all_name_json_mod():
-        json_dirs = [JSON_FILES_DIR_WEAPONS, JSON_FILES_DIR_AMMO]
+        json_dirs = [JSON_FILES_DIR_WEAPONS, JSON_FILES_DIR_AMMO, JSON_FILES_DIR_MEDIC]
         file_name: list[tuple[str, WindowType]] = []
 
         for json_dir in json_dirs:
@@ -229,8 +250,10 @@ class JsonUtils:
                 if filename.endswith('mod.json'):
                     if json_dir == JSON_FILES_DIR_AMMO:
                         file_name.append((filename, WindowType.AMMO))
-                    else:
+                    elif json_dir == JSON_FILES_DIR_WEAPONS:
                         file_name.append((filename, WindowType.WEAPON))
+                    elif json_dir == JSON_FILES_DIR_MEDIC:
+                        file_name.append((filename, WindowType.MEDIC))
 
         if not file_name:
             print("No file mod found")
@@ -242,7 +265,7 @@ class JsonUtils:
     def find_json_file_with_name(file_name: str, window_type: WindowType):
         json_dirs: list = []
         if window_type == WindowType.DELETE:
-            json_dirs = [JSON_FILES_DIR_WEAPONS, JSON_FILES_DIR_AMMO]
+            json_dirs = [JSON_FILES_DIR_WEAPONS, JSON_FILES_DIR_AMMO, JSON_FILES_DIR_MEDIC]
         elif window_type == WindowType.AMMO:
             json_dirs = [JSON_FILES_DIR_AMMO]
         elif window_type == WindowType.WEAPON:

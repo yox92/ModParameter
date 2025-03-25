@@ -38,6 +38,10 @@ class Medic:
     def effects_damage(self):
         return self._effects_damage
 
+    @property
+    def priceFactor(self):
+        return self._priceFactor
+
     @classmethod
     def from_data(cls, data: dict):
         effects_damage = data.get("effects_damage", {})

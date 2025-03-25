@@ -4,7 +4,7 @@ class EnumMedic(Enum):
     MAXHPRESOURCE = ("MaxHpResource","Usage number (0-10000)")
     HPRESOURCERATE = ("hpResourceRate","Hp regen on usage (0-1000)")
     MEDUSETIME = ("medUseTime","time to use medic (seconds) (1-20)")
-    PRICEFACTOR = "priceFactor", "multiply price. (2 = x2 etc)  (0,01-100)"
+    PRICEFACTOR = "priceFactor", "multiply price. (2 = x2 or 0.1 = x0.1)  (0,01-100)"
     EFFECTS_DAMAGE = ("effects_damage","Effect medic item :")
 
     @property

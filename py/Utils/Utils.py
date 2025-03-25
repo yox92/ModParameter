@@ -273,7 +273,8 @@ class Utils:
         limits = {
             EnumMedic.MEDUSETIME.label: (0, 21),
             EnumMedic.HPRESOURCERATE.label: (-1, 1001),
-            EnumMedic.MAXHPRESOURCE.label: (1, 10001)
+            EnumMedic.MAXHPRESOURCE.label: (1, 10001),
+            EnumAmmo.PRICEFACTOR.label: (0.009, 101)
         }
         if name in limits:
             min_value, max_value = limits[name]

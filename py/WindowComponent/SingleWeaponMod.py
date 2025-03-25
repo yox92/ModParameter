@@ -421,7 +421,7 @@ class SingleWeaponMod:
     def reset_apply_button(self):
         self.apply_button.configure(fg_color="blue", hover_color="lightblue", border_color="red",
                                     state="enable")
-        self.status_label.configure(text="Ready to apply changes")
+        self.status_label.configure(text="Ready to apply changes", text_color="white")
 
     @staticmethod
     def create_item_manager_from_json(data, item_manager: ItemManager, wt: WindowType):

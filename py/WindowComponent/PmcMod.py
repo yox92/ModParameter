@@ -273,7 +273,7 @@ class PmcMod:
     def reset_apply_button(self):
         self.apply_button.configure(fg_color="blue", hover_color="lightblue", border_color="red",
                                     state="enable")
-        self.status_label.configure(text="Ready to apply changes")
+        self.status_label.configure(text="Ready to apply changes", text_color="white")
 
     def verify_all_sliders_reset(self):
         if self.save_pmc_exist:

@@ -48,6 +48,8 @@ class ListItemAlreadyMod:
                     self.json_path_name_button.append((json, local.name, windowType))
                 if windowType == WindowType.WEAPON:
                     self.json_path_name_button.append((json, local.short_name, windowType))
+                if windowType == WindowType.MEDIC:
+                    self.json_path_name_button.append((json, local.short_name, windowType))
 
         else:
             for json in self.weapon_list:
@@ -58,6 +60,8 @@ class ListItemAlreadyMod:
                 if self.window_type == WindowType.AMMO:
                     self.json_path_name_button.append((json, local.name, self.window_type))
                 if self.window_type == WindowType.WEAPON:
+                    self.json_path_name_button.append((json, local.short_name, self.window_type))
+                if self.window_type == WindowType.MEDIC:
                     self.json_path_name_button.append((json, local.short_name, self.window_type))
 
 
@@ -138,8 +142,10 @@ class ListItemAlreadyMod:
                 self.delete_specific(pname, short_name))
                 if windowsType == WindowType.AMMO:
                     button_weapon.configure(fg_color="dodgerblue")
-                else:
+                elif windowsType == WindowType.WEAPON:
                     button_weapon.configure(fg_color="peru")
+                elif windowsType == WindowType.MEDIC:
+                    button_weapon.configure(fg_color="green")
 
         self.inner_frame.update_idletasks()
         self.canvas.config(scrollregion=self.canvas.bbox("all"))
