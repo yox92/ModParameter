@@ -12,6 +12,7 @@ import {SaveServer} from "@spt/servers/SaveServer";
 import {ClearCloneService} from "./Service/ClearCloneService";
 import {LocaleService} from "@spt/services/LocaleService";
 import {PmcModifyService} from "./Service/PmcModifyService";
+import {IGrid} from "@spt/models/eft/common/tables/ITemplateItem";
 
 class ModParameter implements IPostDBLoadMod, PreSptModLoader, IPostSptLoadMod {
 
@@ -24,7 +25,14 @@ class ModParameter implements IPostDBLoadMod, PreSptModLoader, IPostSptLoadMod {
         const customItemService: CustomItemService = container.resolve<CustomItemService>("CustomItemService");
         const logger: ILogger = container.resolve<ILogger>("WinstonLogger");
         const itemHelper: ItemHelper = container.resolve<ItemHelper>("ItemHelper");
-        dataService.getGlobals()
+
+        let grids :IGrid[] = dataService.getTemplates().items[""]._props.Grids
+        grids.map(grid => {
+            grid._id = ""
+            grid._props.cellsH
+            grid._props.cellsV
+        } )
+        let magazineCount: number = dataService.getTemplates().items[""]._props.Cartridges[0]._max_count;
         if (!dataService || !logger || !itemHelper || !customItemService) {
             console.error(`[ModParameter] Critical error: Missing dependencies. Mod cannot function properly.`);
             return;

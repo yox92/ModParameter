@@ -270,7 +270,6 @@ export class ItemUpdaterService {
      * Applies modifications from a JSON item.
      * If any value is invalid, skipped for that item.
      * @param weaponItem Weapon extract from JSON
-     * @param dataService data from the SPT database
      * @param id_item_to_modify id from the JSON
      * @param name_item_to_modify name from the JSON
      * @returns true if the item was modified, false if skipped

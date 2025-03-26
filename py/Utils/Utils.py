@@ -3,6 +3,7 @@ import customtkinter as ctk
 from Entity import EnumProps, EnumAiming, EnumAmmo, ItemManager
 from Entity.EnumEffect import EnumEffect
 from Entity.EnumEffectName import EnumEffectName
+from Entity.EnumMagSize import EnumMagSize
 from Entity.EnumMedic import EnumMedic
 from Entity.WindowType import WindowType
 
@@ -61,6 +62,20 @@ class Utils:
         total_buttons = 4
         count = 0
         for y in range(4):
+            if count >= total_buttons:
+                return
+            button = ctk.CTkFrame(frame2, fg_color="transparent")
+            button.grid(row=0, column=y, padx=5, pady=5)
+            frame1.append(button)
+            count += 1
+
+    @staticmethod
+    def create_1x2_bottom(frame1, frame2):
+        frame1.clear()
+        total_buttons: int
+        total_buttons = 2
+        count = 0
+        for y in range(2):
             if count >= total_buttons:
                 return
             button = ctk.CTkFrame(frame2, fg_color="transparent")
@@ -514,3 +529,51 @@ class Utils:
             return parent_id == "5448f39d4bdc2d0a728b4568"
 
         return True
+
+    @staticmethod
+    def switch_mag(result, switch_value):
+        print(result)
+        print(switch_value)
+
+    @staticmethod
+    def size_magazine(result):
+        if result in (EnumMagSize.CAT_01_09.value,
+                      EnumMagSize.CAT_10_19.value,
+                      EnumMagSize.CAT_20_29.value):
+            return "Resize 2 slots to 1 slot"
+        elif result in (EnumMagSize.CAT_30_39.value,
+                        EnumMagSize.CAT_40_49.value,
+                        EnumMagSize.CAT_50_59.value,
+                        EnumMagSize.CAT_60_69.value,
+                        EnumMagSize.CAT_70_79.value,
+                        EnumMagSize.CAT_80_89.value,
+                        EnumMagSize.CAT_90_100.value,
+                        EnumMagSize.CAT_GT_100):
+            return "Resize 3 slots to 2 slots"
+
+    @staticmethod
+    def slider_start(result):
+        if result == EnumMagSize.CAT_01_09.value:
+            return 1
+        elif result == EnumMagSize.CAT_10_19.value:
+            return 10
+        elif result == EnumMagSize.CAT_20_29.value:
+            return 20
+        elif result == EnumMagSize.CAT_30_39.value:
+            return 30
+        elif result == EnumMagSize.CAT_40_49.value:
+            return 40
+        elif result == EnumMagSize.CAT_50_59.value:
+            return 50
+        elif result == EnumMagSize.CAT_60_69.value:
+            return 60
+        elif result == EnumMagSize.CAT_70_79.value:
+            return 70
+        elif result == EnumMagSize.CAT_80_89.value:
+            return 80
+        elif result == EnumMagSize.CAT_90_100.value:
+            return 90
+        elif result == EnumMagSize.CAT_GT_100.value:
+            return 100
+        else:
+            return 1
