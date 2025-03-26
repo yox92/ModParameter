@@ -3,6 +3,7 @@
     "counts": 1,
     "penality": false,
     "resize": false,
+    "fastLoad": false,
     "ids": [
       "5448c12b4bdc2d02308b456f",
       "56deeefcd2720bc8328b4568",
@@ -44,6 +45,7 @@
     "counts": 10,
     "penality": false,
     "resize": false,
+    "fastLoad": false,
     "ids": [
       "5df8f535bb49d91fb446d6b0",
       "617130016c780c1e710c9a24",
@@ -95,6 +97,7 @@
     "counts": 20,
     "penality": false,
     "resize": false,
+    "fastLoad": false,
     "ids": [
       "5ba264f6d4351e0034777d52",
       "6699271b9950f5f4cd060299",
@@ -143,6 +146,7 @@
     "counts": 30,
     "penality": false,
     "resize": false,
+    "fastLoad": false,
     "ids": [
       "59fafc5086f7740dbe19f6c3",
       "564ca99c4bdc2d16268b4589",
@@ -202,6 +206,7 @@
     "counts": 40,
     "penality": false,
     "resize": false,
+    "fastLoad": false,
     "ids": [
       "5ba26586d4351e44f824b340",
       "66992725ae08c5c29e0c4f9a",
@@ -220,6 +225,7 @@
     "counts": 50,
     "penality": false,
     "resize": false,
+    "fastLoad": false,
     "ids": [
       "6699272a3c4fda6471005cc1",
       "5a351711c4a282000b1521a4",
@@ -237,6 +243,7 @@
     "counts": 60,
     "penality": false,
     "resize": false,
+    "fastLoad": false,
     "ids": [
       "55d482194bdc2d1d4e8b456b",
       "59c1383d86f774290a37e0ca",
@@ -247,6 +254,7 @@
     "counts": 70,
     "penality": false,
     "resize": false,
+    "fastLoad": false,
     "ids": [
       "5cbdc23eae9215001136a407",
       "5c6175362e221600133e3b94",
@@ -258,6 +266,7 @@
     "counts": 31,
     "penality": false,
     "resize": false,
+    "fastLoad": false,
     "ids": [
       "55d485be4bdc2d962f8b456f"
     ]
@@ -266,6 +275,7 @@
     "counts": 90,
     "penality": false,
     "resize": false,
+    "fastLoad": false,
     "ids": [
       "646372518610c40fc20204e8",
       "6513f0a194c72326990a3868",
@@ -280,9 +290,10 @@
     ]
   },
   ">100": {
-    "counts": 50,
-    "penality": true,
-    "resize": true,
+    "counts": 100,
+    "penality": false,
+    "resize": false,
+    "fastLoad": false,
     "ids": [
       "65785979bec02a3fe82c181e",
       "671d85439ae8365d69117ba6",

@@ -10,6 +10,7 @@ export class JsonFileService {
     private readonly jsonAimingFolderPath: string;
     private readonly jsonAmmoFolderPath: string;
     private readonly jsonMedicFolderPath: string;
+    private readonly jsonMagFolderPath: string;
     private readonly logger: ILogger;
 
     constructor(logger: ILogger) {
@@ -17,6 +18,7 @@ export class JsonFileService {
         this.jsonAimingFolderPath = config.jsonAimingFolderPath;
         this.jsonAmmoFolderPath = config.jsonAmmoFolderPath;
         this.jsonMedicFolderPath = config.jsonMedicFolderPath;
+        this.jsonMagFolderPath = config.jsonMagFolderPath;
         this.logger = logger;
     }
 
@@ -81,6 +83,9 @@ export class JsonFileService {
         }
         else if (itemType === ItemTypeEnum.Medic) {
             folderPath = this.jsonMedicFolderPath
+        }
+        else if (itemType === ItemTypeEnum.Mag) {
+            folderPath = this.jsonMagFolderPath
         }
         else {
             return [];

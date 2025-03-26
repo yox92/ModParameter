@@ -9,6 +9,8 @@ import {Tracer} from "../Entity/Tracer";
 import {Baseclass} from "../Entity/Baseclass";
 import {ItemHelper} from "@spt/helpers/ItemHelper";
 import {IEffectDamageProps, Medic} from "../Entity/Medic";
+import {Mag} from "../Entity/Mag";
+import {EnumagCount} from "../Entity/EnumagCount";
 
 
 export class ItemUpdaterService {
@@ -325,6 +327,70 @@ export class ItemUpdaterService {
         }
 
         return updatedProps;
+    }
+
+    public applyMagMod(mag: Mag): void {
+        const defaultValue: number = EnumagCount[mag.name]
+
+        if (mag.resize === false && mag.penality === false && mag.counts === defaultValue) {
+            this.logger.debug(`[ModParameter] Skipping mag : ${mag.name}`);
+            return;
+        }
+
+        const templates: ITemplates | undefined = this.dataService.getTemplates();
+        const items: Record<string, ITemplateItem> | undefined = templates?.items;
+
+        if (!templates || !items) {
+            this.logger.debug("[ModParameter] Invalid dataService structure. Modification aborted");
+            return null;
+        }
+
+        const magazines: ITemplateItem[] = Object.values(items).filter(
+            (item: ITemplateItem) =>
+                item?._id &&
+                this.itemHelper.isOfBaseclass(item._id, Baseclass.MAGAZINE) &&
+                mag.ids.includes(item._id));
+
+        for (const magazine of magazines) {
+            if (!magazine._props || !Array.isArray(magazine._props.Cartridges)) {
+                this.logger.debug(`[ModParameter] Warning: Magazine ${magazine._id} has no Cartridges property.`);
+                continue;
+            }
+
+            if (mag.fastLoad) {
+                if (magazine._props.LoadUnloadModifier) {
+                    magazine._props.LoadUnloadModifier = 100;
+                }
+            }
+
+            if (mag.resize) {
+                if (mag.penality) {
+                    if (magazine._props.Width) {
+                        magazine._props.Width = 2;
+                    }
+                }
+            }
+
+            if (mag.penality) {
+                if (magazine._props.Ergonomics && magazine._props.Ergonomics < 0) {
+                    magazine._props.Ergonomics = 0
+                }
+                if (magazine._props.MalfunctionChance) {
+                    magazine._props.MalfunctionChance = 0.03
+                }
+                if (magazine._props.CheckTimeModifier) {
+                    magazine._props.CheckTimeModifier = 0
+                }
+            }
+
+            if (mag.counts !== defaultValue) {
+
+                if (magazine._props && magazine._props.Cartridges && magazine._props.Cartridges[0]) {
+                    magazine._props.Cartridges[0]._props.MaxStackCount = mag.counts
+                }
+
+            }
+        }
     }
 
 }

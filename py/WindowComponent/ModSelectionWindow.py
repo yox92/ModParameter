@@ -789,33 +789,52 @@ class ModSelectionWindow:
         )
         switch_size.grid(row=2, column=1, padx=5, pady=5, sticky="nsew")
 
-        label3 = ctk.CTkLabel(self.frame_bot_bot, text=f"number ammo on magazines ==> {str(mag_obj.counts)}")
+        switch_var3 = ctk.BooleanVar(value=mag_obj.fastLoad)
+
+        label3 = ctk.CTkLabel(self.frame_bot_bot, text=f"Fast load : {switch_var3.get()}")
         label3.grid(row=3, column=0, sticky="nsew")
+
+        switch_speed = ctk.CTkSwitch(
+            self.frame_bot_bot,
+            text="",
+            variable=switch_var3,
+            width=50,
+            command=lambda: label3.configure(text=f"Fast load : {switch_var3.get()}")
+        )
+        switch_speed.grid(row=3, column=1, padx=5, pady=5, sticky="nsew")
+
+        label4 = ctk.CTkLabel(self.frame_bot_bot, text=f"number ammo on magazines ==> {str(mag_obj.counts)}")
+        label4.grid(row=4, column=0, sticky="nsew")
 
         slider = ctk.CTkSlider(self.frame_bot_bot,
                                from_=1, to=150,
-                               command=lambda value: label3.configure(
+                               command=lambda value: label4.configure(
                                    text=f"number ammo on magazines ==> {int(value)}"))
         slider.set(mag_obj.counts or 1)
-        slider.grid(row=3, column=1, sticky=ctk.W, padx=10)
+        slider.grid(row=4, column=1, sticky=ctk.W, padx=10)
 
         validate_button = ctk.CTkButton(
             self.frame_bot_bot,
             text="Validate",
             fg_color="green",
-            command=lambda: self.apply_mag(data, result, switch_var, switch_var2, slider)
+            command=lambda: self.apply_mag(data, result, switch_var, switch_var2, switch_var3, slider)
         )
-        validate_button.grid(row=4, column=0, columnspan=2, padx=5, pady=5)
+        validate_button.grid(row=5, column=0, columnspan=2, padx=5, pady=5)
         reset_button = ctk.CTkButton(
             self.frame_bot_bot,
             text="Reset",
             fg_color="red",
             command=lambda: self.reset_mag(result, data)
         )
-        reset_button.grid(row=4, column=1, columnspan=2, padx=5, pady=5)
+        reset_button.grid(row=5, column=1, columnspan=2, padx=5, pady=5)
 
-    def apply_mag(self, data, result, switch_var, switch_var2, slider):
-        Utils.save_mag_values(data, result, switch_var, switch_var2, slider)
+    def apply_mag(self, data, result, switch_var, switch_var2, switch_var3, slider):
+        Utils.save_mag_values(data,
+                              result,
+                              switch_var,
+                              switch_var2,
+                              switch_var3,
+                              slider)
         self.bag_button_press()
 
     def reset_mag(self, result, data):
@@ -872,7 +891,7 @@ class ModSelectionWindow:
         self.framesBotRecherche.clear()
         self.framesButtonRecherche.clear()
         self.message_not_find.clear()
-
+    
     def open_specific_window(self, send_value, window_type: WindowType):
         self.detail_window = ctk.CTkToplevel(self.root)
 

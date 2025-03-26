@@ -13,6 +13,7 @@ import {ItemHelper} from "@spt/helpers/ItemHelper";
 import {DatabaseService} from "@spt/services/DatabaseService";
 import {creatTracer, Tracer} from "../Entity/Tracer";
 import {createMedic, Medic} from "../Entity/Medic";
+import {createMag, Mag} from "../Entity/Mag";
 
 export class ItemService {
     private readonly logger: ILogger;
@@ -222,6 +223,20 @@ export class ItemService {
         }
     }
 
+    private caseMag(jsonMagFiles: { fileName: string; json: any }[]) {
+        for (const {fileName, json} of jsonMagFiles) {
+            if (!json) {
+                 this.logger.debug(`[ModParameter] Skipping invalid or missing Mag JSON data: ${fileName}`);
+                continue;
+            }
+
+             const mag: Mag = createMag(jsonMagFiles);
+            if (!mag) {
+                this.itemUpdaterService.applyMagMod(mag)
+            }
+        }
+    }
+
     /**
      * clone Items : First Weapons because new ammo need compatibility with new weapon ofc
      */
@@ -229,6 +244,11 @@ export class ItemService {
         this.caseWeapons(this.loadJsonFiles(ItemTypeEnum.Weapon));
         this.caseAmmo(this.loadJsonFiles(ItemTypeEnum.Ammo));
         this.caseMedic(this.loadJsonFiles(ItemTypeEnum.Medic))
+    }
+    public apply_mod_item(): void {
+        this.caseMag(this.loadJsonFiles(ItemTypeEnum.Mag));
+
+
     }
 
     private loadJsonFiles(itemType: ItemTypeEnum): any {

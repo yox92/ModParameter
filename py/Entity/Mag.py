@@ -2,11 +2,12 @@ from Entity.EnumMagSize import EnumMagSize
 
 
 class Mag:
-    def __init__(self, title: str, counts: int, penality: bool, resize: bool, ids:[]):
+    def __init__(self, title: str, counts: int, penality: bool, resize: bool, fastLoad: bool, ids:[]):
         self._title: EnumMagSize = EnumMagSize.from_value(title)
         self._counts: int = counts
         self._penality: bool = penality
         self._resize: bool = resize
+        self._fastLoad: bool = fastLoad
         self._ids: [] = ids
 
     @property
@@ -28,3 +29,7 @@ class Mag:
     @property
     def ids(self) -> []:
         return self._ids
+
+    @property
+    def fastLoad(self) -> []:
+        return self._fastLoad
