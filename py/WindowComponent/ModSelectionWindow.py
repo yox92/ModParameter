@@ -706,7 +706,8 @@ class ModSelectionWindow:
                 font=("Arial", 20, "bold")
             )
             button.pack(side="top", anchor="center")
-            button.configure(command=lambda parent=code: self.bag_button_press())
+            if label == "Magazine":
+                button.configure(command=lambda parent=code: self.bag_button_press())
 
     def bag_button_press(self):
         self.create_frame_bot_find_weapon()
@@ -803,13 +804,15 @@ class ModSelectionWindow:
         )
         switch_speed.grid(row=3, column=1, padx=5, pady=5, sticky="nsew")
 
-        label4 = ctk.CTkLabel(self.frame_bot_bot, text=f"number ammo on magazines ==> {str(mag_obj.counts)}")
+        label4 = ctk.CTkLabel(self.frame_bot_bot, text=f"number ammo on magazines :")
         label4.grid(row=4, column=0, sticky="nsew")
+        label5 = ctk.CTkLabel(self.frame_bot_bot, font=("Arial", 18, "bold"), text=f"{str(mag_obj.counts)}")
+        label5.grid(row=4, column=2,sticky="w")
 
         slider = ctk.CTkSlider(self.frame_bot_bot,
                                from_=1, to=150,
-                               command=lambda value: label4.configure(
-                                   text=f"number ammo on magazines ==> {int(value)}"))
+                               command=lambda value: label5.configure(
+                                   text=f"{int(value)}"))
         slider.set(mag_obj.counts or 1)
         slider.grid(row=4, column=1, sticky=ctk.W, padx=10)
 
@@ -819,7 +822,7 @@ class ModSelectionWindow:
             fg_color="green",
             command=lambda: self.apply_mag(data, result, switch_var, switch_var2, switch_var3, slider)
         )
-        validate_button.grid(row=5, column=0, columnspan=2, padx=5, pady=5)
+        validate_button.grid(row=5, column=0, columnspan=2, padx=5, pady=50)
         reset_button = ctk.CTkButton(
             self.frame_bot_bot,
             text="Reset",
@@ -891,7 +894,7 @@ class ModSelectionWindow:
         self.framesBotRecherche.clear()
         self.framesButtonRecherche.clear()
         self.message_not_find.clear()
-    
+
     def open_specific_window(self, send_value, window_type: WindowType):
         self.detail_window = ctk.CTkToplevel(self.root)
 
