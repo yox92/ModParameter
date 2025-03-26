@@ -359,6 +359,7 @@ export class ItemUpdaterService {
 
             if (mag.fastLoad) {
                 if (magazine._props.LoadUnloadModifier) {
+                    this.logger.debug(`[ModParameter] modify ${magazine._name} Load, Unload speed`);
                     magazine._props.LoadUnloadModifier = 100;
                 }
             }
@@ -366,6 +367,7 @@ export class ItemUpdaterService {
             if (mag.resize) {
                 if (mag.penality) {
                     if (magazine._props.Width) {
+                        this.logger.debug(`[ModParameter] modify ${magazine._name}  slot number`);
                         magazine._props.Width = 2;
                     }
                 }
@@ -373,22 +375,23 @@ export class ItemUpdaterService {
 
             if (mag.penality) {
                 if (magazine._props.Ergonomics && magazine._props.Ergonomics < 0) {
+                    this.logger.debug(`[ModParameter] modify ${magazine._name} Ergonomics`);
                     magazine._props.Ergonomics = 0
                 }
                 if (magazine._props.MalfunctionChance) {
+                    this.logger.debug(`[ModParameter] modify ${magazine._name} MalfunctionChance`);
                     magazine._props.MalfunctionChance = 0.03
                 }
                 if (magazine._props.CheckTimeModifier) {
+                     this.logger.debug(`[ModParameter] modify ${magazine._name} CheckTimeModifier`);
                     magazine._props.CheckTimeModifier = 0
                 }
             }
 
             if (mag.counts !== defaultValue) {
-
-                if (magazine._props && magazine._props.Cartridges && magazine._props.Cartridges[0]) {
+                if (magazine._props?.Cartridges?.[0]) {
                     magazine._props.Cartridges[0]._props.MaxStackCount = mag.counts
                 }
-
             }
         }
     }
