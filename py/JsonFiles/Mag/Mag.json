@@ -1,6 +1,6 @@
 {
   "01–09": {
-    "counts": null,
+    "counts": 1,
     "penality": false,
     "resize": false,
     "ids": [
@@ -41,7 +41,7 @@
     ]
   },
   "10–19": {
-    "counts": null,
+    "counts": 10,
     "penality": false,
     "resize": false,
     "ids": [
@@ -92,7 +92,7 @@
     ]
   },
   "20–29": {
-    "counts": null,
+    "counts": 20,
     "penality": false,
     "resize": false,
     "ids": [
@@ -140,7 +140,7 @@
     ]
   },
   "30–39": {
-    "counts": null,
+    "counts": 30,
     "penality": false,
     "resize": false,
     "ids": [
@@ -199,7 +199,7 @@
     ]
   },
   "40–49": {
-    "counts": null,
+    "counts": 40,
     "penality": false,
     "resize": false,
     "ids": [
@@ -217,7 +217,7 @@
     ]
   },
   "50–59": {
-    "counts": null,
+    "counts": 50,
     "penality": false,
     "resize": false,
     "ids": [
@@ -233,8 +233,18 @@
       "5addccf45acfc400185c2989"
     ]
   },
+  "60–69": {
+    "counts": 60,
+    "penality": false,
+    "resize": false,
+    "ids": [
+      "55d482194bdc2d1d4e8b456b",
+      "59c1383d86f774290a37e0ca",
+      "544a37c44bdc2d25388b4567"
+    ]
+  },
   "70–79": {
-    "counts": null,
+    "counts": 70,
     "penality": false,
     "resize": false,
     "ids": [
@@ -245,7 +255,7 @@
     ]
   },
   "80–89": {
-    "counts": null,
+    "counts": 31,
     "penality": false,
     "resize": false,
     "ids": [
@@ -253,7 +263,7 @@
     ]
   },
   "90–100": {
-    "counts": null,
+    "counts": 90,
     "penality": false,
     "resize": false,
     "ids": [
@@ -269,20 +279,10 @@
       "6761765f1f08ed5e8800b7a6"
     ]
   },
-  "60–69": {
-    "counts": null,
-    "penality": false,
-    "resize": false,
-    "ids": [
-      "55d482194bdc2d1d4e8b456b",
-      "59c1383d86f774290a37e0ca",
-      "544a37c44bdc2d25388b4567"
-    ]
-  },
   ">100": {
-    "counts": null,
-    "penality": false,
-    "resize": false,
+    "counts": 50,
+    "penality": true,
+    "resize": true,
     "ids": [
       "65785979bec02a3fe82c181e",
       "671d85439ae8365d69117ba6",

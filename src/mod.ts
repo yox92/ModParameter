@@ -13,6 +13,7 @@ import {ClearCloneService} from "./Service/ClearCloneService";
 import {LocaleService} from "@spt/services/LocaleService";
 import {PmcModifyService} from "./Service/PmcModifyService";
 import {IGrid} from "@spt/models/eft/common/tables/ITemplateItem";
+import {IBuff, IBuffs} from "@spt/models/eft/common/IGlobals";
 
 class ModParameter implements IPostDBLoadMod, PreSptModLoader, IPostSptLoadMod {
 
@@ -25,6 +26,44 @@ class ModParameter implements IPostDBLoadMod, PreSptModLoader, IPostSptLoadMod {
         const customItemService: CustomItemService = container.resolve<CustomItemService>("CustomItemService");
         const logger: ILogger = container.resolve<ILogger>("WinstonLogger");
         const itemHelper: ItemHelper = container.resolve<ItemHelper>("ItemHelper");
+
+        const buffs: IBuffs = dataService.getGlobals().config.Health.Effects.Stimulator.Buffs
+
+        const muleBuff : IBuff[] = buffs.Buffs_MULE
+        const propitalBuff : IBuff[] = buffs.BuffsPropital
+
+        // WeightLimit
+        muleBuff[0].Duration = 900
+        muleBuff[0].Value = 0.5
+        // HealthRate
+        muleBuff[1].Duration = 900
+        muleBuff[1].Value = -0.1
+
+        // HealthRate
+        propitalBuff[0].Duration = 300
+        propitalBuff[0].Value = 1
+
+        // SkillRate Metabolism
+        propitalBuff[1].Duration = 300
+        propitalBuff[1].Value = 20
+
+        // SkillRate Health
+        propitalBuff[2].Duration = 300
+        propitalBuff[2].Value = 20
+
+        // SkillRate Vitality
+        propitalBuff[3].Duration = 300
+        propitalBuff[3].Value = 20
+
+        // SkillRate HandsTremor
+        propitalBuff[4].Delay = 270
+        propitalBuff[4].Duration = 30
+        propitalBuff[4].Value = 0
+
+        // SkillRate QuantumTunnelling
+        propitalBuff[4].Delay = 270
+        propitalBuff[4].Duration = 30
+        propitalBuff[4].Value = 0
 
         let grids :IGrid[] = dataService.getTemplates().items[""]._props.Grids
         grids.map(grid => {

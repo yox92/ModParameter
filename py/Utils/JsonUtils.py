@@ -6,7 +6,8 @@ from Entity.EffectDamage import EffectDamage
 from Entity.EnumEffect import EnumEffect
 from Entity.EnumMedic import EnumMedic
 from Entity.WindowType import WindowType
-from config import JSON_FILES_DIR_WEAPONS, JSON_FILES_DIR_CALIBER, JSON_FILES_DIR_PMC, JSON_FILES_DIR_AMMO, JSON_FILES_DIR_MEDIC
+from config import JSON_FILES_DIR_WEAPONS, JSON_FILES_DIR_CALIBER, JSON_FILES_DIR_PMC, JSON_FILES_DIR_AMMO, \
+    JSON_FILES_DIR_MEDIC, JSON_FILES_DIR_MAG
 
 
 class JsonUtils:
@@ -31,6 +32,12 @@ class JsonUtils:
         return all(os.path.exists(file) for file in all_file_path)
 
     @staticmethod
+    def load_mag():
+        path = os.path.join(JSON_FILES_DIR_MAG, "Mag.json")
+        with open( path, "r", encoding="utf-8") as f:
+            return json.load(f)
+
+    @staticmethod
     def load_json(file_path):
         try:
             with open(file_path, 'r', encoding="utf-8") as fileReadable:
@@ -40,6 +47,13 @@ class JsonUtils:
             raise FileNotFoundError(f"Le fichier '{file_path}' est introuvable.")
         except json.JSONDecodeError:
             raise ValueError(f"Le fichier '{file_path}' contient un JSON invalide.")
+
+    @staticmethod
+    def save_mag_preset(data, result):
+        path = os.path.join(JSON_FILES_DIR_MAG, "Mag.json")
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2, ensure_ascii=False)
+        print(f"✅ Mag {result} save.")
 
     @staticmethod
     def load_json_Weapon_Ammo_Medic(file_name):

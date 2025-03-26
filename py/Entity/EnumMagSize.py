@@ -16,3 +16,10 @@ class EnumMagSize(Enum):
     @classmethod
     def list_values(cls):
         return [member.value for member in cls]
+
+    @classmethod
+    def from_value(cls, value: str):
+        for member in cls:
+            if member.value == value:
+                return member
+        raise ValueError(f"{value} n'est pas une valeur valide pour EnumMagSize")

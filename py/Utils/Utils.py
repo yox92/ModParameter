@@ -577,3 +577,19 @@ class Utils:
             return 100
         else:
             return 1
+
+    @staticmethod
+    def save_mag_values(data, result, switch_var, switch_var2, slider):
+        from Utils.JsonUtils import JsonUtils
+        data[result]["penality"] = switch_var.get()
+        data[result]["resize"] = switch_var2.get()
+        data[result]["counts"] = int(slider.get())
+        JsonUtils.save_mag_preset(data, result)
+
+    @staticmethod
+    def reset_mag(result, count, data):
+        from Utils.JsonUtils import JsonUtils
+        data[result]["penality"] = False
+        data[result]["resize"] = False
+        data[result]["counts"] = count
+        JsonUtils.save_mag_preset(data, result)

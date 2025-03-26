@@ -4,6 +4,7 @@ from CTkMessagebox import CTkMessagebox
 
 from Entity import Caliber, Root, Logger, CategoryColor
 from Entity.EnumMagSize import EnumMagSize
+from Entity.Mag import Mag
 from Entity.MedicCat import MedicalCat
 from Entity.WindowType import WindowType
 from Utils import WindowUtils
@@ -749,6 +750,9 @@ class ModSelectionWindow:
         Utils.create_grid_row_col_config(self.frame_bot_top, 1, 1)
         Utils.create_grid_row_col_config(self.frame_bot_bot, 4, 3)
 
+        data = JsonUtils.load_mag()
+        mag_obj = Mag(title=result, **data[result])
+
         button = ctk.CTkButton(self.frame_bot_top,
                                text="<== BACK ==>",
                                command=self.bag_button_press,
@@ -756,24 +760,22 @@ class ModSelectionWindow:
                                font=("Arial", 20, "bold"),
                                text_color="black")
         button.grid(row=0, column=0, padx=5, pady=5)
-        switch_value_penalty: bool = False
-        switch_var = ctk.BooleanVar(value=switch_value_penalty)
 
 
-        label = ctk.CTkLabel(self.frame_bot_bot, text="Remove Penalty (Ergo etc...)")
-        label.grid(row=1, column=0, sticky="nsew")
-
+        switch_var = ctk.BooleanVar(value=mag_obj.penality)
         switch_penalty = ctk.CTkSwitch(
             self.frame_bot_bot,
             text="",
             variable=switch_var,
             width=50,
-            command=lambda: label.configure(text=f"test : {switch_var.get()}")
+            command=lambda: label.configure(text=f"Remove Penalty (Ergo etc...) : {switch_var.get()}")
         )
         switch_penalty.grid(row=1, column=1, padx=5, pady=5, sticky="nsew")
 
-        switch_value_resize: bool = False
-        switch_var2 = ctk.BooleanVar(value=switch_value_resize)
+        label = ctk.CTkLabel(self.frame_bot_bot, text=f"Remove Penalty (Ergo etc...) : {switch_var.get()}")
+        label.grid(row=1, column=0, sticky="nsew")
+
+        switch_var2 = ctk.BooleanVar(value=mag_obj.resize)
 
         label2 = ctk.CTkLabel(self.frame_bot_bot, text=f"{Utils.size_magazine(result)} : {switch_var2.get()}")
         label2.grid(row=2, column=0, sticky="nsew")
@@ -787,13 +789,39 @@ class ModSelectionWindow:
         )
         switch_size.grid(row=2, column=1, padx=5, pady=5, sticky="nsew")
 
-        label3 = ctk.CTkLabel(self.frame_bot_bot, text="test")
+        label3 = ctk.CTkLabel(self.frame_bot_bot, text=f"number ammo on magazines ==> {str(mag_obj.counts)}")
         label3.grid(row=3, column=0, sticky="nsew")
 
         slider = ctk.CTkSlider(self.frame_bot_bot,
-                               from_=1, to=150)
-        slider.set(Utils.slider_start(result))
+                               from_=1, to=150,
+                               command=lambda value: label3.configure(
+                                   text=f"number ammo on magazines ==> {int(value)}"))
+        slider.set(mag_obj.counts or 1)
         slider.grid(row=3, column=1, sticky=ctk.W, padx=10)
+
+        validate_button = ctk.CTkButton(
+            self.frame_bot_bot,
+            text="Validate",
+            fg_color="green",
+            command=lambda: self.apply_mag(data, result, switch_var, switch_var2, slider)
+        )
+        validate_button.grid(row=4, column=0, columnspan=2, padx=5, pady=5)
+        reset_button = ctk.CTkButton(
+            self.frame_bot_bot,
+            text="Reset",
+            fg_color="red",
+            command=lambda: self.reset_mag(result, data)
+        )
+        reset_button.grid(row=4, column=1, columnspan=2, padx=5, pady=5)
+
+    def apply_mag(self, data, result, switch_var, switch_var2, slider):
+        Utils.save_mag_values(data, result, switch_var, switch_var2, slider)
+        self.bag_button_press()
+
+    def reset_mag(self, result, data):
+        counts = Utils.slider_start(result)
+        Utils.reset_mag(result, counts, data)
+        self.bag_button_press()
 
     def bag_window(self):
         WindowUtils.lock_choice_frame("bag", self.frames_buttons)
