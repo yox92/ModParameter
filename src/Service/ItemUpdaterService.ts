@@ -403,7 +403,7 @@ export class ItemUpdaterService {
             this.logger.debug(`[ModParameter] modify ${name} MalfunctionChance`);
             props.MalfunctionChance = 0.03
         }
-        if (props?.CheckTimeModifier || props?.CheckTimeModifier > 0) {
+        if (props?.CheckTimeModifier !== null && props?.CheckTimeModifier !== undefined && props?.CheckTimeModifier > 0) {
             this.logger.debug(`[ModParameter] modify ${name} CheckTimeModifier`);
             props.CheckTimeModifier = 0
         }
@@ -463,19 +463,23 @@ export class ItemUpdaterService {
     }
 
     private applyBagPenality(backPackProps: IProps, name: string): void {
-        if (backPackProps.weaponErgonomicPenalty) {
+        if (backPackProps?.weaponErgonomicPenalty !== null
+            && backPackProps?.weaponErgonomicPenalty !== undefined) {
             backPackProps.weaponErgonomicPenalty = 0
             this.logger.debug(`[ModParameter] modify weaponErgonomicPenalty '${name}'`);
         }
-        if (backPackProps.mousePenalty) {
+        if (backPackProps.mousePenalty !== null
+            && backPackProps.mousePenalty !== undefined) {
             backPackProps.mousePenalty = 0
             this.logger.debug(`[ModParameter] modify mousePenalty '${name}'`);
         }
-        if (backPackProps?.Weight) {
+        if (backPackProps?.Weight !== null
+            && backPackProps?.Weight !== undefined) {
             backPackProps.Weight = 0.1
             this.logger.debug(`[ModParameter] modify Weight '${name}'`);
         }
-        if (backPackProps.speedPenaltyPercent) {
+        if (backPackProps.speedPenaltyPercent !== null
+            && backPackProps.speedPenaltyPercent !== undefined) {
             backPackProps.speedPenaltyPercent = 0
             this.logger.debug(`[ModParameter] modify speedPenaltyPercent '${name}'`);
         }
