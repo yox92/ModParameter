@@ -1,5 +1,5 @@
 export const EnumagCount: Record<string, number> = {
-    "1-09": 1,
+    "01-09": 1,
     "10-19": 10,
     "20-29": 20,
     "30-39": 30,
