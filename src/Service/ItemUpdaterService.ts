@@ -51,7 +51,6 @@ export class ItemUpdaterService {
 
         for (const ammo of ammos) {
             if (ammo._props === undefined || ammo._props === null) {
-                this.logger.debug(`[ModParameter] Warning: one ammo leak _props`);
                 continue;
             }
 
@@ -358,7 +357,8 @@ export class ItemUpdaterService {
 
     private applyMagFastLoad(props: IProps, name: string): void {
         if (props?.LoadUnloadModifier) {
-            props.LoadUnloadModifier = -100;
+            props.LoadUnloadModifier = -60;
+            this.logger.warning(`[ModParameter] skip magazines ` + name);
             this.logger.debug(`[ModParameter] modify ${name} Load, Unload speed`);
         }
     }
@@ -366,8 +366,8 @@ export class ItemUpdaterService {
     private applyMagResize(props: IProps, name: string, mag_name: string): void {
         const XS_CATEGORIES = ["01-09", "10-19", "20-29"];
         let categories_XS: boolean = XS_CATEGORIES.includes(mag_name);
-        this.logger.warning(`[ModParameter] warning ${name} est : ` + categories_XS);
-        if (props?.Height && props?.Width, props?.ExtraSizeDown) {
+
+        if (props?.Height && props?.Width && props?.ExtraSizeDown) {
 
             if (props.Height === 3 && props.Width === 1) {
                 props.Height = 2;
@@ -379,6 +379,7 @@ export class ItemUpdaterService {
                 this.logger.debug(`[ModParameter] modify ${name} slot 2 to slot 2 `);
             } else if (props.Height === 2 && props.Width === 1 && categories_XS) {
                 props.Height = 1;
+                 props.ExtraSizeDown = 0;
                  this.logger.debug(`[ModParameter] modify ${name} slot 2 to slot 1 `);
             }
         }
@@ -386,15 +387,15 @@ export class ItemUpdaterService {
     }
 
     private applyMagPenality(props: IProps, name: string): void {
-        if (props?.Ergonomics && props.Ergonomics < 0) {
+        if (props?.Ergonomics  !== null && props?.Ergonomics !== undefined  && props.Ergonomics < 0) {
             this.logger.debug(`[ModParameter] modify ${name} Ergonomics`);
             props.Ergonomics = 0
         }
-        if (props?.MalfunctionChance) {
+        if (props?.MalfunctionChance !== null && props?.MalfunctionChance !== undefined && props?.MalfunctionChance > 0.03) {
             this.logger.debug(`[ModParameter] modify ${name} MalfunctionChance`);
             props.MalfunctionChance = 0.03
         }
-        if (props?.CheckTimeModifier) {
+        if (props?.CheckTimeModifier ||  props?.CheckTimeModifier > 0) {
             this.logger.debug(`[ModParameter] modify ${name} CheckTimeModifier`);
             props.CheckTimeModifier = 0
         }
@@ -462,7 +463,7 @@ export class ItemUpdaterService {
             backPackProps.mousePenalty = 0
             this.logger.debug(`[ModParameter] modify mousePenalty '${name}'`);
         }
-        if (backPackProps.Weight) {
+        if (backPackProps?.Weight) {
             backPackProps.Weight = 0.1
             this.logger.debug(`[ModParameter] modify Weight '${name}'`);
         }
