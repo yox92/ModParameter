@@ -1,0 +1,73 @@
+{
+  "19-24": {
+    "size": 0,
+    "penality": false,
+    "resize": false,
+    "excludedFilter": false,
+    "ids": {
+      "66a9f98f3bd5a41b162030f4": {
+        "name": "backpack_partizan",
+        "Grids": {
+          "66a9f98f3bd5a41b162030f6": {
+            "cellsH": 5,
+            "cellsV": 4
+          }
+        }
+      },
+      "56e335e4d2720b6c058b456d": {
+        "name": "backpack_wild",
+        "Grids": {
+          "56e33614d2720b6c058b456e": {
+            "cellsH": 4,
+            "cellsV": 5
+          }
+        }
+      },
+      "6034d103ca006d2dca39b3f0": {
+        "name": "item_equipment_backpack_takedown_sling",
+        "Grids": {
+          "6034d103ca006d2dca39b3f2": {
+            "cellsH": 3,
+            "cellsV": 8
+          }
+        }
+      },
+      "60a2828e8689911a226117f9": {
+        "name": "item_equipment_backpack_pillbox",
+        "Grids": {
+          "60a2828e8689911a226117fb": {
+            "cellsH": 4,
+            "cellsV": 5
+          }
+        }
+      },
+      "6038d614d10cbf667352dd44": {
+        "name": "item_equipment_backpack_Takedown_sling_multicam",
+        "Grids": {
+          "6038d614d10cbf667352dd46": {
+            "cellsH": 3,
+            "cellsV": 8
+          }
+        }
+      },
+      "5e9dcf5986f7746c417435b3": {
+        "name": "item_equipment_backpack_daypack14",
+        "Grids": {
+          "5e9dcf5986f7746c417435b5": {
+            "cellsH": 4,
+            "cellsV": 5
+          }
+        }
+      },
+      "5ca20d5986f774331e7c9602": {
+        "name": "item_equipment_backpack_wartech",
+        "Grids": {
+          "5ca20d5986f774331e7c9604": {
+            "cellsH": 4,
+            "cellsV": 5
+          }
+        }
+      }
+    }
+  }
+}

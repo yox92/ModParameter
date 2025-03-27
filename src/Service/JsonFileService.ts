@@ -10,6 +10,8 @@ export class JsonFileService {
     private readonly jsonAimingFolderPath: string;
     private readonly jsonAmmoFolderPath: string;
     private readonly jsonMedicFolderPath: string;
+    private readonly jsonMagFolderPath: string;
+    private readonly jsonBagFolderPath: string;
     private readonly logger: ILogger;
 
     constructor(logger: ILogger) {
@@ -17,6 +19,8 @@ export class JsonFileService {
         this.jsonAimingFolderPath = config.jsonAimingFolderPath;
         this.jsonAmmoFolderPath = config.jsonAmmoFolderPath;
         this.jsonMedicFolderPath = config.jsonMedicFolderPath;
+        this.jsonMagFolderPath = config.jsonMagFolderPath;
+        this.jsonBagFolderPath = config.jsonBagFolderPath;
         this.logger = logger;
     }
 
@@ -24,7 +28,7 @@ export class JsonFileService {
      * Checks if the directory exists.
      * @returns `true` if the folder exists, `false` otherwise.
      */
-    private doesFolderExist(folderPath:string): boolean {
+    private doesFolderExist(folderPath: string): boolean {
         if (!fs.existsSync(folderPath)) {
             this.logger.debug(`[ModParameter] [JsonFileService] Folder not found: ${folderPath}`);
             return false;
@@ -71,18 +75,19 @@ export class JsonFileService {
         }
     }
 
-    public loadJsonFiles(itemType: ItemTypeEnum): { fileName: string; json: any }[] {
+    public loadJsonFiles<T>(itemType: ItemTypeEnum): Array<{ fileName: string; json: T }> {
         let folderPath: string;
         if (itemType === ItemTypeEnum.Ammo || itemType === ItemTypeEnum.Tracer) {
             folderPath = this.jsonAmmoFolderPath
-        }
-        else if (itemType === ItemTypeEnum.Weapon) {
+        } else if (itemType === ItemTypeEnum.Weapon) {
             folderPath = this.jsonWeaponFolderPath
-        }
-        else if (itemType === ItemTypeEnum.Medic) {
+        } else if (itemType === ItemTypeEnum.Medic) {
             folderPath = this.jsonMedicFolderPath
-        }
-        else {
+        } else if (itemType === ItemTypeEnum.Mag) {
+            folderPath = this.jsonMagFolderPath
+        } else if (itemType === ItemTypeEnum.Bag) {
+            folderPath = this.jsonBagFolderPath
+        } else {
             return [];
         }
 
@@ -92,10 +97,12 @@ export class JsonFileService {
         }
 
         try {
-            const files = fs.readdirSync(folderPath);
+            const files: string[] = fs.readdirSync(folderPath);
             let jsonFiles: string[];
             if (itemType === ItemTypeEnum.Tracer) {
                 jsonFiles = files.filter(file => file.includes("tracer.json"));
+            } else if (itemType === ItemTypeEnum.Mag) {
+                jsonFiles = files.filter(file => file.includes("Mag.json"));
             } else {
                 jsonFiles = files.filter(file => file.endsWith("mod.json"));
             }
@@ -105,7 +112,9 @@ export class JsonFileService {
                 return [];
             }
 
-            const parsedFiles = jsonFiles.map(file => {
+            const parsedFiles: Array<{ fileName: string; json: T } | null> = jsonFiles.map((file: string): {
+                fileName: string; json: T
+            } | null => {
                 const filePath = path.join(folderPath, file);
 
                 try {
@@ -117,7 +126,7 @@ export class JsonFileService {
                 }
             });
 
-            return parsedFiles.filter(Boolean) as { fileName: string; json: any }[];
+            return parsedFiles.filter((f): f is { fileName: string; json: T } => f !== null)
         } catch (error) {
             this.logger.debug(`[ModParameter] Error reading directory ${folderPath}: ${error.message}`);
             return [];

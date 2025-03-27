@@ -1,14 +1,16 @@
 import {ItemProps} from "../Entity/ItemProps";
 import {ILogger} from "@spt/models/spt/utils/ILogger";
 import {Ammo} from "../Entity/Ammo";
-import {ITemplates} from "@spt/models/spt/templates/ITemplates";
-import {IProps, ITemplateItem} from "@spt/models/eft/common/tables/ITemplateItem";
+import {IGrid, IGridFilter, IProps, ITemplateItem} from "@spt/models/eft/common/tables/ITemplateItem";
 import {ValidateUtils} from "../Utils/ValidateUtils";
 import {DatabaseService} from "@spt/services/DatabaseService";
 import {Tracer} from "../Entity/Tracer";
 import {Baseclass} from "../Entity/Baseclass";
 import {ItemHelper} from "@spt/helpers/ItemHelper";
 import {IEffectDamageProps, Medic} from "../Entity/Medic";
+import {Mag} from "../Entity/Mag";
+import {EnumagCount} from "../Entity/EnumagCount";
+import {Bag, BagCat} from "../Entity/Bag";
 
 
 export class ItemUpdaterService {
@@ -48,7 +50,6 @@ export class ItemUpdaterService {
 
         for (const ammo of ammos) {
             if (ammo._props === undefined || ammo._props === null) {
-                this.logger.debug(`[ModParameter] Warning: one ammo leak _props`);
                 continue;
             }
 
@@ -75,13 +76,7 @@ export class ItemUpdaterService {
                                   name_item_to_modify: string): Partial<Ammo> {
         const validateUtils = new ValidateUtils();
 
-        const templates: ITemplates | undefined = this.dataService.getTemplates();
-        const items: Record<string, ITemplateItem> | undefined = templates?.items;
-
-        if (!templates || !items) {
-            this.logger.debug("[ModParameter] Invalid dataService structure. Modification aborted");
-            return null;
-        }
+        const items: Record<string, ITemplateItem> = validateUtils.getTemplateItems(this.dataService, this.logger)
 
         const sptItem: ITemplateItem | undefined = items[id_item_to_modify];
 
@@ -161,20 +156,9 @@ export class ItemUpdaterService {
                                    name_item_to_modify: string): Partial<Medic> | null {
         const validateUtils = new ValidateUtils();
 
-        const templates: ITemplates | undefined = this.dataService.getTemplates();
-        const items: Record<string, ITemplateItem> | undefined = templates?.items;
-
-        if (!templates || !items) {
-            this.logger.debug("[ModParameter] Invalid dataService structure. Modification aborted");
-            return null;
-        }
+        const items: Record<string, ITemplateItem> = validateUtils.getTemplateItems(this.dataService, this.logger)
 
         const sptItem: ITemplateItem | undefined = items[id_item_to_modify];
-
-        if (!sptItem) {
-            this.logger.debug(`[ModParameter] Item with ID '${id_item_to_modify}' not found in templates DB.`);
-            return null;
-        }
 
         const sptItemProps: IProps | undefined = sptItem._props;
 
@@ -270,7 +254,6 @@ export class ItemUpdaterService {
      * Applies modifications from a JSON item.
      * If any value is invalid, skipped for that item.
      * @param weaponItem Weapon extract from JSON
-     * @param dataService data from the SPT database
      * @param id_item_to_modify id from the JSON
      * @param name_item_to_modify name from the JSON
      * @returns true if the item was modified, false if skipped
@@ -280,13 +263,7 @@ export class ItemUpdaterService {
                                  name_item_to_modify: string): Partial<ItemProps> {
         const validateUtils = new ValidateUtils();
 
-        const templates: ITemplates | undefined = this.dataService.getTemplates();
-        const itemsSpt: Record<string, ITemplateItem> | undefined = templates?.items;
-
-        if (!templates || !itemsSpt) {
-            this.logger.debug("[ModParameter] Invalid dataService structure. Modification aborted");
-            return null;
-        }
+        const itemsSpt: Record<string, ITemplateItem> = validateUtils.getTemplateItems(this.dataService, this.logger)
 
         const sptItem: ITemplateItem | undefined = itemsSpt[id_item_to_modify];
 
@@ -327,5 +304,211 @@ export class ItemUpdaterService {
 
         return updatedProps;
     }
+
+    public applyMagMod(mag: Mag): void {
+        const validateutils = new ValidateUtils();
+        const defaultValue: number = EnumagCount[mag.name];
+        let warning_info = false;
+
+        if (!mag.fastLoad && !mag.resize && !mag.penality && mag.counts === defaultValue) {
+            this.logger.debug(`[ModParameter] skip magazines : ` + mag.name);
+        }
+
+        const items = validateutils.getTemplateItems(this.dataService, this.logger);
+
+        const magazines: ITemplateItem[] = Object.values(items).filter(
+            item =>
+                item?._id &&
+                this.itemHelper.isOfBaseclass(item._id, Baseclass.MAGAZINE) &&
+                mag.ids.includes(item._id)
+        );
+
+        for (const magazine of magazines) {
+
+            if (!magazine?._props || !magazine?._name || !magazine._props?.Cartridges) {
+                this.logger.debug(`[ModParameter] Warning: Magazine has no good property.`);
+                continue;
+            }
+            const props: IProps = magazine._props;
+            const name: string = magazine._name;
+            const firstCartridge = props?.Cartridges?.[0];
+
+            if (mag.fastLoad) {
+                this.applyMagFastLoad(props, name);
+            }
+
+            if (mag.resize) {
+                warning_info = this.applyMagResize(props, name, mag.name);
+            }
+
+            if (mag.penality) {
+                this.applyMagPenality(props, name);
+            }
+
+            if (mag.penality) {
+                this.applyMagPenality(props, name);
+            }
+
+            if (mag.counts !== defaultValue && firstCartridge?._max_count) {
+                firstCartridge._max_count = mag.counts;
+            }
+        }
+        if (warning_info) {
+            this.logger.warning(`[ModParameter] Modified grid size :'${name}'. clean temporary files if need.`);
+        }
+    }
+
+    private applyMagFastLoad(props: IProps, name: string): void {
+        if (props?.LoadUnloadModifier) {
+            props.LoadUnloadModifier = -60;
+            this.logger.debug(`[ModParameter] modify ${name} Load, Unload speed`);
+        }
+    }
+
+    private applyMagResize(props: IProps, name: string, mag_name: string): boolean {
+        let warning_info = false;
+        const XS_CATEGORIES = ["01-09", "10-19", "20-29"];
+        let categories_XS: boolean = XS_CATEGORIES.includes(mag_name);
+
+        if (props?.Height && props?.Width && props?.ExtraSizeDown) {
+
+            if (props.Height === 3 && props.Width === 1) {
+                props.Height = 2;
+                props.ExtraSizeDown = 1;
+                this.logger.debug(`[ModParameter] modify ${name} slot 3 To 2`);
+            } else if (props.Height === 2 && props.Width === 2) {
+                props.Height = 2;
+                props.Width = 1;
+                warning_info = true;
+            } else if (props.Height === 2 && props.Width === 1 && categories_XS) {
+                props.Height = 1;
+                props.ExtraSizeDown = 0;
+                this.logger.debug(`[ModParameter] modify ${name} slot 2 to slot 1 `);
+            }
+        }
+        return warning_info;
+    }
+
+    private applyMagPenality(props: IProps, name: string): void {
+        if (props?.Ergonomics !== null && props?.Ergonomics !== undefined && props.Ergonomics < 0) {
+            this.logger.debug(`[ModParameter] modify ${name} Ergonomics`);
+            props.Ergonomics = 0
+        }
+        if (props?.MalfunctionChance !== null && props?.MalfunctionChance !== undefined && props?.MalfunctionChance > 0.03) {
+            this.logger.debug(`[ModParameter] modify ${name} MalfunctionChance`);
+            props.MalfunctionChance = 0.03
+        }
+        if (props?.CheckTimeModifier || props?.CheckTimeModifier > 0) {
+            this.logger.debug(`[ModParameter] modify ${name} CheckTimeModifier`);
+            props.CheckTimeModifier = 0
+        }
+    }
+
+
+    public applyBagMod(bagCat: BagCat): void {
+        const validateutils = new ValidateUtils();
+        const items: Record<string, ITemplateItem> = validateutils.getTemplateItems(this.dataService, this.logger)
+        const bagIds: string[] = Object.values(bagCat.ids).map(bag => bag.id);
+
+        const backPacks: ITemplateItem[] = Object.values(items).filter(
+            (item: ITemplateItem) =>
+                item?._id &&
+                this.itemHelper.isOfBaseclass(item._id, Baseclass.BACKPACK) &&
+                bagIds.includes(item._id)
+        );
+        if (backPacks.length === 0) {
+            this.logger.debug("[ModParameter] No matching backpacks found for modification.");
+            return;
+        }
+
+        for (const backPack of backPacks) {
+            if (backPack?._props && backPack?._id && backPack?._name) {
+                const backPackProps: IProps = backPack._props;
+                const backPackId: string = backPack._id;
+                const name: string = backPack._name;
+
+                if (bagCat.excludedFilter) {
+                    this.clearExcludedFilters(backPackProps, name);
+                }
+
+                if (bagCat.penality) {
+                    this.applyBagPenality(backPackProps, name);
+                }
+
+                if (bagCat.resize && bagCat.resize !== 0) {
+                    this.applyBagResize(backPackProps, backPackId, bagCat, backPack._name, validateutils);
+                }
+            }
+        }
+    }
+
+    private clearExcludedFilters(backPackProps: IProps, name: string): void {
+        let modified = false;
+        backPackProps.Grids.forEach((grid: IGrid) => {
+            grid._props.filters.forEach((filter: IGridFilter) => {
+                filter.ExcludedFilter = []
+                modified = true;
+            })
+        })
+        if (modified) {
+            this.logger.debug(`[ModParameter] Cleared ExcludedFilter(s) for backpack '${name}'`);
+        } else {
+            this.logger.debug(`[ModParameter] No ExcludedFilter to clear for backpack '${name}'`);
+        }
+    }
+
+    private applyBagPenality(backPackProps: IProps, name: string): void {
+        if (backPackProps.weaponErgonomicPenalty) {
+            backPackProps.weaponErgonomicPenalty = 0
+            this.logger.debug(`[ModParameter] modify weaponErgonomicPenalty '${name}'`);
+        }
+        if (backPackProps.mousePenalty) {
+            backPackProps.mousePenalty = 0
+            this.logger.debug(`[ModParameter] modify mousePenalty '${name}'`);
+        }
+        if (backPackProps?.Weight) {
+            backPackProps.Weight = 0.1
+            this.logger.debug(`[ModParameter] modify Weight '${name}'`);
+        }
+        if (backPackProps.speedPenaltyPercent) {
+            backPackProps.speedPenaltyPercent = 0
+            this.logger.debug(`[ModParameter] modify speedPenaltyPercent '${name}'`);
+        }
+    }
+
+    private applyBagResize(backPackProps: IProps, backPackId: string, bagCat: BagCat, name: string, validateutils): void {
+        const jsonBags: Record<string, Bag> = bagCat.ids;
+        const jsonBag = jsonBags[backPackId];
+        let modified = false;
+
+        if (!jsonBag || !backPackProps?.Grids) {
+            return;
+        }
+
+        if (backPackProps.Grids.length > 1) {
+            this.logger.debug(`[ModParameter] Skipping resize for '${name}' — multiple grids`);
+            return;
+        }
+
+
+        const jsonGrids = jsonBag.Grids;
+        if (!backPackProps?.Grids) {
+            return;
+        }
+
+        for (const sptGrid of backPackProps.Grids) {
+            const jsonGrid = sptGrid._id ? jsonGrids[sptGrid._id] : null;
+            if (jsonGrid && sptGrid._props) {
+                sptGrid._props.cellsH = validateutils.validateAndCastIntPmc(jsonGrid.cellsH);
+                sptGrid._props.cellsV = validateutils.validateAndCastIntPmc(jsonGrid.cellsV);
+                modified = true;
+            }
+        }
+        if (!modified) {
+            this.logger.debug(`[ModParameter] No resize applied to backpack '${name}' — no matching grids found.`);
+        }
+
+    }
+
 
 }

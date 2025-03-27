@@ -6,7 +6,8 @@ from Entity.EffectDamage import EffectDamage
 from Entity.EnumEffect import EnumEffect
 from Entity.EnumMedic import EnumMedic
 from Entity.WindowType import WindowType
-from config import JSON_FILES_DIR_WEAPONS, JSON_FILES_DIR_CALIBER, JSON_FILES_DIR_PMC, JSON_FILES_DIR_AMMO, JSON_FILES_DIR_MEDIC
+from config import JSON_FILES_DIR_WEAPONS, JSON_FILES_DIR_CALIBER, JSON_FILES_DIR_PMC, JSON_FILES_DIR_AMMO, \
+    JSON_FILES_DIR_MEDIC, JSON_FILES_DIR_MAG, JSON_FILES_DIR_BAG
 
 
 class JsonUtils:
@@ -15,6 +16,11 @@ class JsonUtils:
     @staticmethod
     def file_exist(file_path):
         return os.path.exists(file_path)
+
+    @staticmethod
+    def bag_exist(result):
+        path = os.path.join(JSON_FILES_DIR_BAG, f'{result}_mod.json')
+        return os.path.exists(path)
 
     @staticmethod
     def file_mod_exist(file_path):
@@ -31,6 +37,24 @@ class JsonUtils:
         return all(os.path.exists(file) for file in all_file_path)
 
     @staticmethod
+    def load_mag():
+        path = os.path.join(JSON_FILES_DIR_MAG, "Mag.json")
+        with open( path, "r", encoding="utf-8") as f:
+            return json.load(f)
+
+    @staticmethod
+    def load_bag(result):
+        path = os.path.join(JSON_FILES_DIR_BAG, f'{result}.json')
+        with open( path, "r", encoding="utf-8") as f:
+            return json.load(f)
+
+    @staticmethod
+    def load_bag_mod(result):
+        path = os.path.join(JSON_FILES_DIR_BAG, f'{result}_mod.json')
+        with open( path, "r", encoding="utf-8") as f:
+            return json.load(f)
+
+    @staticmethod
     def load_json(file_path):
         try:
             with open(file_path, 'r', encoding="utf-8") as fileReadable:
@@ -40,6 +64,13 @@ class JsonUtils:
             raise FileNotFoundError(f"Le fichier '{file_path}' est introuvable.")
         except json.JSONDecodeError:
             raise ValueError(f"Le fichier '{file_path}' contient un JSON invalide.")
+
+    @staticmethod
+    def save_mag_preset(data, result):
+        path = os.path.join(JSON_FILES_DIR_MAG, "Mag.json")
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2)
+        print(f"✅ Mag {result} save.")
 
     @staticmethod
     def load_json_Weapon_Ammo_Medic(file_name):
@@ -94,13 +125,13 @@ class JsonUtils:
         data["clone"] = new_value
 
         with open(file_path, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=2, ensure_ascii=False)
+            json.dump(data, f, indent=4)
 
     @staticmethod
     def write_json(data, file_path):
         try:
             with open(file_path, "w", encoding="utf-8") as json_file:
-                json.dump(data, json_file, indent=4, ensure_ascii=False)
+                json.dump(data, json_file, indent=4)
                 print("JSON file successfully written.")
         except IOError as e:
             print(f"Error on write file :  '{file_path}': {e}")
@@ -416,6 +447,12 @@ class JsonUtils:
         print(f" file delete : {file_path}")
 
     @staticmethod
+    def delete_bag_mod(name):
+        path_mod = os.path.join(JSON_FILES_DIR_BAG, f'{name}_mod.json')
+        os.remove(path_mod)
+        print(f" file delete : {name}")
+
+    @staticmethod
     def delete_file_mod_if_exists(file_path):
         json_file_path_mod = file_path.replace(".json", "_mod.json")
         if os.path.exists(json_file_path_mod):
@@ -494,3 +531,11 @@ class JsonUtils:
                 if file_name.endswith('_mod.json'):
                     file_path = os.path.join(JSON_FILES_DIR_MEDIC, file_name)
                     JsonUtils.delete_file(file_path)
+
+    @staticmethod
+    def create_mod_bag(data, name):
+        path_mod = os.path.join(JSON_FILES_DIR_BAG, f'{name}_mod.json')
+        JsonUtils.delete_file_if_exists(path_mod)
+        with open(path_mod, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=4)
+        print("Create new Bag catergories mods")

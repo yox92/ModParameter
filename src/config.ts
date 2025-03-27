@@ -13,6 +13,8 @@ export const config = {
     jsonAmmoFolderPath: path.join(__dirname, "..", "py", "JsonFiles", "Ammo"),
     jsonAmmoFolderPathNew: path.join(__dirname, "..", "py", "JsonFiles", "AmmoNew"),
     jsonMedicFolderPath: path.join(__dirname, "..", "py", "JsonFiles", "Medic"),
+    jsonMagFolderPath: path.join(__dirname, "..", "py", "JsonFiles", "Mag"),
+    jsonBagFolderPath: path.join(__dirname, "..", "py", "JsonFiles", "Bag"),
 };
 
 export const debug = true;

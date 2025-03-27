@@ -1,0 +1,181 @@
+{
+  "25-30": {
+    "size": 0,
+    "penality": false,
+    "resize": false,
+    "excludedFilter": false,
+    "ids": {
+      "545cdae64bdc2d39198b4568": {
+        "name": "bigBackpack",
+        "Grids": {
+          "55d4a17a4bdc2d8b2f8b456d": {
+            "cellsH": 5,
+            "cellsV": 6
+          }
+        }
+      },
+      "656ddcf0f02d7bcea90bf395": {
+        "name": "item_equipment_backpack_tehinkom_patrol",
+        "Grids": {
+          "656ddcf0f02d7bcea90bf396": {
+            "cellsH": 1,
+            "cellsV": 2
+          },
+          "6580093bcbb8470421442533": {
+            "cellsH": 1,
+            "cellsV": 2
+          },
+          "6580094024d2053bb360b52f": {
+            "cellsH": 1,
+            "cellsV": 3
+          },
+          "658009467d858b6a1a399eeb": {
+            "cellsH": 1,
+            "cellsV": 3
+          },
+          "6580094ef093f41e35629745": {
+            "cellsH": 3,
+            "cellsV": 2
+          },
+          "65800a6c46a703073a5b9228": {
+            "cellsH": 3,
+            "cellsV": 3
+          }
+        }
+      },
+      "674da107c512807d1a0e7436": {
+        "name": "item_equipment_backpack_mystery_ranch_terraframe",
+        "Grids": {
+          "674da107c512807d1a0e7438": {
+            "cellsH": 2,
+            "cellsV": 5
+          },
+          "67613eb1b612744c0009ccb8": {
+            "cellsH": 4,
+            "cellsV": 5
+          }
+        }
+      },
+      "5b44c6ae86f7742d1627baea": {
+        "name": "item_equipment_backpack_betav2",
+        "Grids": {
+          "5b44c6ae86f7742d1627baec": {
+            "cellsH": 5,
+            "cellsV": 6
+          }
+        }
+      },
+      "618cfae774bb2d036a049e7c": {
+        "name": "item_equipment_backpack_lbt1476a",
+        "Grids": {
+          "618cfae774bb2d036a049e7e": {
+            "cellsH": 5,
+            "cellsV": 5
+          }
+        }
+      },
+      "67458794e21e5d724e066976": {
+        "name": "item_equipment_backpack_lbt1476a_slick_winter",
+        "Grids": {
+          "67458794e21e5d724e066978": {
+            "cellsH": 5,
+            "cellsV": 5
+          }
+        }
+      },
+      "5f5e467b0bc58666c37e7821": {
+        "name": "item_equipment_backpack_f5switchblade",
+        "Grids": {
+          "5f5e467b0bc58666c37e7823": {
+            "cellsH": 5,
+            "cellsV": 6
+          }
+        }
+      },
+      "619cf0335771dd3c390269ae": {
+        "name": "item_equipment_backpack_gr99t20_multicam",
+        "Grids": {
+          "619cf0335771dd3c390269b0": {
+            "cellsH": 5,
+            "cellsV": 5
+          }
+        }
+      },
+      "62a1b7fbc30cfa1d366af586": {
+        "name": "item_equipment_backpack_gr99_t30_multicam",
+        "Grids": {
+          "62a1b7fbc30cfa1d366af588": {
+            "cellsH": 5,
+            "cellsV": 6
+          }
+        }
+      },
+      "656f198fb27298d6fd005466": {
+        "name": "item_equipment_backpack_dragon_egg_mk_ii",
+        "Grids": {
+          "656f198fb27298d6fd005467": {
+            "cellsH": 2,
+            "cellsV": 2
+          },
+          "658006d6077bbc49fc10c019": {
+            "cellsH": 3,
+            "cellsV": 2
+          },
+          "658008e9a9176671262fe360": {
+            "cellsH": 5,
+            "cellsV": 3
+          }
+        }
+      },
+      "66b5f22b78bbc0200425f904": {
+        "name": "item_equipment_backpack_camelback_trizip_multicam",
+        "Grids": {
+          "66b5f22b78bbc0200425f906": {
+            "cellsH": 5,
+            "cellsV": 6
+          }
+        }
+      },
+      "618bb76513f5097c8d5aa2d5": {
+        "name": "item_equipment_backpack_gr99t20",
+        "Grids": {
+          "618bb76513f5097c8d5aa2d7": {
+            "cellsH": 5,
+            "cellsV": 5
+          }
+        }
+      },
+      "628e1ffc83ec92260c0f437f": {
+        "name": "item_equipment_backpack_gr99_t30",
+        "Grids": {
+          "628e1ffc83ec92260c0f4381": {
+            "cellsH": 5,
+            "cellsV": 6
+          }
+        }
+      },
+      "674da9cf0cb4bcde7103c07b": {
+        "name": "item_equipment_backpack_mystery_ranch_terraframe_xmass",
+        "Grids": {
+          "674da9cf0cb4bcde7103c07d": {
+            "cellsH": 2,
+            "cellsV": 5
+          },
+          "67613f9f81b244c5c702203a": {
+            "cellsH": 4,
+            "cellsV": 5
+          }
+        }
+      },
+      "60a272cc93ef783291411d8e": {
+        "name": "item_equipment_backpack_drawbridge",
+        "Grids": {
+          "60a272cd93ef783291411d90": {
+            "cellsH": 5,
+            "cellsV": 5
+          }
+        }
+      }
+    }
+  }
+}

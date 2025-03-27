@@ -1,8 +1,13 @@
+import copy
+
 import customtkinter as ctk
 
 from Entity import EnumProps, EnumAiming, EnumAmmo, ItemManager
+from Entity.Bag import Bag
+from Entity.EnumBagSize import EnumBagSize
 from Entity.EnumEffect import EnumEffect
 from Entity.EnumEffectName import EnumEffectName
+from Entity.EnumMagSize import EnumMagSize
 from Entity.EnumMedic import EnumMedic
 from Entity.WindowType import WindowType
 
@@ -61,6 +66,20 @@ class Utils:
         total_buttons = 4
         count = 0
         for y in range(4):
+            if count >= total_buttons:
+                return
+            button = ctk.CTkFrame(frame2, fg_color="transparent")
+            button.grid(row=0, column=y, padx=5, pady=5)
+            frame1.append(button)
+            count += 1
+
+    @staticmethod
+    def create_1x2_bottom(frame1, frame2):
+        frame1.clear()
+        total_buttons: int
+        total_buttons = 2
+        count = 0
+        for y in range(2):
             if count >= total_buttons:
                 return
             button = ctk.CTkFrame(frame2, fg_color="transparent")
@@ -514,3 +533,112 @@ class Utils:
             return parent_id == "5448f39d4bdc2d0a728b4568"
 
         return True
+
+    @staticmethod
+    def switch_mag(result, switch_value):
+        print(result)
+        print(switch_value)
+
+    @staticmethod
+    def size_magazine(result):
+        if result in (EnumMagSize.CAT_01_09.value,
+                      EnumMagSize.CAT_10_19.value,
+                      EnumMagSize.CAT_20_29.value):
+            return "Resize 2 slots to 1 slot"
+        elif result in (EnumMagSize.CAT_30_39.value,
+                        EnumMagSize.CAT_40_49.value,
+                        EnumMagSize.CAT_50_59.value,
+                        EnumMagSize.CAT_60_69.value,
+                        EnumMagSize.CAT_70_79.value,
+                        EnumMagSize.CAT_80_89.value,
+                        EnumMagSize.CAT_90_100.value,
+                        EnumMagSize.CAT_GT_100):
+            return "Resize 3 slots to 2 slots"
+
+    @staticmethod
+    def slider_start(result):
+        if result == EnumMagSize.CAT_01_09.value:
+            return 1
+        elif result == EnumMagSize.CAT_10_19.value:
+            return 10
+        elif result == EnumMagSize.CAT_20_29.value:
+            return 20
+        elif result == EnumMagSize.CAT_30_39.value:
+            return 30
+        elif result == EnumMagSize.CAT_40_49.value:
+            return 40
+        elif result == EnumMagSize.CAT_50_59.value:
+            return 50
+        elif result == EnumMagSize.CAT_60_69.value:
+            return 60
+        elif result == EnumMagSize.CAT_70_79.value:
+            return 70
+        elif result == EnumMagSize.CAT_80_89.value:
+            return 80
+        elif result == EnumMagSize.CAT_90_100.value:
+            return 90
+        elif result == EnumMagSize.CAT_GT_100.value:
+            return 100
+        else:
+            return 1
+
+    @staticmethod
+    def save_mag_values(data, result, switch_var, switch_var2, switch_var3, slider):
+        from Utils.JsonUtils import JsonUtils
+        data[result]["penality"] = switch_var.get()
+        data[result]["resize"] = switch_var2.get()
+        data[result]["fastLoad"] = switch_var3.get()
+        data[result]["counts"] = int(slider.get())
+        JsonUtils.save_mag_preset(data, result)
+
+    @staticmethod
+    def reset_mag(result, count, data):
+        from Utils.JsonUtils import JsonUtils
+        data[result]["penality"] = False
+        data[result]["resize"] = False
+        data[result]["fastLoad"] = False
+        data[result]["counts"] = count
+        JsonUtils.save_mag_preset(data, result)
+
+    @staticmethod
+    def apply_bag_value(result, switch_var, switch_var2, slider):
+        from Utils.JsonUtils import JsonUtils
+        data = JsonUtils.load_bag(result)
+        change_number = int(slider.get())
+        boolean = bool(switch_var.get())
+        boolean2 = bool(switch_var2.get())
+        if boolean or boolean2 or change_number > 0:
+            bags = []
+            for ids, bag_info in data.get(result).get("ids", {}).items():
+                Grids = bag_info.get("Grids", {})
+                bag = Bag(
+                    ids=ids,
+                    name=bag_info.get("name"),
+                    Grids=Grids)
+                bags.append(bag)
+            if change_number > 0:
+                for bag in bags:
+                    old_grids = {gid: grid.copy() for gid, grid in bag.Grids.items()}
+                    bag.resize_backpacks(change_number)
+                    bag.display_resize_info(old_grids)
+                    data[result]["resize"] = True
+                    data[result]["size"] = change_number
+                    data[result]["ids"][bag.ids]["Grids"] = bag.Grids
+            if boolean:
+                data[result]["penality"] = True
+            if boolean2:
+                data[result]["excludedFilter"] = True
+            JsonUtils.create_mod_bag(data, result)
+        else:
+            print("no change")
+
+    @staticmethod
+    def max_min_slider_bag(result: str):
+        if EnumBagSize.from_value(result) == EnumBagSize.CAT_S:
+            return 0, 300
+        elif EnumBagSize.from_value(result) in (EnumBagSize.CAT_M1, EnumBagSize.CAT_M2):
+            return 0, 150
+        elif EnumBagSize.from_value(result) == EnumBagSize.CAT_L:
+            return 0, 100
+        elif EnumBagSize.from_value(result) == EnumBagSize.CAT_XL:
+            return 0, 80

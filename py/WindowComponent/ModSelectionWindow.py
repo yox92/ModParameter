@@ -3,6 +3,10 @@ from customtkinter import CTkImage
 from CTkMessagebox import CTkMessagebox
 
 from Entity import Caliber, Root, Logger, CategoryColor
+from Entity.Bag import Bag
+from Entity.EnumBagSize import EnumBagSize
+from Entity.EnumMagSize import EnumMagSize
+from Entity.Mag import Mag
 from Entity.MedicCat import MedicalCat
 from Entity.WindowType import WindowType
 from Utils import WindowUtils
@@ -103,6 +107,9 @@ class ModSelectionWindow:
         self.painkiller_image: CTkImage = ImageUtils.create_image_var("painkiller")
         self.salewa_image: CTkImage = ImageUtils.create_image_var("salewa")
         self.bandage_image: CTkImage = ImageUtils.create_image_var("bandage")
+        self.bag_mag_image: CTkImage = ImageUtils.create_image_var("mbag")
+        self.bag_image: CTkImage = ImageUtils.create_image_var("bag")
+        self.mag_image: CTkImage = ImageUtils.create_image_var("mag")
 
     def create_frame_main(self):
         self.root.grid_rowconfigure(0, weight=1)
@@ -234,8 +241,9 @@ class ModSelectionWindow:
         response = msg_choice.get()
         if response == "Select categories":
             msg_choice_bis = CTkMessagebox(title=POP_UP_CATEGORIES_TITLE,
-                                       message=MESSAGE_CATEGORIES_DELETE,
-                                       icon="warning", option_1="All Ammos", option_2="All Weapons", option_3="All medicals")
+                                           message=MESSAGE_CATEGORIES_DELETE,
+                                           icon="warning", option_1="All Ammos", option_2="All Weapons",
+                                           option_3="All medicals")
             responseBis = msg_choice_bis.get()
             if responseBis == "ALl Ammo":
                 ModSelectionWindow.delete_all_items(WindowType.AMMO)
@@ -268,6 +276,7 @@ class ModSelectionWindow:
         self.main_frame_top.grid_columnconfigure(2, weight=1)
         self.main_frame_top.grid_columnconfigure(3, weight=1)
         self.main_frame_top.grid_columnconfigure(4, weight=1)
+        self.main_frame_top.grid_columnconfigure(5, weight=1)
         self.main_frame_top.grid_rowconfigure(0, weight=1)
 
         self.frame_top_1 = ctk.CTkFrame(self.main_frame_top, fg_color="transparent")
@@ -275,11 +284,13 @@ class ModSelectionWindow:
         self.frame_top_3 = ctk.CTkFrame(self.main_frame_top, fg_color="transparent")
         self.frame_top_4 = ctk.CTkFrame(self.main_frame_top, fg_color="transparent")
         self.frame_top_5 = ctk.CTkFrame(self.main_frame_top, fg_color="transparent")
+        self.frame_top_6 = ctk.CTkFrame(self.main_frame_top, fg_color="transparent")
         self.frame_top_1.grid(row=0, column=0, sticky="nsew")
         self.frame_top_2.grid(row=0, column=1, sticky="nsew")
         self.frame_top_3.grid(row=0, column=2, sticky="nsew")
         self.frame_top_4.grid(row=0, column=3, sticky="nsew")
         self.frame_top_5.grid(row=0, column=4, sticky="nsew")
+        self.frame_top_6.grid(row=0, column=5, sticky="nsew")
 
     def show_all_weapons_mod(self):
         self.list_json_name_mod_weapons = JsonUtils.load_all_json_files_weapons_mod()
@@ -295,6 +306,7 @@ class ModSelectionWindow:
                                self, WindowType.WEAPON)
         else:
             self.buttonWeapon.configure(text="No weapons mod find")
+
     def show_all_medic_mod(self):
         self.list_json_name_mod_medic = JsonUtils.load_all_json_files_medic_mod()
         if self.list_json_name_mod_medic:
@@ -329,7 +341,7 @@ class ModSelectionWindow:
         self.buttonWeapon = ctk.CTkButton(
             self.frame_top_1,
             image=self.weapon_image,
-            text="One Specific Weapon",
+            text="Specific Weapon",
             compound="bottom",
             fg_color="transparent",
             text_color="orange",
@@ -343,7 +355,7 @@ class ModSelectionWindow:
         self.button_caliber = ctk.CTkButton(
             self.frame_top_2,
             image=self.caliber_image,
-            text="Weapons by Ballistics",
+            text="Weapons by Caliber",
             compound="bottom",
             fg_color="transparent",
             text_color="Crimson",
@@ -356,7 +368,7 @@ class ModSelectionWindow:
         self.button_ammo = ctk.CTkButton(
             self.frame_top_3,
             image=self.ammo_image,
-            text="Ammo Attributes",
+            text="Ammo",
             compound="bottom",
             fg_color="transparent",
             text_color="FireBrick",
@@ -369,7 +381,7 @@ class ModSelectionWindow:
         self.button_pmc = ctk.CTkButton(
             self.frame_top_4,
             image=self.pmc_image,
-            text="PMC Attributes",
+            text="PMC",
             compound="bottom",
             fg_color="transparent",
             text_color="green",
@@ -382,7 +394,7 @@ class ModSelectionWindow:
         self.button_medic = ctk.CTkButton(
             self.frame_top_5,
             image=self.medic_image,
-            text="Medical Attributes",
+            text="Medical",
             compound="bottom",
             fg_color="transparent",
             text_color="red",
@@ -392,12 +404,26 @@ class ModSelectionWindow:
         )
         self.button_medic.pack(side="top", anchor="center",
                                expand=True, fill="both")
+        self.button_mag = ctk.CTkButton(
+            self.frame_top_6,
+            image=self.bag_mag_image,
+            text="Bag / Mag",
+            compound="bottom",
+            fg_color="transparent",
+            text_color="cyan",
+            hover_color="whitesmoke",
+            font=("Arial", 16, "bold"),
+            command=lambda: self.generate_list_button(WindowType.MAG)
+        )
+        self.button_mag.pack(side="top", anchor="center",
+                               expand=True, fill="both")
         self.frames_buttons = {
             "weapon": self.buttonWeapon,
             "caliber": self.button_caliber,
             "pmc": self.button_pmc,
             "ammo": self.button_ammo,
-            "medic": self.button_medic
+            "medic": self.button_medic,
+            "mag": self.button_mag
         }
 
     def generate_list_button(self, choice_window: WindowType):
@@ -407,6 +433,8 @@ class ModSelectionWindow:
             WindowUtils.lock_choice_frame("caliber", self.frames_buttons)
         elif choice_window == WindowType.MEDIC:
             WindowUtils.lock_choice_frame("medic", self.frames_buttons)
+        elif choice_window == WindowType.MAG:
+            WindowUtils.lock_choice_frame("mag", self.frames_buttons)
 
         Utils.clear_frame(self.main_frame_bot)
         if choice_window == WindowType.AMMO or choice_window == WindowType.CALIBER:
@@ -417,6 +445,10 @@ class ModSelectionWindow:
             Utils.create_grid_row_col_config(self.main_frame_bot, 1, 4)
             Utils.create_1x4_bottom(self.framesBotCaliber, self.main_frame_bot)
             self.create_buttons_for_medic(choice_window)
+        elif choice_window == WindowType.MAG:
+            Utils.create_grid_row_col_config(self.main_frame_bot, 1, 2)
+            Utils.create_1x2_bottom(self.framesBotCaliber, self.main_frame_bot)
+            self.create_buttons_for_bag_mag()
 
     def pmc_window(self):
         WindowUtils.lock_choice_frame("pmc", self.frames_buttons)
@@ -661,6 +693,330 @@ class ModSelectionWindow:
             button.configure(command=lambda parent=code: self.medic_button_press(parent, choice_window))
             column += 1
 
+    def create_buttons_for_bag_mag(self):
+        buttons_data = [
+            ("Bag", self.bag_image, "code_a"),
+            ("Magazine", self.mag_image, "code_b"),
+        ]
+
+        for idx, (label, image, code) in enumerate(buttons_data):
+            button = ctk.CTkButton(
+                self.framesBotCaliber[idx],  # ou un autre index si besoin
+                image=image,
+                text=label,
+                width=150,
+                compound="bottom",
+                fg_color="transparent",
+                text_color="white",
+                font=("Arial", 20, "bold")
+            )
+            button.pack(side="top", anchor="center")
+            if label == "Magazine":
+                button.configure(command=lambda parent=code: self.mag_button_press())
+            elif label == "Bag":
+                button.configure(command=lambda parent=code: self.bag_button_press())
+
+    def mag_button_press(self):
+        self.create_frame_bot_find_weapon()
+        Utils.create_grid_row_col_config(self.frame_bot_top, 1, 1)
+        Utils.create_grid_row_col_config(self.frame_bot_bot, 3, 3)
+        label = ctk.CTkLabel(self.frame_bot_bot,
+                             text=f"Groups magazines into categories \n based on their ammo capacity",
+                             height=20, font=("Arial", 13, "bold"),)
+        label.grid(row=4,
+                   column=1,
+                   sticky="ew",
+                   pady=10)
+        max_items = 15
+        items_per_row = 3
+        total_rows = (max_items + items_per_row - 1) // items_per_row
+        Utils.configure_grid(
+            self.frame_bot_bot,
+            rows=total_rows,
+            cols=items_per_row,
+            weight=1)
+        button = ctk.CTkButton(self.frame_bot_top,
+                               text="<== BACK ==>",
+                               command=self.mag_window,
+                               fg_color="orange",
+                               font=("Arial", 20, "bold"),
+                               text_color="black")
+        button.grid(row=2, column=0, padx=5, pady=5)
+
+        for idx, result in enumerate(EnumMagSize.list_values()):
+            frame_recherche_m = ctk.CTkFrame(self.frame_bot_bot, fg_color="transparent")
+            row, col = divmod(idx, items_per_row)
+            frame_recherche_m.grid(row=row,
+                                   column=col,
+                                   padx=5,
+                                   pady=5,
+                                   sticky="nsew")
+            button = ctk.CTkButton(frame_recherche_m,
+                                   font=("Arial", 20, "bold"),
+                                   text=result,
+                                   text_color="black",
+                                   command=lambda r=result: self.on_click_result_mag(r))
+            button.pack(expand=True)
+
+    def bag_button_press(self):
+        self.create_frame_bot_find_weapon()
+        Utils.create_grid_row_col_config(self.frame_bot_top, 1, 1)
+        Utils.create_grid_row_col_config(self.frame_bot_bot, 3, 2)
+        label = ctk.CTkLabel(self.frame_bot_bot,
+                             text=f"Defines categories of bags based \n on how many slots they offer",
+                             height=20, font=("Arial", 13, "bold"), )
+        label.grid(row=4,
+                   column=1,
+                   sticky="ew",
+                   pady=10)
+        max_items = 5
+        items_per_row = 3
+        total_rows = (max_items + items_per_row - 1) // items_per_row
+        Utils.configure_grid(
+            self.frame_bot_bot,
+            rows=total_rows,
+            cols=items_per_row,
+            weight=1)
+        button = ctk.CTkButton(self.frame_bot_top,
+                               text="<== BACK ==>",
+                               command=self.bag_window,
+                               fg_color="orange",
+                               font=("Arial", 20, "bold"),
+                               text_color="black")
+        button.grid(row=2, column=0, padx=5, pady=5)
+
+        for idx, result in enumerate(EnumBagSize.list_values()):
+            frame_recherche_m = ctk.CTkFrame(self.frame_bot_bot, fg_color="transparent")
+            row, col = divmod(idx, items_per_row)
+            frame_recherche_m.grid(row=row,
+                                   column=col,
+                                   padx=5,
+                                   pady=5,
+                                   sticky="nsew")
+            button = ctk.CTkButton(frame_recherche_m,
+                                   font=("Arial", 20, "bold"),
+                                   text=result,
+                                   text_color="black",
+                                   command=lambda r=result: self.on_click_result_bag(r))
+            button.pack(expand=True)
+
+    def on_click_result_mag(self, result):
+        Utils.clear_frame(self.main_frame_bot)
+        Utils.clear_config_row_col(self.main_frame_bot)
+        self.create_frame_bot_find_weapon()
+        Utils.create_grid_row_col_config(self.frame_bot_top, 1, 1)
+        Utils.create_grid_row_col_config(self.frame_bot_bot, 4, 3)
+
+        data = JsonUtils.load_mag()
+        mag_obj = Mag(title=result, **data[result])
+
+        button = ctk.CTkButton(self.frame_bot_top,
+                               text="<== BACK ==>",
+                               command=self.mag_button_press,
+                               fg_color="orange",
+                               font=("Arial", 20, "bold"),
+                               text_color="black")
+        button.grid(row=0, column=0, padx=5, pady=5)
+
+        label_count = ctk.CTkLabel(
+            self.frame_bot_bot,
+            text=f"{len(mag_obj.ids)} Magazines",
+            font=("Arial", 16, "bold"),
+            text_color="white"
+        )
+        label_count.grid(row=0, column=1, padx=10, pady=10, sticky="w")
+
+
+
+
+        switch_var = ctk.BooleanVar(value=mag_obj.penality)
+        switch_penalty = ctk.CTkSwitch(
+            self.frame_bot_bot,
+            text="",
+            variable=switch_var,
+            width=50,
+            command=lambda: label.configure(text=f"Remove Penalty (Ergo etc...) : {switch_var.get()}")
+        )
+        switch_penalty.grid(row=1, column=1, padx=5, pady=5, sticky="nsew")
+
+        label = ctk.CTkLabel(self.frame_bot_bot, text=f"Remove Penalty (Ergo etc...) : {switch_var.get()}")
+        label.grid(row=1, column=0, sticky="nsew")
+
+        switch_var2 = ctk.BooleanVar(value=mag_obj.resize)
+
+        label2 = ctk.CTkLabel(self.frame_bot_bot, text=f"{Utils.size_magazine(result)} : {switch_var2.get()}")
+        label2.grid(row=2, column=0, sticky="nsew")
+
+        switch_size = ctk.CTkSwitch(
+            self.frame_bot_bot,
+            text="",
+            variable=switch_var2,
+            width=50,
+            command=lambda: label2.configure(text=f"{Utils.size_magazine(result)} : {switch_var2.get()}")
+        )
+        switch_size.grid(row=2, column=1, padx=5, pady=5, sticky="nsew")
+
+        switch_var3 = ctk.BooleanVar(value=mag_obj.fastLoad)
+
+        label3 = ctk.CTkLabel(self.frame_bot_bot, text=f"Fast load : {switch_var3.get()}")
+        label3.grid(row=3, column=0, sticky="nsew")
+
+        switch_speed = ctk.CTkSwitch(
+            self.frame_bot_bot,
+            text="",
+            variable=switch_var3,
+            width=50,
+            command=lambda: label3.configure(text=f"Fast load : {switch_var3.get()}")
+        )
+        switch_speed.grid(row=3, column=1, padx=5, pady=5, sticky="nsew")
+
+        label4 = ctk.CTkLabel(self.frame_bot_bot, text=f"number ammo on magazines :")
+        label4.grid(row=4, column=0, sticky="nsew")
+        label5 = ctk.CTkLabel(self.frame_bot_bot, font=("Arial", 18, "bold"), text=f"{str(mag_obj.counts)} ammo(s)")
+        label5.grid(row=4, column=2,sticky="w")
+
+        slider = ctk.CTkSlider(self.frame_bot_bot,
+                               from_=1, to=150,
+                               command=lambda value: label5.configure(
+                                   text=f"{int(value)} ammo(s)"))
+        slider.set(mag_obj.counts or 1)
+        slider.grid(row=4, column=1, sticky=ctk.W, padx=10)
+
+        validate_button = ctk.CTkButton(
+            self.frame_bot_bot,
+            text="Validate",
+            fg_color="green",
+            command=lambda: self.apply_mag(data, result, switch_var, switch_var2, switch_var3, slider)
+        )
+        validate_button.grid(row=5, column=0, columnspan=2, padx=5, pady=50)
+        reset_button = ctk.CTkButton(
+            self.frame_bot_bot,
+            text="Reset",
+            fg_color="red",
+            command=lambda: self.reset_mag(result, data)
+        )
+        reset_button.grid(row=5, column=1, columnspan=2, padx=5, pady=5)
+
+    def on_click_result_bag(self, result):
+        Utils.clear_frame(self.main_frame_bot)
+        Utils.clear_config_row_col(self.main_frame_bot)
+        self.create_frame_bot_find_weapon()
+        Utils.create_grid_row_col_config(self.frame_bot_top, 1, 1)
+        Utils.create_grid_row_col_config(self.frame_bot_bot, 4, 3)
+        data_load = False
+        if not JsonUtils.bag_exist(result):
+            data = JsonUtils.load_bag(result)
+
+        else:
+            data = JsonUtils.load_bag_mod(result)
+            self.logger.log("info","Bag save load")
+            data_load = True
+
+        category_data = data.get(result)
+        penality = category_data.get("penality")
+        excluded_filter = category_data.get("excludedFilter")
+        size = category_data.get("size")
+
+        button = ctk.CTkButton(self.frame_bot_top,
+                               text="<== BACK ==>",
+                               command=self.bag_button_press,
+                               fg_color="orange",
+                               font=("Arial", 20, "bold"),
+                               text_color="black")
+        button.grid(row=0, column=0, padx=5, pady=5)
+
+        label_count = ctk.CTkLabel(
+            self.frame_bot_bot,
+            text=f"{len(category_data.get("ids", {}))} Bags",
+            font=("Arial", 16, "bold"),
+            text_color="white"
+        )
+        label_count.grid(row=0, column=1, padx=10, pady=10, sticky="w")
+
+        switch_var = ctk.BooleanVar(value=penality)
+        switch_penalty = ctk.CTkSwitch(
+            self.frame_bot_bot,
+            text="",
+            variable=switch_var,
+            width=50,
+            command=lambda: label.configure(text=f"Disable content restrictions : {switch_var.get()}")
+        )
+        switch_penalty.grid(row=1, column=1, padx=5, pady=5, sticky="nsew")
+
+        label = ctk.CTkLabel(self.frame_bot_bot, text=f"Disable content restrictions : {switch_var.get()}")
+        label.grid(row=1, column=0, sticky="nsew")
+
+        switch_var2 = ctk.BooleanVar(value=excluded_filter)
+        switch_excludedFilter = ctk.CTkSwitch(
+            self.frame_bot_bot,
+            text="",
+            variable=switch_var2,
+            width=50,
+            command=lambda: label2.configure(text=f"Remove Penalty (Ergo etc...) :  {switch_var2.get()}")
+        )
+        switch_excludedFilter.grid(row=2, column=1, padx=5, pady=5, sticky="nsew")
+
+        label2 = ctk.CTkLabel(self.frame_bot_bot, text=f"Remove Penalty (Ergo etc...) : {switch_var.get()}")
+        label2.grid(row=2, column=0, sticky="nsew")
+
+        label4 = ctk.CTkLabel(self.frame_bot_bot, text=f"Improve size BackPack on + %:")
+        label4.grid(row=3, column=0, sticky="nsew")
+        label5 = ctk.CTkLabel(self.frame_bot_bot, font=("Arial", 18, "bold"), text=f"+{str(size)}%")
+        label5.grid(row=3, column=2,sticky="w")
+        [min, max] = Utils.max_min_slider_bag(result)
+        slider = ctk.CTkSlider(self.frame_bot_bot,
+                               from_=min, to=max,
+                               command=lambda value: label5.configure(
+                                   text=f"+{int(value)}%"))
+        slider.set(size)
+        slider.grid(row=3, column=1, sticky=ctk.W, padx=10)
+
+        validate_button = ctk.CTkButton(
+            self.frame_bot_bot,
+            text="Validate",
+            fg_color="green",
+            command=lambda: self.apply_bag( result, switch_var, switch_var2,  slider)
+        )
+        validate_button.grid(row=4, column=0, columnspan=2, padx=5, pady=50)
+        reset_button = ctk.CTkButton(
+            self.frame_bot_bot,
+            text="Reset",
+            fg_color="red",
+            command=lambda: self.reset_bag(result, data_load)
+        )
+        reset_button.grid(row=4, column=1, columnspan=2, padx=5, pady=5)
+
+    def apply_bag(self, result, switch_var, switch_var2, slider):
+        Utils.apply_bag_value(  result, switch_var,switch_var2, slider)
+        self.bag_button_press()
+
+    def reset_bag(self, result, data_load):
+        if data_load:
+            JsonUtils.delete_bag_mod(result)
+        self.bag_button_press()
+
+    def apply_mag(self, data, result, switch_var, switch_var2, switch_var3, slider):
+        Utils.save_mag_values(data,
+                              result,
+                              switch_var,
+                              switch_var2,
+                              switch_var3,
+                              slider)
+        self.mag_button_press()
+
+    def reset_mag(self, result, data):
+        counts = Utils.slider_start(result)
+        Utils.reset_mag(result, counts, data)
+        self.mag_button_press()
+
+    def mag_window(self):
+        WindowUtils.lock_choice_frame("mag", self.frames_buttons)
+        self.generate_list_button(WindowType.MAG)
+
+    def bag_window(self):
+        WindowUtils.lock_choice_frame("mag", self.frames_buttons)
+        self.generate_list_button(WindowType.MAG)
+
     def ammo_button_press(self, caliber_select, choice_window):
         if not self.data_json_from_load_all_ammo:
             (self.data_json_from_load_all_ammo,
@@ -736,10 +1092,10 @@ class ModSelectionWindow:
                     self)
         elif window_type == WindowType.MEDIC:
             MedicMod(self.detail_window,
-                    self.root,
-                    self.detail_window,
-                    send_value,
-                    self)
+                     self.root,
+                     self.detail_window,
+                     send_value,
+                     self)
 
     def open_weapon_specific_window_from_list(self, name, window_type):
         list_for_data = None

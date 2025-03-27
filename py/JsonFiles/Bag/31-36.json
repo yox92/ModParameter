@@ -1,0 +1,126 @@
+{
+  "31-36": {
+    "size": 0,
+    "penality": false,
+    "resize": false,
+    "excludedFilter": false,
+    "ids": {
+      "59e763f286f7742ee57895da": {
+        "name": "backpack_pilgrim",
+        "Grids": {
+          "59e763f286f7742ee57895db": {
+            "cellsH": 5,
+            "cellsV": 7
+          }
+        }
+      },
+      "5d5d940f86f7742797262046": {
+        "name": "item_equipment_backpack_mech",
+        "Grids": {
+          "5d5d940f86f7742797262048": {
+            "cellsH": 4,
+            "cellsV": 4
+          },
+          "5d5d940f86f7742797262049": {
+            "cellsH": 2,
+            "cellsV": 2
+          },
+          "5d5d940f86f774279726204a": {
+            "cellsH": 2,
+            "cellsV": 2
+          },
+          "5d5d940f86f774279726204b": {
+            "cellsH": 2,
+            "cellsV": 2
+          },
+          "64ad21682b49b454630e014e": {
+            "cellsH": 2,
+            "cellsV": 2
+          }
+        }
+      },
+      "6034d2d697633951dc245ea6": {
+        "name": "item_equipment_backpack_g2_gunslinger",
+        "Grids": {
+          "6034d2d697633951dc245ea8": {
+            "cellsH": 3,
+            "cellsV": 5
+          },
+          "64ad22022b49b454630e014f": {
+            "cellsH": 2,
+            "cellsV": 7
+          },
+          "64ad22022b49b454630e0150": {
+            "cellsH": 3,
+            "cellsV": 2
+          }
+        }
+      },
+      "656e0436d44a1bb4220303a0": {
+        "name": "item_equipment_backpack_mystery_ranch_satl",
+        "Grids": {
+          "656e0436d44a1bb4220303a1": {
+            "cellsH": 6,
+            "cellsV": 2
+          },
+          "65800aed077bbc49fc10c01d": {
+            "cellsH": 3,
+            "cellsV": 4
+          },
+          "65800ba124d2053bb360b530": {
+            "cellsH": 3,
+            "cellsV": 4
+          }
+        }
+      },
+      "61b9e1aaef9a1b5d6a79899a": {
+        "name": "backpack_pilgrim_red",
+        "Grids": {
+          "61b9e1aaef9a1b5d6a79899c": {
+            "cellsH": 5,
+            "cellsV": 7
+          }
+        }
+      },
+      "5ab8ebf186f7742d8b372e80": {
+        "name": "backpack_sso_attack2",
+        "Grids": {
+          "5ab8ebf186f7742d8b372e82": {
+            "cellsH": 5,
+            "cellsV": 7
+          }
+        }
+      },
+      "639346cc1c8f182ad90c8972": {
+        "name": "item_equipment_backpack_trooper_35",
+        "Grids": {
+          "639346cc1c8f182ad90c8973": {
+            "cellsH": 5,
+            "cellsV": 7
+          }
+        }
+      },
+      "5c0e805e86f774683f3dd637": {
+        "name": "item_equipment_backpack_paratus",
+        "Grids": {
+          "5c0e805e86f774683f3dd639": {
+            "cellsH": 5,
+            "cellsV": 5
+          },
+          "5c0e816086f7745dc7616605": {
+            "cellsH": 1,
+            "cellsV": 2
+          },
+          "64ad21c41fffb70b540dee8e": {
+            "cellsH": 1,
+            "cellsV": 2
+          },
+          "64ad21c41fffb70b540dee8f": {
+            "cellsH": 3,
+            "cellsV": 2
+          }
+        }
+      }
+    }
+  }
+}

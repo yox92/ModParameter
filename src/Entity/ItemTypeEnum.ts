@@ -3,5 +3,7 @@ export enum ItemTypeEnum {
     Weapon = "Weapon",
     Aiming = "Aiming",
     Tracer = "Tracer",
-    Medic = "Medic"
+    Medic = "Medic",
+    Mag = "Mag",
+    Bag = "Bag"
 }

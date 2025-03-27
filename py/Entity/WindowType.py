@@ -8,3 +8,5 @@ class WindowType(Enum):
     PMC = "pmc"
     MEDIC = "medic"
     DELETE = "delete"
+    BAG = "bag"
+    MAG = "mag"

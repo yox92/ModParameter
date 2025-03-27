@@ -24,7 +24,7 @@ class ModParameter implements IPostDBLoadMod, PreSptModLoader, IPostSptLoadMod {
         const customItemService: CustomItemService = container.resolve<CustomItemService>("CustomItemService");
         const logger: ILogger = container.resolve<ILogger>("WinstonLogger");
         const itemHelper: ItemHelper = container.resolve<ItemHelper>("ItemHelper");
-        dataService.getGlobals()
+
         if (!dataService || !logger || !itemHelper || !customItemService) {
             console.error(`[ModParameter] Critical error: Missing dependencies. Mod cannot function properly.`);
             return;
@@ -39,6 +39,7 @@ class ModParameter implements IPostDBLoadMod, PreSptModLoader, IPostSptLoadMod {
 
         itemService.allTracer();
         itemService.cloneItems();
+        itemService.apply_mod_item();
         pmcService.updatePmc();
     }
 

@@ -1,0 +1,91 @@
+{
+  "1-18": {
+    "size": 0,
+    "penality": false,
+    "resize": false,
+    "excludedFilter": false,
+    "ids": {
+      "628bc7fb408e2b2e9c0801b1": {
+        "name": "item_equipment_backpack_boss_birdeye",
+        "Grids": {
+          "628bc7fb408e2b2e9c0801b2": {
+            "cellsH": 2,
+            "cellsV": 7
+          }
+        }
+      },
+      "5ab8ee7786f7742d8f33f0b9": {
+        "name": "backpack_vkboarmy",
+        "Grids": {
+          "5ab8ee7786f7742d8f33f0bb": {
+            "cellsH": 4,
+            "cellsV": 2
+          }
+        }
+      },
+      "5e997f0b86f7741ac73993e2": {
+        "name": "backpack_sanitar_medbag",
+        "Grids": {
+          "5e997f0b86f7741ac73993e4": {
+            "cellsH": 4,
+            "cellsV": 4
+          }
+        }
+      },
+      "544a5cde4bdc2d39388b456b": {
+        "name": "standartBackpack",
+        "Grids": {
+          "55d4a1374bdc2d8b2f8b456c": {
+            "cellsH": 4,
+            "cellsV": 4
+          }
+        }
+      },
+      "5ab8f04f86f774585f4237d8": {
+        "name": "backpack_molle",
+        "Grids": {
+          "5ab8f04f86f774585f4237da": {
+            "cellsH": 3,
+            "cellsV": 2
+          }
+        }
+      },
+      "66b5f247af44ca0014063c02": {
+        "name": "item_equipment_backpack_vertx_readypack_red",
+        "Grids": {
+          "66b5f247af44ca0014063c04": {
+            "cellsH": 4,
+            "cellsV": 4
+          }
+        }
+      },
+      "5f5e45cc5021ce62144be7aa": {
+        "name": "item_equipment_backpack_redfox",
+        "Grids": {
+          "5f5e45cc5021ce62144be7ac": {
+            "cellsH": 3,
+            "cellsV": 4
+          }
+        }
+      },
+      "56e33634d2720bd8058b456b": {
+        "name": "forward_backpack",
+        "Grids": {
+          "56e33661d2720b4c098b456a": {
+            "cellsH": 4,
+            "cellsV": 3
+          }
+        }
+      },
+      "56e33680d2720be2748b4576": {
+        "name": "tactical_backpack",
+        "Grids": {
+          "56e336afd2720be2748b4577": {
+            "cellsH": 3,
+            "cellsV": 3
+          }
+        }
+      }
+    }
+  }
+}

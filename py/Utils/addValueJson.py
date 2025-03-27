@@ -69,4 +69,25 @@ folders = [config.JSON_FILES_DIR_MEDIC]
 #                 json.dump(data, f, indent=2)
 #                 print(f"{filename} ➜ 'clone: true' inséré")
 
+
+import json
+
+# JSON original (simplifié ici, remplacer par le JSON complet dans un cas réel)
+
+MAG_PATH = config.JSON_FILES_DIR_MAG / "Mag.json"
+
+with open(MAG_PATH, "r", encoding="utf-8") as f:
+    original_data = json.load(f)
+
+transformed_data = {
+    category: {
+        "value": None,
+        "items": ids
+    } for category, ids in original_data.items()
+}
+
+# Sauvegarde du nouveau JSON
+with open(MAG_PATH, "w", encoding="utf-8") as f:
+    json.dump(transformed_data, f, indent=2, ensure_ascii=False)
+
 print("Traitement terminé.")
