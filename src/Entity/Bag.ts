@@ -1,9 +1,9 @@
 export class Bag {
     id: string;
     name: string;
-    Grids: Record<string, IGrid>;
+    Grids: Record<string, IGridJson>;
 
-    constructor(id: string, name: string, grids: Record<string, IGrid>) {
+    constructor(id: string, name: string, grids: Record<string, IGridJson>) {
         this.id = id;
         this.name = name;
         this.Grids = grids;
@@ -17,12 +17,14 @@ export class Bag {
 export class BagCat {
     size: number;
     penality: boolean;
-    resize: boolean;
+    resize: number;
+    excludedFilter: boolean;
     ids: Record<string, Bag>;
 
-    constructor(size: number, penality: boolean, resize: boolean, ids: Record<string, Bag>) {
+    constructor(size: number, penality: boolean, resize: number, excludedFilter: boolean, ids: Record<string, Bag>) {
         this.size = size;
         this.penality = penality;
+        this.excludedFilter = excludedFilter;
         this.resize = resize;
         this.ids = ids;
     }
@@ -33,23 +35,24 @@ export class BagCat {
             ids[bagId] = Bag.fromJson(bagId, bagData);
         }
 
-        return new BagCat(data.size, data.penality, data.resize, ids);
+        return new BagCat(data.size, data.penality, data.excludedFilter, data.resize, ids);
     }
 }
 
-export interface IGrid {
+export interface IGridJson {
     cellsH: number;
     cellsV: number;
 }
 
 export interface IBagJson {
     name: string;
-    Grids: Record<string, IGrid>;
+    Grids: Record<string, IGridJson>;
 }
 
 export interface IBagCatJson {
     size: number;
     penality: boolean;
     resize: boolean;
+    excludedFilter: boolean;
     ids: Record<string, IBagJson>;
 }

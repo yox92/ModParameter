@@ -600,11 +600,12 @@ class Utils:
         JsonUtils.save_mag_preset(data, result)
 
     @staticmethod
-    def apply_bag_value(data, result, switch_var, slider):
+    def apply_bag_value(data, result, switch_var,switch_var2, slider):
         from Utils.JsonUtils import JsonUtils
         change_number = int(slider.get())
         boolean = bool(switch_var.get())
-        if boolean or change_number > 0:
+        boolean2 = bool(switch_var2.get())
+        if boolean or boolean2 or change_number > 0:
             bags = []
             for ids, bag_info in data.get(result).get("ids", {}).items():
                 Grids = bag_info.get("Grids", {})
@@ -621,6 +622,8 @@ class Utils:
                     data[result]["ids"][bag.ids]["Grids"] = bag.Grids
             if boolean:
                 data[result]["penality"] = True
+            if boolean2:
+                data[result]["excludedFilter"] = True
             JsonUtils.create_mod_bag(data, result)
         else:
             print("no change")

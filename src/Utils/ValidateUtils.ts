@@ -330,5 +330,17 @@ export class ValidateUtils {
         return null;
     }
 
+    public getTemplateItems(dataService: DatabaseService, logger: ILogger): Record<string, ITemplateItem> | null {
+        const templates = dataService.getTemplates();
+        const items = templates?.items;
+
+        if (!templates || !items) {
+            logger.debug("[ModParameter] Invalid dataService structure. Modification aborted");
+            return null;
+        }
+
+        return items;
+    }
+
 
 }

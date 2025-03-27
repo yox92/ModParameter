@@ -3,6 +3,7 @@
     "size": 0,
     "penality": false,
     "resize": false,
+    "excludedFilter": false,
     "ids": {
       "5c0e774286f77468413cc5b2": {
         "name": "item_equipment_backpack_blackjack",

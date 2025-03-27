@@ -3,6 +3,7 @@
     "size": 0,
     "penality": false,
     "resize": false,
+    "excludedFilter": false,
     "ids": {
       "66a9f98f3bd5a41b162030f4": {
         "name": "backpack_partizan",

@@ -3,6 +3,7 @@
     "size": 0,
     "penality": false,
     "resize": false,
+    "excludedFilter": false,
     "ids": {
       "545cdae64bdc2d39198b4568": {
         "name": "bigBackpack",

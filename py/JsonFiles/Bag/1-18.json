@@ -3,6 +3,7 @@
     "size": 0,
     "penality": false,
     "resize": false,
+    "excludedFilter": false,
     "ids": {
       "628bc7fb408e2b2e9c0801b1": {
         "name": "item_equipment_backpack_boss_birdeye",

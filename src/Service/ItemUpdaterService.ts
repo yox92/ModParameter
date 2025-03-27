@@ -2,7 +2,7 @@ import {ItemProps} from "../Entity/ItemProps";
 import {ILogger} from "@spt/models/spt/utils/ILogger";
 import {Ammo} from "../Entity/Ammo";
 import {ITemplates} from "@spt/models/spt/templates/ITemplates";
-import {IProps, ITemplateItem} from "@spt/models/eft/common/tables/ITemplateItem";
+import {IGrid, IGridFilter, IProps, ITemplateItem} from "@spt/models/eft/common/tables/ITemplateItem";
 import {ValidateUtils} from "../Utils/ValidateUtils";
 import {DatabaseService} from "@spt/services/DatabaseService";
 import {Tracer} from "../Entity/Tracer";
@@ -11,7 +11,7 @@ import {ItemHelper} from "@spt/helpers/ItemHelper";
 import {IEffectDamageProps, Medic} from "../Entity/Medic";
 import {Mag} from "../Entity/Mag";
 import {EnumagCount} from "../Entity/EnumagCount";
-import {Bag, BagCat} from "../Entity/Bag";
+import {Bag, BagCat, IGridJson} from "../Entity/Bag";
 
 
 export class ItemUpdaterService {
@@ -309,118 +309,177 @@ export class ItemUpdaterService {
 
     public applyMagMod(mag: Mag): void {
         const validateutils = new ValidateUtils();
-        const defaultValue: number = EnumagCount[mag.name]
+        const defaultValue: number = EnumagCount[mag.name];
 
         if (mag.resize === false && mag.penality === false && mag.counts === defaultValue) {
             this.logger.debug(`[ModParameter] Skipping mag : ${mag.name}`);
             return;
         }
 
-        const items: Record<string, ITemplateItem> = validateutils.getTemplateItems(this.dataService, this.logger)
+        const items = validateutils.getTemplateItems(this.dataService, this.logger);
 
         const magazines: ITemplateItem[] = Object.values(items).filter(
-            (item: ITemplateItem) =>
+            item =>
                 item?._id &&
                 this.itemHelper.isOfBaseclass(item._id, Baseclass.MAGAZINE) &&
-                mag.ids.includes(item._id));
+                mag.ids.includes(item._id)
+        );
 
         for (const magazine of magazines) {
-            if (!magazine._props || !Array.isArray(magazine._props.Cartridges)) {
+
+            if (!magazine._props || !magazine._name || !Array.isArray(magazine._props.Cartridges)) {
                 this.logger.debug(`[ModParameter] Warning: Magazine ${magazine._id} has no Cartridges property.`);
                 continue;
             }
+            const props: IProps = magazine._props;
+            const name: string = magazine._name;
+            const firstCartridge = props?.Cartridges?.[0];
 
             if (mag.fastLoad) {
-                if (magazine._props.LoadUnloadModifier) {
-                    this.logger.debug(`[ModParameter] modify ${magazine._name} Load, Unload speed`);
-                    magazine._props.LoadUnloadModifier = 100;
-                }
+                this.applyMagFastLoad(props, name);
             }
 
             if (mag.resize) {
-                if (mag.penality) {
-                    if (magazine._props.Width) {
-                        this.logger.debug(`[ModParameter] modify ${magazine._name}  slot number`);
-                        magazine._props.Width = 2;
-                    }
-                }
+                this.applyMagResize(props, name);
             }
 
             if (mag.penality) {
-                if (magazine._props.Ergonomics && magazine._props.Ergonomics < 0) {
-                    this.logger.debug(`[ModParameter] modify ${magazine._name} Ergonomics`);
-                    magazine._props.Ergonomics = 0
-                }
-                if (magazine._props.MalfunctionChance) {
-                    this.logger.debug(`[ModParameter] modify ${magazine._name} MalfunctionChance`);
-                    magazine._props.MalfunctionChance = 0.03
-                }
-                if (magazine._props.CheckTimeModifier) {
-                    this.logger.debug(`[ModParameter] modify ${magazine._name} CheckTimeModifier`);
-                    magazine._props.CheckTimeModifier = 0
-                }
+                this.applyMagPenality(props, name);
             }
 
-            if (mag.counts !== defaultValue) {
-                if (magazine._props?.Cartridges?.[0]) {
-                    magazine._props.Cartridges[0]._props.MaxStackCount = mag.counts
-                }
+            if (mag.counts !== defaultValue && firstCartridge?._props) {
+                firstCartridge._props.MaxStackCount = mag.counts;
             }
         }
     }
+
+    private applyMagFastLoad(props: IProps, name: string): void {
+        if (props.LoadUnloadModifier) {
+            this.logger.debug(`[ModParameter] modify ${name} Load, Unload speed`);
+            props.LoadUnloadModifier = 100;
+        }
+    }
+
+    private applyMagResize(props: IProps, name: string): void {
+        if (props.Width) {
+            this.logger.debug(`[ModParameter] modify ${name}  slot number`);
+            props.Width = 2;
+        }
+    }
+
+    private applyMagPenality(props: IProps, name: string): void {
+        if (props.Ergonomics && props.Ergonomics < 0) {
+            this.logger.debug(`[ModParameter] modify ${name} Ergonomics`);
+            props.Ergonomics = 0
+        }
+        if (props.MalfunctionChance) {
+            this.logger.debug(`[ModParameter] modify ${name} MalfunctionChance`);
+            props.MalfunctionChance = 0.03
+        }
+        if (props.CheckTimeModifier) {
+            this.logger.debug(`[ModParameter] modify ${name} CheckTimeModifier`);
+            props.CheckTimeModifier = 0
+        }
+    }
+
+
     public applyBagMod(bagCat: BagCat): void {
         const validateutils = new ValidateUtils();
-
         const items: Record<string, ITemplateItem> = validateutils.getTemplateItems(this.dataService, this.logger)
+        const bagIds: string[] = Object.values(bagCat.ids).map(bag => bag.id);
 
-        const bagpack: ITemplateItem[] = Object.values(items).filter(
+        const backPacks: ITemplateItem[] = Object.values(items).filter(
             (item: ITemplateItem) =>
                 item?._id &&
-                this.itemHelper.isOfBaseclass(item._id, Baseclass.BACKPACK));
+                this.itemHelper.isOfBaseclass(item._id, Baseclass.BACKPACK) &&
+                bagIds.includes(item._id)
+        );
+        if (backPacks.length === 0) {
+            this.logger.debug("[ModParameter] No matching backpacks found for modification.");
+            return;
+        }
 
-        for (const magazine of magazines) {
-            if (!magazine._props || !Array.isArray(magazine._props.Cartridges)) {
-                this.logger.debug(`[ModParameter] Warning: Magazine ${magazine._id} has no Cartridges property.`);
-                continue;
-            }
+        for (const backPack of backPacks) {
+            if (backPack?._props && backPack?._id && backPack?._name) {
+                const backPackProps: IProps = backPack._props;
+                const backPackId: string = backPack._id;
+                const name: string = backPack._name;
 
-            if (mag.fastLoad) {
-                if (magazine._props.LoadUnloadModifier) {
-                    this.logger.debug(`[ModParameter] modify ${magazine._name} Load, Unload speed`);
-                    magazine._props.LoadUnloadModifier = 100;
+                if (bagCat.excludedFilter) {
+                    this.clearExcludedFilters(backPackProps, name);
                 }
-            }
 
-            if (mag.resize) {
-                if (mag.penality) {
-                    if (magazine._props.Width) {
-                        this.logger.debug(`[ModParameter] modify ${magazine._name}  slot number`);
-                        magazine._props.Width = 2;
-                    }
+                if (bagCat.penality) {
+                    this.applyBagPenality(backPackProps, name);
                 }
-            }
 
-            if (mag.penality) {
-                if (magazine._props.Ergonomics && magazine._props.Ergonomics < 0) {
-                    this.logger.debug(`[ModParameter] modify ${magazine._name} Ergonomics`);
-                    magazine._props.Ergonomics = 0
-                }
-                if (magazine._props.MalfunctionChance) {
-                    this.logger.debug(`[ModParameter] modify ${magazine._name} MalfunctionChance`);
-                    magazine._props.MalfunctionChance = 0.03
-                }
-                if (magazine._props.CheckTimeModifier) {
-                    this.logger.debug(`[ModParameter] modify ${magazine._name} CheckTimeModifier`);
-                    magazine._props.CheckTimeModifier = 0
-                }
-            }
-
-            if (mag.counts !== defaultValue) {
-                if (magazine._props?.Cartridges?.[0]) {
-                    magazine._props.Cartridges[0]._props.MaxStackCount = mag.counts
+                if (bagCat.resize && bagCat.resize !== 0) {
+                    this.applyBagResize(backPackProps, backPackId, bagCat, backPack._name);
                 }
             }
         }
     }
+
+    private clearExcludedFilters(backPackProps: IProps, name: string): void {
+        let modified = false;
+        backPackProps.Grids.forEach((grid: IGrid) => {
+            grid._props.filters.forEach((filter: IGridFilter) => {
+                filter.ExcludedFilter = []
+                modified = true;
+            })
+        })
+        if (modified) {
+            this.logger.debug(`[ModParameter] Cleared ExcludedFilter(s) for backpack '${name}'`);
+        } else {
+            this.logger.debug(`[ModParameter] No ExcludedFilter to clear for backpack '${name}'`);
+        }
+    }
+
+    private applyBagPenality(backPackProps: IProps, name: string): void {
+        if (backPackProps.weaponErgonomicPenalty) {
+            backPackProps.weaponErgonomicPenalty = 0
+            this.logger.debug(`[ModParameter] modify weaponErgonomicPenalty '${name}'`);
+        }
+        if (backPackProps.mousePenalty) {
+            backPackProps.mousePenalty = 0
+            this.logger.debug(`[ModParameter] modify mousePenalty '${name}'`);
+        }
+        if (backPackProps.Weight) {
+            backPackProps.Weight = 0.1
+            this.logger.debug(`[ModParameter] modify Weight '${name}'`);
+        }
+        if (backPackProps.speedPenaltyPercent) {
+            backPackProps.speedPenaltyPercent = 0
+            this.logger.debug(`[ModParameter] modify speedPenaltyPercent '${name}'`);
+        }
+    }
+
+    private applyBagResize(backPackProps: IProps, backPackId: string, bagCat: BagCat, name: string): void {
+        const jsonBags: Record<string, Bag> = bagCat.ids;
+
+        const jsonBag = jsonBags[backPackId];
+        if (!jsonBag) {
+            return;
+        }
+
+        const jsonGrids = jsonBag.Grids;
+        if (!backPackProps?.Grids) {
+            return;
+        }
+        let modified = false;
+        for (const sptGrid of backPackProps.Grids) {
+            const jsonGrid = sptGrid._id ? jsonGrids[sptGrid._id] : null;
+            if (jsonGrid && sptGrid._props) {
+                sptGrid._props.cellsH = jsonGrid.cellsH;
+                sptGrid._props.cellsV = jsonGrid.cellsV;
+                modified = true;
+            }
+        }
+        if (!modified) {
+            this.logger.debug(`[ModParameter] No resize applied to backpack '${name}' — no matching grids found.`);
+        }
+
+    }
+
 
 }

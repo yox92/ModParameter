@@ -887,6 +887,7 @@ class ModSelectionWindow:
 
         category_data = data.get(result)
         penality = category_data.get("penality")
+        excludedFilter = category_data.get("excludedFilter")
         resize = category_data.get("resize")
         size = category_data.get("size")
 
@@ -912,42 +913,55 @@ class ModSelectionWindow:
             text="",
             variable=switch_var,
             width=50,
-            command=lambda: label.configure(text=f"Remove Penalty (Ergo etc...) : {switch_var.get()}")
+            command=lambda: label.configure(text=f"Disable content restrictions : {switch_var.get()}")
         )
         switch_penalty.grid(row=1, column=1, padx=5, pady=5, sticky="nsew")
 
-        label = ctk.CTkLabel(self.frame_bot_bot, text=f"Remove Penalty (Ergo etc...) : {switch_var.get()}")
+        label = ctk.CTkLabel(self.frame_bot_bot, text=f"Disable content restrictions : {switch_var.get()}")
         label.grid(row=1, column=0, sticky="nsew")
 
+        switch_var2 = ctk.BooleanVar(value=excludedFilter)
+        switch_excludedFilter = ctk.CTkSwitch(
+            self.frame_bot_bot,
+            text="",
+            variable=switch_var2,
+            width=50,
+            command=lambda: label2.configure(text=f"Remove Penalty (Ergo etc...) :  {switch_var2.get()}")
+        )
+        switch_excludedFilter.grid(row=2, column=1, padx=5, pady=5, sticky="nsew")
+
+        label2 = ctk.CTkLabel(self.frame_bot_bot, text=f"Remove Penalty (Ergo etc...) : {switch_var.get()}")
+        label2.grid(row=2, column=0, sticky="nsew")
+
         label4 = ctk.CTkLabel(self.frame_bot_bot, text=f"Improve size BackPack on + %:")
-        label4.grid(row=2, column=0, sticky="nsew")
+        label4.grid(row=3, column=0, sticky="nsew")
         label5 = ctk.CTkLabel(self.frame_bot_bot, font=("Arial", 18, "bold"), text=f"+{str(size)}%")
-        label5.grid(row=2, column=2,sticky="w")
+        label5.grid(row=3, column=2,sticky="w")
 
         slider = ctk.CTkSlider(self.frame_bot_bot,
                                from_=0, to=200,
                                command=lambda value: label5.configure(
                                    text=f"{int(value)}"))
         slider.set(size)
-        slider.grid(row=2, column=1, sticky=ctk.W, padx=10)
+        slider.grid(row=3, column=1, sticky=ctk.W, padx=10)
 
         validate_button = ctk.CTkButton(
             self.frame_bot_bot,
             text="Validate",
             fg_color="green",
-            command=lambda: self.apply_bag( data,result, switch_var,  slider)
+            command=lambda: self.apply_bag( data,result, switch_var, switch_var2,  slider)
         )
-        validate_button.grid(row=3, column=0, columnspan=2, padx=5, pady=50)
+        validate_button.grid(row=4, column=0, columnspan=2, padx=5, pady=50)
         reset_button = ctk.CTkButton(
             self.frame_bot_bot,
             text="Reset",
             fg_color="red",
             command=lambda: self.reset_bag(result, data_load)
         )
-        reset_button.grid(row=3, column=1, columnspan=2, padx=5, pady=5)
+        reset_button.grid(row=4, column=1, columnspan=2, padx=5, pady=5)
 
-    def apply_bag(self, data, result, switch_var, slider):
-        Utils.apply_bag_value( data, result, switch_var, slider)
+    def apply_bag(self, data, result, switch_var, switch_var2, slider):
+        Utils.apply_bag_value( data, result, switch_var,switch_var2, slider)
         self.bag_button_press()
 
     def reset_bag(self, result, data_load):
