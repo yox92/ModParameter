@@ -1,3 +1,5 @@
+import copy
+
 import customtkinter as ctk
 
 from Entity import EnumProps, EnumAiming, EnumAmmo, ItemManager
@@ -595,3 +597,15 @@ class Utils:
         data[result]["fastLoad"] = False
         data[result]["counts"] = count
         JsonUtils.save_mag_preset(data, result)
+
+    @staticmethod
+    def apply_bag_value(bags, result, data_load, switch_var, slider):
+        change_number = int(slider.get())
+        if switch_var and change_number > 0:
+            if change_number > 0:
+                for bag in bags:
+                    old_grids = copy.deepcopy(bag.Grids)
+                    bag.resize_backpacks(change_number)
+                    bag.display_resize_info(old_grids)
+            if switch_var:
+

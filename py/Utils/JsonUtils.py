@@ -7,7 +7,7 @@ from Entity.EnumEffect import EnumEffect
 from Entity.EnumMedic import EnumMedic
 from Entity.WindowType import WindowType
 from config import JSON_FILES_DIR_WEAPONS, JSON_FILES_DIR_CALIBER, JSON_FILES_DIR_PMC, JSON_FILES_DIR_AMMO, \
-    JSON_FILES_DIR_MEDIC, JSON_FILES_DIR_MAG
+    JSON_FILES_DIR_MEDIC, JSON_FILES_DIR_MAG, JSON_FILES_DIR_BAG
 
 
 class JsonUtils:
@@ -16,6 +16,11 @@ class JsonUtils:
     @staticmethod
     def file_exist(file_path):
         return os.path.exists(file_path)
+
+    @staticmethod
+    def bag_exist(result):
+        path = os.path.join(JSON_FILES_DIR_BAG, f'{result}_mod.json')
+        return os.path.exists(path)
 
     @staticmethod
     def file_mod_exist(file_path):
@@ -34,6 +39,18 @@ class JsonUtils:
     @staticmethod
     def load_mag():
         path = os.path.join(JSON_FILES_DIR_MAG, "Mag.json")
+        with open( path, "r", encoding="utf-8") as f:
+            return json.load(f)
+
+    @staticmethod
+    def load_bag(result):
+        path = os.path.join(JSON_FILES_DIR_BAG, f'{result}.json')
+        with open( path, "r", encoding="utf-8") as f:
+            return json.load(f)
+
+    @staticmethod
+    def load_bag_mod(result):
+        path = os.path.join(JSON_FILES_DIR_BAG, f'{result}_mod.json')
         with open( path, "r", encoding="utf-8") as f:
             return json.load(f)
 
@@ -508,3 +525,15 @@ class JsonUtils:
                 if file_name.endswith('_mod.json'):
                     file_path = os.path.join(JSON_FILES_DIR_MEDIC, file_name)
                     JsonUtils.delete_file(file_path)
+
+    @staticmethod
+    def create_mod_bag(result):
+        path_mod = os.path.join(JSON_FILES_DIR_BAG, f'{result}_mod.json')
+        if JsonUtils.file_exist(path_mod):
+            return JsonUtils.load_json(path_mod)
+
+        path_original = os.path.join(JSON_FILES_DIR_BAG, f'{result}.json')
+        data = JsonUtils.load_json(path_original)
+        with open(path_mod, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=4)
+        return data

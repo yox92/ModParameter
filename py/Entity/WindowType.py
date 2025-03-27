@@ -9,3 +9,4 @@ class WindowType(Enum):
     MEDIC = "medic"
     DELETE = "delete"
     BAG = "bag"
+    MAG = "mag"

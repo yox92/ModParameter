@@ -234,6 +234,9 @@ export class ItemService {
             if (!mag) {
                 this.itemUpdaterService.applyMagMod(mag)
             }
+            else {
+                 this.logger.debug(`[ModParameter] invalide parsing json to mag: ${fileName}`);
+            }
         }
     }
 

@@ -99,8 +99,26 @@ PARENT_ID_BACKPACK = "5448e53e4bdc2d60728b4567"
 #
 #     print(f"\n✅ JSON écrit dans : {output_path}")
 
+CATEGORY_BOUNDS = {
+    "01-18": (1, 18),
+    "19-24": (19, 24),
+    "25-30": (25, 30),
+    "31-36": (31, 36),
+    "37-48.json": (37, 48)
+}
+def get_category_for_size(size: int) -> str:
+    for label, (min_size, max_size) in CATEGORY_BOUNDS.items():
+        if min_size <= size <= max_size:
+            return label
+    return "unknown"
+
 def extract_backpacks_with_grids_from_file(items_file: Path, output_file: Path) -> None:
-    result = {}
+    result = defaultdict(lambda: {
+        "size": 0,
+        "penality": False,
+        "resize": False,
+        "ids": {}
+    })
 
     try:
         with open(items_file, "r", encoding="utf-8") as f:
@@ -112,6 +130,7 @@ def extract_backpacks_with_grids_from_file(items_file: Path, output_file: Path) 
 
             grids = item_data.get("_props", {}).get("Grids", [])
             grid_data = {}
+            total_size = 0
 
             for grid in grids:
                 grid_id = grid.get("_id")
@@ -123,12 +142,21 @@ def extract_backpacks_with_grids_from_file(items_file: Path, output_file: Path) 
                         "cellsH": cellsH,
                         "cellsV": cellsV
                     }
+                    total_size += cellsH * cellsV
 
             if grid_data:
-                result[item_id] = {"Grids": grid_data}
+                category = get_category_for_size(total_size)
 
+                if category == "unknown":
+                    print(f"⚠️  Sac ignoré : id={item_id}, name={item_data.get('_name', 'Inconnu')}, size={total_size}")
+                    continue
+
+                result[category]["ids"][item_id] = {
+                    "name": item_data.get("_name", "Inconnu"),
+                    "Grids": grid_data
+                }
     except Exception as e:
-        print(f"❌ Erreur pendant le traitement de {items_file.name} : {e}")
+        print(f"❌ Erreur pendant le traitement de {items_file} : {e}")
         return
 
     output_file.parent.mkdir(parents=True, exist_ok=True)
@@ -137,7 +165,6 @@ def extract_backpacks_with_grids_from_file(items_file: Path, output_file: Path) 
         json.dump(result, f, indent=2, ensure_ascii=False)
 
     print(f"✅ Export terminé : {output_file}")
-
 # Exemple d'utilisation
 if __name__ == "__main__":
 
