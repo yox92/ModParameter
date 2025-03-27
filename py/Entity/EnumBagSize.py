@@ -1,7 +1,7 @@
 from enum import Enum
 
 class EnumBagSize(Enum):
-    CAT_S = "1-18"
+    CAT_S = "01-18"
     CAT_M1 = "19-24"
     CAT_M2 = "25-30"
     CAT_L = "31-36"

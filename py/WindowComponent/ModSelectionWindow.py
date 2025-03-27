@@ -874,9 +874,9 @@ class ModSelectionWindow:
         label4.grid(row=4, column=0, sticky="nsew")
         label5 = ctk.CTkLabel(self.frame_bot_bot, font=("Arial", 18, "bold"), text=f"{str(mag_obj.counts)} ammo(s)")
         label5.grid(row=4, column=2,sticky="w")
-
+        [min_value, max_value] = Utils.max_min_slider_mag(result)
         slider = ctk.CTkSlider(self.frame_bot_bot,
-                               from_=1, to=150,
+                               from_=min_value, to=max_value,
                                command=lambda value: label5.configure(
                                    text=f"{int(value)} ammo(s)"))
         slider.set(mag_obj.counts or 1)
@@ -963,9 +963,9 @@ class ModSelectionWindow:
         label4.grid(row=3, column=0, sticky="nsew")
         label5 = ctk.CTkLabel(self.frame_bot_bot, font=("Arial", 18, "bold"), text=f"+{str(size)}%")
         label5.grid(row=3, column=2,sticky="w")
-        [min, max] = Utils.max_min_slider_bag(result)
+        [min_value, max_value] = Utils.max_min_slider_bag(result)
         slider = ctk.CTkSlider(self.frame_bot_bot,
-                               from_=min, to=max,
+                               from_=min_value, to=max_value,
                                command=lambda value: label5.configure(
                                    text=f"+{int(value)}%"))
         slider.set(size)

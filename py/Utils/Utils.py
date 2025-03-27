@@ -642,3 +642,20 @@ class Utils:
             return 0, 100
         elif EnumBagSize.from_value(result) == EnumBagSize.CAT_XL:
             return 0, 80
+
+    @staticmethod
+    def max_min_slider_mag(result: str):
+        if EnumMagSize.from_value(result) in (EnumMagSize.CAT_01_09,
+                                              EnumMagSize.CAT_10_19,
+                                              EnumMagSize.CAT_20_29,
+                                              EnumMagSize.CAT_30_39,
+                                              EnumMagSize.CAT_40_49):
+            return 1, 100
+        elif EnumMagSize.from_value(result) in (EnumMagSize.CAT_50_59,
+                                                EnumMagSize.CAT_60_69,
+                                                EnumMagSize.CAT_70_79):
+            return 1, 150
+        elif EnumMagSize.from_value(result) in (EnumMagSize.CAT_80_89,
+                                                EnumMagSize.CAT_90_100,
+                                                EnumMagSize.CAT_GT_100):
+            return 1, 200
