@@ -39,7 +39,7 @@ export class BagCat {
             ids[bagId] = Bag.fromJson(bagId, bagData);
         }
 
-        return new BagCat(data.size, data.penality, data.excludedFilter, data.resize, ids);
+        return new BagCat(data.size, data.penality, data.resize,data.excludedFilter, ids);
     }
 }
 
