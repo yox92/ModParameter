@@ -354,7 +354,7 @@ export class ItemUpdaterService {
             }
         }
         if (warning_info) {
-            this.logger.warning(`[ModParameter] Modified grid size :'${name}'. clean temporary files if need.`);
+            this.logger.warning(`[ModParameter] Modified grid size Magazine :'${mag.name}'. clean temporary files if need.`);
         }
     }
 
