@@ -445,7 +445,7 @@ class ModSelectionWindow:
         elif choice_window == WindowType.MAG:
             Utils.create_grid_row_col_config(self.main_frame_bot, 1, 2)
             Utils.create_1x2_bottom(self.framesBotCaliber, self.main_frame_bot)
-            self.create_buttons_for_bag(choice_window)
+            self.create_buttons_for_bag()
 
     def pmc_window(self):
         WindowUtils.lock_choice_frame("pmc", self.frames_buttons)
@@ -690,7 +690,7 @@ class ModSelectionWindow:
             button.configure(command=lambda parent=code: self.medic_button_press(parent, choice_window))
             column += 1
 
-    def create_buttons_for_bag(self, choice_window: WindowType):
+    def create_buttons_for_bag(self):
         buttons_data = [
             ("Bag", self.bag_image, "code_a"),
             ("Magazine", self.bag_image, "code_b"),
@@ -877,28 +877,18 @@ class ModSelectionWindow:
         Utils.create_grid_row_col_config(self.frame_bot_top, 1, 1)
         Utils.create_grid_row_col_config(self.frame_bot_bot, 4, 3)
         data_load = False
+        if not JsonUtils.bag_exist(result):
+            data = JsonUtils.load_bag(result)
 
-        if JsonUtils.bag_exist(result):
-            data_load = True
+        else:
+            data = JsonUtils.load_bag_mod(result)
             self.logger.log("info","Bag save load")
-        data = JsonUtils.create_mod_bag(result)
+            data_load = True
 
         category_data = data.get(result)
         penality = category_data.get("penality")
         resize = category_data.get("resize")
         size = category_data.get("size")
-
-        data = JsonUtils.create_mod_bag(result)
-        category_data = data.get(result)
-
-        bags = []
-        for ids, bag_info in category_data.get("ids", {}).items():
-            Grids = bag_info.get("Grids", {})
-            bag = Bag(
-                ids=ids,
-                name=bag_info.get("name", "Inconnu"),
-                Grids=Grids)
-            bags.append(bag)
 
         button = ctk.CTkButton(self.frame_bot_top,
                                text="<== BACK ==>",
@@ -910,7 +900,7 @@ class ModSelectionWindow:
 
         label_count = ctk.CTkLabel(
             self.frame_bot_bot,
-            text=f"{len(bags)} Bags",
+            text=f"{len(category_data.get("ids", {}))} Bags",
             font=("Arial", 16, "bold"),
             text_color="white"
         )
@@ -945,19 +935,24 @@ class ModSelectionWindow:
             self.frame_bot_bot,
             text="Validate",
             fg_color="green",
-            command=lambda: self.apply_bag( bags,result, data_load, switch_var,  slider)
+            command=lambda: self.apply_bag( data,result, switch_var,  slider)
         )
         validate_button.grid(row=3, column=0, columnspan=2, padx=5, pady=50)
         reset_button = ctk.CTkButton(
             self.frame_bot_bot,
             text="Reset",
             fg_color="red",
-            command=lambda: self.reset_bag(result, data)
+            command=lambda: self.reset_bag(result, data_load)
         )
         reset_button.grid(row=3, column=1, columnspan=2, padx=5, pady=5)
 
-    def apply_bag(self, bags, result, data_load, switch_var, slider):
-        Utils.apply_bag_value( bags, result, data_load, switch_var, slider)
+    def apply_bag(self, data, result, switch_var, slider):
+        Utils.apply_bag_value( data, result, switch_var, slider)
+        self.bag_button_press()
+
+    def reset_bag(self, result, data_load):
+        if data_load:
+            JsonUtils.delete_bag_mod(result)
         self.bag_button_press()
 
     def apply_mag(self, data, result, switch_var, switch_var2, switch_var3, slider):
@@ -979,8 +974,8 @@ class ModSelectionWindow:
         self.generate_list_button(WindowType.MAG)
 
     def bag_window(self):
-        WindowUtils.lock_choice_frame("bag", self.frames_buttons)
-        self.generate_list_button(WindowType.BAG)
+        WindowUtils.lock_choice_frame("mag", self.frames_buttons)
+        self.generate_list_button(WindowType.MAG)
 
     def ammo_button_press(self, caliber_select, choice_window):
         if not self.data_json_from_load_all_ammo:

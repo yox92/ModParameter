@@ -3,6 +3,7 @@ import copy
 import customtkinter as ctk
 
 from Entity import EnumProps, EnumAiming, EnumAmmo, ItemManager
+from Entity.Bag import Bag
 from Entity.EnumEffect import EnumEffect
 from Entity.EnumEffectName import EnumEffectName
 from Entity.EnumMagSize import EnumMagSize
@@ -599,13 +600,27 @@ class Utils:
         JsonUtils.save_mag_preset(data, result)
 
     @staticmethod
-    def apply_bag_value(bags, result, data_load, switch_var, slider):
+    def apply_bag_value(data, result, switch_var, slider):
+        from Utils.JsonUtils import JsonUtils
         change_number = int(slider.get())
-        if switch_var and change_number > 0:
+        boolean = bool(switch_var.get())
+        if boolean or change_number > 0:
+            bags = []
+            for ids, bag_info in data.get(result).get("ids", {}).items():
+                Grids = bag_info.get("Grids", {})
+                bag = Bag(
+                ids=ids,
+                name=bag_info.get("name"),
+                Grids=Grids)
+                bags.append(bag)
             if change_number > 0:
                 for bag in bags:
-                    old_grids = copy.deepcopy(bag.Grids)
                     bag.resize_backpacks(change_number)
-                    bag.display_resize_info(old_grids)
-            if switch_var:
-
+                    data[result]["resize"] = True
+                    data[result]["size"] = change_number
+                    data[result]["ids"][bag.ids]["Grids"] = bag.Grids
+            if boolean:
+                data[result]["penality"] = True
+            JsonUtils.create_mod_bag(data, result)
+        else:
+            print("no change")

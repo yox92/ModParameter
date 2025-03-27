@@ -1,6 +1,5 @@
 import * as fs from "fs";
 import * as path from "path";
-import {WeaponEnum} from "../ListIdItem/WeaponEnum";
 import {EnumUtils} from "../Service/EnumUtils";
 import {mongoid} from "mongoid-js";
 import {MedicEnum} from "../ListIdItem/MedicEnum";

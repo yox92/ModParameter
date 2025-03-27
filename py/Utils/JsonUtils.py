@@ -447,6 +447,12 @@ class JsonUtils:
         print(f" file delete : {file_path}")
 
     @staticmethod
+    def delete_bag_mod(name):
+        path_mod = os.path.join(JSON_FILES_DIR_BAG, f'{name}_mod.json')
+        os.remove(path_mod)
+        print(f" file delete : {name}")
+
+    @staticmethod
     def delete_file_mod_if_exists(file_path):
         json_file_path_mod = file_path.replace(".json", "_mod.json")
         if os.path.exists(json_file_path_mod):
@@ -527,13 +533,9 @@ class JsonUtils:
                     JsonUtils.delete_file(file_path)
 
     @staticmethod
-    def create_mod_bag(result):
-        path_mod = os.path.join(JSON_FILES_DIR_BAG, f'{result}_mod.json')
-        if JsonUtils.file_exist(path_mod):
-            return JsonUtils.load_json(path_mod)
-
-        path_original = os.path.join(JSON_FILES_DIR_BAG, f'{result}.json')
-        data = JsonUtils.load_json(path_original)
+    def create_mod_bag(data, name):
+        path_mod = os.path.join(JSON_FILES_DIR_BAG, f'{name}_mod.json')
+        JsonUtils.delete_file_if_exists(path_mod)
         with open(path_mod, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=4)
-        return data
+        print("Create new Bag catergories mods")

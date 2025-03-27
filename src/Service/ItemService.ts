@@ -13,7 +13,8 @@ import {ItemHelper} from "@spt/helpers/ItemHelper";
 import {DatabaseService} from "@spt/services/DatabaseService";
 import {creatTracer, Tracer} from "../Entity/Tracer";
 import {createMedic, Medic} from "../Entity/Medic";
-import {createMag, Mag} from "../Entity/Mag";
+import {Mag, MagJsonFile} from "../Entity/Mag";
+import {Bag, BagCat} from "../Entity/Bag";
 
 export class ItemService {
     private readonly logger: ILogger;
@@ -223,20 +224,35 @@ export class ItemService {
         }
     }
 
-    private caseMag(jsonMagFiles: { fileName: string; json: any }[]) {
+    private caseMag(jsonMagFiles: Array<{ fileName: string; json: MagJsonFile }>) {
         for (const {fileName, json} of jsonMagFiles) {
             if (!json) {
-                 this.logger.debug(`[ModParameter] Skipping invalid or missing Mag JSON data: ${fileName}`);
+                this.logger.debug(`[ModParameter] Skipping invalid or missing Mag JSON data: ${fileName}`);
                 continue;
             }
 
-             const mag: Mag = createMag(jsonMagFiles);
-            if (!mag) {
-                this.itemUpdaterService.applyMagMod(mag)
+            for (const [name, magJson] of Object.entries(json)) {
+                const mag = new Mag(name, magJson);
+                this.itemUpdaterService.applyMagMod(mag);
             }
-            else {
-                 this.logger.debug(`[ModParameter] invalide parsing json to mag: ${fileName}`);
+        }
+    }
+
+    private caseBag(jsonBagFiles: Array<{ fileName: string; json: MagJsonFile }>) {
+        for (const {fileName, json} of jsonBagFiles) {
+            if (!json) {
+                this.logger.debug(`[ModParameter] Skipping invalid or missing Bag JSON data: ${fileName}`);
+                continue;
             }
+
+            try {
+                const bagCat: BagCat = BagCat.fromJson(json);
+                this.itemUpdaterService.applyBagMod(bagCat);
+                } catch (err) {
+                this.logger.debug(`[ModParameter] Failed parsing JSON to BagCat: ${fileName} — ${err}`);
+            }
+
+
         }
     }
 
@@ -248,14 +264,16 @@ export class ItemService {
         this.caseAmmo(this.loadJsonFiles(ItemTypeEnum.Ammo));
         this.caseMedic(this.loadJsonFiles(ItemTypeEnum.Medic))
     }
+
     public apply_mod_item(): void {
         this.caseMag(this.loadJsonFiles(ItemTypeEnum.Mag));
+        this.caseBag(this.loadJsonFiles(ItemTypeEnum.Bag));
 
 
     }
 
-    private loadJsonFiles(itemType: ItemTypeEnum): any {
-        const jsonFiles: { fileName: string; json: any }[] = this.jsonFileService.loadJsonFiles(itemType);
+    private loadJsonFiles<T>(itemType: ItemTypeEnum): Array<{ fileName: string; json: T }> {
+        const jsonFiles: Array<{ fileName: string; json: T }> = this.jsonFileService.loadJsonFiles(itemType);
 
         if (jsonFiles.length === 0) {
             this.logger.debug(`[ModParameter] No ${itemType} mod found. Skipping ${itemType} updates.`);

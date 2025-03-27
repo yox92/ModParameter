@@ -6,17 +6,31 @@ export class Mag {
     fastLoad: boolean;
     ids: string[];
 
-    constructor(aiming: Mag) {
-        Object.assign(this, aiming);
+    constructor(name: string, data: IMagJson) {
+        this.name = name;
+        this.counts = data.counts;
+        this.penality = data.penality;
+        this.resize = data.resize;
+        this.fastLoad = data.fastLoad;
+        this.ids = data.ids;
+    }
+
+    toJson(): IMagJson {
+        return {
+            counts: this.counts,
+            penality: this.penality,
+            resize: this.resize,
+            fastLoad: this.fastLoad,
+            ids: this.ids
+        };
     }
 }
-export function createMag(data: any): Mag {
-    return new Mag({
-        name: data.name,
-        counts: data.counts,
-        penality: data.penality,
-        resize: data.resize,
-        fastLoad: data.resize,
-        ids: data.ids,
-    });
+
+export interface IMagJson {
+    counts: number;
+    penality: boolean;
+    resize: boolean;
+    fastLoad: boolean;
+    ids: string[];
 }
+export type MagJsonFile = Record<string, IMagJson>;

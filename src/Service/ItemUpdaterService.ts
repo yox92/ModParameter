@@ -11,6 +11,7 @@ import {ItemHelper} from "@spt/helpers/ItemHelper";
 import {IEffectDamageProps, Medic} from "../Entity/Medic";
 import {Mag} from "../Entity/Mag";
 import {EnumagCount} from "../Entity/EnumagCount";
+import {Bag, BagCat} from "../Entity/Bag";
 
 
 export class ItemUpdaterService {
@@ -77,13 +78,7 @@ export class ItemUpdaterService {
                                   name_item_to_modify: string): Partial<Ammo> {
         const validateUtils = new ValidateUtils();
 
-        const templates: ITemplates | undefined = this.dataService.getTemplates();
-        const items: Record<string, ITemplateItem> | undefined = templates?.items;
-
-        if (!templates || !items) {
-            this.logger.debug("[ModParameter] Invalid dataService structure. Modification aborted");
-            return null;
-        }
+        const items: Record<string, ITemplateItem> = validateUtils.getTemplateItems(this.dataService, this.logger)
 
         const sptItem: ITemplateItem | undefined = items[id_item_to_modify];
 
@@ -163,20 +158,9 @@ export class ItemUpdaterService {
                                    name_item_to_modify: string): Partial<Medic> | null {
         const validateUtils = new ValidateUtils();
 
-        const templates: ITemplates | undefined = this.dataService.getTemplates();
-        const items: Record<string, ITemplateItem> | undefined = templates?.items;
-
-        if (!templates || !items) {
-            this.logger.debug("[ModParameter] Invalid dataService structure. Modification aborted");
-            return null;
-        }
+        const items: Record<string, ITemplateItem> = validateUtils.getTemplateItems(this.dataService, this.logger)
 
         const sptItem: ITemplateItem | undefined = items[id_item_to_modify];
-
-        if (!sptItem) {
-            this.logger.debug(`[ModParameter] Item with ID '${id_item_to_modify}' not found in templates DB.`);
-            return null;
-        }
 
         const sptItemProps: IProps | undefined = sptItem._props;
 
@@ -281,13 +265,7 @@ export class ItemUpdaterService {
                                  name_item_to_modify: string): Partial<ItemProps> {
         const validateUtils = new ValidateUtils();
 
-        const templates: ITemplates | undefined = this.dataService.getTemplates();
-        const itemsSpt: Record<string, ITemplateItem> | undefined = templates?.items;
-
-        if (!templates || !itemsSpt) {
-            this.logger.debug("[ModParameter] Invalid dataService structure. Modification aborted");
-            return null;
-        }
+        const itemsSpt: Record<string, ITemplateItem> = validateUtils.getTemplateItems(this.dataService, this.logger)
 
         const sptItem: ITemplateItem | undefined = itemsSpt[id_item_to_modify];
 
@@ -330,6 +308,7 @@ export class ItemUpdaterService {
     }
 
     public applyMagMod(mag: Mag): void {
+        const validateutils = new ValidateUtils();
         const defaultValue: number = EnumagCount[mag.name]
 
         if (mag.resize === false && mag.penality === false && mag.counts === defaultValue) {
@@ -337,13 +316,7 @@ export class ItemUpdaterService {
             return;
         }
 
-        const templates: ITemplates | undefined = this.dataService.getTemplates();
-        const items: Record<string, ITemplateItem> | undefined = templates?.items;
-
-        if (!templates || !items) {
-            this.logger.debug("[ModParameter] Invalid dataService structure. Modification aborted");
-            return null;
-        }
+        const items: Record<string, ITemplateItem> = validateutils.getTemplateItems(this.dataService, this.logger)
 
         const magazines: ITemplateItem[] = Object.values(items).filter(
             (item: ITemplateItem) =>
@@ -383,7 +356,61 @@ export class ItemUpdaterService {
                     magazine._props.MalfunctionChance = 0.03
                 }
                 if (magazine._props.CheckTimeModifier) {
-                     this.logger.debug(`[ModParameter] modify ${magazine._name} CheckTimeModifier`);
+                    this.logger.debug(`[ModParameter] modify ${magazine._name} CheckTimeModifier`);
+                    magazine._props.CheckTimeModifier = 0
+                }
+            }
+
+            if (mag.counts !== defaultValue) {
+                if (magazine._props?.Cartridges?.[0]) {
+                    magazine._props.Cartridges[0]._props.MaxStackCount = mag.counts
+                }
+            }
+        }
+    }
+    public applyBagMod(bagCat: BagCat): void {
+        const validateutils = new ValidateUtils();
+
+        const items: Record<string, ITemplateItem> = validateutils.getTemplateItems(this.dataService, this.logger)
+
+        const bagpack: ITemplateItem[] = Object.values(items).filter(
+            (item: ITemplateItem) =>
+                item?._id &&
+                this.itemHelper.isOfBaseclass(item._id, Baseclass.BACKPACK));
+
+        for (const magazine of magazines) {
+            if (!magazine._props || !Array.isArray(magazine._props.Cartridges)) {
+                this.logger.debug(`[ModParameter] Warning: Magazine ${magazine._id} has no Cartridges property.`);
+                continue;
+            }
+
+            if (mag.fastLoad) {
+                if (magazine._props.LoadUnloadModifier) {
+                    this.logger.debug(`[ModParameter] modify ${magazine._name} Load, Unload speed`);
+                    magazine._props.LoadUnloadModifier = 100;
+                }
+            }
+
+            if (mag.resize) {
+                if (mag.penality) {
+                    if (magazine._props.Width) {
+                        this.logger.debug(`[ModParameter] modify ${magazine._name}  slot number`);
+                        magazine._props.Width = 2;
+                    }
+                }
+            }
+
+            if (mag.penality) {
+                if (magazine._props.Ergonomics && magazine._props.Ergonomics < 0) {
+                    this.logger.debug(`[ModParameter] modify ${magazine._name} Ergonomics`);
+                    magazine._props.Ergonomics = 0
+                }
+                if (magazine._props.MalfunctionChance) {
+                    this.logger.debug(`[ModParameter] modify ${magazine._name} MalfunctionChance`);
+                    magazine._props.MalfunctionChance = 0.03
+                }
+                if (magazine._props.CheckTimeModifier) {
+                    this.logger.debug(`[ModParameter] modify ${magazine._name} CheckTimeModifier`);
                     magazine._props.CheckTimeModifier = 0
                 }
             }
