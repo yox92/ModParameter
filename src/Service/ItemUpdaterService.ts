@@ -311,6 +311,10 @@ export class ItemUpdaterService {
         const validateutils = new ValidateUtils();
         const defaultValue: number = EnumagCount[mag.name];
 
+        if (!mag.fastLoad && !mag.resize && !mag.penality && mag.counts === defaultValue) {
+            this.logger.warning(`[ModParameter] skip magazines : ` + mag.name);
+        }
+
         const items = validateutils.getTemplateItems(this.dataService, this.logger);
 
         const magazines: ITemplateItem[] = Object.values(items).filter(
@@ -342,15 +346,19 @@ export class ItemUpdaterService {
                 this.applyMagPenality(props, name);
             }
 
-            if (mag.counts !== defaultValue && firstCartridge?._props) {
-                firstCartridge._props.MaxStackCount = mag.counts;
+            if (mag.penality) {
+                this.applyMagPenality(props, name);
+            }
+
+            if (mag.counts !== defaultValue && firstCartridge?._max_count) {
+                firstCartridge._max_count = mag.counts;
             }
         }
     }
 
     private applyMagFastLoad(props: IProps, name: string): void {
         if (props?.LoadUnloadModifier) {
-            props.LoadUnloadModifier = 100;
+            props.LoadUnloadModifier = -100;
             this.logger.debug(`[ModParameter] modify ${name} Load, Unload speed`);
         }
     }
