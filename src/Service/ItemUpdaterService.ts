@@ -349,7 +349,7 @@ export class ItemUpdaterService {
                 this.applyMagPenality(props, name);
             }
 
-            if (mag.counts !== defaultValue && firstCartridge?._max_count !== null && firstCartridge?._max_count !== undefined ) {
+            if (mag.counts !== defaultValue && firstCartridge?._max_count !== null && firstCartridge?._max_count !== undefined) {
                 firstCartridge._max_count = mag.counts;
             }
         }
@@ -359,7 +359,7 @@ export class ItemUpdaterService {
     }
 
     private applyMagFastLoad(props: IProps, name: string): void {
-        if (props?.LoadUnloadModifier) {
+        if (props?.LoadUnloadModifier !== null && props?.LoadUnloadModifier !== undefined) {
             props.LoadUnloadModifier = -60;
             this.logger.debug(`[ModParameter] modify ${name} Load, Unload speed`);
         }
@@ -370,7 +370,12 @@ export class ItemUpdaterService {
         const XS_CATEGORIES = ["01-09", "10-19", "20-29"];
         let categories_XS: boolean = XS_CATEGORIES.includes(mag_name);
 
-        if (props?.Height && props?.Width && props?.ExtraSizeDown) {
+        if (props?.Height !== null &&
+            props?.Height !== undefined &&
+            props?.Width !== null &&
+            props?.Width !== undefined &&
+            props?.ExtraSizeDown !== null &&
+            props?.ExtraSizeDown !== undefined) {
 
             if (props.Height === 3 && props.Width === 1) {
                 props.Height = 2;
