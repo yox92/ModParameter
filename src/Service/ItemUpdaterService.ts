@@ -311,11 +311,6 @@ export class ItemUpdaterService {
         const validateutils = new ValidateUtils();
         const defaultValue: number = EnumagCount[mag.name];
 
-        if (mag.resize === false && mag.penality === false && mag.counts === defaultValue) {
-            this.logger.debug(`[ModParameter] Skipping mag : ${mag.name}`);
-            return;
-        }
-
         const items = validateutils.getTemplateItems(this.dataService, this.logger);
 
         const magazines: ITemplateItem[] = Object.values(items).filter(
@@ -327,7 +322,7 @@ export class ItemUpdaterService {
 
         for (const magazine of magazines) {
 
-            if (!magazine?._props || !magazine?._name || magazine?._props || magazine._props?.Cartridges) {
+            if (!magazine?._props || !magazine?._name || !magazine._props?.Cartridges) {
                 this.logger.debug(`[ModParameter] Warning: Magazine has no good property.`);
                 continue;
             }

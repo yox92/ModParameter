@@ -69,7 +69,7 @@ class JsonUtils:
     def save_mag_preset(data, result):
         path = os.path.join(JSON_FILES_DIR_MAG, "Mag.json")
         with open(path, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=2, ensure_ascii=False)
+            json.dump(data, f, indent=2)
         print(f"✅ Mag {result} save.")
 
     @staticmethod
@@ -125,13 +125,13 @@ class JsonUtils:
         data["clone"] = new_value
 
         with open(file_path, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=2, ensure_ascii=False)
+            json.dump(data, f, indent=4)
 
     @staticmethod
     def write_json(data, file_path):
         try:
             with open(file_path, "w", encoding="utf-8") as json_file:
-                json.dump(data, json_file, indent=4, ensure_ascii=False)
+                json.dump(data, json_file, indent=4)
                 print("JSON file successfully written.")
         except IOError as e:
             print(f"Error on write file :  '{file_path}': {e}")

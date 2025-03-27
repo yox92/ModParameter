@@ -1,5 +1,5 @@
 {
-  "01–09": {
+  "01-09": {
     "counts": 1,
     "penality": false,
     "resize": false,
@@ -41,7 +41,7 @@
       "5de653abf76fdc1ce94a5a2a"
     ]
   },
-  "10–19": {
+  "10-19": {
     "counts": 10,
     "penality": false,
     "resize": false,
@@ -93,7 +93,7 @@
       "5c503ad32e2216398b5aada2"
     ]
   },
-  "20–29": {
+  "20-29": {
     "counts": 20,
     "penality": false,
     "resize": false,
@@ -142,7 +142,7 @@
       "5c0673fb0db8340023300271"
     ]
   },
-  "30–39": {
+  "30-39": {
     "counts": 30,
     "penality": false,
     "resize": false,
@@ -202,7 +202,7 @@
       "5c05413a0db834001c390617"
     ]
   },
-  "40–49": {
+  "40-49": {
     "counts": 40,
     "penality": false,
     "resize": false,
@@ -221,7 +221,7 @@
       "5d1340bdd7ad1a0e8d245aab"
     ]
   },
-  "50–59": {
+  "50-59": {
     "counts": 50,
     "penality": false,
     "resize": false,
@@ -239,7 +239,7 @@
       "5addccf45acfc400185c2989"
     ]
   },
-  "60–69": {
+  "60-69": {
     "counts": 60,
     "penality": false,
     "resize": false,
@@ -250,7 +250,7 @@
       "544a37c44bdc2d25388b4567"
     ]
   },
-  "70–79": {
+  "70-79": {
     "counts": 70,
     "penality": false,
     "resize": false,
@@ -262,7 +262,7 @@
       "61695095d92c473c7702147a"
     ]
   },
-  "80–89": {
+  "80-89": {
     "counts": 31,
     "penality": false,
     "resize": false,
@@ -271,7 +271,7 @@
       "55d485be4bdc2d962f8b456f"
     ]
   },
-  "90–100": {
+  "90-100": {
     "counts": 90,
     "penality": false,
     "resize": false,

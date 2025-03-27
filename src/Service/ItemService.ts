@@ -246,13 +246,12 @@ export class ItemService {
             }
 
             try {
-                const bagCat: BagCat = BagCat.fromJson(json);
+                const firstKey = Object.keys(json)[0];
+                const bagCat: BagCat = BagCat.fromJson(json[firstKey]);
                 this.itemUpdaterService.applyBagMod(bagCat);
-                } catch (err) {
+            } catch (err) {
                 this.logger.debug(`[ModParameter] Failed parsing JSON to BagCat: ${fileName} — ${err}`);
             }
-
-
         }
     }
 

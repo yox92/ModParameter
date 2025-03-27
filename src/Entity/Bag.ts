@@ -30,6 +30,10 @@ export class BagCat {
     }
 
     static fromJson(data: any): BagCat {
+        if (!data || typeof data !== "object" || !data.ids) {
+            throw new Error("Invalid BagCat JSON structure");
+        }
+
         const ids: Record<string, Bag> = {};
         for (const [bagId, bagData] of Object.entries(data.ids)) {
             ids[bagId] = Bag.fromJson(bagId, bagData);
