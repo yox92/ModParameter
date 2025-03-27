@@ -28,7 +28,9 @@ REQUIRED_DIRS = [JSON_FILES_DIR,
                  JSON_FILES_DIR_CALIBER,
                  JSON_FILES_DIR_PMC,
                  JSON_FILES_DIR_AMMO,
-                 JSON_FILES_DIR_MEDIC
+                 JSON_FILES_DIR_MEDIC,
+                 JSON_FILES_DIR_MAG,
+                 JSON_FILES_DIR_BAG
                  ]
 
 
@@ -131,6 +133,8 @@ def check_project_structure():
         print(f" JSON directory (JsonFiles): {JSON_FILES_DIR_PMC}")
         print(f" JSON directory (JsonFiles): {JSON_FILES_DIR_AMMO}")
         print(f" JSON directory (JsonFiles): {JSON_FILES_DIR_MEDIC}")
+        print(f" JSON directory (JsonFiles): {JSON_FILES_DIR_BAG}")
+        print(f" JSON directory (JsonFiles): {JSON_FILES_DIR_MAG}")
         print(f" Image directory (JsonFiles): {IMAGES_DIR}")
         print("------------------------------------------------------------\n")
 
