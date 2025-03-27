@@ -327,8 +327,8 @@ export class ItemUpdaterService {
 
         for (const magazine of magazines) {
 
-            if (!magazine._props || !magazine._name || !Array.isArray(magazine._props.Cartridges)) {
-                this.logger.debug(`[ModParameter] Warning: Magazine ${magazine._id} has no Cartridges property.`);
+            if (!magazine?._props || !magazine?._name || magazine?._props || magazine._props?.Cartridges) {
+                this.logger.debug(`[ModParameter] Warning: Magazine has no good property.`);
                 continue;
             }
             const props: IProps = magazine._props;
@@ -354,29 +354,29 @@ export class ItemUpdaterService {
     }
 
     private applyMagFastLoad(props: IProps, name: string): void {
-        if (props.LoadUnloadModifier) {
+        if (props?.LoadUnloadModifier) {
             this.logger.debug(`[ModParameter] modify ${name} Load, Unload speed`);
             props.LoadUnloadModifier = 100;
         }
     }
 
     private applyMagResize(props: IProps, name: string): void {
-        if (props.Width) {
+        if (props?.Height && props.Height === 3) {
             this.logger.debug(`[ModParameter] modify ${name}  slot number`);
-            props.Width = 2;
+            props.Height = 2;
         }
     }
 
     private applyMagPenality(props: IProps, name: string): void {
-        if (props.Ergonomics && props.Ergonomics < 0) {
+        if (props?.Ergonomics && props.Ergonomics < 0) {
             this.logger.debug(`[ModParameter] modify ${name} Ergonomics`);
             props.Ergonomics = 0
         }
-        if (props.MalfunctionChance) {
+        if (props?.MalfunctionChance) {
             this.logger.debug(`[ModParameter] modify ${name} MalfunctionChance`);
             props.MalfunctionChance = 0.03
         }
-        if (props.CheckTimeModifier) {
+        if (props?.CheckTimeModifier) {
             this.logger.debug(`[ModParameter] modify ${name} CheckTimeModifier`);
             props.CheckTimeModifier = 0
         }
@@ -414,7 +414,7 @@ export class ItemUpdaterService {
                 }
 
                 if (bagCat.resize && bagCat.resize !== 0) {
-                    this.applyBagResize(backPackProps, backPackId, bagCat, backPack._name);
+                    this.applyBagResize(backPackProps, backPackId, bagCat, backPack._name, validateutils);
                 }
             }
         }
@@ -454,7 +454,7 @@ export class ItemUpdaterService {
         }
     }
 
-    private applyBagResize(backPackProps: IProps, backPackId: string, bagCat: BagCat, name: string): void {
+    private applyBagResize(backPackProps: IProps, backPackId: string, bagCat: BagCat, name: string, validateutils): void {
         const jsonBags: Record<string, Bag> = bagCat.ids;
 
         const jsonBag = jsonBags[backPackId];
@@ -470,8 +470,8 @@ export class ItemUpdaterService {
         for (const sptGrid of backPackProps.Grids) {
             const jsonGrid = sptGrid._id ? jsonGrids[sptGrid._id] : null;
             if (jsonGrid && sptGrid._props) {
-                sptGrid._props.cellsH = jsonGrid.cellsH;
-                sptGrid._props.cellsV = jsonGrid.cellsV;
+                sptGrid._props.cellsH = validateutils.validateAndCastIntPmc(jsonGrid.cellsH);
+                sptGrid._props.cellsV = validateutils.validateAndCastIntPmc(jsonGrid.cellsV);
                 modified = true;
             }
         }
