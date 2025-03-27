@@ -339,7 +339,7 @@ export class ItemUpdaterService {
             }
 
             if (mag.resize) {
-                this.applyMagResize(props, name);
+                this.applyMagResize(props, name, mag.name);
             }
 
             if (mag.penality) {
@@ -363,16 +363,26 @@ export class ItemUpdaterService {
         }
     }
 
-    private applyMagResize(props: IProps, name: string): void {
-        if (props?.Height && props?.Width && props.Height === 3 && props?.Width === 1) {
-            props.Height = 2;
-            this.logger.debug(`[ModParameter] modify ${name} slot number Height = 2`);
+    private applyMagResize(props: IProps, name: string, mag_name: string): void {
+        const XS_CATEGORIES = ["01-09", "10-19", "20-29"];
+        let categories_XS: boolean = XS_CATEGORIES.includes(mag_name);
+        this.logger.warning(`[ModParameter] warning ${name} est : ` + categories_XS);
+        if (props?.Height && props?.Width, props?.ExtraSizeDown) {
+
+            if (props.Height === 3 && props.Width === 1) {
+                props.Height = 2;
+                props.ExtraSizeDown = 1;
+                this.logger.debug(`[ModParameter] modify ${name} slot number Height = 2`);
+            } else if (props.Height === 2 && props.Width === 2) {
+                props.Height = 2;
+                props.Width = 1;
+                this.logger.debug(`[ModParameter] modify ${name} slot 2 to slot 2 `);
+            } else if (props.Height === 2 && props.Width === 1 && categories_XS) {
+                props.Height = 1;
+                 this.logger.debug(`[ModParameter] modify ${name} slot 2 to slot 1 `);
+            }
         }
-        if (props?.Height && props?.Width && props.Height === 2 && props.Width === 2) {
-            props.Height = 2;
-            props.Width = 1;
-             this.logger.debug(`[ModParameter] modify ${name} slot 4 to slot 2 `);
-        }
+
     }
 
     private applyMagPenality(props: IProps, name: string): void {
