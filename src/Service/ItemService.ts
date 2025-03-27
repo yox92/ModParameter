@@ -267,8 +267,6 @@ export class ItemService {
     public apply_mod_item(): void {
         this.caseMag(this.loadJsonFiles(ItemTypeEnum.Mag));
         this.caseBag(this.loadJsonFiles(ItemTypeEnum.Bag));
-
-
     }
 
     private loadJsonFiles<T>(itemType: ItemTypeEnum): Array<{ fileName: string; json: T }> {

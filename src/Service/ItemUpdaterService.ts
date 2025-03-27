@@ -1,7 +1,6 @@
 import {ItemProps} from "../Entity/ItemProps";
 import {ILogger} from "@spt/models/spt/utils/ILogger";
 import {Ammo} from "../Entity/Ammo";
-import {ITemplates} from "@spt/models/spt/templates/ITemplates";
 import {IGrid, IGridFilter, IProps, ITemplateItem} from "@spt/models/eft/common/tables/ITemplateItem";
 import {ValidateUtils} from "../Utils/ValidateUtils";
 import {DatabaseService} from "@spt/services/DatabaseService";
@@ -11,7 +10,7 @@ import {ItemHelper} from "@spt/helpers/ItemHelper";
 import {IEffectDamageProps, Medic} from "../Entity/Medic";
 import {Mag} from "../Entity/Mag";
 import {EnumagCount} from "../Entity/EnumagCount";
-import {Bag, BagCat, IGridJson} from "../Entity/Bag";
+import {Bag, BagCat} from "../Entity/Bag";
 
 
 export class ItemUpdaterService {
@@ -311,7 +310,7 @@ export class ItemUpdaterService {
         const defaultValue: number = EnumagCount[mag.name];
 
         if (!mag.fastLoad && !mag.resize && !mag.penality && mag.counts === defaultValue) {
-            this.logger.warning(`[ModParameter] skip magazines : ` + mag.name);
+            this.logger.debug(`[ModParameter] skip magazines : ` + mag.name);
         }
 
         const items = validateutils.getTemplateItems(this.dataService, this.logger);
@@ -358,7 +357,6 @@ export class ItemUpdaterService {
     private applyMagFastLoad(props: IProps, name: string): void {
         if (props?.LoadUnloadModifier) {
             props.LoadUnloadModifier = -60;
-            this.logger.warning(`[ModParameter] skip magazines ` + name);
             this.logger.debug(`[ModParameter] modify ${name} Load, Unload speed`);
         }
     }
@@ -372,22 +370,21 @@ export class ItemUpdaterService {
             if (props.Height === 3 && props.Width === 1) {
                 props.Height = 2;
                 props.ExtraSizeDown = 1;
-                this.logger.debug(`[ModParameter] modify ${name} slot number Height = 2`);
+                this.logger.debug(`[ModParameter] modify ${name} slot 3 To 2`);
             } else if (props.Height === 2 && props.Width === 2) {
                 props.Height = 2;
                 props.Width = 1;
-                this.logger.debug(`[ModParameter] modify ${name} slot 2 to slot 2 `);
+                 this.logger.warning(`[ModParameter] Modified grid size :'${name}'. clean temporary files if need.`);
             } else if (props.Height === 2 && props.Width === 1 && categories_XS) {
                 props.Height = 1;
-                 props.ExtraSizeDown = 0;
-                 this.logger.debug(`[ModParameter] modify ${name} slot 2 to slot 1 `);
+                props.ExtraSizeDown = 0;
+                this.logger.debug(`[ModParameter] modify ${name} slot 2 to slot 1 `);
             }
         }
-
     }
 
     private applyMagPenality(props: IProps, name: string): void {
-        if (props?.Ergonomics  !== null && props?.Ergonomics !== undefined  && props.Ergonomics < 0) {
+        if (props?.Ergonomics !== null && props?.Ergonomics !== undefined && props.Ergonomics < 0) {
             this.logger.debug(`[ModParameter] modify ${name} Ergonomics`);
             props.Ergonomics = 0
         }
@@ -395,7 +392,7 @@ export class ItemUpdaterService {
             this.logger.debug(`[ModParameter] modify ${name} MalfunctionChance`);
             props.MalfunctionChance = 0.03
         }
-        if (props?.CheckTimeModifier ||  props?.CheckTimeModifier > 0) {
+        if (props?.CheckTimeModifier || props?.CheckTimeModifier > 0) {
             this.logger.debug(`[ModParameter] modify ${name} CheckTimeModifier`);
             props.CheckTimeModifier = 0
         }
@@ -475,17 +472,24 @@ export class ItemUpdaterService {
 
     private applyBagResize(backPackProps: IProps, backPackId: string, bagCat: BagCat, name: string, validateutils): void {
         const jsonBags: Record<string, Bag> = bagCat.ids;
-
         const jsonBag = jsonBags[backPackId];
-        if (!jsonBag) {
+        let modified = false;
+
+        if (!jsonBag || !backPackProps?.Grids) {
             return;
         }
+
+        if (backPackProps.Grids.length > 1) {
+            this.logger.debug(`[ModParameter] Skipping resize for '${name}' — multiple grids`);
+            return;
+        }
+
 
         const jsonGrids = jsonBag.Grids;
         if (!backPackProps?.Grids) {
             return;
         }
-        let modified = false;
+
         for (const sptGrid of backPackProps.Grids) {
             const jsonGrid = sptGrid._id ? jsonGrids[sptGrid._id] : null;
             if (jsonGrid && sptGrid._props) {
