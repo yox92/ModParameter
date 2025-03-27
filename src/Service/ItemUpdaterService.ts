@@ -308,6 +308,7 @@ export class ItemUpdaterService {
     public applyMagMod(mag: Mag): void {
         const validateutils = new ValidateUtils();
         const defaultValue: number = EnumagCount[mag.name];
+        let warning_info = false;
 
         if (!mag.fastLoad && !mag.resize && !mag.penality && mag.counts === defaultValue) {
             this.logger.debug(`[ModParameter] skip magazines : ` + mag.name);
@@ -337,7 +338,7 @@ export class ItemUpdaterService {
             }
 
             if (mag.resize) {
-                this.applyMagResize(props, name, mag.name);
+                warning_info = this.applyMagResize(props, name, mag.name);
             }
 
             if (mag.penality) {
@@ -352,6 +353,9 @@ export class ItemUpdaterService {
                 firstCartridge._max_count = mag.counts;
             }
         }
+        if (warning_info) {
+            this.logger.warning(`[ModParameter] Modified grid size :'${name}'. clean temporary files if need.`);
+        }
     }
 
     private applyMagFastLoad(props: IProps, name: string): void {
@@ -361,7 +365,8 @@ export class ItemUpdaterService {
         }
     }
 
-    private applyMagResize(props: IProps, name: string, mag_name: string): void {
+    private applyMagResize(props: IProps, name: string, mag_name: string): boolean {
+        let warning_info = false;
         const XS_CATEGORIES = ["01-09", "10-19", "20-29"];
         let categories_XS: boolean = XS_CATEGORIES.includes(mag_name);
 
@@ -374,13 +379,14 @@ export class ItemUpdaterService {
             } else if (props.Height === 2 && props.Width === 2) {
                 props.Height = 2;
                 props.Width = 1;
-                 this.logger.warning(`[ModParameter] Modified grid size :'${name}'. clean temporary files if need.`);
+                warning_info = true;
             } else if (props.Height === 2 && props.Width === 1 && categories_XS) {
                 props.Height = 1;
                 props.ExtraSizeDown = 0;
                 this.logger.debug(`[ModParameter] modify ${name} slot 2 to slot 1 `);
             }
         }
+        return warning_info;
     }
 
     private applyMagPenality(props: IProps, name: string): void {

@@ -601,8 +601,9 @@ class Utils:
         JsonUtils.save_mag_preset(data, result)
 
     @staticmethod
-    def apply_bag_value(data, result, switch_var, switch_var2, slider):
+    def apply_bag_value(result, switch_var, switch_var2, slider):
         from Utils.JsonUtils import JsonUtils
+        data = JsonUtils.load_bag(result)
         change_number = int(slider.get())
         boolean = bool(switch_var.get())
         boolean2 = bool(switch_var2.get())
@@ -617,7 +618,9 @@ class Utils:
                 bags.append(bag)
             if change_number > 0:
                 for bag in bags:
+                    old_grids = {gid: grid.copy() for gid, grid in bag.Grids.items()}
                     bag.resize_backpacks(change_number)
+                    bag.display_resize_info(old_grids)
                     data[result]["resize"] = True
                     data[result]["size"] = change_number
                     data[result]["ids"][bag.ids]["Grids"] = bag.Grids
@@ -632,10 +635,10 @@ class Utils:
     @staticmethod
     def max_min_slider_bag(result: str):
         if EnumBagSize.from_value(result) == EnumBagSize.CAT_S:
-            return 0, 200
+            return 0, 300
         elif EnumBagSize.from_value(result) in (EnumBagSize.CAT_M1, EnumBagSize.CAT_M2):
             return 0, 150
         elif EnumBagSize.from_value(result) == EnumBagSize.CAT_L:
-            return 0, 150
-        elif EnumBagSize.from_value(result) == EnumBagSize.CAT_XL:
             return 0, 100
+        elif EnumBagSize.from_value(result) == EnumBagSize.CAT_XL:
+            return 0, 80

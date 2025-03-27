@@ -48,10 +48,15 @@ class Bag:
             # Apply the scale to cellsH and cellsV, rounding and enforcing a minimum of 1
             new_H = max(1, round(grid["cellsH"] * scale))
             new_V = max(1, round(grid["cellsV"] * scale))
-            # Store the resized grid
+
+            if new_H > 7:
+                new_H = 7
+                # Ajuster V pour compenser et maintenir la surface
+                new_V = max(1, round(grid_target_size / new_H))
+
             new_grids[gid] = {"cellsH": new_H, "cellsV": new_V}
             actual_new_total += new_H * new_V
-        # Replace the old grids with the resized ones
+
         self._Grids = new_grids
 
     def display_resize_info(self, old_grids: dict = None, verbose: bool = False):

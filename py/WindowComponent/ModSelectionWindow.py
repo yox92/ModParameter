@@ -914,7 +914,7 @@ class ModSelectionWindow:
 
         category_data = data.get(result)
         penality = category_data.get("penality")
-        excluded_filter = category_data.get("excluded_filter")
+        excluded_filter = category_data.get("excludedFilter")
         size = category_data.get("size")
 
         button = ctk.CTkButton(self.frame_bot_top,
@@ -975,7 +975,7 @@ class ModSelectionWindow:
             self.frame_bot_bot,
             text="Validate",
             fg_color="green",
-            command=lambda: self.apply_bag( data,result, switch_var, switch_var2,  slider)
+            command=lambda: self.apply_bag( result, switch_var, switch_var2,  slider)
         )
         validate_button.grid(row=4, column=0, columnspan=2, padx=5, pady=50)
         reset_button = ctk.CTkButton(
@@ -986,8 +986,8 @@ class ModSelectionWindow:
         )
         reset_button.grid(row=4, column=1, columnspan=2, padx=5, pady=5)
 
-    def apply_bag(self, data, result, switch_var, switch_var2, slider):
-        Utils.apply_bag_value( data, result, switch_var,switch_var2, slider)
+    def apply_bag(self, result, switch_var, switch_var2, slider):
+        Utils.apply_bag_value(  result, switch_var,switch_var2, slider)
         self.bag_button_press()
 
     def reset_bag(self, result, data_load):
