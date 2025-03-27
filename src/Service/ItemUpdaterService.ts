@@ -349,7 +349,7 @@ export class ItemUpdaterService {
                 this.applyMagPenality(props, name);
             }
 
-            if (mag.counts !== defaultValue && firstCartridge?._max_count) {
+            if (mag.counts !== defaultValue && firstCartridge?._max_count !== null && firstCartridge?._max_count !== undefined ) {
                 firstCartridge._max_count = mag.counts;
             }
         }
