@@ -107,7 +107,9 @@ class ModSelectionWindow:
         self.painkiller_image: CTkImage = ImageUtils.create_image_var("painkiller")
         self.salewa_image: CTkImage = ImageUtils.create_image_var("salewa")
         self.bandage_image: CTkImage = ImageUtils.create_image_var("bandage")
+        self.bag_mag_image: CTkImage = ImageUtils.create_image_var("mbag")
         self.bag_image: CTkImage = ImageUtils.create_image_var("bag")
+        self.mag_image: CTkImage = ImageUtils.create_image_var("mag")
 
     def create_frame_main(self):
         self.root.grid_rowconfigure(0, weight=1)
@@ -402,25 +404,26 @@ class ModSelectionWindow:
         )
         self.button_medic.pack(side="top", anchor="center",
                                expand=True, fill="both")
-        self.button_medic = ctk.CTkButton(
+        self.button_mag = ctk.CTkButton(
             self.frame_top_6,
-            image=self.bag_image,
-            text="BAG / MAG",
+            image=self.bag_mag_image,
+            text="Bag / Mag",
             compound="bottom",
             fg_color="transparent",
-            text_color="red",
+            text_color="cyan",
             hover_color="whitesmoke",
             font=("Arial", 16, "bold"),
             command=lambda: self.generate_list_button(WindowType.MAG)
         )
-        self.button_medic.pack(side="top", anchor="center",
+        self.button_mag.pack(side="top", anchor="center",
                                expand=True, fill="both")
         self.frames_buttons = {
             "weapon": self.buttonWeapon,
             "caliber": self.button_caliber,
             "pmc": self.button_pmc,
             "ammo": self.button_ammo,
-            "medic": self.button_medic
+            "medic": self.button_medic,
+            "mag": self.button_mag
         }
 
     def generate_list_button(self, choice_window: WindowType):
@@ -445,7 +448,7 @@ class ModSelectionWindow:
         elif choice_window == WindowType.MAG:
             Utils.create_grid_row_col_config(self.main_frame_bot, 1, 2)
             Utils.create_1x2_bottom(self.framesBotCaliber, self.main_frame_bot)
-            self.create_buttons_for_bag()
+            self.create_buttons_for_bag_mag()
 
     def pmc_window(self):
         WindowUtils.lock_choice_frame("pmc", self.frames_buttons)
@@ -690,10 +693,10 @@ class ModSelectionWindow:
             button.configure(command=lambda parent=code: self.medic_button_press(parent, choice_window))
             column += 1
 
-    def create_buttons_for_bag(self):
+    def create_buttons_for_bag_mag(self):
         buttons_data = [
             ("Bag", self.bag_image, "code_a"),
-            ("Magazine", self.bag_image, "code_b"),
+            ("Magazine", self.mag_image, "code_b"),
         ]
 
         for idx, (label, image, code) in enumerate(buttons_data):
@@ -717,6 +720,13 @@ class ModSelectionWindow:
         self.create_frame_bot_find_weapon()
         Utils.create_grid_row_col_config(self.frame_bot_top, 1, 1)
         Utils.create_grid_row_col_config(self.frame_bot_bot, 3, 3)
+        label = ctk.CTkLabel(self.frame_bot_bot,
+                             text=f"Groups magazines into categories \n based on their ammo capacity",
+                             height=20, font=("Arial", 13, "bold"),)
+        label.grid(row=4,
+                   column=1,
+                   sticky="ew",
+                   pady=10)
         max_items = 15
         items_per_row = 3
         total_rows = (max_items + items_per_row - 1) // items_per_row
@@ -752,6 +762,13 @@ class ModSelectionWindow:
         self.create_frame_bot_find_weapon()
         Utils.create_grid_row_col_config(self.frame_bot_top, 1, 1)
         Utils.create_grid_row_col_config(self.frame_bot_bot, 3, 2)
+        label = ctk.CTkLabel(self.frame_bot_bot,
+                             text=f"Defines categories of bags based \n on how many slots they offer",
+                             height=20, font=("Arial", 13, "bold"), )
+        label.grid(row=4,
+                   column=1,
+                   sticky="ew",
+                   pady=10)
         max_items = 5
         items_per_row = 3
         total_rows = (max_items + items_per_row - 1) // items_per_row
@@ -800,6 +817,16 @@ class ModSelectionWindow:
                                font=("Arial", 20, "bold"),
                                text_color="black")
         button.grid(row=0, column=0, padx=5, pady=5)
+
+        label_count = ctk.CTkLabel(
+            self.frame_bot_bot,
+            text=f"{len(mag_obj.ids)} Magazines",
+            font=("Arial", 16, "bold"),
+            text_color="white"
+        )
+        label_count.grid(row=0, column=1, padx=10, pady=10, sticky="w")
+
+
 
 
         switch_var = ctk.BooleanVar(value=mag_obj.penality)
@@ -887,8 +914,7 @@ class ModSelectionWindow:
 
         category_data = data.get(result)
         penality = category_data.get("penality")
-        excludedFilter = category_data.get("excludedFilter")
-        resize = category_data.get("resize")
+        excluded_filter = category_data.get("excluded_filter")
         size = category_data.get("size")
 
         button = ctk.CTkButton(self.frame_bot_top,
@@ -920,7 +946,7 @@ class ModSelectionWindow:
         label = ctk.CTkLabel(self.frame_bot_bot, text=f"Disable content restrictions : {switch_var.get()}")
         label.grid(row=1, column=0, sticky="nsew")
 
-        switch_var2 = ctk.BooleanVar(value=excludedFilter)
+        switch_var2 = ctk.BooleanVar(value=excluded_filter)
         switch_excludedFilter = ctk.CTkSwitch(
             self.frame_bot_bot,
             text="",
