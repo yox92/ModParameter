@@ -355,15 +355,20 @@ export class ItemUpdaterService {
 
     private applyMagFastLoad(props: IProps, name: string): void {
         if (props?.LoadUnloadModifier) {
-            this.logger.debug(`[ModParameter] modify ${name} Load, Unload speed`);
             props.LoadUnloadModifier = 100;
+            this.logger.debug(`[ModParameter] modify ${name} Load, Unload speed`);
         }
     }
 
     private applyMagResize(props: IProps, name: string): void {
-        if (props?.Height && props.Height === 3) {
-            this.logger.debug(`[ModParameter] modify ${name}  slot number`);
+        if (props?.Height && props?.Width && props.Height === 3 && props?.Width === 1) {
             props.Height = 2;
+            this.logger.debug(`[ModParameter] modify ${name} slot number Height = 2`);
+        }
+        if (props?.Height && props?.Width && props.Height === 2 && props.Width === 2) {
+            props.Height = 2;
+            props.Width = 1;
+             this.logger.debug(`[ModParameter] modify ${name} slot 4 to slot 2 `);
         }
     }
 
