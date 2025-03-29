@@ -26,7 +26,7 @@ import os
 from pathlib import Path
 
 MAG_PATH = config.JSON_FILES_DIR_MAG
-BAG_PATH = config.JSON_FILES_DIR_BAG / "Bag.json"
+BAG_PATH = config.JSON_FILES_DIR_BAG / "Buff.json"
 PARENT_ID_MAGAZINE = "5448bc234bdc2d3c308b4569"
 PARENT_ID_BACKPACK = "5448e53e4bdc2d60728b4567"
 
@@ -258,7 +258,7 @@ if __name__ == "__main__":
     target_path = (
             config.BASE_DIR / ".." / "src" / "external" / "server" / "project" / "assets" / "database").resolve()
     items_json_path = target_path / "Buff.json"
-    output_path = config.JSON_FILES_DIR_BUFF / "Bag.json"
+    output_path = config.JSON_FILES_DIR_BUFF / "Buff.json"
 
     if result:
         output_path.parent.mkdir(parents=True, exist_ok=True)
