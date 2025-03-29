@@ -4,7 +4,10 @@ from CTkMessagebox import CTkMessagebox
 
 from Entity import Caliber, Root, Logger, CategoryColor
 from Entity.Bag import Bag
+from Entity.Buff import Buff
+from Entity.BuffGroup import BuffGroup
 from Entity.EnumBagSize import EnumBagSize
+from Entity.EnumBuff import EnumBuff
 from Entity.EnumMagSize import EnumMagSize
 from Entity.Mag import Mag
 from Entity.MedicCat import MedicalCat
@@ -25,7 +28,7 @@ POP_UP_DELETE_TITLE = "All Delete Or Choice Which One?"
 POP_UP_CATEGORIES_TITLE = "Categorie to Delete?"
 MESSAGE_DELETE = "Choose an option: Delete All Item By categories or Select a Mod to Delete"
 MESSAGE_CATEGORIES_DELETE = "Choose an option: Delete All Ammo/Weapons/Medical"
-WINDOW_GEOMETRY = "870x650"
+WINDOW_GEOMETRY = "1000x650"
 APPEARANCE_MODE = "dark"
 DETAIL_WINDOW_TITLE = "Detail windows"
 DETAIL_WINDOW_WIDTH = 900
@@ -35,6 +38,10 @@ WINDOW_OFFSET = 10
 
 class ModSelectionWindow:
     def __init__(self, root):
+        self.block_system_error_detect = False
+        self.appender_button = []
+        self.status_label = None
+        self.prop_widgets = None
         self.list_medic_select = None
         self.medic_image = None
         self.button_medic = None
@@ -110,6 +117,7 @@ class ModSelectionWindow:
         self.bag_mag_image: CTkImage = ImageUtils.create_image_var("mbag")
         self.bag_image: CTkImage = ImageUtils.create_image_var("bag")
         self.mag_image: CTkImage = ImageUtils.create_image_var("mag")
+        self.buff_image: CTkImage = ImageUtils.create_image_var("buff")
 
     def create_frame_main(self):
         self.root.grid_rowconfigure(0, weight=1)
@@ -277,6 +285,7 @@ class ModSelectionWindow:
         self.main_frame_top.grid_columnconfigure(3, weight=1)
         self.main_frame_top.grid_columnconfigure(4, weight=1)
         self.main_frame_top.grid_columnconfigure(5, weight=1)
+        self.main_frame_top.grid_columnconfigure(6, weight=1)
         self.main_frame_top.grid_rowconfigure(0, weight=1)
 
         self.frame_top_1 = ctk.CTkFrame(self.main_frame_top, fg_color="transparent")
@@ -285,12 +294,14 @@ class ModSelectionWindow:
         self.frame_top_4 = ctk.CTkFrame(self.main_frame_top, fg_color="transparent")
         self.frame_top_5 = ctk.CTkFrame(self.main_frame_top, fg_color="transparent")
         self.frame_top_6 = ctk.CTkFrame(self.main_frame_top, fg_color="transparent")
+        self.frame_top_7 = ctk.CTkFrame(self.main_frame_top, fg_color="transparent")
         self.frame_top_1.grid(row=0, column=0, sticky="nsew")
         self.frame_top_2.grid(row=0, column=1, sticky="nsew")
         self.frame_top_3.grid(row=0, column=2, sticky="nsew")
         self.frame_top_4.grid(row=0, column=3, sticky="nsew")
         self.frame_top_5.grid(row=0, column=4, sticky="nsew")
         self.frame_top_6.grid(row=0, column=5, sticky="nsew")
+        self.frame_top_7.grid(row=0, column=6, sticky="nsew")
 
     def show_all_weapons_mod(self):
         self.list_json_name_mod_weapons = JsonUtils.load_all_json_files_weapons_mod()
@@ -347,7 +358,7 @@ class ModSelectionWindow:
             text_color="orange",
             hover_color="whitesmoke",
             font=("Arial", 16, "bold"),
-            command=lambda: self.generate_bot_frame_weapon_and_ammo(WindowType.WEAPON)
+            command=lambda: self.generate_bot_frame_weapon_ammo_medic(WindowType.WEAPON)
         )
         self.buttonWeapon.pack(side="top", anchor="center",
                                expand=True, fill="both")
@@ -417,13 +428,27 @@ class ModSelectionWindow:
         )
         self.button_mag.pack(side="top", anchor="center",
                                expand=True, fill="both")
+        self.button_buff = ctk.CTkButton(
+            self.frame_top_7,
+            image=self.buff_image,
+            text="Buffs",
+            compound="bottom",
+            fg_color="transparent",
+            text_color="Orange",
+            hover_color="whitesmoke",
+            font=("Arial", 16, "bold"),
+            command=lambda: self.generate_list_button(WindowType.BUFF)
+        )
+        self.button_buff.pack(side="top", anchor="center",
+                               expand=True, fill="both")
         self.frames_buttons = {
             "weapon": self.buttonWeapon,
             "caliber": self.button_caliber,
             "pmc": self.button_pmc,
             "ammo": self.button_ammo,
             "medic": self.button_medic,
-            "mag": self.button_mag
+            "mag": self.button_mag,
+            "buff": self.button_buff
         }
 
     def generate_list_button(self, choice_window: WindowType):
@@ -435,6 +460,8 @@ class ModSelectionWindow:
             WindowUtils.lock_choice_frame("medic", self.frames_buttons)
         elif choice_window == WindowType.MAG:
             WindowUtils.lock_choice_frame("mag", self.frames_buttons)
+        elif choice_window == WindowType.BUFF:
+            WindowUtils.lock_choice_frame("buff", self.frames_buttons)
 
         Utils.clear_frame(self.main_frame_bot)
         if choice_window == WindowType.AMMO or choice_window == WindowType.CALIBER:
@@ -449,6 +476,10 @@ class ModSelectionWindow:
             Utils.create_grid_row_col_config(self.main_frame_bot, 1, 2)
             Utils.create_1x2_bottom(self.framesBotCaliber, self.main_frame_bot)
             self.create_buttons_for_bag_mag()
+        elif choice_window == WindowType.BUFF:
+            Utils.create_grid_row_col_config(self.main_frame_bot, 5, 5)
+            Utils.create_5x5_bottom(self.framesBotCaliber, self.main_frame_bot, choice_window)
+            self.create_buttons_for_buff()
 
     def pmc_window(self):
         WindowUtils.lock_choice_frame("pmc", self.frames_buttons)
@@ -478,7 +509,7 @@ class ModSelectionWindow:
         self.frame_bot_top.grid(row=0, column=0, sticky="nsew")
         self.frame_bot_bot.grid(row=1, column=0, sticky="nsew")
 
-    def generate_bot_frame_weapon_and_ammo(self, choice_window: WindowType):
+    def generate_bot_frame_weapon_ammo_medic(self, choice_window: WindowType):
         self.create_frame_bot_find_weapon()
 
         Utils.create_grid_row_col_config(self.frame_bot_top, 1, 1)
@@ -666,6 +697,27 @@ class ModSelectionWindow:
                 column = 0
                 row += 1
 
+    def create_buttons_for_buff(self):
+        row = 1
+        column = 0
+
+        for idx, (label, cleanName) in enumerate(EnumBuff.enumerate_labels()):
+            idx: int
+            button = ctk.CTkButton(
+                self.framesBotCaliber[idx],
+                text=cleanName,
+                width=150,
+                text_color="black",
+                font=("Arial", 15, "bold"),
+                command=lambda r=label: self.buff_button_press(r)
+            )
+            button.pack(side="top", anchor="center")
+
+            column += 1
+            if column >= 5:
+                column = 0
+                row += 1
+
     def create_buttons_for_medic(self, choice_window: WindowType):
         column = 0
         for idx, (label, code) in enumerate(MedicalCat.enumerate_medical()):
@@ -800,6 +852,44 @@ class ModSelectionWindow:
                                    command=lambda r=result: self.on_click_result_bag(r))
             button.pack(expand=True)
 
+    def buff_button_press(self, name):
+        self.create_frame_bot_find_weapon()
+        Utils.create_grid_row_col_config(self.frame_bot_top, 1, 1)
+        if JsonUtils.buff_mod_exist():
+            data = JsonUtils.load_buff_mod()
+        else:
+            data = JsonUtils.load_buff()
+        buffs_data = data.get("Buffs", {}).get(name, [])
+        buffs = [Buff.from_data(b) for b in buffs_data]
+
+        total_items = len(buffs)
+        columns = min(3, total_items)
+        rows = (total_items + columns - 1) // columns
+
+        Utils.create_grid_row_col_config(self.frame_bot_bot, rows, columns)
+        Utils.configure_grid(self.frame_bot_bot,rows=rows,cols=columns,weight=1)
+        button = ctk.CTkButton(self.frame_bot_top,
+                               text="<== BACK ==>",
+                               command=self.buff_window,
+                               fg_color="orange",
+                               font=("Arial", 20, "bold"),
+                               text_color="black")
+        button.grid(row=2, column=0, padx=5, pady=5)
+
+        for idx, buff in enumerate(buffs):
+            row, col = divmod(idx, columns)
+            frame_recherche_m = ctk.CTkFrame(self.frame_bot_bot, fg_color="transparent")
+            frame_recherche_m.grid(row=row,
+                                   column=col,padx=5,pady=5,sticky="nsew")
+            label_text = f"{buff.buff_type} / {buff.skill_name or '-'}"
+            button = ctk.CTkButton(frame_recherche_m,
+                                   font=("Arial", 20, "bold"),
+                                   text=label_text,
+                                   text_color="black",
+                                   command=lambda b=buff, n=name: self.on_click_result_buff(b, name)
+            )
+            button.pack(expand=True)
+
     def on_click_result_mag(self, result):
         Utils.clear_frame(self.main_frame_bot)
         Utils.clear_config_row_col(self.main_frame_bot)
@@ -825,8 +915,6 @@ class ModSelectionWindow:
             text_color="white"
         )
         label_count.grid(row=0, column=1, padx=10, pady=10, sticky="w")
-
-
 
 
         switch_var = ctk.BooleanVar(value=mag_obj.penality)
@@ -896,6 +984,112 @@ class ModSelectionWindow:
             command=lambda: self.reset_mag(result, data)
         )
         reset_button.grid(row=5, column=1, columnspan=2, padx=5, pady=5)
+
+    def on_click_result_buff(self, buff: Buff, name: str):
+        self.appender_button.clear()
+        Utils.clear_frame(self.main_frame_bot)
+        Utils.clear_config_row_col(self.main_frame_bot)
+        self.create_frame_bot_find_weapon()
+        Utils.create_grid_row_col_config(self.frame_bot_top, 1, 1)
+        Utils.create_grid_row_col_config(self.frame_bot_bot, 4, 3)
+
+
+
+        button = ctk.CTkButton(self.frame_bot_top,
+                               text="<== BACK ==>",
+                               command=lambda n=name: self.buff_button_press(n),
+                               fg_color="orange",
+                               font=("Arial", 20, "bold"),
+                               text_color="black")
+        button.grid(row=0, column=0, padx=5, pady=5)
+
+
+        label1 = ctk.CTkLabel(self.frame_bot_bot, font=("Arial", 18, "bold"), text=f"Duration effect : {str(buff.duration)} (seconds)")
+        label1.grid(row=1, column=2,sticky="w")
+        # [min_value, max_value] = Utils.max_min_slider_mag(result)
+        slider = ctk.CTkSlider(self.frame_bot_bot,
+                               from_=0, to=2000,
+                               command=lambda value: label1.configure(
+                                   text=f"Duration effect : {int(value)} (seconds)"))
+        slider.set(buff.duration or 0)
+        slider.grid(row=1, column=1, sticky=ctk.W, padx=10)
+
+
+        label2 = ctk.CTkLabel(self.frame_bot_bot, font=("Arial", 18, "bold"), text=f"Time before activation : {str(buff.delay)} (seconds)")
+        label2.grid(row=2, column=2,sticky="w")
+        # [min_value, max_value] = Utils.max_min_slider_mag(result)
+        slider2 = ctk.CTkSlider(self.frame_bot_bot,
+                                from_=0, to=300,
+                                command=lambda value1: label2.configure(
+                                   text=f"Time before activation : {int(value1)} (seconds)"))
+        slider2.set(buff.delay or 0)
+        slider2.grid(row=2, column=1, sticky=ctk.W, padx=10)
+
+        entry = ctk.CTkEntry(
+            self.frame_bot_bot,
+            placeholder_text="Enter value...",
+            width=70,
+            font=("Arial", 16, "bold"),
+            justify="center"
+        )
+        entry.bind("<KeyRelease>", lambda event: self.get_entry_value(event, ))
+        entry.insert(0, str(buff.value))
+        entry.grid(row=3, column=1, padx=10, pady=5, sticky="ew")
+        entry_label = ctk.CTkLabel(
+            self.frame_bot_bot, text=f"value : {buff.value} (-600 / 200)", font=("Arial", 15, "bold"))
+        entry_label.grid(row=3, column=2, sticky=ctk.W, padx=10)
+
+        validate_button = ctk.CTkButton(
+            self.frame_bot_bot,
+            text="Validate",
+            fg_color="green"
+        )
+        validate_button.grid(row=5, column=0, columnspan=2, padx=5, pady=50)
+        reset_button = ctk.CTkButton(
+            self.frame_bot_bot,
+            text="Reset",
+            fg_color="red",
+            command=lambda: self.apply_buff(slider, slider2, entry.get())
+        )
+        reset_button.grid(row=5, column=1, columnspan=2, padx=5, pady=5)
+        self.appender_button.append(entry)
+        self.appender_button.append(entry_label)
+        self.appender_button.append(validate_button)
+        self.appender_button.append(reset_button)
+
+    def apply_buff(self, slider, slider2, entry, name, buff):
+
+        self.buff_button_press(name)
+
+    def get_entry_value(self, event):
+        input_text = self.appender_button[0].get()
+        try:
+            numeric_value = int(input_text)
+        except ValueError:
+            try:
+                numeric_value = float(input_text)
+            except ValueError:
+                Utils.error_number_prompt(self.appender_button)
+                self.logger.log("warning", "Number please ...")
+                self.block_system_error_detect = True
+                self.appender_button[1].configure(text="Number please ...")
+                self.appender_button[2].configure(state="disabled", fg_color="red")
+
+                return
+
+        if isinstance(numeric_value, (int,float)):
+            if not Utils.is_value_outside_limits(numeric_value):
+                if self.block_system_error_detect:
+                    self.appender_button[2].configure(state="normal", fg_color="green")
+                    self.appender_button[1].configure(text=f"value : {str(numeric_value)} (-600 - 200)", text_color="white")
+                    self.block_system_error_detect = False
+            else:
+                self.block_system_error_detect = True
+                self.appender_button[1].configure(text="Out of limite ... (-600 / 200)")
+                self.appender_button[2].configure(state="disabled", fg_color="red")
+
+
+
 
     def on_click_result_bag(self, result):
         Utils.clear_frame(self.main_frame_bot)
@@ -1017,6 +1211,10 @@ class ModSelectionWindow:
         WindowUtils.lock_choice_frame("mag", self.frames_buttons)
         self.generate_list_button(WindowType.MAG)
 
+    def buff_window(self):
+        WindowUtils.lock_choice_frame("buff", self.frames_buttons)
+        self.generate_list_button(WindowType.BUFF)
+
     def ammo_button_press(self, caliber_select, choice_window):
         if not self.data_json_from_load_all_ammo:
             (self.data_json_from_load_all_ammo,
@@ -1036,7 +1234,7 @@ class ModSelectionWindow:
                 if root.item.props.get_value_by_label("Caliber") == caliber_select
             ]
         self.list_ammo_select = filtered_roots
-        self.generate_bot_frame_weapon_and_ammo(choice_window)
+        self.generate_bot_frame_weapon_ammo_medic(choice_window)
 
     def medic_button_press(self, parent, choice_window):
 
@@ -1050,7 +1248,7 @@ class ModSelectionWindow:
             if root.item.parent == parent
         ]
         self.list_medic_select = filtered_roots
-        self.generate_bot_frame_weapon_and_ammo(choice_window)
+        self.generate_bot_frame_weapon_ammo_medic(choice_window)
 
     def clear_recherche_frame(self):
         for frame in self.framesBotRecherche:

@@ -4,6 +4,8 @@ import customtkinter as ctk
 
 from Entity import EnumProps, EnumAiming, EnumAmmo, ItemManager
 from Entity.Bag import Bag
+from Entity.Buff import Buff
+from Entity.BuffGroup import BuffGroup
 from Entity.EnumBagSize import EnumBagSize
 from Entity.EnumEffect import EnumEffect
 from Entity.EnumEffectName import EnumEffectName
@@ -47,6 +49,8 @@ class Utils:
         total_buttons: int
         if choice_window == WindowType.AMMO:
             total_buttons = 24
+        elif choice_window == WindowType.BUFF:
+            total_buttons = 21
         else:
             total_buttons = 22
         count = 0
@@ -592,6 +596,19 @@ class Utils:
         JsonUtils.save_mag_preset(data, result)
 
     @staticmethod
+    def save_buff_values(result, switch_var, switch_var2, switch_var3, buff):
+        from Utils.JsonUtils import JsonUtils
+        if JsonUtils.buff_mod_exist():
+            data = JsonUtils.load_buff_mod()
+        else:
+            data = JsonUtils.load_buff()
+        data[result]["penality"] = switch_var.get()
+        data[result]["resize"] = switch_var2.get()
+        data[result]["fastLoad"] = switch_var3.get()
+        data[result]["counts"] = int(slider.get())
+        JsonUtils.save_mag_preset(data, result)
+
+    @staticmethod
     def reset_mag(result, count, data):
         from Utils.JsonUtils import JsonUtils
         data[result]["penality"] = False
@@ -659,3 +676,19 @@ class Utils:
                                                 EnumMagSize.CAT_90_100,
                                                 EnumMagSize.CAT_GT_100):
             return 1, 200
+
+    @staticmethod
+    def get_buffs_by_group_name(buff_groups: list[BuffGroup], name: str) -> list[Buff]:
+        for group in buff_groups:
+            if group.name.value == name:
+                return group.buffs
+        return []
+
+    @staticmethod
+    def error_number_prompt(appender: []):
+        appender[1].configure(text="Error ! : Valide number please ", text_color="red")
+        appender[2].configure(fg_color="red", state="disabled")
+
+    @staticmethod
+    def is_value_outside_limits(value):
+        return value > 200 or value < -600

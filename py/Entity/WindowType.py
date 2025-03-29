@@ -10,3 +10,4 @@ class WindowType(Enum):
     DELETE = "delete"
     BAG = "bag"
     MAG = "mag"
+    BUFF = "buff"

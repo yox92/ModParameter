@@ -7,7 +7,7 @@ from Entity.EnumEffect import EnumEffect
 from Entity.EnumMedic import EnumMedic
 from Entity.WindowType import WindowType
 from config import JSON_FILES_DIR_WEAPONS, JSON_FILES_DIR_CALIBER, JSON_FILES_DIR_PMC, JSON_FILES_DIR_AMMO, \
-    JSON_FILES_DIR_MEDIC, JSON_FILES_DIR_MAG, JSON_FILES_DIR_BAG
+    JSON_FILES_DIR_MEDIC, JSON_FILES_DIR_MAG, JSON_FILES_DIR_BAG, JSON_FILES_DIR_BUFF
 
 
 class JsonUtils:
@@ -20,6 +20,11 @@ class JsonUtils:
     @staticmethod
     def bag_exist(result):
         path = os.path.join(JSON_FILES_DIR_BAG, f'{result}_mod.json')
+        return os.path.exists(path)
+
+    @staticmethod
+    def buff_mod_exist():
+        path = os.path.join(JSON_FILES_DIR_BUFF, 'Buff_mod.json')
         return os.path.exists(path)
 
     @staticmethod
@@ -51,6 +56,18 @@ class JsonUtils:
     @staticmethod
     def load_bag_mod(result):
         path = os.path.join(JSON_FILES_DIR_BAG, f'{result}_mod.json')
+        with open( path, "r", encoding="utf-8") as f:
+            return json.load(f)
+
+    @staticmethod
+    def load_buff_mod():
+        path = os.path.join(JSON_FILES_DIR_BUFF, 'Buff_mod.json')
+        with open( path, "r", encoding="utf-8") as f:
+            return json.load(f)
+
+    @staticmethod
+    def load_buff():
+        path = os.path.join(JSON_FILES_DIR_BUFF, 'Buff.json')
         with open( path, "r", encoding="utf-8") as f:
             return json.load(f)
 
@@ -451,6 +468,12 @@ class JsonUtils:
         path_mod = os.path.join(JSON_FILES_DIR_BAG, f'{name}_mod.json')
         os.remove(path_mod)
         print(f" file delete : {name}")
+
+    @staticmethod
+    def delete_buff_mod():
+        path_mod = os.path.join(JSON_FILES_DIR_BAG, 'Buff_mod.json')
+        os.remove(path_mod)
+        print(f" file delete : Buff_mod.json")
 
     @staticmethod
     def delete_file_mod_if_exists(file_path):
