@@ -15,6 +15,7 @@ export const config = {
     jsonMedicFolderPath: path.join(__dirname, "..", "py", "JsonFiles", "Medic"),
     jsonMagFolderPath: path.join(__dirname, "..", "py", "JsonFiles", "Mag"),
     jsonBagFolderPath: path.join(__dirname, "..", "py", "JsonFiles", "Bag"),
+    jsonBuffFolderPath: path.join(__dirname, "..", "py", "JsonFiles", "Buff"),
 };
 
 export const debug = true;

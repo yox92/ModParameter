@@ -15,6 +15,7 @@ import {creatTracer, Tracer} from "../Entity/Tracer";
 import {createMedic, Medic} from "../Entity/Medic";
 import {Mag, MagJsonFile} from "../Entity/Mag";
 import {Bag, BagCat} from "../Entity/Bag";
+import {Buff, BuffGroup, BuffsJsonFile, IBuffJson} from "../Entity/Buff";
 
 export class ItemService {
     private readonly logger: ILogger;
@@ -255,6 +256,39 @@ export class ItemService {
         }
     }
 
+    private caseBuff(jsonFiles: Array<{ fileName: string; json: BuffsJsonFile }>) {
+        for (const {fileName, json} of jsonFiles) {
+            if (!json?.Buffs || typeof json.Buffs !== "object") {
+                this.logger.debug(`[ModParameter] Skipping invalid or malformed Buff JSON in: ${fileName}`);
+                return;
+            }
+            if (json.Buffs.areAllBuffsUnchanged) {
+                 this.logger.debug(`[ModParameter] Skipping Buff no change: ${fileName}`);
+                return;
+            }
+
+            for (const [groupName, buffs] of Object.entries(json.Buffs)) {
+                for (const buffData of buffs) {
+                    try {
+                        const buff = new Buff(buffData);
+                        this.logger.debug(`----------------------------------------------------`);
+                        this.logger.debug(`[ModParameter] Taille : ${buffs.length}`);
+                        this.logger.debug(`[ModParameter] skillName : ${buff.skillName}`);
+                        this.logger.debug(`[ModParameter] buffType : ${buff.buffType}`);
+                        this.logger.debug(`[ModParameter] chance : ${buff.chance}`);
+                        this.logger.debug(`[ModParameter] delay : ${buff.delay}`);
+                        this.logger.debug(`[ModParameter] duration : ${buff.duration}`);
+                         this.logger.debug(`[ModParameter] value : ${buff.value}`);
+                           this.logger.debug(`----------------------------------------------------`);
+                        // this.itemUpdaterService.applyBuffMod(buff);
+                    } catch (err) {
+                        this.logger.error(`[ModParameter] Error applying buff '${buffData.buffType}' in ${groupName}: ${err}`);
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * clone Items : First Weapons because new ammo need compatibility with new weapon ofc
      */
@@ -267,6 +301,7 @@ export class ItemService {
     public apply_mod_item(): void {
         this.caseMag(this.loadJsonFiles(ItemTypeEnum.Mag));
         this.caseBag(this.loadJsonFiles(ItemTypeEnum.Bag));
+        this.caseBuff(this.loadJsonFiles(ItemTypeEnum.Buff));
     }
 
     private loadJsonFiles<T>(itemType: ItemTypeEnum): Array<{ fileName: string; json: T }> {
