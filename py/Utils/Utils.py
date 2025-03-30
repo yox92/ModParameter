@@ -596,18 +596,31 @@ class Utils:
         JsonUtils.save_mag_preset(data, result)
 
     @staticmethod
-    def save_buff_values(result, switch_var, switch_var2, switch_var3, buff):
+    def save_buff_values(slider, slider2, entry, name, buff):
         from Utils.JsonUtils import JsonUtils
+
         if JsonUtils.buff_mod_exist():
             data = JsonUtils.load_buff_mod()
         else:
             data = JsonUtils.load_buff()
-        data[result]["penality"] = switch_var.get()
-        data[result]["resize"] = switch_var2.get()
-        data[result]["fastLoad"] = switch_var3.get()
-        data[result]["counts"] = int(slider.get())
-        JsonUtils.save_mag_preset(data, result)
 
+        new_duration = int(slider.get())
+        new_delay = int(slider2.get())
+        new_value = entry.get()
+
+        buff_group = data.get("Buffs", {}).get(name, [])
+
+        for b in buff_group:
+            if b["BuffType"] == buff.buff_type and b["SkillName"] == buff.skill_name:
+                b["Duration"] = new_duration
+                b["Delay"] = new_delay
+                b["Value"] = new_value
+                b["change"] = True
+                break
+
+        JsonUtils.save_buff_mod(data)
+
+        print(f"✅ Buff '{buff.buff_type}' mis à jour dans le groupe '{name}' et enregistré.")
     @staticmethod
     def reset_mag(result, count, data):
         from Utils.JsonUtils import JsonUtils
@@ -692,3 +705,47 @@ class Utils:
     @staticmethod
     def is_value_outside_limits(value):
         return value > 200 or value < -600
+
+    @staticmethod
+    def reset_buff_in_mod(name: str, buff):
+        from Utils.JsonUtils import JsonUtils
+
+        if not JsonUtils.buff_mod_exist():
+            print("ℹ️ Aucun fichier Buff_mod.json à réinitialiser.")
+            return
+
+        original_data = JsonUtils.load_buff()
+        mod_data = JsonUtils.load_buff_mod()
+
+        original_group = original_data.get("Buffs", {}).get(name, [])
+        mod_group = mod_data.get("Buffs", {}).get(name, [])
+
+        original_buff = next(
+            (b for b in original_group if b["BuffType"] == buff.buff_type and b["SkillName"] == buff.skill_name),
+            None
+        )
+
+        if original_buff is None:
+            print(f"❌ Buff original introuvable pour '{buff.buff_type}' / '{buff.skill_name}'")
+            return
+
+        for b in mod_group:
+            if b["BuffType"] == buff.buff_type and b["SkillName"] == buff.skill_name:
+                b["Duration"] = original_buff["Duration"]
+                b["Delay"] = original_buff["Delay"]
+                b["Value"] = original_buff["Value"]
+                b["change"] = False
+                break
+
+        all_buffs = [
+            b for group in mod_data.get("Buffs", {}).values()
+            for b in group
+        ]
+
+        if all(not b.get("change", False) for b in all_buffs):
+            JsonUtils.delete_buff_mod()
+            print("Tous les buffs modifiés ont été réinitialisés. Buff_mod.json supprimé.")
+        else:
+            JsonUtils.save_buff_mod(mod_data)
+            print(f" Buff '{buff.buff_type}' remis à zéro dans Buff_mod.json.")
+

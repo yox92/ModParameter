@@ -471,7 +471,7 @@ class JsonUtils:
 
     @staticmethod
     def delete_buff_mod():
-        path_mod = os.path.join(JSON_FILES_DIR_BAG, 'Buff_mod.json')
+        path_mod = os.path.join(JSON_FILES_DIR_BUFF, 'Buff_mod.json')
         os.remove(path_mod)
         print(f" file delete : Buff_mod.json")
 
@@ -493,6 +493,17 @@ class JsonUtils:
 
         print(f" file save : {new_file_path}")
         return new_file_path
+
+    @staticmethod
+    def save_buff_mod(data):
+        path = os.path.join(JSON_FILES_DIR_BUFF, 'Buff_mod.json')
+
+        JsonUtils.delete_file_if_exists(path)
+
+        with open(path, "w", encoding="utf-8") as new_file:
+            json.dump(data, new_file, indent=4)
+
+        print(f" file save : {path}")
 
     @staticmethod
     def return_list_json_path(name_json):

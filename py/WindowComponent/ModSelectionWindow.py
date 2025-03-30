@@ -1006,7 +1006,6 @@ class ModSelectionWindow:
 
         label1 = ctk.CTkLabel(self.frame_bot_bot, font=("Arial", 18, "bold"), text=f"Duration effect : {str(buff.duration)} (seconds)")
         label1.grid(row=1, column=2,sticky="w")
-        # [min_value, max_value] = Utils.max_min_slider_mag(result)
         slider = ctk.CTkSlider(self.frame_bot_bot,
                                from_=0, to=2000,
                                command=lambda value: label1.configure(
@@ -1017,7 +1016,6 @@ class ModSelectionWindow:
 
         label2 = ctk.CTkLabel(self.frame_bot_bot, font=("Arial", 18, "bold"), text=f"Time before activation : {str(buff.delay)} (seconds)")
         label2.grid(row=2, column=2,sticky="w")
-        # [min_value, max_value] = Utils.max_min_slider_mag(result)
         slider2 = ctk.CTkSlider(self.frame_bot_bot,
                                 from_=0, to=300,
                                 command=lambda value1: label2.configure(
@@ -1042,14 +1040,15 @@ class ModSelectionWindow:
         validate_button = ctk.CTkButton(
             self.frame_bot_bot,
             text="Validate",
-            fg_color="green"
+            fg_color="green",
+        command = lambda: self.apply_buff(slider, slider2, entry, name, buff)
         )
         validate_button.grid(row=5, column=0, columnspan=2, padx=5, pady=50)
         reset_button = ctk.CTkButton(
             self.frame_bot_bot,
             text="Reset",
             fg_color="red",
-            command=lambda: self.apply_buff(slider, slider2, entry.get())
+            command=lambda: self.reset_buff(name, buff)
         )
         reset_button.grid(row=5, column=1, columnspan=2, padx=5, pady=5)
         self.appender_button.append(entry)
@@ -1058,7 +1057,11 @@ class ModSelectionWindow:
         self.appender_button.append(reset_button)
 
     def apply_buff(self, slider, slider2, entry, name, buff):
+        Utils.save_buff_values(slider, slider2, entry, name, buff)
+        self.buff_button_press(name)
 
+    def reset_buff(self, name, buff):
+        Utils.reset_buff_in_mod(name, buff)
         self.buff_button_press(name)
 
     def get_entry_value(self, event):

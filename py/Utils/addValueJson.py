@@ -69,25 +69,22 @@ folders = [config.JSON_FILES_DIR_MEDIC]
 #                 json.dump(data, f, indent=2)
 #                 print(f"{filename} ➜ 'clone: true' inséré")
 
-
 import json
+import config  # ← tu utilises déjà ton fichier config dans tes autres scripts
 
-# JSON original (simplifié ici, remplacer par le JSON complet dans un cas réel)
+BUFF_PATH = config.JSON_FILES_DIR_BUFF / "Buff.json"
 
-MAG_PATH = config.JSON_FILES_DIR_MAG / "Mag.json"
-
-with open(MAG_PATH, "r", encoding="utf-8") as f:
+# Charger le fichier JSON
+with open(BUFF_PATH, "r", encoding="utf-8") as f:
     original_data = json.load(f)
 
-transformed_data = {
-    category: {
-        "value": None,
-        "items": ids
-    } for category, ids in original_data.items()
-}
+# Transformation : ajout de "change": False à chaque buff
+for group_name, buff_list in original_data.get("Buffs", {}).items():
+    for buff in buff_list:
+        buff["change"] = False
 
-# Sauvegarde du nouveau JSON
-with open(MAG_PATH, "w", encoding="utf-8") as f:
-    json.dump(transformed_data, f, indent=2, ensure_ascii=False)
+# Sauvegarde du fichier modifié
+with open(BUFF_PATH, "w", encoding="utf-8") as f:
+    json.dump(original_data, f, indent=2, ensure_ascii=False)
 
-print("Traitement terminé.")
+print("✅ Ajout de 'change: false' terminé.")
