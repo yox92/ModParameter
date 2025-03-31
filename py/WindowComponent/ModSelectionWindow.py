@@ -117,7 +117,7 @@ class ModSelectionWindow:
         self.bag_image: CTkImage = ImageUtils.create_image_var("bag")
         self.mag_image: CTkImage = ImageUtils.create_image_var("mag")
         self.buff_image: CTkImage = ImageUtils.create_image_var("buff")
-        self.fast_image: CTkImage = ImageUtils.create_image_var("buff")
+        self.fast_image: CTkImage = ImageUtils.create_image_var("fast")
 
     def create_frame_main(self):
         self.root.grid_rowconfigure(0, weight=1)
@@ -302,7 +302,7 @@ class ModSelectionWindow:
         self.frame_top_4.grid(row=0, column=3, sticky="nsew")
         self.frame_top_5.grid(row=0, column=4, sticky="nsew")
         self.frame_top_6.grid(row=0, column=5, sticky="nsew")
-        self.frame_top_7.grid(row=0, column=5, sticky="nsew")
+        self.frame_top_7.grid(row=0, column=6, sticky="nsew")
 
     def show_all_weapons_mod(self):
         self.list_json_name_mod_weapons = JsonUtils.load_all_json_files_weapons_mod()
@@ -431,6 +431,7 @@ class ModSelectionWindow:
                              expand=True, fill="both")
         self.button_fast = ctk.CTkButton(
             self.frame_top_7,
+            image=self.fast_image,
             text="Fast Setting",
             compound="bottom",
             fg_color="transparent",
@@ -447,7 +448,8 @@ class ModSelectionWindow:
             "pmc": self.button_pmc,
             "ammo": self.button_ammo,
             "medic": self.button_medic,
-            "mag": self.button_mag
+            "mag": self.button_mag,
+            "fast": self.button_fast
         }
 
     def generate_list_button(self, choice_window: WindowType):
