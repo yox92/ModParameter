@@ -459,6 +459,7 @@ export class ItemUpdaterService {
         }
 
         let totalBuffsModified = 0;
+        let totalBuffsAdded = 0;
         let totalGroupsTouched = 0;
 
         for (const [groupName, modifiedBuffs] of Object.entries(jsonBuff)) {
@@ -469,36 +470,50 @@ export class ItemUpdaterService {
                 continue;
             }
 
-            let groupModified = false;
+            let groupTouched: boolean = false;
 
             for (const buffData of modifiedBuffs) {
                 const modBuff = new Buff(buffData);
 
-                if (!modBuff.change) continue;
+                if (!modBuff.change && (modBuff.add == null || !modBuff.add)) continue;
 
                 const targetBuff = originalGroup.find(
                     b => b.BuffType === modBuff.buffType && b.SkillName === modBuff.skillName
                 );
 
-                if (!targetBuff) {
-                    console.debug(`[ModParameter] Buff introuvable dans '${groupName}' : ${modBuff.buffType} / ${modBuff.skillName}`);
-                    continue;
+                if (modBuff.change && targetBuff) {
+                    targetBuff.Delay = modBuff.delay;
+                    targetBuff.Duration = modBuff.duration;
+                    targetBuff.Value = modBuff.value;
+
+                    totalBuffsModified++;
+                    groupTouched = true;
                 }
 
-                targetBuff.Delay = modBuff.delay;
-                targetBuff.Duration = modBuff.duration;
-                targetBuff.Value = modBuff.value;
+                if (modBuff.add && !targetBuff) {
+                    originalGroup.push({
+                        AbsoluteValue: modBuff.absoluteValue,
+                        BuffType: modBuff.buffType,
+                        Chance: modBuff.chance,
+                        Delay: modBuff.delay,
+                        Duration: modBuff.duration,
+                        SkillName: modBuff.skillName,
+                        Value: modBuff.value,
+                    });
 
-                totalBuffsModified++;
-                groupModified = true;
+                    totalBuffsAdded++;
+                    groupTouched = true;
+                    console.debug(`[ModParameter] New buff add to '${groupName}' : ${modBuff.buffType} / ${modBuff.skillName}`);
+                }
             }
 
-            if (groupModified) {
+            if (groupTouched) {
                 totalGroupsTouched++;
             }
         }
 
-        console.debug(`[ModParameter] Résumé : ${totalBuffsModified} buff(s) modifié(s) dans ${totalGroupsTouched} groupe(s).`);
+       console.debug(`[ModParameter] Resume : ${totalBuffsModified} buff(s) modify, ${totalBuffsAdded} add(s), on ${totalGroupsTouched} group(s).`);
+
     }
 
 

@@ -1,5 +1,5 @@
-// Interface représentant un buff dans le JSON
 export interface IBuffJson {
+    absoluteValue: boolean;
     buffType: string;
     chance: number;
     delay: number;
@@ -7,10 +7,11 @@ export interface IBuffJson {
     skillName: string;
     value: number;
     change?: boolean;
+    add?: boolean;
 }
 
-// Classe représentant un Buff individuel
 export class Buff {
+    absoluteValue: boolean;
     buffType: string;
     chance: number;
     delay: number;
@@ -18,8 +19,10 @@ export class Buff {
     skillName: string;
     value: number;
     change: boolean;
+    add: boolean;
 
     constructor(data: any) {
+        this.absoluteValue = data.AbsoluteValue ?? data.absoluteValue;
         this.buffType = data.BuffType ?? data.buffType;
         this.chance = data.Chance ?? data.chance;
         this.delay = data.Delay ?? data.delay;
@@ -27,17 +30,20 @@ export class Buff {
         this.skillName = data.SkillName ?? data.skillName;
         this.value = data.Value ?? data.value;
         this.change = data.change ?? false;
+        this.add = data.add ?? false;
     }
 
     toJson(): IBuffJson {
         return {
+            absoluteValue: this.absoluteValue,
             buffType: this.buffType,
             chance: this.chance,
             delay: this.delay,
             duration: this.duration,
             skillName: this.skillName,
             value: this.value,
-            change: this.change
+            change: this.change,
+            add: this.add
         };
     }
 }
@@ -67,7 +73,6 @@ export class BuffGroup {
         return this.buffs.filter(b => b.change);
     }
 }
-// Type de la structure JSON complète
 export type BuffsJsonFile = {
     Buffs: Record<string, IBuffJson[]>;
 };
