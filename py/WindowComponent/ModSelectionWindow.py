@@ -996,8 +996,12 @@ class ModSelectionWindow:
                                text_color="black")
         button.grid(row=2, column=0, padx=5, pady=5)
 
-        color_add_buff = "#A569BD"
+
         for idx, buff in enumerate(buffs):
+            if buff.buff_type in "SkillRate":
+                color_add_buff = "#6c3483"
+            else:
+                color_add_buff = "#af7ac5"
             row, col = divmod(idx, columns)
             frame_recherche_m = ctk.CTkFrame(self.frame_bot_bot, fg_color="transparent")
             frame_recherche_m.grid(row=row,
@@ -1005,7 +1009,7 @@ class ModSelectionWindow:
             label_text = f"{'StopBleeds' 
             if buff.buff_type == 'RemoveAllBloodLosses' 
             else ('Skill' 
-                  if buff.buff_type == 'SkillRate' 
+                  if buff.buff_type in 'SkillRate' 
                   else buff.buff_type)} / {buff.skill_name or '-'}"
 
             button = ctk.CTkButton(frame_recherche_m,
@@ -1155,6 +1159,8 @@ class ModSelectionWindow:
         slider2.set(buff.delay or 0)
         slider2.grid(row=2, column=1, sticky=ctk.W, padx=10)
 
+        [min_value, max_value] = Utils.max_min_input_value_buff(f"{buff.skill_name}{buff.buff_type}")
+
         entry = ctk.CTkEntry(
             self.frame_bot_bot,
             placeholder_text="Enter value...",
@@ -1162,12 +1168,17 @@ class ModSelectionWindow:
             font=("Arial", 16, "bold"),
             justify="center"
         )
-        entry.bind("<KeyRelease>", lambda event: self.get_entry_value(event, ))
+        entry.bind("<KeyRelease>", lambda event: self.get_entry_value(event,min_value,  max_value))
         entry.insert(0, str(buff.value))
         entry.grid(row=3, column=1, padx=10, pady=5, sticky="ew")
+
         entry_label = ctk.CTkLabel(
-            self.frame_bot_bot, text=f"value : {buff.value} (-600 / 200)", font=("Arial", 15, "bold"))
+            self.frame_bot_bot, text=f"value : {buff.value} ({min_value} / {max_value})", font=("Arial", 15, "bold"))
         entry_label.grid(row=3, column=2, sticky=ctk.W, padx=10)
+
+        if min_value == 0 and max_value == 0:
+            entry_label.configure(text="always 0 do not touch this number")
+            entry.configure(state="disabled")
 
         validate_button = ctk.CTkButton(
             self.frame_bot_bot,
@@ -1197,7 +1208,7 @@ class ModSelectionWindow:
         Utils.reset_buff_in_mod(name, buff)
         self.buff_button_press(name)
 
-    def get_entry_value(self, event):
+    def get_entry_value(self, event, min_value, max_value):
         input_text = self.appender_button[0].get()
         try:
             numeric_value = int(input_text)
@@ -1214,14 +1225,14 @@ class ModSelectionWindow:
                 return
 
         if isinstance(numeric_value, (int,float)):
-            if not Utils.is_value_outside_limits(numeric_value):
+            if not Utils.is_value_outside_limits(numeric_value, min_value, max_value):
                 if self.block_system_error_detect:
                     self.appender_button[2].configure(state="normal", fg_color="green")
-                    self.appender_button[1].configure(text=f"value : {str(numeric_value)} (-600 - 200)", text_color="white")
+                    self.appender_button[1].configure(text=f"value : {str(numeric_value)} ({min_value} / {max_value})", text_color="white")
                     self.block_system_error_detect = False
             else:
                 self.block_system_error_detect = True
-                self.appender_button[1].configure(text="Out of limite ... (-600 / 200)")
+                self.appender_button[1].configure(text=f"Out of limite ... ({min_value}  / {max_value})")
                 self.appender_button[2].configure(state="disabled", fg_color="red")
 
 

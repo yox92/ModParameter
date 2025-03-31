@@ -7,6 +7,7 @@ from Entity.Bag import Bag
 from Entity.Buff import Buff
 from Entity.BuffGroup import BuffGroup
 from Entity.EnumBagSize import EnumBagSize
+from Entity.EnumBuffTypeSkillName import EnumBuffTypeSkillName
 from Entity.EnumEffect import EnumEffect
 from Entity.EnumEffectName import EnumEffectName
 from Entity.EnumMagSize import EnumMagSize
@@ -625,6 +626,7 @@ class Utils:
         JsonUtils.save_buff_mod(data)
 
         print(f" Buff '{buff.buff_type}' update on '{name}' et save.")
+
     @staticmethod
     def reset_mag(result, count, data):
         from Utils.JsonUtils import JsonUtils
@@ -707,8 +709,8 @@ class Utils:
         appender[2].configure(fg_color="red", state="disabled")
 
     @staticmethod
-    def is_value_outside_limits(value):
-        return value > 200 or value < -600
+    def is_value_outside_limits(value, min_value, max_value):
+        return value > max_value or value < min_value
 
     @staticmethod
     def reset_buff_in_mod(name: str, buff):
@@ -827,13 +829,12 @@ class Utils:
             return True
 
         return any(
-        buff.change is True or getattr(buff, "add", None) is not None
-        for buff in current_group.buffs
-    )
-
+            buff.change is True or getattr(buff, "add", None) is not None
+            for buff in current_group.buffs
+        )
 
     @staticmethod
-    def check_before_apply_buff(slider, slider2, entry, buff)-> bool:
+    def check_before_apply_buff(slider, slider2, entry, buff) -> bool:
         new_duration = int(slider.get())
         new_delay = int(slider2.get())
         try:
@@ -848,4 +849,30 @@ class Utils:
             print("change buff")
             return True
 
-
+    @staticmethod
+    def max_min_input_value_buff(value: str):
+        if "SkillRate" in value or "MaxStamina" in value:
+            return -30, 50
+        elif value in (EnumBuffTypeSkillName.HydrationRate.value,
+                       EnumBuffTypeSkillName.EnergyRate.value):
+            return -2.0, 2.0
+        elif value in (EnumBuffTypeSkillName.Contusion.value,
+                       EnumBuffTypeSkillName.HandsTremor.value,
+                       EnumBuffTypeSkillName.QuantumTunnelling.value,
+                       EnumBuffTypeSkillName.RemoveAllBloodLosses.value,
+                       EnumBuffTypeSkillName.Antidote.value,
+                       EnumBuffTypeSkillName.UnknownToxin.value):
+            return 0, 0
+        elif value in EnumBuffTypeSkillName.StaminaRate.value:
+            return -2, 3
+        elif value in EnumBuffTypeSkillName.WeightLimit.value:
+            return 0.01, 1.0
+        elif value in EnumBuffTypeSkillName.DamageModifier.value:
+            return 0.01, 10.0
+        elif value in EnumBuffTypeSkillName.BodyTemperature.value:
+            return -4, 6
+        elif value in EnumBuffTypeSkillName.HealthRate.value:
+            return -600, 50
+        else:
+            print(value)
+        return -100, 100
