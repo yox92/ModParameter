@@ -72,6 +72,12 @@ class JsonUtils:
             return json.load(f)
 
     @staticmethod
+    def load_add_buff():
+        path = os.path.join(JSON_FILES_DIR_BUFF, 'Buff_add.json')
+        with open( path, "r", encoding="utf-8") as f:
+            return json.load(f)
+
+    @staticmethod
     def load_json(file_path):
         try:
             with open(file_path, 'r', encoding="utf-8") as fileReadable:

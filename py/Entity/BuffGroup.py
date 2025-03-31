@@ -31,5 +31,10 @@ class BuffGroup:
         buffs = [Buff.from_data(b) for b in buffs_data]
         return cls(name=EnumBuff(name), buffs=buffs)
 
+    def has_changes_or_additions(self) -> bool:
+        has_change = any(buff.change is True for buff in self._buffs)
+        has_add = any(getattr(buff, "add", None) is not None for buff in self._buffs)
+        return has_change and has_add
+
     def __repr__(self):
         return f"<BuffGroup {self.name.value} ({len(self.buffs)} buffs)>"

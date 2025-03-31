@@ -615,12 +615,16 @@ class Utils:
                 b["Duration"] = new_duration
                 b["Delay"] = new_delay
                 b["Value"] = new_value
-                b["change"] = True
+                if b.get("add") is None:
+                    b["change"] = True
+                    continue
+                if b.get("change") is None:
+                    continue
                 break
 
         JsonUtils.save_buff_mod(data)
 
-        print(f"✅ Buff '{buff.buff_type}' mis à jour dans le groupe '{name}' et enregistré.")
+        print(f" Buff '{buff.buff_type}' update on '{name}' et save.")
     @staticmethod
     def reset_mag(result, count, data):
         from Utils.JsonUtils import JsonUtils
@@ -748,4 +752,100 @@ class Utils:
         else:
             JsonUtils.save_buff_mod(mod_data)
             print(f" Buff '{buff.buff_type}' remis à zéro dans Buff_mod.json.")
+
+    @staticmethod
+    def add_buff(buff: Buff, name: str):
+        from Utils.JsonUtils import JsonUtils
+        if JsonUtils.buff_mod_exist():
+            data = JsonUtils.load_buff_mod()
+        else:
+            data = JsonUtils.load_buff()
+
+        data["Buffs"][name].append(Utils.to_dict(buff))
+        JsonUtils.save_buff_mod(data)
+
+    @staticmethod
+    def to_dict(buff: Buff):
+        return {
+            "AbsoluteValue": buff.absolute_value,
+            "BuffType": buff.buff_type,
+            "Chance": buff.chance,
+            "Delay": buff.delay,
+            "Duration": buff.duration,
+            "SkillName": buff.skill_name,
+            "Value": buff.value,
+            "add": True
+        }
+
+    @staticmethod
+    def is_duplicate(buff1: Buff, buff2: Buff) -> bool:
+        return buff1.buff_type == buff2.buff_type and buff1.skill_name == buff2.skill_name
+
+    @staticmethod
+    def remove_buff_from_list(buff: Buff, name: str):
+        from Utils.JsonUtils import JsonUtils
+        data = JsonUtils.load_buff_mod() if JsonUtils.buff_mod_exist() else JsonUtils.load_buff()
+        if name not in data.get("Buffs", {}):
+            print(f"Error : No buff find on {name}")
+            return
+
+        buff_list = data["Buffs"][name]
+        data["Buffs"][name] = [
+            b for b in buff_list
+            if not (b.get("BuffType") == buff.buff_type and b.get("SkillName") == buff.skill_name)
+        ]
+
+        JsonUtils.save_buff_mod(data)
+
+    @staticmethod
+    def on_reset_buff(name: str):
+        from Utils.JsonUtils import JsonUtils
+        data = JsonUtils.load_buff()
+        if name not in data.get("Buffs", {}):
+            print(f"Error : No buff find on {name}")
+            return
+
+        original = data["Buffs"][name]
+        if not JsonUtils.buff_mod_exist():
+            return
+        mod_data = JsonUtils.load_buff_mod() if JsonUtils.buff_mod_exist() else {"Buffs": {}}
+        mod_data["Buffs"][name] = original
+        JsonUtils.save_buff_mod(mod_data)
+
+    @staticmethod
+    def buff_group_has_changes(name: str, current_buffs: list["Buff"]) -> bool:
+        from Utils.JsonUtils import JsonUtils
+        from Entity.BuffGroup import BuffGroup
+
+        original_data = JsonUtils.load_buff()
+        original_buffs_data = original_data.get("Buffs", {}).get(name, [])
+        original_group = BuffGroup.from_data(name, original_buffs_data)
+
+        current_group = BuffGroup(name=original_group.name, buffs=current_buffs)
+
+        if len(original_group.buffs) != len(current_group.buffs):
+            return True
+
+        return any(
+        buff.change is True or getattr(buff, "add", None) is not None
+        for buff in current_group.buffs
+    )
+
+
+    @staticmethod
+    def check_before_apply_buff(slider, slider2, entry, buff)-> bool:
+        new_duration = int(slider.get())
+        new_delay = int(slider2.get())
+        try:
+            new_value = float(entry.get())
+        except ValueError:
+            return False
+
+        if new_duration == buff.duration and new_delay == buff.delay and float(buff.value) == new_value:
+            print("No change buff")
+            return False
+        else:
+            print("change buff")
+            return True
+
 

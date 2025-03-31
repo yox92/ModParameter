@@ -38,6 +38,7 @@ WINDOW_OFFSET = 10
 
 class ModSelectionWindow:
     def __init__(self, root):
+        self.remove_mode = False
         self.block_system_error_detect = False
         self.appender_button = []
         self.status_label = None
@@ -854,7 +855,10 @@ class ModSelectionWindow:
 
     def buff_button_press(self, name):
         self.create_frame_bot_find_weapon()
-        Utils.create_grid_row_col_config(self.frame_bot_top, 1, 1)
+        self.frame_bot_top.columnconfigure(0, weight=0)
+        self.frame_bot_top.columnconfigure(1, weight=1)
+        self.frame_bot_top.columnconfigure(2, weight=0)
+        self.frame_bot_top.columnconfigure(3, weight=0)
         if JsonUtils.buff_mod_exist():
             data = JsonUtils.load_buff_mod()
         else:
@@ -862,33 +866,166 @@ class ModSelectionWindow:
         buffs_data = data.get("Buffs", {}).get(name, [])
         buffs = [Buff.from_data(b) for b in buffs_data]
 
-        total_items = len(buffs)
-        columns = min(3, total_items)
+        total_items = len(buffs) + 1
+        columns = min(4, total_items)
         rows = (total_items + columns - 1) // columns
+        color_add_buff = "#A569BD"
 
         Utils.create_grid_row_col_config(self.frame_bot_bot, rows, columns)
         Utils.configure_grid(self.frame_bot_bot,rows=rows,cols=columns,weight=1)
-        button = ctk.CTkButton(self.frame_bot_top,
-                               text="<== BACK ==>",
-                               command=self.buff_window,
-                               fg_color="orange",
-                               font=("Arial", 20, "bold"),
-                               text_color="black")
-        button.grid(row=2, column=0, padx=5, pady=5)
+        if not self.remove_mode:
+            button = ctk.CTkButton(self.frame_bot_top,
+                                   text="<== BACK ==>",
+                                   command=self.buff_window,
+                                   fg_color="orange",
+                                   font=("Arial", 20, "bold"),
+                                   text_color="black")
+            button.grid(row=2, column=1, padx=5, pady=5)
+
+        if self.remove_mode:
+            toggle_remove_button = ctk.CTkButton(self.frame_bot_top,
+                                                 text="Stop Remove",
+                                                 command=lambda: self.toggle_remove_mode(name),
+                                                 fg_color="green",
+                                                 font=("Arial", 40, "bold"),
+                                                 hover_color="yellow",
+                                                 text_color="black")
+        else:
+            toggle_remove_button = ctk.CTkButton(self.frame_bot_top,
+                                                 text="🗑 Remove buff ?",
+                                                 command=lambda: self.toggle_remove_mode(name),
+                                                 fg_color="red",
+                                                 hover_color="yellow",
+                                                 font=("Arial", 15, "bold"),
+                                                 width=40,
+                                                 text_color="black")
+
+        toggle_remove_button.grid(row=2, column=1, sticky="e")
+
+        if not self.remove_mode and Utils.buff_group_has_changes(name, buffs):
+            reset_button = ctk.CTkButton(self.frame_bot_top,
+                                         text="Reset",
+                                         command=lambda: self.on_reset_buff(name),
+                                         fg_color="#D35400",
+                                         font=("Arial", 15, "bold"),
+                                         text_color="black", width=20)
+            reset_button.grid(row=2, column=3, padx=5, pady=5, sticky="e")
 
         for idx, buff in enumerate(buffs):
             row, col = divmod(idx, columns)
             frame_recherche_m = ctk.CTkFrame(self.frame_bot_bot, fg_color="transparent")
             frame_recherche_m.grid(row=row,
                                    column=col,padx=5,pady=5,sticky="nsew")
-            label_text = f"{buff.buff_type} / {buff.skill_name or '-'}"
+            label_text = f"{'StopBleeds' 
+            if buff.buff_type == 'RemoveAllBloodLosses' 
+            else ('Skill' 
+                  if buff.buff_type == 'SkillRate' 
+                  else buff.buff_type)} / {buff.skill_name or '-'}"
+
             button = ctk.CTkButton(frame_recherche_m,
                                    font=("Arial", 20, "bold"),
                                    text=label_text,
                                    text_color="black",
                                    command=lambda b=buff, n=name: self.on_click_result_buff(b, name)
             )
+            if self.remove_mode:
+                button.configure(command=lambda b=buff, n=name: self.remove_buff_from_list(b, name),  hover_color="red")
+            if not buff.add in (None, False) :
+                button.configure(fg_color=color_add_buff)
             button.pack(expand=True)
+
+        if not self.remove_mode:
+            row, col = divmod(len(buffs), columns)
+            frame_add_buff = ctk.CTkFrame(self.frame_bot_bot, fg_color="transparent")
+            frame_add_buff.grid(row=row, column=col, padx=5, pady=5, sticky="nsew")
+            add_buff_button = ctk.CTkButton(frame_add_buff,
+                                                text="➕ Add Buff",
+                                                command=lambda: self.on_add_buff(name),
+                                                fg_color="green",
+                                                font=("Arial", 20, "bold"),
+                                                text_color="black")
+            add_buff_button.pack(expand=True)
+
+    def toggle_remove_mode(self, name):
+        self.remove_mode = not self.remove_mode
+        self.buff_button_press(name)
+
+    def on_reset_buff(self, name):
+        Utils.on_reset_buff(name)
+        self.buff_button_press(name)
+
+    def remove_buff_from_list(self, buff: Buff, name: str):
+        Utils.remove_buff_from_list(buff, name)
+        self.buff_button_press(name)
+
+    def on_add_buff(self, name):
+        self.create_frame_bot_find_weapon()
+        Utils.create_grid_row_col_config(self.frame_bot_top, 1, 1)
+
+        data = JsonUtils.load_add_buff()
+        all_buffs = [Buff.from_data(b) for b in data]
+
+        existing_data = JsonUtils.load_buff_mod() if JsonUtils.buff_mod_exist() else JsonUtils.load_buff()
+        existing_buff_data = existing_data.get("Buffs", {}).get(name, [])
+        existing_buffs = [Buff.from_data(b) for b in existing_buff_data]
+
+        buffs = [
+            b for b in all_buffs
+            if not any(Utils.is_duplicate(b, existing) for existing in existing_buffs)
+        ]
+
+        total_items = len(buffs)
+        if total_items == 0:
+            Utils.create_grid_row_col_config(self.frame_bot_bot, 1, 1)
+            Utils.configure_grid(self.frame_bot_bot, rows=1, cols=1, weight=1)
+            button = ctk.CTkButton(self.frame_bot_top,
+                                   text=f"BACK to {EnumBuff.clean_buff_name(name)}",
+                                   command=lambda: self.buff_button_press(name),
+                                   fg_color="orange",
+                                   font=("Arial", 20, "bold"),
+                                   text_color="black")
+            button.grid(row=2, column=0, padx=5, pady=5)
+            label = ctk.CTkLabel(self.frame_bot_bot, text="All buffs are add !!!", font=("Arial", 30, "bold"))
+            label.pack(pady=20)
+            return
+
+        columns = min(4, total_items)
+        rows = (total_items + columns - 1) // columns
+        Utils.create_grid_row_col_config(self.frame_bot_bot, rows, columns)
+        Utils.configure_grid(self.frame_bot_bot,rows=rows,cols=columns,weight=1)
+        button = ctk.CTkButton(self.frame_bot_top,
+                               text=f"BACK to {EnumBuff.clean_buff_name(name)}",
+                               command=lambda : self.buff_button_press(name),
+                               fg_color="orange",
+                               font=("Arial", 20, "bold"),
+                               text_color="black")
+        button.grid(row=2, column=0, padx=5, pady=5)
+
+        color_add_buff = "#A569BD"
+        for idx, buff in enumerate(buffs):
+            row, col = divmod(idx, columns)
+            frame_recherche_m = ctk.CTkFrame(self.frame_bot_bot, fg_color="transparent")
+            frame_recherche_m.grid(row=row,
+                                   column=col,padx=5,pady=5,sticky="nsew")
+            label_text = f"{'StopBleeds' 
+            if buff.buff_type == 'RemoveAllBloodLosses' 
+            else ('Skill' 
+                  if buff.buff_type == 'SkillRate' 
+                  else buff.buff_type)} / {buff.skill_name or '-'}"
+
+            button = ctk.CTkButton(frame_recherche_m,
+                                   font=("Arial", 20, "bold"),
+                                   text=label_text,
+                                   text_color="black",
+                                   fg_color=color_add_buff,
+                                   command=lambda b=buff, n=name: self.add_buff_to_list(b, name),
+            )
+            button.pack(expand=True)
+
+    def add_buff_to_list(self, buff: Buff, name: str):
+        Utils.add_buff(buff, name)
+        self.buff_button_press(name)
+
 
     def on_click_result_mag(self, result):
         Utils.clear_frame(self.main_frame_bot)
@@ -996,7 +1133,7 @@ class ModSelectionWindow:
 
 
         button = ctk.CTkButton(self.frame_bot_top,
-                               text="<== BACK ==>",
+                               text=f"BACK to {EnumBuff.clean_buff_name(name)}",
                                command=lambda n=name: self.buff_button_press(n),
                                fg_color="orange",
                                font=("Arial", 20, "bold"),
@@ -1057,7 +1194,8 @@ class ModSelectionWindow:
         self.appender_button.append(reset_button)
 
     def apply_buff(self, slider, slider2, entry, name, buff):
-        Utils.save_buff_values(slider, slider2, entry, name, buff)
+        if Utils.check_before_apply_buff(slider, slider2, entry,buff):
+            Utils.save_buff_values(slider, slider2, entry, name, buff)
         self.buff_button_press(name)
 
     def reset_buff(self, name, buff):

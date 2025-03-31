@@ -41,3 +41,8 @@ class EnumBuff(str, Enum):
             (member.value, member.value.replace("Buffs_", "").replace("Buffs", "").replace("TGLabs", ""))
             for member in cls
         ]
+
+    @classmethod
+    def clean_buff_name(cls, name: str) -> str:
+        return name.replace("Buffs_", "").replace("Buffs", "").replace("TGLabs", "")
+

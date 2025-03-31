@@ -7,6 +7,8 @@ class Buff:
         self._duration = buff.get("Duration", None)
         self._skill_name = buff.get("SkillName", None)
         self._value = buff.get("Value", None)
+        self._change = buff.get("change", None)
+        self._add = buff.get("add", None)
 
     @property
     def absolute_value(self) -> bool:
@@ -35,6 +37,14 @@ class Buff:
     @property
     def value(self) -> float:
         return self._value
+
+    @property
+    def change(self) -> bool:
+        return self._change
+
+    @property
+    def add(self) -> bool:
+        return self._add
 
     @classmethod
     def from_data(cls, data: dict):

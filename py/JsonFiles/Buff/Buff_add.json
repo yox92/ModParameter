@@ -7,7 +7,7 @@
     "Duration": 60,
     "SkillName": "Endurance",
     "Value": 10,
-    "change": false
+    "add": true
   },
   {
     "AbsoluteValue": true,
@@ -17,7 +17,7 @@
     "Duration": 60,
     "SkillName": "Strength",
     "Value": 10,
-    "change": false
+    "add": true
   },
   {
     "AbsoluteValue": true,
@@ -26,68 +26,68 @@
     "Delay": 1,
     "Duration": 60,
     "SkillName": "StressResistance",
-    "Value": -10,
-    "change": false
+    "Value": 10,
+    "add": true
   },
   {
     "AbsoluteValue": true,
     "BuffType": "SkillRate",
     "Chance": 1,
     "Delay": 1,
-    "Duration": 300,
+    "Duration": 60,
     "SkillName": "Metabolism",
-    "Value": 20,
-    "change": false
+    "Value": 10,
+    "add": true
   },
   {
     "AbsoluteValue": true,
     "BuffType": "SkillRate",
     "Chance": 1,
     "Delay": 1,
-    "Duration": 300,
+    "Duration": 60,
     "SkillName": "Vitality",
-    "Value": 20,
-    "change": false
+    "Value": 10,
+    "add": true
   },
   {
     "AbsoluteValue": true,
     "BuffType": "SkillRate",
     "Chance": 1,
     "Delay": 1,
-    "Duration": 900,
+    "Duration": 60,
     "SkillName": "Attention",
     "Value": 10,
-    "change": false
+    "add": true
   },
   {
     "AbsoluteValue": true,
     "BuffType": "SkillRate",
     "Chance": 1,
     "Delay": 1,
-    "Duration": 900,
+    "Duration": 60,
     "SkillName": "Perception",
     "Value": 10,
-    "change": false
+    "add": true
   },
   {
     "AbsoluteValue": true,
     "BuffType": "SkillRate",
-    "Chance": 0.25,
+    "Chance": 1,
     "Delay": 0,
-    "Duration": 600,
+    "Duration": 60,
     "SkillName": "Intellect",
     "Value": 10,
-    "change": false
+    "add": true
   },
   {
     "AbsoluteValue": true,
     "BuffType": "SkillRate",
-    "Chance": 0.25,
+    "Chance": 1,
     "Delay": 0,
-    "Duration": 600,
+    "Duration": 60,
     "SkillName": "Charisma",
     "Value": 10,
-    "change": false
+    "add": true
   },
   {
     "AbsoluteValue": true,
@@ -96,8 +96,8 @@
     "Delay": 50,
     "Duration": 30,
     "SkillName": "",
-    "Value": -1,
-    "change": false
+    "Value": 1,
+    "add": true
   },
   {
     "AbsoluteValue": true,
@@ -106,8 +106,8 @@
     "Delay": 50,
     "Duration": 30,
     "SkillName": "",
-    "Value": -0.8,
-    "change": false
+    "Value": 1,
+    "add": true
   },
   {
     "AbsoluteValue": false,
@@ -117,7 +117,7 @@
     "Duration": 5,
     "SkillName": "",
     "Value": 1,
-    "change": false
+    "add": true
   },
   {
     "AbsoluteValue": true,
@@ -127,27 +127,27 @@
     "Duration": 30,
     "SkillName": "",
     "Value": 0,
-    "change": false
+    "add": true
   },
   {
     "AbsoluteValue": true,
     "BuffType": "QuantumTunnelling",
     "Chance": 1,
     "Delay": 270,
-    "Duration": 30,
+    "Duration": 20,
     "SkillName": "",
     "Value": 0,
-    "change": false
+    "add": true
   },
   {
     "AbsoluteValue": true,
     "BuffType": "MaxStamina",
     "Chance": 1,
     "Delay": 1,
-    "Duration": 240,
+    "Duration": 1800,
     "SkillName": "",
     "Value": 30,
-    "change": false
+    "add": true
   },
   {
     "AbsoluteValue": true,
@@ -156,8 +156,8 @@
     "Delay": 1,
     "Duration": 240,
     "SkillName": "",
-    "Value": 2,
-    "change": false
+    "Value": 1,
+    "add": true
   },
   {
     "AbsoluteValue": true,
@@ -167,7 +167,7 @@
     "Duration": 180,
     "SkillName": "",
     "Value": 0,
-    "change": false
+    "add": true
   },
   {
     "AbsoluteValue": false,
@@ -177,7 +177,7 @@
     "Duration": 900,
     "SkillName": "",
     "Value": 0.15,
-    "change": false
+    "add": true
   },
   {
     "AbsoluteValue": true,
@@ -187,7 +187,7 @@
     "Duration": 60,
     "SkillName": "",
     "Value": 0,
-    "change": false
+    "add": true
   },
   {
     "AbsoluteValue": true,
@@ -197,7 +197,7 @@
     "Duration": -1,
     "SkillName": "",
     "Value": 0,
-    "change": false
+    "add": true
   },
   {
     "AbsoluteValue": false,
@@ -207,7 +207,7 @@
     "Duration": 600,
     "SkillName": "",
     "Value": 0.2,
-    "change": false
+    "add": true
   },
   {
     "AbsoluteValue": true,
@@ -217,7 +217,7 @@
     "Duration": 600,
     "SkillName": "",
     "Value": -4,
-    "change": false
+    "add": true
   },
   {
     "AbsoluteValue": true,
@@ -227,6 +227,6 @@
     "Duration": 15,
     "SkillName": "",
     "Value": 4,
-    "change": false
+    "add": true
   }
 ]
