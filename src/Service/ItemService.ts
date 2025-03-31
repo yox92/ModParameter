@@ -14,8 +14,8 @@ import {DatabaseService} from "@spt/services/DatabaseService";
 import {creatTracer, Tracer} from "../Entity/Tracer";
 import {createMedic, Medic} from "../Entity/Medic";
 import {Mag, MagJsonFile} from "../Entity/Mag";
-import {Bag, BagCat} from "../Entity/Bag";
-import {Buff, BuffsJsonFile} from "../Entity/Buff";
+import {BagCat} from "../Entity/Bag";
+import {BuffsJsonFile} from "../Entity/Buff";
 
 export class ItemService {
     private readonly logger: ILogger;
