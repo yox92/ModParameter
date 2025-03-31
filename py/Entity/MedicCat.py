@@ -6,6 +6,7 @@ class MedicalCat(Enum):
     DRUGS = "Drugs","5448f3a14bdc2d27728b4569"
     STIMULATOR = "Stimulator" ,"5448f3a64bdc2d60728b456a",
     MEDICAL = "Medical" ,"5448f3ac4bdc2dce718b4569",
+    BUFF = "Buff" ,"",
 
     @property
     def label(self):

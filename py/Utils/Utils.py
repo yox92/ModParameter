@@ -64,12 +64,12 @@ class Utils:
                 count += 1
 
     @staticmethod
-    def create_1x4_bottom(frame1, frame2):
+    def create_1x5_bottom(frame1, frame2):
         frame1.clear()
         total_buttons: int
-        total_buttons = 4
+        total_buttons = 5
         count = 0
-        for y in range(4):
+        for y in range(5):
             if count >= total_buttons:
                 return
             button = ctk.CTkFrame(frame2, fg_color="transparent")
