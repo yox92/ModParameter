@@ -923,3 +923,35 @@ class Utils:
             elif response == "No":
                 print("No delete")
 
+    @staticmethod
+    def apply_fast(slider1, slider2, slider3, slider4, switch1, switch2):
+        from Utils.JsonUtils import JsonUtils
+        fastload = bool(switch1.get())
+        ammoTracer = bool(switch2.get())
+        sizeMag = int(slider1.get())
+        sizeBag = int(slider2.get())
+        stimNumber = int(slider3.get())
+        moreHealHp = int(slider4.get())
+        if fastload or ammoTracer or sizeMag != 0 or sizeBag != 0 or stimNumber != 1 or moreHealHp != 0:
+            data = {
+                "fastload": fastload,
+                "sizeBag": sizeBag,
+                "sizeMag": sizeMag,
+                "stimNumber": stimNumber,
+                "moreHealHp": moreHealHp,
+                "ammoTracer": ammoTracer
+            }
+            JsonUtils.save_fast(data, "save")
+
+    @staticmethod
+    def reset_fast():
+        from Utils.JsonUtils import JsonUtils
+        data = {
+            "fastload": False,
+            "sizeBag": False,
+            "sizeMag": 0,
+            "stimNumber": 1,
+            "moreHealHp": 0,
+            "ammoTracer": 0
+        }
+        JsonUtils.save_fast(data, "reset")

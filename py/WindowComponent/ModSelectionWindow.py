@@ -117,6 +117,7 @@ class ModSelectionWindow:
         self.bag_image: CTkImage = ImageUtils.create_image_var("bag")
         self.mag_image: CTkImage = ImageUtils.create_image_var("mag")
         self.buff_image: CTkImage = ImageUtils.create_image_var("buff")
+        self.fast_image: CTkImage = ImageUtils.create_image_var("buff")
 
     def create_frame_main(self):
         self.root.grid_rowconfigure(0, weight=1)
@@ -285,6 +286,7 @@ class ModSelectionWindow:
         self.main_frame_top.grid_columnconfigure(4, weight=1)
         self.main_frame_top.grid_columnconfigure(5, weight=1)
         self.main_frame_top.grid_columnconfigure(6, weight=1)
+        self.main_frame_top.grid_columnconfigure(7, weight=1)
         self.main_frame_top.grid_rowconfigure(0, weight=1)
 
         self.frame_top_1 = ctk.CTkFrame(self.main_frame_top, fg_color="transparent")
@@ -293,12 +295,14 @@ class ModSelectionWindow:
         self.frame_top_4 = ctk.CTkFrame(self.main_frame_top, fg_color="transparent")
         self.frame_top_5 = ctk.CTkFrame(self.main_frame_top, fg_color="transparent")
         self.frame_top_6 = ctk.CTkFrame(self.main_frame_top, fg_color="transparent")
+        self.frame_top_7 = ctk.CTkFrame(self.main_frame_top, fg_color="transparent")
         self.frame_top_1.grid(row=0, column=0, sticky="nsew")
         self.frame_top_2.grid(row=0, column=1, sticky="nsew")
         self.frame_top_3.grid(row=0, column=2, sticky="nsew")
         self.frame_top_4.grid(row=0, column=3, sticky="nsew")
         self.frame_top_5.grid(row=0, column=4, sticky="nsew")
         self.frame_top_6.grid(row=0, column=5, sticky="nsew")
+        self.frame_top_7.grid(row=0, column=5, sticky="nsew")
 
     def show_all_weapons_mod(self):
         self.list_json_name_mod_weapons = JsonUtils.load_all_json_files_weapons_mod()
@@ -425,6 +429,18 @@ class ModSelectionWindow:
         )
         self.button_mag.pack(side="top", anchor="center",
                              expand=True, fill="both")
+        self.button_fast = ctk.CTkButton(
+            self.frame_top_7,
+            text="Fast Setting",
+            compound="bottom",
+            fg_color="transparent",
+            text_color="#9F2B68",
+            hover_color="whitesmoke",
+            font=("Arial", 14, "bold"),
+            command=lambda: self.fast_setting()
+        )
+        self.button_fast.pack(side="top", anchor="center",
+                             expand=True, fill="both")
         self.frames_buttons = {
             "weapon": self.buttonWeapon,
             "caliber": self.button_caliber,
@@ -462,6 +478,110 @@ class ModSelectionWindow:
             Utils.create_grid_row_col_config(self.frame_bot_bot, 5, 5)
             Utils.create_5x5_bottom(self.framesBotCaliber, self.frame_bot_bot, choice_window)
             self.create_buttons_for_buff()
+
+
+
+
+    def fast_setting(self):
+        Utils.clear_frame(self.main_frame_bot)
+        Utils.clear_config_row_col(self.main_frame_bot)
+        Utils.configure_grid(self.main_frame_bot, 7, 3, 1)
+        data = JsonUtils.load_fast()
+
+        switch_var1 = ctk.BooleanVar(value=data["fastload"])
+        switch1 = ctk.CTkSwitch(
+            self.main_frame_bot,
+            text="",
+            variable=switch_var1,
+            width=50,
+            command=lambda: label1.configure(text=f"fast magazine load/unload : {switch_var1.get()}")
+        )
+        switch1.grid(row=0, column=1, padx=5, pady=5, sticky="nsew")
+        label1 = ctk.CTkLabel(self.main_frame_bot, text=f"fast magazine load/unload : {switch_var1.get()}")
+        label1.grid(row=0, column=0, sticky="nsew")
+
+        label2 = ctk.CTkLabel(self.main_frame_bot, font=("Arial", 18, "bold"), text=f"capacity magazine : + {str(data["sizeMag"])} %")
+        label2.grid(row=1, column=2, sticky="w")
+        slider1 = ctk.CTkSlider(self.main_frame_bot,
+                               from_=0, to=100,
+                               command=lambda value: label2.configure(
+                                   text=f"capacity magazine : + {int(value)} %"))
+        slider1.set(data["sizeMag"])
+        slider1.grid(row=1, column=1, sticky=ctk.W, padx=10)
+
+        switch_var2 = ctk.BooleanVar(value=data["ammoTracer"])
+        switch2 = ctk.CTkSwitch(
+            self.main_frame_bot,
+            text="",
+            variable=switch_var2,
+            width=50,
+            command=lambda: label3.configure(text=f"all Ammo Tracer : {switch_var2.get()}")
+        )
+        switch2.grid(row=2, column=1, padx=5, pady=5, sticky="nsew")
+        label3 = ctk.CTkLabel(self.main_frame_bot, text=f"all Ammo Tracer : {switch_var2.get()}")
+        label3.grid(row=2, column=0, sticky="nsew")
+
+        label4 = ctk.CTkLabel(self.main_frame_bot, font=("Arial", 18, "bold"), text=f"capacity BackPack : + {str(data["sizeBag"])} %")
+        label4.grid(row=3, column=2, sticky="w")
+        slider2 = ctk.CTkSlider(self.main_frame_bot,
+                               from_=0, to=100,
+                               command=lambda value: label4.configure(
+                                   text=f"capacity BackPack : + {int(value)} %"))
+        slider2.set(data["sizeBag"])
+        slider2.grid(row=3, column=1, sticky=ctk.W, padx=10)
+
+        label5 = ctk.CTkLabel(self.main_frame_bot, font=("Arial", 18, "bold"), text=f"Stimator number : {str(data["stimNumber"])}")
+        label5.grid(row=4, column=2, sticky="w")
+        slider3 = ctk.CTkSlider(self.main_frame_bot,
+                               from_=1, to=10,
+                               command=lambda value: label5.configure(
+                                   text=f"Stimator number : {int(value)}"))
+        slider3.set(data["stimNumber"])
+        slider3.grid(row=4, column=1, sticky=ctk.W, padx=10)
+
+        label6 = ctk.CTkLabel(self.main_frame_bot, font=("Arial", 18, "bold"), text=f"MedKit more HP : + {str(data["moreHealHp"])} %")
+        label6.grid(row=5, column=2, sticky="w")
+        slider4 = ctk.CTkSlider(self.main_frame_bot,
+                               from_=1, to=400,
+                               command=lambda value: label6.configure(
+                                   text=f"MedKit more HP : + {int(value)} %"))
+        slider4.set(data["moreHealHp"])
+        slider4.grid(row=5, column=1, sticky=ctk.W, padx=10)
+        label7 = ctk.CTkLabel(self.main_frame_bot, font=("Arial", 18, "bold"), text_color="green",
+                              text="")
+        label7.grid(row=7, column=0)
+        validate_button = ctk.CTkButton(
+            self.main_frame_bot,
+            text="Validate",
+            fg_color="green",
+            command=lambda: (Utils.apply_fast(slider1, slider2, slider3, slider4, switch1, switch2), label7.configure(text="save !!!"))
+        )
+        validate_button.grid(row=6, column=0, columnspan=2, padx=5, pady=50)
+
+        reset_button = ctk.CTkButton(
+            self.main_frame_bot,
+            text="Reset",
+            fg_color="red",
+            command=lambda: self.reset_fast(slider1, slider2, slider3, slider4, switch1, switch2,label1, label2, label3, label4, label5, label6)
+        )
+        reset_button.grid(row=6, column=2, columnspan=2, padx=5, pady=5)
+
+    @staticmethod
+    def reset_fast(slider1, slider2, slider3, slider4, switch1, switch2,
+                   label1, label2, label3, label4, label5, label6):
+        slider1.set(0)
+        slider2.set(0)
+        slider3.set(1)
+        slider4.set(0)
+        switch1.deselect()
+        switch2.deselect()
+        label1.configure(text=f"fast magazine load/unload : False")
+        label2.configure(text=f"capacity magazine : + 0 %")
+        label3.configure(text=f"all Ammo Tracer : False")
+        label4.configure(text=f"capacity BackPack : + 0 %")
+        label5.configure(text=f"Stimator number : 1")
+        label6.configure(text=f"MedKit more HP : + 0 %")
+        Utils.reset_fast()
 
     def pmc_window(self):
         WindowUtils.lock_choice_frame("pmc", self.frames_buttons)

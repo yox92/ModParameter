@@ -7,7 +7,7 @@ from Entity.EnumEffect import EnumEffect
 from Entity.EnumMedic import EnumMedic
 from Entity.WindowType import WindowType
 from config import JSON_FILES_DIR_WEAPONS, JSON_FILES_DIR_CALIBER, JSON_FILES_DIR_PMC, JSON_FILES_DIR_AMMO, \
-    JSON_FILES_DIR_MEDIC, JSON_FILES_DIR_MAG, JSON_FILES_DIR_BAG, JSON_FILES_DIR_BUFF
+    JSON_FILES_DIR_MEDIC, JSON_FILES_DIR_MAG, JSON_FILES_DIR_BAG, JSON_FILES_DIR_BUFF, JSON_FILES_DIR_FAST
 
 
 class JsonUtils:
@@ -46,6 +46,19 @@ class JsonUtils:
         path = os.path.join(JSON_FILES_DIR_MAG, "Mag.json")
         with open( path, "r", encoding="utf-8") as f:
             return json.load(f)
+
+    @staticmethod
+    def load_fast():
+        path = os.path.join(JSON_FILES_DIR_FAST, "Fast.json")
+        with open( path, "r", encoding="utf-8") as f:
+            return json.load(f)
+
+    @staticmethod
+    def save_fast(data, manage):
+        path = os.path.join(JSON_FILES_DIR_FAST, "Fast.json")
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2)
+        print(f"Fast setting {manage}")
 
     @staticmethod
     def load_bag(result):
