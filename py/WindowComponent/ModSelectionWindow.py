@@ -3,9 +3,7 @@ from customtkinter import CTkImage
 from CTkMessagebox import CTkMessagebox
 
 from Entity import Caliber, Root, Logger, CategoryColor
-from Entity.Bag import Bag
 from Entity.Buff import Buff
-from Entity.BuffGroup import BuffGroup
 from Entity.EnumBagSize import EnumBagSize
 from Entity.EnumBuff import EnumBuff
 from Entity.EnumMagSize import EnumMagSize
@@ -685,6 +683,13 @@ class ModSelectionWindow:
         Utils.configure_grid(self.frame_bot_top, 1, 1, 1)
         row = 1
         column = 0
+        reset_button = ctk.CTkButton(self.frame_bot_top,
+                                     text="Reset all",
+                                     command=lambda: Utils.delete_mod(WindowType.BUFF),
+                                     fg_color="#D35400",
+                                     font=("Arial", 15, "bold"),
+                                     text_color="black", width=20)
+        reset_button.grid(row=2, column=3, padx=5, pady=5, sticky="e")
         button = ctk.CTkButton(self.frame_bot_top,
                                text="<== BACK ==>",
                                command=self.medic_window,
@@ -708,6 +713,7 @@ class ModSelectionWindow:
             if column >= 5:
                 column = 0
                 row += 1
+
 
     def create_buttons_for_medic(self, choice_window: WindowType):
         column = 0
@@ -783,6 +789,14 @@ class ModSelectionWindow:
             rows=total_rows,
             cols=items_per_row,
             weight=1)
+        reset_button = ctk.CTkButton(self.frame_bot_top,
+                                     text="Reset all",
+                                     command=lambda: Utils.delete_mod(WindowType.MAG),
+                                     fg_color="#D35400",
+                                     font=("Arial", 15, "bold"),
+                                     text_color="black", width=20)
+        reset_button.grid(row=2, column=3, padx=5, pady=5, sticky="e")
+
         button = ctk.CTkButton(self.frame_bot_top,
                                text="<== BACK ==>",
                                command=self.mag_window,
@@ -825,6 +839,14 @@ class ModSelectionWindow:
             rows=total_rows,
             cols=items_per_row,
             weight=1)
+        reset_button = ctk.CTkButton(self.frame_bot_top,
+                                     text="Reset all",
+                                     command=lambda: Utils.delete_mod(WindowType.BAG),
+                                     fg_color="#D35400",
+                                     font=("Arial", 15, "bold"),
+                                     text_color="black", width=20)
+        reset_button.grid(row=2, column=3, padx=5, pady=5, sticky="e")
+
         button = ctk.CTkButton(self.frame_bot_top,
                                text="<== BACK ==>",
                                command=self.bag_window,

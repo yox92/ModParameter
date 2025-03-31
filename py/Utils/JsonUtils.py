@@ -476,6 +476,14 @@ class JsonUtils:
         print(f" file delete : {name}")
 
     @staticmethod
+    def delete_all_bag_mod():
+        for file_name in os.listdir(JSON_FILES_DIR_BAG):
+            if file_name.endswith('mod.json'):
+                file_path = os.path.join(JSON_FILES_DIR_BAG, file_name)
+                JsonUtils.delete_file(file_path)
+                print(f" file delete : {file_name}")
+
+    @staticmethod
     def delete_buff_mod():
         path_mod = os.path.join(JSON_FILES_DIR_BUFF, 'Buff_mod.json')
         os.remove(path_mod)
@@ -571,6 +579,11 @@ class JsonUtils:
                 if file_name.endswith('_mod.json'):
                     file_path = os.path.join(JSON_FILES_DIR_MEDIC, file_name)
                     JsonUtils.delete_file(file_path)
+
+    @staticmethod
+    def delete_all_medic(window_type: WindowType, parent):
+        print("")
+
 
     @staticmethod
     def create_mod_bag(data, name):

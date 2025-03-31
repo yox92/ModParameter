@@ -1,6 +1,7 @@
 import copy
 
 import customtkinter as ctk
+from CTkMessagebox import CTkMessagebox
 
 from Entity import EnumProps, EnumAiming, EnumAmmo, ItemManager
 from Entity.Bag import Bag
@@ -637,6 +638,17 @@ class Utils:
         JsonUtils.save_mag_preset(data, result)
 
     @staticmethod
+    def reset_all_mag():
+        from Utils.JsonUtils import JsonUtils
+        data = JsonUtils.load_mag()
+        for result in EnumMagSize.list_values():
+            data[result]["penality"] = False
+            data[result]["resize"] = False
+            data[result]["fastLoad"] = False
+            data[result]["counts"] =  Utils.slider_start(result)
+            JsonUtils.save_mag_preset(data, result)
+
+    @staticmethod
     def apply_bag_value(result, switch_var, switch_var2, slider):
         from Utils.JsonUtils import JsonUtils
         data = JsonUtils.load_bag(result)
@@ -876,3 +888,38 @@ class Utils:
         else:
             print(value)
         return -100, 100
+
+    @staticmethod
+    def delete_mod(window_type: WindowType, result):
+        from Utils.JsonUtils import JsonUtils
+        if window_type == WindowType.BUFF:
+            msg_choice = CTkMessagebox(title="remove all Buff ?",
+                                       message="Are you sure to DELETE all Buffs modifications ? ",
+                                       icon="warning", option_1="No", option_2="Yes")
+            response = msg_choice.get()
+            if response == "Yes":
+                if JsonUtils.buff_mod_exist():
+                    JsonUtils.delete_buff_mod()
+            elif response == "No":
+                print("No delete")
+
+        if window_type == WindowType.MAG:
+            msg_choice = CTkMessagebox(title="remove all Magazines ?",
+                                       message="Are you sure to DELETE all Magazines modifications ? ",
+                                       icon="warning", option_1="No", option_2="Yes")
+            response = msg_choice.get()
+            if response == "Yes":
+                Utils.reset_all_mag()
+            elif response == "No":
+                print("No delete")
+
+        if window_type == WindowType.BAG:
+            msg_choice = CTkMessagebox(title="remove all Bag ?",
+                                       message="Are you sure to DELETE all BackPack modifications ? ",
+                                       icon="warning", option_1="No", option_2="Yes")
+            response = msg_choice.get()
+            if response == "Yes":
+                JsonUtils.delete_all_bag_mod()
+            elif response == "No":
+                print("No delete")
+
