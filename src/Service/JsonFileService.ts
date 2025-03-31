@@ -112,7 +112,7 @@ export class JsonFileService {
             }
 
             if (jsonFiles.length === 0) {
-                this.logger.debug("[ModParameter] No JSON files found");
+                this.logger.debug(`"[ModParameter] No JSON files found for ${itemType}"`);
                 return [];
             }
 

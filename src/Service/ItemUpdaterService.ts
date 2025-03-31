@@ -11,6 +11,8 @@ import {IEffectDamageProps, Medic} from "../Entity/Medic";
 import {Mag} from "../Entity/Mag";
 import {EnumagCount} from "../Entity/EnumagCount";
 import {Bag, BagCat} from "../Entity/Bag";
+import {Buff, IBuffJson} from "../Entity/Buff";
+import {IBuff, IBuffs, IGlobals} from "@spt/models/eft/common/IGlobals";
 
 
 export class ItemUpdaterService {
@@ -446,6 +448,59 @@ export class ItemUpdaterService {
             }
         }
     }
+
+    public applyBuffMod(jsonBuff: Record<string, IBuffJson[]>): void {
+        const globals: IGlobals = this.dataService.getGlobals();
+        const buffs: IBuffs = globals?.config?.Health.Effects?.Stimulator?.Buffs;
+
+        if (!buffs) {
+            console.debug(`[ModParameter] Impossible de récupérer les buffs depuis Globals.`);
+            return;
+        }
+
+        let totalBuffsModified = 0;
+        let totalGroupsTouched = 0;
+
+        for (const [groupName, modifiedBuffs] of Object.entries(jsonBuff)) {
+            const originalGroup: IBuff[] = buffs[groupName as keyof IBuffs];
+
+            if (!originalGroup || !Array.isArray(originalGroup)) {
+                console.debug(`[ModParameter] Groupe introuvable dans IBuffs : ${groupName}`);
+                continue;
+            }
+
+            let groupModified = false;
+
+            for (const buffData of modifiedBuffs) {
+                const modBuff = new Buff(buffData);
+
+                if (!modBuff.change) continue;
+
+                const targetBuff = originalGroup.find(
+                    b => b.BuffType === modBuff.buffType && b.SkillName === modBuff.skillName
+                );
+
+                if (!targetBuff) {
+                    console.debug(`[ModParameter] Buff introuvable dans '${groupName}' : ${modBuff.buffType} / ${modBuff.skillName}`);
+                    continue;
+                }
+
+                targetBuff.Delay = modBuff.delay;
+                targetBuff.Duration = modBuff.duration;
+                targetBuff.Value = modBuff.value;
+
+                totalBuffsModified++;
+                groupModified = true;
+            }
+
+            if (groupModified) {
+                totalGroupsTouched++;
+            }
+        }
+
+        console.debug(`[ModParameter] Résumé : ${totalBuffsModified} buff(s) modifié(s) dans ${totalGroupsTouched} groupe(s).`);
+    }
+
 
     private clearExcludedFilters(backPackProps: IProps, name: string): void {
         let modified = false;
