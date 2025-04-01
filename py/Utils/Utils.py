@@ -890,7 +890,7 @@ class Utils:
         return -100, 100
 
     @staticmethod
-    def delete_mod(window_type: WindowType, result):
+    def delete_mod(window_type: WindowType):
         from Utils.JsonUtils import JsonUtils
         if window_type == WindowType.BUFF:
             msg_choice = CTkMessagebox(title="remove all Buff ?",
@@ -948,10 +948,10 @@ class Utils:
         from Utils.JsonUtils import JsonUtils
         data = {
             "fastload": False,
-            "sizeBag": False,
+            "sizeBag": 0,
             "sizeMag": 0,
             "stimNumber": 1,
             "moreHealHp": 0,
-            "ammoTracer": 0
+            "ammoTracer": False
         }
         JsonUtils.save_fast(data, "reset")

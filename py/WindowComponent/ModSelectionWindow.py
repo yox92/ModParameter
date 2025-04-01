@@ -485,6 +485,7 @@ class ModSelectionWindow:
 
 
     def fast_setting(self):
+        WindowUtils.lock_choice_frame("fast", self.frames_buttons)
         Utils.clear_frame(self.main_frame_bot)
         Utils.clear_config_row_col(self.main_frame_bot)
         Utils.configure_grid(self.main_frame_bot, 7, 3, 1)
@@ -544,7 +545,7 @@ class ModSelectionWindow:
         label6 = ctk.CTkLabel(self.main_frame_bot, font=("Arial", 18, "bold"), text=f"MedKit more HP : + {str(data["moreHealHp"])} %")
         label6.grid(row=5, column=2, sticky="w")
         slider4 = ctk.CTkSlider(self.main_frame_bot,
-                               from_=1, to=400,
+                               from_=0, to=400,
                                command=lambda value: label6.configure(
                                    text=f"MedKit more HP : + {int(value)} %"))
         slider4.set(data["moreHealHp"])

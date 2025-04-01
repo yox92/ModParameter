@@ -1,8 +1,8 @@
 {
   "fastload": false,
-  "sizeBag": false,
+  "sizeBag": 0,
   "sizeMag": 0,
   "stimNumber": 1,
   "moreHealHp": 0,
-  "ammoTracer": 0
+  "ammoTracer": false
 }

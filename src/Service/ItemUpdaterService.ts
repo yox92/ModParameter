@@ -80,11 +80,11 @@ export class ItemUpdaterService {
         }
 
         if (fast.sizeBag > 0) {
-            this.applyFastToBackpacks(fast, items);
+            this.applyFastBackpacks(fast, items);
         }
 
         if (fast.moreHealHp !== 0 || fast.stimNumber !== 1) {
-            this.applyFastToHealItems(fast, items);
+            this.applyFastHeal(fast, items);
         }
     }
 
@@ -93,6 +93,7 @@ export class ItemUpdaterService {
             (item): item is ITemplateItem =>
                 !!item?._id && this.itemHelper.isOfBaseclass(item._id, Baseclass.MAGAZINE)
         );
+        let totalModified = 0;
 
         magazines.forEach((magazine) => {
             const props = magazine._props;
@@ -104,24 +105,32 @@ export class ItemUpdaterService {
             }
 
             const firstCartridge = props.Cartridges[0];
+            let modified = false;
 
             if (fast.fastload) {
                 this.applyMagFastLoad(props, name);
+                modified = true;
             }
 
             if (fast.sizeMag > 0) {
                 const originalValue = firstCartridge._max_count;
                 firstCartridge._max_count = Math.round(originalValue * (fast.sizeMag / 100));
+                modified = true;
+            }
+            if (modified) {
+                totalModified++;
             }
         });
+        this.logger.debug(`[ModParameter] Finished: ${totalModified} magazine(s) modified.`);
+
     }
 
-    private applyFastToBackpacks(fast: Fast, items: ITemplateItem[]): void {
+    private applyFastBackpacks(fast: Fast, items: ITemplateItem[]): void {
         const backPacks = Object.values(items).filter(
             (item): item is ITemplateItem =>
                 !!item?._id && this.itemHelper.isOfBaseclass(item._id, Baseclass.BACKPACK)
         );
-
+        let totalModified = 0;
         backPacks.forEach((backPack) => {
             const props = backPack._props;
             const name = backPack._name ?? backPack._id;
@@ -135,7 +144,7 @@ export class ItemUpdaterService {
                 this.logger.debug(`[ModParameter] Skipping resize for '${name}' — multiple grids.`);
                 return;
             }
-
+            let modified = false;
             props.Grids.forEach((grid: IGrid) => {
                 if (!grid._props) return;
 
@@ -148,11 +157,16 @@ export class ItemUpdaterService {
 
                 grid._props.cellsH = newH;
                 grid._props.cellsV = newV;
+                modified = true;
             });
+            if (modified) {
+                totalModified++;
+            }
         });
+        this.logger.debug(`[ModParameter] ${totalModified} backpack(s) resized.`);
     }
 
-    private applyFastToHealItems(fast: Fast, items: ITemplateItem[]): void {
+    private applyFastHeal(fast: Fast, items: ITemplateItem[]): void {
         const healItems = Object.values(items).filter(
             (item): item is ITemplateItem =>
                 !!item?._id && (
