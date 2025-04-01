@@ -175,19 +175,6 @@ class ModSelectionWindow:
             command=self.show_all_ammo_mod
         )
         self.button_view_all_ammo_mod.grid(row=0, column=1, padx=10)
-        self.button_all_ammo_tracer = ctk.CTkButton(
-            self.button_frame,
-            text="All Ammo Tracer ?",
-            compound="top",
-            fg_color="blue",
-            text_color="white",
-            hover_color="black",
-            font=("Arial", 15, "bold"),
-            height=10,
-            width=10,
-            command=self.all_ammo_tracer
-        )
-        self.button_all_ammo_tracer.grid(row=0, column=3, padx=10)
         self.button_delete_mod = ctk.CTkButton(
             self.button_frame,
             text="Select mod to DELETE",
@@ -207,25 +194,17 @@ class ModSelectionWindow:
             self.button_view_all_ammo_mod.configure(text="All Saved Ammo Mod")
 
     def all_ammo_tracer(self):
-        msg_choice = CTkMessagebox(title="All Ammo Tracer ?",
-                                   message="Would you like all the bullets in the game to become tracer rounds",
-                                   icon="warning", option_1="No", option_2="Yes")
-        response = msg_choice.get()
+        msg_color = CTkMessagebox(title="Which color ?",
+                                  message="Which color tracer do you want to apply ",
+                                  icon="info", option_1="Green", option_2="Red")
+        response_color = msg_color.get()
 
-        if response == "Yes":
-            msg_color = CTkMessagebox(title="Which color ?",
-                                      message="Which color do you want to apply ",
-                                      icon="info", option_1="Cancel", option_2="Green", option_3="Red", )
-            response_color = msg_color.get()
-
-            if response_color == "Red":
-                self.apply_all_ammo_tracer(False)
-            elif response_color == "Green":
-                self.apply_all_ammo_tracer(True)
-            else:
-                print("Too bad, wise decision")
-        elif response == "No":
-            self.remove_tracer()
+        if response_color == "Red":
+            self.apply_all_ammo_tracer(False)
+        elif response_color == "Green":
+            self.apply_all_ammo_tracer(True)
+        else:
+            print("Too bad, wise decision")
 
     def remove_tracer(self):
         JsonUtils.update_tracer(False, False)
@@ -488,7 +467,7 @@ class ModSelectionWindow:
         WindowUtils.lock_choice_frame("fast", self.frames_buttons)
         Utils.clear_frame(self.main_frame_bot)
         Utils.clear_config_row_col(self.main_frame_bot)
-        Utils.configure_grid(self.main_frame_bot, 7, 3, 1)
+        Utils.configure_grid(self.main_frame_bot, 8, 3, 1)
         data = JsonUtils.load_fast()
 
         switch_var1 = ctk.BooleanVar(value=data["fastload"])
@@ -513,43 +492,54 @@ class ModSelectionWindow:
         slider1.grid(row=1, column=1, sticky=ctk.W, padx=10)
 
         switch_var2 = ctk.BooleanVar(value=data["ammoTracer"])
+        label3 = ctk.CTkLabel(self.main_frame_bot, text=f"all Ammo Tracer : {switch_var2.get()}")
+        label3.grid(row=3, column=0, sticky="nsew")
         switch2 = ctk.CTkSwitch(
             self.main_frame_bot,
             text="",
             variable=switch_var2,
             width=50,
-            command=lambda: label3.configure(text=f"all Ammo Tracer : {switch_var2.get()}")
+            command=lambda l=label3, s=switch_var2: self.ammo_tracer(l,s))
+        switch2.grid(row=3, column=1, padx=5, pady=5, sticky="nsew")
+
+        switch_var3 = ctk.BooleanVar(value=data["slotMag"])
+        label8 = ctk.CTkLabel(self.main_frame_bot, text=f"resize 3 slot magazine to 2 : {switch_var3.get()}")
+        label8.grid(row=2, column=0, sticky="nsew")
+        switch3 = ctk.CTkSwitch(
+            self.main_frame_bot,
+            text="",
+            variable=switch_var3,
+            width=50,
+            command=lambda: label8.configure(text=f"fast magazine load/unload : {switch_var3.get()}")
         )
-        switch2.grid(row=2, column=1, padx=5, pady=5, sticky="nsew")
-        label3 = ctk.CTkLabel(self.main_frame_bot, text=f"all Ammo Tracer : {switch_var2.get()}")
-        label3.grid(row=2, column=0, sticky="nsew")
+        switch3.grid(row=2, column=1, padx=5, pady=5, sticky="nsew")
 
         label4 = ctk.CTkLabel(self.main_frame_bot, font=("Arial", 18, "bold"), text=f"capacity BackPack : + {str(data["sizeBag"])} %")
-        label4.grid(row=3, column=2, sticky="w")
+        label4.grid(row=4, column=2, sticky="w")
         slider2 = ctk.CTkSlider(self.main_frame_bot,
                                from_=0, to=100,
                                command=lambda value: label4.configure(
                                    text=f"capacity BackPack : + {int(value)} %"))
         slider2.set(data["sizeBag"])
-        slider2.grid(row=3, column=1, sticky=ctk.W, padx=10)
+        slider2.grid(row=4, column=1, sticky=ctk.W, padx=10)
 
         label5 = ctk.CTkLabel(self.main_frame_bot, font=("Arial", 18, "bold"), text=f"Stimator number : {str(data["stimNumber"])}")
-        label5.grid(row=4, column=2, sticky="w")
+        label5.grid(row=5, column=2, sticky="w")
         slider3 = ctk.CTkSlider(self.main_frame_bot,
                                from_=1, to=10,
                                command=lambda value: label5.configure(
                                    text=f"Stimator number : {int(value)}"))
         slider3.set(data["stimNumber"])
-        slider3.grid(row=4, column=1, sticky=ctk.W, padx=10)
+        slider3.grid(row=5, column=1, sticky=ctk.W, padx=10)
 
         label6 = ctk.CTkLabel(self.main_frame_bot, font=("Arial", 18, "bold"), text=f"MedKit more HP : + {str(data["moreHealHp"])} %")
-        label6.grid(row=5, column=2, sticky="w")
+        label6.grid(row=6, column=2, sticky="w")
         slider4 = ctk.CTkSlider(self.main_frame_bot,
                                from_=0, to=400,
                                command=lambda value: label6.configure(
                                    text=f"MedKit more HP : + {int(value)} %"))
         slider4.set(data["moreHealHp"])
-        slider4.grid(row=5, column=1, sticky=ctk.W, padx=10)
+        slider4.grid(row=6, column=1, sticky=ctk.W, padx=10)
         label7 = ctk.CTkLabel(self.main_frame_bot, font=("Arial", 18, "bold"), text_color="green",
                               text="")
         label7.grid(row=7, column=0)
@@ -557,33 +547,44 @@ class ModSelectionWindow:
             self.main_frame_bot,
             text="Validate",
             fg_color="green",
-            command=lambda: (Utils.apply_fast(slider1, slider2, slider3, slider4, switch1, switch2), label7.configure(text="save !!!"))
+            command=lambda: (Utils.apply_fast(slider1, slider2, slider3, slider4, switch1, switch2, switch3), label7.configure(text="save !!!"))
         )
-        validate_button.grid(row=6, column=0, columnspan=2, padx=5, pady=50)
+        validate_button.grid(row=7, column=0, columnspan=2, padx=5, pady=50)
 
         reset_button = ctk.CTkButton(
             self.main_frame_bot,
             text="Reset",
             fg_color="red",
-            command=lambda: self.reset_fast(slider1, slider2, slider3, slider4, switch1, switch2,label1, label2, label3, label4, label5, label6)
+            command=lambda: self.reset_fast(slider1, slider2, slider3, slider4, switch1, switch2,switch3,
+                                            label1, label2, label3, label4, label5, label6,label7, label8)
         )
-        reset_button.grid(row=6, column=2, columnspan=2, padx=5, pady=5)
+        reset_button.grid(row=7, column=2, columnspan=2, padx=5, pady=5)
+
+    def ammo_tracer(self, label3, switch_var2):
+        label3.configure(text=f"all Ammo Tracer : {switch_var2.get()}")
+        if switch_var2.get():
+            self.all_ammo_tracer()
+        else:
+            self.remove_tracer()
 
     @staticmethod
-    def reset_fast(slider1, slider2, slider3, slider4, switch1, switch2,
-                   label1, label2, label3, label4, label5, label6):
+    def reset_fast(slider1, slider2, slider3, slider4, switch1, switch2, switch3,
+                   label1, label2, label3, label4, label5, label6, label7, label8):
         slider1.set(0)
         slider2.set(0)
         slider3.set(1)
         slider4.set(0)
         switch1.deselect()
         switch2.deselect()
+        switch3.deselect()
         label1.configure(text=f"fast magazine load/unload : False")
         label2.configure(text=f"capacity magazine : + 0 %")
         label3.configure(text=f"all Ammo Tracer : False")
         label4.configure(text=f"capacity BackPack : + 0 %")
         label5.configure(text=f"Stimator number : 1")
         label6.configure(text=f"MedKit more HP : + 0 %")
+        label7.configure(text=f"")
+        label8.configure(text=f"resize 3 slot magazine to 2 : False")
         Utils.reset_fast()
 
     def pmc_window(self):

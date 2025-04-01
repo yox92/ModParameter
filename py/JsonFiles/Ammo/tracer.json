@@ -1,4 +1,4 @@
 {
-    "Tracer": false,
-    "TracerColor": "red"
+    "Tracer": true,
+    "TracerColor": "tracerGreen"
 }

@@ -559,7 +559,7 @@ class Utils:
                         EnumMagSize.CAT_80_89.value,
                         EnumMagSize.CAT_90_100.value,
                         EnumMagSize.CAT_GT_100):
-            return "Resize 3 slots to 2 slots"
+            return "Resize 3/(4) slots to 2 slots"
 
     @staticmethod
     def slider_start(result):
@@ -924,17 +924,19 @@ class Utils:
                 print("No delete")
 
     @staticmethod
-    def apply_fast(slider1, slider2, slider3, slider4, switch1, switch2):
+    def apply_fast(slider1, slider2, slider3, slider4, switch1, switch2, switch3):
         from Utils.JsonUtils import JsonUtils
         fastload = bool(switch1.get())
         ammoTracer = bool(switch2.get())
+        slotMag = bool(switch3.get())
         sizeMag = int(slider1.get())
         sizeBag = int(slider2.get())
         stimNumber = int(slider3.get())
         moreHealHp = int(slider4.get())
-        if fastload or ammoTracer or sizeMag != 0 or sizeBag != 0 or stimNumber != 1 or moreHealHp != 0:
+        if fastload or ammoTracer or slotMag or sizeMag != 0 or sizeBag != 0 or stimNumber != 1 or moreHealHp != 0:
             data = {
                 "fastload": fastload,
+                "slotMag": slotMag,
                 "sizeBag": sizeBag,
                 "sizeMag": sizeMag,
                 "stimNumber": stimNumber,
@@ -948,6 +950,7 @@ class Utils:
         from Utils.JsonUtils import JsonUtils
         data = {
             "fastload": False,
+            "slotMag": False,
             "sizeBag": 0,
             "sizeMag": 0,
             "stimNumber": 1,

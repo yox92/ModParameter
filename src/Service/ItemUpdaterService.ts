@@ -1,7 +1,7 @@
 import {ItemProps} from "../Entity/ItemProps";
 import {ILogger} from "@spt/models/spt/utils/ILogger";
 import {Ammo} from "../Entity/Ammo";
-import {IGrid, IGridFilter, IProps, ITemplateItem} from "@spt/models/eft/common/tables/ITemplateItem";
+import {IGrid, IGridFilter, IProps, ISlot, ITemplateItem} from "@spt/models/eft/common/tables/ITemplateItem";
 import {ValidateUtils} from "../Utils/ValidateUtils";
 import {DatabaseService} from "@spt/services/DatabaseService";
 import {creatTracer, Tracer} from "../Entity/Tracer";
@@ -47,7 +47,7 @@ export class ItemUpdaterService {
 
         const items: ITemplateItem[] = validateUtils.checkTemplateItems(this.dataService, this.logger)
 
-        const ammos: ITemplateItem[] = items.filter(item =>
+        const ammos: ITemplateItem[] = items.filter((item:ITemplateItem) =>
             item?._id && this.itemHelper.isOfBaseclass(item._id, Baseclass.AMMO)
         );
 
@@ -70,17 +70,12 @@ export class ItemUpdaterService {
         const validateUtils = new ValidateUtils();
         const items: ITemplateItem[] = validateUtils.checkTemplateItems(this.dataService, this.logger);
 
-        if (fast.ammoTracer) {
-            const tracer: Tracer = creatTracer({Tracer: true, TracerColor: "red"});
-            this.applyAllTracerAllAmmoDB(tracer);
-        }
-
-        if (fast.fastload || fast.sizeMag > 0) {
+        if (fast.fastload || fast.sizeMag > 0 || fast.slotMag) {
             this.applyFastToMagazines(fast, items);
         }
 
         if (fast.sizeBag > 0) {
-            this.applyFastBackpacks(fast, items);
+            this.applyFastBackpacks(fast, items, validateUtils);
         }
 
         if (fast.moreHealHp !== 0 || fast.stimNumber !== 1) {
@@ -89,11 +84,13 @@ export class ItemUpdaterService {
     }
 
     private applyFastToMagazines(fast: Fast, items: ITemplateItem[]): void {
-        const magazines = Object.values(items).filter(
-            (item): item is ITemplateItem =>
+        const magazines:ITemplateItem[] = Object.values(items).filter(
+            (item:ITemplateItem): item is ITemplateItem =>
                 !!item?._id && this.itemHelper.isOfBaseclass(item._id, Baseclass.MAGAZINE)
         );
-        let totalModified = 0;
+        let countFastLoad = 0;
+        let countSizeMag = 0;
+        let countSlotMag = 0;
 
         magazines.forEach((magazine) => {
             const props = magazine._props;
@@ -104,28 +101,27 @@ export class ItemUpdaterService {
                 return;
             }
 
-            const firstCartridge = props.Cartridges[0];
-            let modified = false;
+            const firstCartridge:ISlot = props.Cartridges[0];
 
             if (fast.fastload) {
-                this.applyMagFastLoad(props, name);
-                modified = true;
+                countFastLoad = countFastLoad + this.applyMagFastLoad(props, name);
             }
-
+            if (fast.slotMag) {
+                countSlotMag = countSlotMag + this.applyMagResize(props, name, firstCartridge)
+            }
             if (fast.sizeMag > 0) {
                 const originalValue = firstCartridge._max_count;
-                firstCartridge._max_count = Math.round(originalValue * (fast.sizeMag / 100));
-                modified = true;
+                firstCartridge._max_count = Math.round(originalValue * (1 + fast.sizeMag / 100));
+                countSizeMag++
             }
-            if (modified) {
-                totalModified++;
-            }
-        });
-        this.logger.debug(`[ModParameter] Finished: ${totalModified} magazine(s) modified.`);
 
+        });
+        this.logger.debug(`[ModParameter] Finished: ${countFastLoad} magazine(s) modified with fast(Un)load`);
+        this.logger.debug(`[ModParameter] Finished: ${countSizeMag} magazine(s) modified ammo count containing`);
+        this.logger.debug(`[ModParameter] Finished: ${countSlotMag} magazine(s) modified slot`);
     }
 
-    private applyFastBackpacks(fast: Fast, items: ITemplateItem[]): void {
+    private applyFastBackpacks(fast: Fast, items: ITemplateItem[], validateUtils: ValidateUtils): void {
         const backPacks = Object.values(items).filter(
             (item): item is ITemplateItem =>
                 !!item?._id && this.itemHelper.isOfBaseclass(item._id, Baseclass.BACKPACK)
@@ -148,15 +144,10 @@ export class ItemUpdaterService {
             props.Grids.forEach((grid: IGrid) => {
                 if (!grid._props) return;
 
-                const originalH = grid._props.cellsH;
-                const originalV = grid._props.cellsV;
+                const resizeBag :{ cellsH: number; cellsV: number } = validateUtils.resizeGrid(grid._props, fast.sizeBag)
 
-                const newH = Math.round(originalH * (fast.sizeBag / 100));
-                let newV = Math.round(originalV * (fast.sizeBag / 100));
-                newV = Math.min(newV, 7);
-
-                grid._props.cellsH = newH;
-                grid._props.cellsV = newV;
+                grid._props.cellsH = resizeBag.cellsH
+                grid._props.cellsV = resizeBag.cellsV
                 modified = true;
             });
             if (modified) {
@@ -188,12 +179,12 @@ export class ItemUpdaterService {
             if (fast.moreHealHp !== 0 && props.MaxHpResource > 0) {
                 const original = props.MaxHpResource;
                 props.MaxHpResource = Math.round(original * (fast.moreHealHp / 100));
-                this.logger.debug(`[ModParameter] Heal '${name}' MaxHpResource scaled: ${original} → ${props.MaxHpResource}`);
+                this.logger.debug(`[ModParameter] Heal '${name}' usage scaled: ${original} → ${props.MaxHpResource}`);
             } else if (fast.stimNumber !== 1 &&
                 props.MaxHpResource === 0 &&
                 this.itemHelper.isOfBaseclass(healItem._id, Baseclass.STIMULATOR)) {
                 props.MaxHpResource = fast.stimNumber;
-                this.logger.debug(`[ModParameter] Stim '${name}' MaxHpResource set to ${fast.stimNumber}`);
+                this.logger.debug(`[ModParameter] Stim '${name}' usage set to ${fast.stimNumber}`);
             }
         });
     }
@@ -466,14 +457,14 @@ export class ItemUpdaterService {
             }
             const props: IProps = magazine._props;
             const name: string = magazine._name;
-            const firstCartridge = props?.Cartridges?.[0];
+            const firstCartridge: ISlot = props?.Cartridges?.[0];
 
             if (mag.fastLoad) {
                 this.applyMagFastLoad(props, name);
             }
 
             if (mag.resize) {
-                warning_info = this.applyMagResize(props, name, mag.name);
+                this.applyMagResize(props, name, firstCartridge);
             }
 
             if (mag.penality) {
@@ -493,18 +484,16 @@ export class ItemUpdaterService {
         }
     }
 
-    private applyMagFastLoad(props: IProps, name: string): void {
+    private applyMagFastLoad(props: IProps, name: string): number {
         if (props?.LoadUnloadModifier !== null && props?.LoadUnloadModifier !== undefined) {
             props.LoadUnloadModifier = -60;
-            this.logger.debug(`[ModParameter] modify ${name} Load, Unload speed`);
+            return +1
+        } else {
+            return 0
         }
     }
 
-    private applyMagResize(props: IProps, name: string, mag_name: string): boolean {
-        let warning_info = false;
-        const XS_CATEGORIES = ["01-09", "10-19", "20-29"];
-        let categories_XS: boolean = XS_CATEGORIES.includes(mag_name);
-
+    private applyMagResize(props: IProps, name: string, firstCartridge: ISlot): number {
         if (props?.Height !== null &&
             props?.Height !== undefined &&
             props?.Width !== null &&
@@ -515,18 +504,17 @@ export class ItemUpdaterService {
             if (props.Height === 3 && props.Width === 1) {
                 props.Height = 2;
                 props.ExtraSizeDown = 1;
-                this.logger.debug(`[ModParameter] modify ${name} slot 3 To 2`);
+                return +1
             } else if (props.Height === 2 && props.Width === 2) {
                 props.Height = 2;
                 props.Width = 1;
-                warning_info = true;
-            } else if (props.Height === 2 && props.Width === 1 && categories_XS) {
+                return +1
+            } else if (props.Height === 2 && props.Width === 1 && firstCartridge && firstCartridge._max_count < 29) {
                 props.Height = 1;
                 props.ExtraSizeDown = 0;
-                this.logger.debug(`[ModParameter] modify ${name} slot 2 to slot 1 `);
+                return +1
             }
         }
-        return warning_info;
     }
 
     private applyMagPenality(props: IProps, name: string): void {
@@ -647,7 +635,6 @@ export class ItemUpdaterService {
         console.debug(`[ModParameter] Resume : ${totalBuffsModified} buff(s) modify, ${totalBuffsAdded} add(s), on ${totalGroupsTouched} group(s).`);
 
     }
-
 
     private clearExcludedFilters(backPackProps: IProps, name: string): void {
         let modified = false;

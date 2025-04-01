@@ -5,6 +5,7 @@ export class Fast {
     stimNumber: number;
     moreHealHp: number;
     ammoTracer: boolean;
+    slotMag: boolean;
 
 
     constructor(fast: Fast) {
@@ -18,7 +19,8 @@ export function createFast(data: any): Fast {
         sizeMag: data.sizeMag,
         stimNumber: data.stimNumber,
         moreHealHp: data.moreHealHp,
-        ammoTracer: data.ammoTracer
+        ammoTracer: data.ammoTracer,
+        slotMag: data.slotMag,
 
     });
 }
