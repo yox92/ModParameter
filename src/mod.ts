@@ -40,6 +40,7 @@ class ModParameter implements IPostDBLoadMod, PreSptModLoader, IPostSptLoadMod {
         itemService.allTracer();
         itemService.cloneItems();
         itemService.apply_mod_item();
+        itemService.fast_setting();
         pmcService.updatePmc();
     }
 

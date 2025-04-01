@@ -4,7 +4,7 @@ import {Ammo} from "../Entity/Ammo";
 import {IGrid, IGridFilter, IProps, ITemplateItem} from "@spt/models/eft/common/tables/ITemplateItem";
 import {ValidateUtils} from "../Utils/ValidateUtils";
 import {DatabaseService} from "@spt/services/DatabaseService";
-import {Tracer} from "../Entity/Tracer";
+import {creatTracer, Tracer} from "../Entity/Tracer";
 import {Baseclass} from "../Entity/Baseclass";
 import {ItemHelper} from "@spt/helpers/ItemHelper";
 import {IEffectDamageProps, Medic} from "../Entity/Medic";
@@ -13,6 +13,7 @@ import {EnumagCount} from "../Entity/EnumagCount";
 import {Bag, BagCat} from "../Entity/Bag";
 import {Buff, IBuffJson} from "../Entity/Buff";
 import {IBuff, IBuffs, IGlobals} from "@spt/models/eft/common/IGlobals";
+import {Fast} from "../Entity/Fast";
 
 
 export class ItemUpdaterService {
@@ -63,6 +64,124 @@ export class ItemUpdaterService {
             ammo._props.Tracer = tracer.Tracer;
             ammo._props.TracerColor = validateUtils.validateTracerColor(tracer.TracerColor);
         }
+    }
+
+    public applyFast(fast: Fast): void {
+        const validateUtils = new ValidateUtils();
+        const items: ITemplateItem[] = validateUtils.checkTemplateItems(this.dataService, this.logger);
+
+        if (fast.ammoTracer) {
+            const tracer: Tracer = creatTracer({Tracer: true, TracerColor: "red"});
+            this.applyAllTracerAllAmmoDB(tracer);
+        }
+
+        if (fast.fastload || fast.sizeMag > 0) {
+            this.applyFastToMagazines(fast, items);
+        }
+
+        if (fast.sizeBag > 0) {
+            this.applyFastToBackpacks(fast, items);
+        }
+
+        if (fast.moreHealHp !== 0 || fast.stimNumber !== 1) {
+            this.applyFastToHealItems(fast, items);
+        }
+    }
+
+    private applyFastToMagazines(fast: Fast, items: ITemplateItem[]): void {
+        const magazines = Object.values(items).filter(
+            (item): item is ITemplateItem =>
+                !!item?._id && this.itemHelper.isOfBaseclass(item._id, Baseclass.MAGAZINE)
+        );
+
+        magazines.forEach((magazine) => {
+            const props = magazine._props;
+            const name = magazine._name ?? magazine._id;
+
+            if (!props || !props.Cartridges || !Array.isArray(props.Cartridges) || props.Cartridges.length === 0) {
+                this.logger.debug(`[ModParameter] Warning: Magazine '${name}' has invalid properties.`);
+                return;
+            }
+
+            const firstCartridge = props.Cartridges[0];
+
+            if (fast.fastload) {
+                this.applyMagFastLoad(props, name);
+            }
+
+            if (fast.sizeMag > 0) {
+                const originalValue = firstCartridge._max_count;
+                firstCartridge._max_count = Math.round(originalValue * (fast.sizeMag / 100));
+            }
+        });
+    }
+
+    private applyFastToBackpacks(fast: Fast, items: ITemplateItem[]): void {
+        const backPacks = Object.values(items).filter(
+            (item): item is ITemplateItem =>
+                !!item?._id && this.itemHelper.isOfBaseclass(item._id, Baseclass.BACKPACK)
+        );
+
+        backPacks.forEach((backPack) => {
+            const props = backPack._props;
+            const name = backPack._name ?? backPack._id;
+
+            if (!props?.Grids || !Array.isArray(props.Grids)) {
+                this.logger.debug(`[ModParameter] Warning: Backpack '${name}' has no grids.`);
+                return;
+            }
+
+            if (props.Grids.length > 1) {
+                this.logger.debug(`[ModParameter] Skipping resize for '${name}' — multiple grids.`);
+                return;
+            }
+
+            props.Grids.forEach((grid: IGrid) => {
+                if (!grid._props) return;
+
+                const originalH = grid._props.cellsH;
+                const originalV = grid._props.cellsV;
+
+                const newH = Math.round(originalH * (fast.sizeBag / 100));
+                let newV = Math.round(originalV * (fast.sizeBag / 100));
+                newV = Math.min(newV, 7);
+
+                grid._props.cellsH = newH;
+                grid._props.cellsV = newV;
+            });
+        });
+    }
+
+    private applyFastToHealItems(fast: Fast, items: ITemplateItem[]): void {
+        const healItems = Object.values(items).filter(
+            (item): item is ITemplateItem =>
+                !!item?._id && (
+                    this.itemHelper.isOfBaseclass(item._id, Baseclass.MEDKIT) ||
+                    this.itemHelper.isOfBaseclass(item._id, Baseclass.MEDICAL) ||
+                    this.itemHelper.isOfBaseclass(item._id, Baseclass.STIMULATOR)
+                )
+        );
+
+        healItems.forEach((healItem) => {
+            const props = healItem._props;
+            const name = healItem._name ?? healItem._id;
+
+            if (!props || typeof props.MaxHpResource !== "number") {
+                this.logger.debug(`[ModParameter] Warning: Heal item '${name}' has invalid or missing MaxHpResource.`);
+                return;
+            }
+
+            if (fast.moreHealHp !== 0 && props.MaxHpResource > 0) {
+                const original = props.MaxHpResource;
+                props.MaxHpResource = Math.round(original * (fast.moreHealHp / 100));
+                this.logger.debug(`[ModParameter] Heal '${name}' MaxHpResource scaled: ${original} → ${props.MaxHpResource}`);
+            } else if (fast.stimNumber !== 1 &&
+                props.MaxHpResource === 0 &&
+                this.itemHelper.isOfBaseclass(healItem._id, Baseclass.STIMULATOR)) {
+                props.MaxHpResource = fast.stimNumber;
+                this.logger.debug(`[ModParameter] Stim '${name}' MaxHpResource set to ${fast.stimNumber}`);
+            }
+        });
     }
 
     /**
@@ -503,7 +622,6 @@ export class ItemUpdaterService {
 
                     totalBuffsAdded++;
                     groupTouched = true;
-                    console.debug(`[ModParameter] New buff add to '${groupName}' : ${modBuff.buffType} / ${modBuff.skillName}`);
                 }
             }
 
@@ -512,7 +630,7 @@ export class ItemUpdaterService {
             }
         }
 
-       console.debug(`[ModParameter] Resume : ${totalBuffsModified} buff(s) modify, ${totalBuffsAdded} add(s), on ${totalGroupsTouched} group(s).`);
+        console.debug(`[ModParameter] Resume : ${totalBuffsModified} buff(s) modify, ${totalBuffsAdded} add(s), on ${totalGroupsTouched} group(s).`);
 
     }
 
@@ -588,6 +706,5 @@ export class ItemUpdaterService {
         }
 
     }
-
 
 }

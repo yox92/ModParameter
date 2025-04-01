@@ -16,6 +16,7 @@ import {createMedic, Medic} from "../Entity/Medic";
 import {Mag, MagJsonFile} from "../Entity/Mag";
 import {BagCat} from "../Entity/Bag";
 import {BuffsJsonFile} from "../Entity/Buff";
+import {createFast, Fast} from "../Entity/Fast";
 
 export class ItemService {
     private readonly logger: ILogger;
@@ -257,7 +258,6 @@ export class ItemService {
     }
 
     private caseBuff(jsonFiles: Array<{ fileName: string; json: BuffsJsonFile }>) {
-        this.logger.debug("caseBuff start")
         for (const {fileName, json} of jsonFiles) {
             if (!json?.Buffs || typeof json.Buffs !== "object") {
                 this.logger.debug(`[ModParameter] Skipping invalid or malformed Buff JSON in: ${fileName}`);
@@ -268,6 +268,18 @@ export class ItemService {
                 return;
             }
             this.itemUpdaterService.applyBuffMod(json.Buffs);
+        }
+    }
+
+    private caseFast(jsonFiles: Array<{ fileName: string; json: any }>) {
+        for (const {fileName, json} of jsonFiles) {
+            if (!json) {
+                this.logger.debug(`[ModParameter] Skipping fast setting`);
+            } else {
+                const fast: Fast = createFast(json);
+                this.itemUpdaterService.applyFast(fast);
+            }
+
         }
     }
 
@@ -284,6 +296,10 @@ export class ItemService {
         this.caseMag(this.loadJsonFiles(ItemTypeEnum.Mag));
         this.caseBag(this.loadJsonFiles(ItemTypeEnum.Bag));
         this.caseBuff(this.loadJsonFiles(ItemTypeEnum.Buff));
+    }
+
+    public fast_setting(): void {
+        this.caseFast(this.loadJsonFiles(ItemTypeEnum.Fast));
     }
 
     private loadJsonFiles<T>(itemType: ItemTypeEnum): Array<{ fileName: string; json: T }> {
