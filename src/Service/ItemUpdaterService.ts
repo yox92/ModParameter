@@ -432,15 +432,14 @@ export class ItemUpdaterService {
     }
 
     public applyMagMod(mag: Mag): void {
-        const validateutils = new ValidateUtils();
-        const defaultValue: number = EnumagCount[mag.name];
+        const validateUtils = new ValidateUtils();
         let warning_info = false;
 
-        if (!mag.fastLoad && !mag.resize && !mag.penality && mag.counts === defaultValue) {
+        if (!mag.fastLoad && !mag.resize && !mag.penality && mag.counts === 0) {
             this.logger.debug(`[ModParameter] skip magazines : ` + mag.name);
         }
 
-        const items = validateutils.getTemplateItems(this.dataService, this.logger);
+        const items = validateUtils.getTemplateItems(this.dataService, this.logger);
 
         const magazines: ITemplateItem[] = Object.values(items).filter(
             item =>
@@ -471,12 +470,9 @@ export class ItemUpdaterService {
                 this.applyMagPenality(props, name);
             }
 
-            if (mag.penality) {
-                this.applyMagPenality(props, name);
-            }
-
-            if (mag.counts !== defaultValue && firstCartridge?._max_count !== null && firstCartridge?._max_count !== undefined) {
-                firstCartridge._max_count = mag.counts;
+            if (mag.counts !== 0 && firstCartridge?._max_count !== null && firstCartridge?._max_count !== undefined) {
+                 const originalValue = firstCartridge._max_count;
+                firstCartridge._max_count = Math.round(originalValue * (1 + mag.counts / 100));
             }
         }
         if (warning_info) {
