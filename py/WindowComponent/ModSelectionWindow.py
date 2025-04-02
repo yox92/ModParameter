@@ -1057,11 +1057,8 @@ class ModSelectionWindow:
             frame_recherche_m = ctk.CTkFrame(self.frame_bot_bot, fg_color="transparent")
             frame_recherche_m.grid(row=row,
                                    column=col, padx=5, pady=5, sticky="nsew")
-            label_text = f"{'StopBleeds'
-            if buff.buff_type == 'RemoveAllBloodLosses'
-            else ('Skill'
-                  if buff.buff_type == 'SkillRate'
-                  else buff.buff_type)} / {buff.skill_name or '-'}"
+            label_text = f"{'StopBleeds' if buff.buff_type == 'RemoveAllBloodLosses' else ('Skill' if buff.buff_type == 'SkillRate' else buff.buff_type)} / {buff.skill_name or '-'}"
+            label_text = label_text.replace("HealthRate", "HealthRegen").replace("StaminaRate", "StaminaRegen")
 
             button = ctk.CTkButton(frame_recherche_m,
                                    font=("Arial", 20, "bold"),
@@ -1282,9 +1279,9 @@ class ModSelectionWindow:
                               text=f"Duration effect : {str(buff.duration)} (seconds)")
         label1.grid(row=1, column=2, sticky="w")
         slider = ctk.CTkSlider(self.frame_bot_bot,
-                               from_=0, to=2000,
-                               command=lambda value: label1.configure(
-                                   text=f"Duration effect : {int(value)} (seconds)"))
+                               from_=0, to=1000,
+                               command=lambda value: Utils.on_slider_buff_change(value, slider, label1)
+                               )
         slider.set(buff.duration or 0)
         slider.grid(row=1, column=1, sticky=ctk.W, padx=10)
 

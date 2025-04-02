@@ -945,4 +945,15 @@ class Utils:
             switch_size.configure(state="disabled")
             label2.configure(text="Resize slot : already define on Fast setting", text_color="red")
 
+    @staticmethod
+    def on_slider_buff_change(value, slider, label):
+        value = int(value)
+        if value <= 60:
+            adjusted = value
+        elif value <= 200:
+            adjusted = round(value / 10) * 10
+        else:
+            adjusted = round(value / 50) * 50
 
+        slider.set(adjusted)
+        label.configure(text=f"Duration effect : {adjusted} (seconds)")
