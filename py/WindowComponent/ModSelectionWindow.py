@@ -1237,17 +1237,15 @@ class ModSelectionWindow:
         )
         switch_speed.grid(row=3, column=1, padx=5, pady=5, sticky="nsew")
 
-        label4 = ctk.CTkLabel(self.frame_bot_bot, text=f"number ammo on magazines :")
-        label4.grid(row=4, column=0, sticky="nsew")
-        label5 = ctk.CTkLabel(self.frame_bot_bot, font=("Arial", 18, "bold"), text=f"{str(mag_obj.counts)} ammo(s)")
-        label5.grid(row=4, column=2, sticky="w")
-        [min_value, max_value] = Utils.max_min_slider_mag(result)
+        label5 = ctk.CTkLabel(self.frame_bot_bot, font=("Arial", 18, "bold"), text=f"capacity magazine : + {str(mag_obj.counts)} %")
+        label5.grid(row=4, column=2, sticky="nsew")
         slider = ctk.CTkSlider(self.frame_bot_bot,
-                               from_=min_value, to=max_value,
+                               from_=0, to=100,
                                command=lambda value: label5.configure(
-                                   text=f"{int(value)} ammo(s)"))
-        slider.set(mag_obj.counts or 1)
+                                   text=f"capacity magazine : + {int(value)} %"))
+        slider.set(mag_obj.counts)
         slider.grid(row=4, column=1, sticky=ctk.W, padx=10)
+        Utils.check_magazine_already_touched(slider,label5,  switch_speed,label3, switch_size,label2)
 
         validate_button = ctk.CTkButton(
             self.frame_bot_bot,
@@ -1255,14 +1253,14 @@ class ModSelectionWindow:
             fg_color="green",
             command=lambda: self.apply_mag(data, result, switch_var, switch_var2, switch_var3, slider)
         )
-        validate_button.grid(row=5, column=0, columnspan=2, padx=5, pady=50)
+        validate_button.grid(row=6, column=0, columnspan=2, padx=5, pady=50)
         reset_button = ctk.CTkButton(
             self.frame_bot_bot,
             text="Reset",
             fg_color="red",
             command=lambda: self.reset_mag(result, data)
         )
-        reset_button.grid(row=5, column=1, columnspan=2, padx=5, pady=5)
+        reset_button.grid(row=6, column=1, columnspan=2, padx=5, pady=5)
 
     def on_click_result_buff(self, buff: Buff, name: str):
         self.appender_button.clear()
@@ -1485,8 +1483,7 @@ class ModSelectionWindow:
         self.mag_button_press()
 
     def reset_mag(self, result, data):
-        counts = Utils.slider_start(result)
-        Utils.reset_mag(result, counts, data)
+        Utils.reset_mag(result, data)
         self.mag_button_press()
 
     def mag_window(self):

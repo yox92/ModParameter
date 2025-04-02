@@ -562,33 +562,6 @@ class Utils:
             return "Resize 3/(4) slots to 2 slots"
 
     @staticmethod
-    def slider_start(result):
-        if result == EnumMagSize.CAT_01_09.value:
-            return 1
-        elif result == EnumMagSize.CAT_10_19.value:
-            return 10
-        elif result == EnumMagSize.CAT_20_29.value:
-            return 20
-        elif result == EnumMagSize.CAT_30_39.value:
-            return 30
-        elif result == EnumMagSize.CAT_40_49.value:
-            return 40
-        elif result == EnumMagSize.CAT_50_59.value:
-            return 50
-        elif result == EnumMagSize.CAT_60_69.value:
-            return 60
-        elif result == EnumMagSize.CAT_70_79.value:
-            return 70
-        elif result == EnumMagSize.CAT_80_89.value:
-            return 80
-        elif result == EnumMagSize.CAT_90_100.value:
-            return 90
-        elif result == EnumMagSize.CAT_GT_100.value:
-            return 100
-        else:
-            return 1
-
-    @staticmethod
     def save_mag_values(data, result, switch_var, switch_var2, switch_var3, slider):
         from Utils.JsonUtils import JsonUtils
         data[result]["penality"] = switch_var.get()
@@ -629,12 +602,12 @@ class Utils:
         print(f" Buff '{buff.buff_type}' update on '{name}' et save.")
 
     @staticmethod
-    def reset_mag(result, count, data):
+    def reset_mag(result, data):
         from Utils.JsonUtils import JsonUtils
         data[result]["penality"] = False
         data[result]["resize"] = False
         data[result]["fastLoad"] = False
-        data[result]["counts"] = count
+        data[result]["counts"] = 0
         JsonUtils.save_mag_preset(data, result)
 
     @staticmethod
@@ -933,17 +906,16 @@ class Utils:
         sizeBag = int(slider2.get())
         stimNumber = int(slider3.get())
         moreHealHp = int(slider4.get())
-        if fastload or ammoTracer or slotMag or sizeMag != 0 or sizeBag != 0 or stimNumber != 1 or moreHealHp != 0:
-            data = {
-                "fastload": fastload,
-                "slotMag": slotMag,
-                "sizeBag": sizeBag,
-                "sizeMag": sizeMag,
-                "stimNumber": stimNumber,
-                "moreHealHp": moreHealHp,
-                "ammoTracer": ammoTracer
-            }
-            JsonUtils.save_fast(data, "save")
+        data = {
+            "fastload": fastload,
+            "slotMag": slotMag,
+            "sizeBag": sizeBag,
+            "sizeMag": sizeMag,
+            "stimNumber": stimNumber,
+            "moreHealHp": moreHealHp,
+            "ammoTracer": ammoTracer
+        }
+        JsonUtils.save_fast(data, "save")
 
     @staticmethod
     def reset_fast():
@@ -958,3 +930,19 @@ class Utils:
             "ammoTracer": False
         }
         JsonUtils.save_fast(data, "reset")
+
+    @staticmethod
+    def check_magazine_already_touched(slider,label5, switch_speed,label3, switch_size,label2):
+        from Utils.JsonUtils import JsonUtils
+        data = JsonUtils.load_fast()
+        if data["sizeMag"] != 0:
+            slider.configure(state="disabled")
+            label5.configure(text="Capacity : already define on Fast setting", text_color="red")
+        if data["slotMag"]:
+            switch_speed.configure(state="disabled")
+            label3.configure(text="Fast load : already define on Fast setting", text_color="red")
+        if data["fastload"]:
+            switch_size.configure(state="disabled")
+            label2.configure(text="Resize slot : already define on Fast setting", text_color="red")
+
+
