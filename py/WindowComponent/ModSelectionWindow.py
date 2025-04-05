@@ -3,8 +3,9 @@ from customtkinter import CTkImage
 from CTkMessagebox import CTkMessagebox
 
 from Entity import Caliber, Root, Logger, CategoryColor
-from Entity.Bag import Bag
+from Entity.Buff import Buff
 from Entity.EnumBagSize import EnumBagSize
+from Entity.EnumBuff import EnumBuff
 from Entity.EnumMagSize import EnumMagSize
 from Entity.Mag import Mag
 from Entity.MedicCat import MedicalCat
@@ -25,7 +26,7 @@ POP_UP_DELETE_TITLE = "All Delete Or Choice Which One?"
 POP_UP_CATEGORIES_TITLE = "Categorie to Delete?"
 MESSAGE_DELETE = "Choose an option: Delete All Item By categories or Select a Mod to Delete"
 MESSAGE_CATEGORIES_DELETE = "Choose an option: Delete All Ammo/Weapons/Medical"
-WINDOW_GEOMETRY = "870x650"
+WINDOW_GEOMETRY = "1000x650"
 APPEARANCE_MODE = "dark"
 DETAIL_WINDOW_TITLE = "Detail windows"
 DETAIL_WINDOW_WIDTH = 900
@@ -35,6 +36,11 @@ WINDOW_OFFSET = 10
 
 class ModSelectionWindow:
     def __init__(self, root):
+        self.remove_mode = False
+        self.block_system_error_detect = False
+        self.appender_button = []
+        self.status_label = None
+        self.prop_widgets = None
         self.list_medic_select = None
         self.medic_image = None
         self.button_medic = None
@@ -110,6 +116,8 @@ class ModSelectionWindow:
         self.bag_mag_image: CTkImage = ImageUtils.create_image_var("mbag")
         self.bag_image: CTkImage = ImageUtils.create_image_var("bag")
         self.mag_image: CTkImage = ImageUtils.create_image_var("mag")
+        self.buff_image: CTkImage = ImageUtils.create_image_var("buff")
+        self.fast_image: CTkImage = ImageUtils.create_image_var("fast")
 
     def create_frame_main(self):
         self.root.grid_rowconfigure(0, weight=1)
@@ -167,19 +175,6 @@ class ModSelectionWindow:
             command=self.show_all_ammo_mod
         )
         self.button_view_all_ammo_mod.grid(row=0, column=1, padx=10)
-        self.button_all_ammo_tracer = ctk.CTkButton(
-            self.button_frame,
-            text="All Ammo Tracer ?",
-            compound="top",
-            fg_color="blue",
-            text_color="white",
-            hover_color="black",
-            font=("Arial", 15, "bold"),
-            height=10,
-            width=10,
-            command=self.all_ammo_tracer
-        )
-        self.button_all_ammo_tracer.grid(row=0, column=3, padx=10)
         self.button_delete_mod = ctk.CTkButton(
             self.button_frame,
             text="Select mod to DELETE",
@@ -199,25 +194,17 @@ class ModSelectionWindow:
             self.button_view_all_ammo_mod.configure(text="All Saved Ammo Mod")
 
     def all_ammo_tracer(self):
-        msg_choice = CTkMessagebox(title="All Ammo Tracer ?",
-                                   message="Would you like all the bullets in the game to become tracer rounds",
-                                   icon="warning", option_1="No", option_2="Yes")
-        response = msg_choice.get()
+        msg_color = CTkMessagebox(title="Which color ?",
+                                  message="Which color tracer do you want to apply ",
+                                  icon="info", option_1="Green", option_2="Red")
+        response_color = msg_color.get()
 
-        if response == "Yes":
-            msg_color = CTkMessagebox(title="Which color ?",
-                                      message="Which color do you want to apply ",
-                                      icon="info", option_1="Cancel", option_2="Green", option_3="Red", )
-            response_color = msg_color.get()
-
-            if response_color == "Red":
-                self.apply_all_ammo_tracer(False)
-            elif response_color == "Green":
-                self.apply_all_ammo_tracer(True)
-            else:
-                print("Too bad, wise decision")
-        elif response == "No":
-            self.remove_tracer()
+        if response_color == "Red":
+            self.apply_all_ammo_tracer(False)
+        elif response_color == "Green":
+            self.apply_all_ammo_tracer(True)
+        else:
+            print("Too bad, wise decision")
 
     def remove_tracer(self):
         JsonUtils.update_tracer(False, False)
@@ -277,6 +264,8 @@ class ModSelectionWindow:
         self.main_frame_top.grid_columnconfigure(3, weight=1)
         self.main_frame_top.grid_columnconfigure(4, weight=1)
         self.main_frame_top.grid_columnconfigure(5, weight=1)
+        self.main_frame_top.grid_columnconfigure(6, weight=1)
+        self.main_frame_top.grid_columnconfigure(7, weight=1)
         self.main_frame_top.grid_rowconfigure(0, weight=1)
 
         self.frame_top_1 = ctk.CTkFrame(self.main_frame_top, fg_color="transparent")
@@ -285,12 +274,14 @@ class ModSelectionWindow:
         self.frame_top_4 = ctk.CTkFrame(self.main_frame_top, fg_color="transparent")
         self.frame_top_5 = ctk.CTkFrame(self.main_frame_top, fg_color="transparent")
         self.frame_top_6 = ctk.CTkFrame(self.main_frame_top, fg_color="transparent")
+        self.frame_top_7 = ctk.CTkFrame(self.main_frame_top, fg_color="transparent")
         self.frame_top_1.grid(row=0, column=0, sticky="nsew")
         self.frame_top_2.grid(row=0, column=1, sticky="nsew")
         self.frame_top_3.grid(row=0, column=2, sticky="nsew")
         self.frame_top_4.grid(row=0, column=3, sticky="nsew")
         self.frame_top_5.grid(row=0, column=4, sticky="nsew")
         self.frame_top_6.grid(row=0, column=5, sticky="nsew")
+        self.frame_top_7.grid(row=0, column=6, sticky="nsew")
 
     def show_all_weapons_mod(self):
         self.list_json_name_mod_weapons = JsonUtils.load_all_json_files_weapons_mod()
@@ -347,7 +338,7 @@ class ModSelectionWindow:
             text_color="orange",
             hover_color="whitesmoke",
             font=("Arial", 16, "bold"),
-            command=lambda: self.generate_bot_frame_weapon_and_ammo(WindowType.WEAPON)
+            command=lambda: self.generate_bot_frame_weapon_ammo_medic(WindowType.WEAPON)
         )
         self.buttonWeapon.pack(side="top", anchor="center",
                                expand=True, fill="both")
@@ -416,14 +407,28 @@ class ModSelectionWindow:
             command=lambda: self.generate_list_button(WindowType.MAG)
         )
         self.button_mag.pack(side="top", anchor="center",
-                               expand=True, fill="both")
+                             expand=True, fill="both")
+        self.button_fast = ctk.CTkButton(
+            self.frame_top_7,
+            image=self.fast_image,
+            text="Fast Setting",
+            compound="bottom",
+            fg_color="transparent",
+            text_color="#9F2B68",
+            hover_color="whitesmoke",
+            font=("Arial", 14, "bold"),
+            command=lambda: self.fast_setting()
+        )
+        self.button_fast.pack(side="top", anchor="center",
+                             expand=True, fill="both")
         self.frames_buttons = {
             "weapon": self.buttonWeapon,
             "caliber": self.button_caliber,
             "pmc": self.button_pmc,
             "ammo": self.button_ammo,
             "medic": self.button_medic,
-            "mag": self.button_mag
+            "mag": self.button_mag,
+            "fast": self.button_fast
         }
 
     def generate_list_button(self, choice_window: WindowType):
@@ -442,13 +447,145 @@ class ModSelectionWindow:
             Utils.create_5x5_bottom(self.framesBotCaliber, self.main_frame_bot, choice_window)
             self.create_buttons_for_calibers_ammo(choice_window)
         elif choice_window == WindowType.MEDIC:
-            Utils.create_grid_row_col_config(self.main_frame_bot, 1, 4)
-            Utils.create_1x4_bottom(self.framesBotCaliber, self.main_frame_bot)
+            Utils.create_grid_row_col_config(self.main_frame_bot, 1, 5)
+            Utils.create_1x5_bottom(self.framesBotCaliber, self.main_frame_bot)
             self.create_buttons_for_medic(choice_window)
         elif choice_window == WindowType.MAG:
             Utils.create_grid_row_col_config(self.main_frame_bot, 1, 2)
             Utils.create_1x2_bottom(self.framesBotCaliber, self.main_frame_bot)
             self.create_buttons_for_bag_mag()
+        elif choice_window == WindowType.BUFF:
+            self.create_two_frame_on_bot()
+            Utils.create_grid_row_col_config(self.frame_bot_bot, 5, 5)
+            Utils.create_5x5_bottom(self.framesBotCaliber, self.frame_bot_bot, choice_window)
+            self.create_buttons_for_buff()
+
+
+
+
+    def fast_setting(self):
+        WindowUtils.lock_choice_frame("fast", self.frames_buttons)
+        Utils.clear_frame(self.main_frame_bot)
+        Utils.clear_config_row_col(self.main_frame_bot)
+        Utils.configure_grid(self.main_frame_bot, 8, 3, 1)
+        data = JsonUtils.load_fast()
+
+        switch_var1 = ctk.BooleanVar(value=data["fastload"])
+        switch1 = ctk.CTkSwitch(
+            self.main_frame_bot,
+            text="",
+            variable=switch_var1,
+            width=50,
+            command=lambda: label1.configure(text=f"fast magazine load/unload : {switch_var1.get()}")
+        )
+        switch1.grid(row=0, column=1, padx=5, pady=5, sticky="nsew")
+        label1 = ctk.CTkLabel(self.main_frame_bot, text=f"fast magazine load/unload : {switch_var1.get()}")
+        label1.grid(row=0, column=0, sticky="nsew")
+
+        label2 = ctk.CTkLabel(self.main_frame_bot, font=("Arial", 18, "bold"), text=f"capacity magazine : + {str(data["sizeMag"])} %")
+        label2.grid(row=1, column=2, sticky="w")
+        slider1 = ctk.CTkSlider(self.main_frame_bot,
+                               from_=0, to=100,
+                               command=lambda value: label2.configure(
+                                   text=f"capacity magazine : + {int(value)} %"))
+        slider1.set(data["sizeMag"])
+        slider1.grid(row=1, column=1, sticky=ctk.W, padx=10)
+
+        switch_var2 = ctk.BooleanVar(value=data["ammoTracer"])
+        label3 = ctk.CTkLabel(self.main_frame_bot, text=f"all Ammo Tracer : {switch_var2.get()}")
+        label3.grid(row=3, column=0, sticky="nsew")
+        switch2 = ctk.CTkSwitch(
+            self.main_frame_bot,
+            text="",
+            variable=switch_var2,
+            width=50,
+            command=lambda l=label3, s=switch_var2: self.ammo_tracer(l,s))
+        switch2.grid(row=3, column=1, padx=5, pady=5, sticky="nsew")
+
+        switch_var3 = ctk.BooleanVar(value=data["slotMag"])
+        label8 = ctk.CTkLabel(self.main_frame_bot, text=f"resize 3 slot magazine to 2 : {switch_var3.get()}")
+        label8.grid(row=2, column=0, sticky="nsew")
+        switch3 = ctk.CTkSwitch(
+            self.main_frame_bot,
+            text="",
+            variable=switch_var3,
+            width=50,
+            command=lambda: label8.configure(text=f"fast magazine load/unload : {switch_var3.get()}")
+        )
+        switch3.grid(row=2, column=1, padx=5, pady=5, sticky="nsew")
+
+        label4 = ctk.CTkLabel(self.main_frame_bot, font=("Arial", 18, "bold"), text=f"capacity BackPack : + {str(data["sizeBag"])} %")
+        label4.grid(row=4, column=2, sticky="w")
+        slider2 = ctk.CTkSlider(self.main_frame_bot,
+                               from_=0, to=100,
+                               command=lambda value: label4.configure(
+                                   text=f"capacity BackPack : + {int(value)} %"))
+        slider2.set(data["sizeBag"])
+        slider2.grid(row=4, column=1, sticky=ctk.W, padx=10)
+
+        label5 = ctk.CTkLabel(self.main_frame_bot, font=("Arial", 18, "bold"), text=f"Stimator number : {str(data["stimNumber"])}")
+        label5.grid(row=5, column=2, sticky="w")
+        slider3 = ctk.CTkSlider(self.main_frame_bot,
+                               from_=1, to=10,
+                               command=lambda value: label5.configure(
+                                   text=f"Stimator number : {int(value)}"))
+        slider3.set(data["stimNumber"])
+        slider3.grid(row=5, column=1, sticky=ctk.W, padx=10)
+
+        label6 = ctk.CTkLabel(self.main_frame_bot, font=("Arial", 18, "bold"), text=f"MedKit more HP : + {str(data["moreHealHp"])} %")
+        label6.grid(row=6, column=2, sticky="w")
+        slider4 = ctk.CTkSlider(self.main_frame_bot,
+                               from_=0, to=400,
+                               command=lambda value: label6.configure(
+                                   text=f"MedKit more HP : + {int(value)} %"))
+        slider4.set(data["moreHealHp"])
+        slider4.grid(row=6, column=1, sticky=ctk.W, padx=10)
+        label7 = ctk.CTkLabel(self.main_frame_bot, font=("Arial", 18, "bold"), text_color="green",
+                              text="")
+        label7.grid(row=7, column=0)
+        validate_button = ctk.CTkButton(
+            self.main_frame_bot,
+            text="Validate",
+            fg_color="green",
+            command=lambda: (Utils.apply_fast(slider1, slider2, slider3, slider4, switch1, switch2, switch3), label7.configure(text="save !!!"))
+        )
+        validate_button.grid(row=7, column=0, columnspan=2, padx=5, pady=50)
+
+        reset_button = ctk.CTkButton(
+            self.main_frame_bot,
+            text="Reset",
+            fg_color="red",
+            command=lambda: self.reset_fast(slider1, slider2, slider3, slider4, switch1, switch2,switch3,
+                                            label1, label2, label3, label4, label5, label6,label7, label8)
+        )
+        reset_button.grid(row=7, column=2, columnspan=2, padx=5, pady=5)
+
+    def ammo_tracer(self, label3, switch_var2):
+        label3.configure(text=f"all Ammo Tracer : {switch_var2.get()}")
+        if switch_var2.get():
+            self.all_ammo_tracer()
+        else:
+            self.remove_tracer()
+
+    @staticmethod
+    def reset_fast(slider1, slider2, slider3, slider4, switch1, switch2, switch3,
+                   label1, label2, label3, label4, label5, label6, label7, label8):
+        slider1.set(0)
+        slider2.set(0)
+        slider3.set(1)
+        slider4.set(0)
+        switch1.deselect()
+        switch2.deselect()
+        switch3.deselect()
+        label1.configure(text=f"fast magazine load/unload : False")
+        label2.configure(text=f"capacity magazine : + 0 %")
+        label3.configure(text=f"all Ammo Tracer : False")
+        label4.configure(text=f"capacity BackPack : + 0 %")
+        label5.configure(text=f"Stimator number : 1")
+        label6.configure(text=f"MedKit more HP : + 0 %")
+        label7.configure(text=f"")
+        label8.configure(text=f"resize 3 slot magazine to 2 : False")
+        Utils.reset_fast()
 
     def pmc_window(self):
         WindowUtils.lock_choice_frame("pmc", self.frames_buttons)
@@ -463,7 +600,7 @@ class ModSelectionWindow:
                self.detail_window,
                self)
 
-    def create_frame_bot_find_weapon(self):
+    def create_two_frame_on_bot(self):
         Utils.clear_frame(self.main_frame_bot)
         Utils.clear_config_row_col(self.main_frame_bot)
 
@@ -478,8 +615,8 @@ class ModSelectionWindow:
         self.frame_bot_top.grid(row=0, column=0, sticky="nsew")
         self.frame_bot_bot.grid(row=1, column=0, sticky="nsew")
 
-    def generate_bot_frame_weapon_and_ammo(self, choice_window: WindowType):
-        self.create_frame_bot_find_weapon()
+    def generate_bot_frame_weapon_ammo_medic(self, choice_window: WindowType):
+        self.create_two_frame_on_bot()
 
         Utils.create_grid_row_col_config(self.frame_bot_top, 1, 1)
         Utils.create_grid_row_col_config(self.frame_bot_bot, 3, 3)
@@ -666,6 +803,42 @@ class ModSelectionWindow:
                 column = 0
                 row += 1
 
+    def create_buttons_for_buff(self):
+        Utils.configure_grid(self.frame_bot_top, 1, 1, 1)
+        row = 1
+        column = 0
+        reset_button = ctk.CTkButton(self.frame_bot_top,
+                                     text="Reset all",
+                                     command=lambda: Utils.delete_mod(WindowType.BUFF),
+                                     fg_color="#D35400",
+                                     font=("Arial", 15, "bold"),
+                                     text_color="black", width=20)
+        reset_button.grid(row=2, column=3, padx=5, pady=5, sticky="e")
+        button = ctk.CTkButton(self.frame_bot_top,
+                               text="<== BACK ==>",
+                               command=self.medic_window,
+                               fg_color="orange",
+                               font=("Arial", 20, "bold"),
+                               text_color="black")
+        button.grid(row=2, column=0, padx=5, pady=5)
+        for idx, (label, cleanName) in enumerate(EnumBuff.enumerate_labels()):
+            idx: int
+            button = ctk.CTkButton(
+                self.framesBotCaliber[idx],
+                text=cleanName,
+                width=150,
+                text_color="black",
+                font=("Arial", 15, "bold"),
+                command=lambda r=label: self.buff_button_press(r)
+            )
+            button.pack(side="top", anchor="center")
+
+            column += 1
+            if column >= 5:
+                column = 0
+                row += 1
+
+
     def create_buttons_for_medic(self, choice_window: WindowType):
         column = 0
         for idx, (label, code) in enumerate(MedicalCat.enumerate_medical()):
@@ -678,7 +851,7 @@ class ModSelectionWindow:
                 compound="bottom",
                 fg_color="transparent",
                 text_color="white",
-                font=("Arial", 20, "bold")
+                font=("Arial", 18, "bold")
             )
             if label == MedicalCat.STIMULATOR.label:
                 button.configure(image=self.stim_image)
@@ -688,9 +861,14 @@ class ModSelectionWindow:
                 button.configure(image=self.salewa_image)
             elif label == MedicalCat.MEDICAL.label:
                 button.configure(image=self.bandage_image)
+            elif label == MedicalCat.BUFF.label:
+                button.configure(image=self.buff_image)
 
             button.pack(side="top", anchor="center")
-            button.configure(command=lambda parent=code: self.medic_button_press(parent, choice_window))
+            if label == MedicalCat.BUFF.label:
+                button.configure(command=lambda: self.generate_list_button(WindowType.BUFF))
+            else:
+                button.configure(command=lambda parent=code: self.medic_button_press(parent, choice_window))
             column += 1
 
     def create_buttons_for_bag_mag(self):
@@ -717,12 +895,12 @@ class ModSelectionWindow:
                 button.configure(command=lambda parent=code: self.bag_button_press())
 
     def mag_button_press(self):
-        self.create_frame_bot_find_weapon()
+        self.create_two_frame_on_bot()
         Utils.create_grid_row_col_config(self.frame_bot_top, 1, 1)
         Utils.create_grid_row_col_config(self.frame_bot_bot, 3, 3)
         label = ctk.CTkLabel(self.frame_bot_bot,
                              text=f"Groups magazines into categories \n based on their ammo capacity",
-                             height=20, font=("Arial", 13, "bold"),)
+                             height=20, font=("Arial", 13, "bold"), )
         label.grid(row=4,
                    column=1,
                    sticky="ew",
@@ -735,6 +913,14 @@ class ModSelectionWindow:
             rows=total_rows,
             cols=items_per_row,
             weight=1)
+        reset_button = ctk.CTkButton(self.frame_bot_top,
+                                     text="Reset all",
+                                     command=lambda: Utils.delete_mod(WindowType.MAG),
+                                     fg_color="#D35400",
+                                     font=("Arial", 15, "bold"),
+                                     text_color="black", width=20)
+        reset_button.grid(row=2, column=3, padx=5, pady=5, sticky="e")
+
         button = ctk.CTkButton(self.frame_bot_top,
                                text="<== BACK ==>",
                                command=self.mag_window,
@@ -759,7 +945,7 @@ class ModSelectionWindow:
             button.pack(expand=True)
 
     def bag_button_press(self):
-        self.create_frame_bot_find_weapon()
+        self.create_two_frame_on_bot()
         Utils.create_grid_row_col_config(self.frame_bot_top, 1, 1)
         Utils.create_grid_row_col_config(self.frame_bot_bot, 3, 2)
         label = ctk.CTkLabel(self.frame_bot_bot,
@@ -777,6 +963,14 @@ class ModSelectionWindow:
             rows=total_rows,
             cols=items_per_row,
             weight=1)
+        reset_button = ctk.CTkButton(self.frame_bot_top,
+                                     text="Reset all",
+                                     command=lambda: Utils.delete_mod(WindowType.BAG),
+                                     fg_color="#D35400",
+                                     font=("Arial", 15, "bold"),
+                                     text_color="black", width=20)
+        reset_button.grid(row=2, column=3, padx=5, pady=5, sticky="e")
+
         button = ctk.CTkButton(self.frame_bot_top,
                                text="<== BACK ==>",
                                command=self.bag_window,
@@ -800,10 +994,183 @@ class ModSelectionWindow:
                                    command=lambda r=result: self.on_click_result_bag(r))
             button.pack(expand=True)
 
+    def buff_button_press(self, name):
+        self.create_two_frame_on_bot()
+        self.frame_bot_top.columnconfigure(0, weight=0)
+        self.frame_bot_top.columnconfigure(1, weight=1)
+        self.frame_bot_top.columnconfigure(2, weight=0)
+        self.frame_bot_top.columnconfigure(3, weight=0)
+        if JsonUtils.buff_mod_exist():
+            data = JsonUtils.load_buff_mod()
+        else:
+            data = JsonUtils.load_buff()
+        buffs_data = data.get("Buffs", {}).get(name, [])
+        buffs = [Buff.from_data(b) for b in buffs_data]
+
+        total_items = len(buffs) + 1
+        columns = min(4, total_items)
+        rows = (total_items + columns - 1) // columns
+        color_add_buff = "#A569BD"
+
+        Utils.create_grid_row_col_config(self.frame_bot_bot, rows, columns)
+        Utils.configure_grid(self.frame_bot_bot, rows=rows, cols=columns, weight=1)
+        if not self.remove_mode:
+            button = ctk.CTkButton(self.frame_bot_top,
+                                   text="<== BACK ==>",
+                                   command=self.buff_window,
+                                   fg_color="orange",
+                                   font=("Arial", 20, "bold"),
+                                   text_color="black")
+            button.grid(row=2, column=1, padx=5, pady=5)
+
+        if self.remove_mode:
+            toggle_remove_button = ctk.CTkButton(self.frame_bot_top,
+                                                 text="Stop Remove",
+                                                 command=lambda: self.toggle_remove_mode(name),
+                                                 fg_color="green",
+                                                 font=("Arial", 40, "bold"),
+                                                 hover_color="yellow",
+                                                 text_color="black")
+        else:
+            toggle_remove_button = ctk.CTkButton(self.frame_bot_top,
+                                                 text="🗑 Remove buff ?",
+                                                 command=lambda: self.toggle_remove_mode(name),
+                                                 fg_color="red",
+                                                 hover_color="yellow",
+                                                 font=("Arial", 15, "bold"),
+                                                 width=40,
+                                                 text_color="black")
+
+        toggle_remove_button.grid(row=2, column=1, sticky="e")
+
+        if not self.remove_mode and Utils.buff_group_has_changes(name, buffs):
+            reset_button = ctk.CTkButton(self.frame_bot_top,
+                                         text="Reset",
+                                         command=lambda: self.on_reset_buff(name),
+                                         fg_color="#D35400",
+                                         font=("Arial", 15, "bold"),
+                                         text_color="black", width=20)
+            reset_button.grid(row=2, column=3, padx=5, pady=5, sticky="e")
+
+        for idx, buff in enumerate(buffs):
+            row, col = divmod(idx, columns)
+            frame_recherche_m = ctk.CTkFrame(self.frame_bot_bot, fg_color="transparent")
+            frame_recherche_m.grid(row=row,
+                                   column=col, padx=5, pady=5, sticky="nsew")
+            label_text = f"{'StopBleeds' if buff.buff_type == 'RemoveAllBloodLosses' else ('Skill' if buff.buff_type == 'SkillRate' else buff.buff_type)} / {buff.skill_name or '-'}"
+            label_text = label_text.replace("HealthRate", "HealthRegen").replace("StaminaRate", "StaminaRegen")
+
+            button = ctk.CTkButton(frame_recherche_m,
+                                   font=("Arial", 20, "bold"),
+                                   text=label_text,
+                                   text_color="black",
+                                   command=lambda b=buff, n=name: self.on_click_result_buff(b, name)
+                                   )
+            if self.remove_mode:
+                button.configure(command=lambda b=buff, n=name: self.remove_buff_from_list(b, name), hover_color="red")
+            if not buff.add in (None, False):
+                button.configure(fg_color=color_add_buff)
+            button.pack(expand=True)
+
+        if not self.remove_mode:
+            row, col = divmod(len(buffs), columns)
+            frame_add_buff = ctk.CTkFrame(self.frame_bot_bot, fg_color="transparent")
+            frame_add_buff.grid(row=row, column=col, padx=5, pady=5, sticky="nsew")
+            add_buff_button = ctk.CTkButton(frame_add_buff,
+                                            text="➕ Add Buff",
+                                            command=lambda: self.on_add_buff(name),
+                                            fg_color="green",
+                                            font=("Arial", 20, "bold"),
+                                            text_color="black")
+            add_buff_button.pack(expand=True)
+
+    def toggle_remove_mode(self, name):
+        self.remove_mode = not self.remove_mode
+        self.buff_button_press(name)
+
+    def on_reset_buff(self, name):
+        Utils.on_reset_buff(name)
+        self.buff_button_press(name)
+
+    def remove_buff_from_list(self, buff: Buff, name: str):
+        Utils.remove_buff_from_list(buff, name)
+        self.buff_button_press(name)
+
+    def on_add_buff(self, name):
+        self.create_two_frame_on_bot()
+        Utils.create_grid_row_col_config(self.frame_bot_top, 1, 1)
+
+        data = JsonUtils.load_add_buff()
+        all_buffs = [Buff.from_data(b) for b in data]
+
+        existing_data = JsonUtils.load_buff_mod() if JsonUtils.buff_mod_exist() else JsonUtils.load_buff()
+        existing_buff_data = existing_data.get("Buffs", {}).get(name, [])
+        existing_buffs = [Buff.from_data(b) for b in existing_buff_data]
+
+        buffs = [
+            b for b in all_buffs
+            if not any(Utils.is_duplicate(b, existing) for existing in existing_buffs)
+        ]
+
+        total_items = len(buffs)
+        if total_items == 0:
+            Utils.create_grid_row_col_config(self.frame_bot_bot, 1, 1)
+            Utils.configure_grid(self.frame_bot_bot, rows=1, cols=1, weight=1)
+            button = ctk.CTkButton(self.frame_bot_top,
+                                   text=f"BACK to {EnumBuff.clean_buff_name(name)}",
+                                   command=lambda: self.buff_button_press(name),
+                                   fg_color="orange",
+                                   font=("Arial", 20, "bold"),
+                                   text_color="black")
+            button.grid(row=2, column=0, padx=5, pady=5)
+            label = ctk.CTkLabel(self.frame_bot_bot, text="All buffs are add !!!", font=("Arial", 30, "bold"))
+            label.pack(pady=20)
+            return
+
+        columns = min(4, total_items)
+        rows = (total_items + columns - 1) // columns
+        Utils.create_grid_row_col_config(self.frame_bot_bot, rows, columns)
+        Utils.configure_grid(self.frame_bot_bot, rows=rows, cols=columns, weight=1)
+        button = ctk.CTkButton(self.frame_bot_top,
+                               text=f"BACK to {EnumBuff.clean_buff_name(name)}",
+                               command=lambda: self.buff_button_press(name),
+                               fg_color="orange",
+                               font=("Arial", 20, "bold"),
+                               text_color="black")
+        button.grid(row=2, column=0, padx=5, pady=5)
+
+        for idx, buff in enumerate(buffs):
+            if buff.buff_type in "SkillRate":
+                color_add_buff = "#6c3483"
+            else:
+                color_add_buff = "#af7ac5"
+            row, col = divmod(idx, columns)
+            frame_recherche_m = ctk.CTkFrame(self.frame_bot_bot, fg_color="transparent")
+            frame_recherche_m.grid(row=row,
+                                   column=col, padx=5, pady=5, sticky="nsew")
+            label_text = f"{'StopBleeds'
+            if buff.buff_type == 'RemoveAllBloodLosses'
+            else ('Skill'
+                  if buff.buff_type in 'SkillRate'
+                  else buff.buff_type)} / {buff.skill_name or '-'}"
+
+            button = ctk.CTkButton(frame_recherche_m,
+                                   font=("Arial", 20, "bold"),
+                                   text=label_text,
+                                   text_color="black",
+                                   fg_color=color_add_buff,
+                                   command=lambda b=buff, n=name: self.add_buff_to_list(b, name),
+                                   )
+            button.pack(expand=True)
+
+    def add_buff_to_list(self, buff: Buff, name: str):
+        Utils.add_buff(buff, name)
+        self.buff_button_press(name)
+
     def on_click_result_mag(self, result):
         Utils.clear_frame(self.main_frame_bot)
         Utils.clear_config_row_col(self.main_frame_bot)
-        self.create_frame_bot_find_weapon()
+        self.create_two_frame_on_bot()
         Utils.create_grid_row_col_config(self.frame_bot_top, 1, 1)
         Utils.create_grid_row_col_config(self.frame_bot_bot, 4, 3)
 
@@ -825,9 +1192,6 @@ class ModSelectionWindow:
             text_color="white"
         )
         label_count.grid(row=0, column=1, padx=10, pady=10, sticky="w")
-
-
-
 
         switch_var = ctk.BooleanVar(value=mag_obj.penality)
         switch_penalty = ctk.CTkSwitch(
@@ -870,17 +1234,15 @@ class ModSelectionWindow:
         )
         switch_speed.grid(row=3, column=1, padx=5, pady=5, sticky="nsew")
 
-        label4 = ctk.CTkLabel(self.frame_bot_bot, text=f"number ammo on magazines :")
-        label4.grid(row=4, column=0, sticky="nsew")
-        label5 = ctk.CTkLabel(self.frame_bot_bot, font=("Arial", 18, "bold"), text=f"{str(mag_obj.counts)} ammo(s)")
-        label5.grid(row=4, column=2,sticky="w")
-        [min_value, max_value] = Utils.max_min_slider_mag(result)
+        label5 = ctk.CTkLabel(self.frame_bot_bot, font=("Arial", 18, "bold"), text=f"capacity magazine : + {str(mag_obj.counts)} %")
+        label5.grid(row=4, column=2, sticky="nsew")
         slider = ctk.CTkSlider(self.frame_bot_bot,
-                               from_=min_value, to=max_value,
+                               from_=0, to=100,
                                command=lambda value: label5.configure(
-                                   text=f"{int(value)} ammo(s)"))
-        slider.set(mag_obj.counts or 1)
+                                   text=f"capacity magazine : + {int(value)} %"))
+        slider.set(mag_obj.counts)
         slider.grid(row=4, column=1, sticky=ctk.W, padx=10)
+        Utils.check_magazine_already_touched(slider,label5,  switch_speed,label3, switch_size,label2)
 
         validate_button = ctk.CTkButton(
             self.frame_bot_bot,
@@ -888,19 +1250,132 @@ class ModSelectionWindow:
             fg_color="green",
             command=lambda: self.apply_mag(data, result, switch_var, switch_var2, switch_var3, slider)
         )
-        validate_button.grid(row=5, column=0, columnspan=2, padx=5, pady=50)
+        validate_button.grid(row=6, column=0, columnspan=2, padx=5, pady=50)
         reset_button = ctk.CTkButton(
             self.frame_bot_bot,
             text="Reset",
             fg_color="red",
             command=lambda: self.reset_mag(result, data)
         )
+        reset_button.grid(row=6, column=1, columnspan=2, padx=5, pady=5)
+
+    def on_click_result_buff(self, buff: Buff, name: str):
+        self.appender_button.clear()
+        Utils.clear_frame(self.main_frame_bot)
+        Utils.clear_config_row_col(self.main_frame_bot)
+        self.create_two_frame_on_bot()
+        Utils.create_grid_row_col_config(self.frame_bot_top, 1, 1)
+        Utils.create_grid_row_col_config(self.frame_bot_bot, 4, 3)
+
+        button = ctk.CTkButton(self.frame_bot_top,
+                               text=f"BACK to {EnumBuff.clean_buff_name(name)}",
+                               command=lambda n=name: self.buff_button_press(n),
+                               fg_color="orange",
+                               font=("Arial", 20, "bold"),
+                               text_color="black")
+        button.grid(row=0, column=0, padx=5, pady=5)
+
+        label1 = ctk.CTkLabel(self.frame_bot_bot, font=("Arial", 18, "bold"),
+                              text=f"Duration effect : {str(buff.duration)} (seconds)")
+        label1.grid(row=1, column=2, sticky="w")
+        slider = ctk.CTkSlider(self.frame_bot_bot,
+                               from_=0, to=1000,
+                               command=lambda value: Utils.on_slider_buff_change(value, slider, label1, True)
+                               )
+        slider.set(buff.duration or 0)
+        slider.grid(row=1, column=1, sticky=ctk.W, padx=10)
+
+        label2 = ctk.CTkLabel(self.frame_bot_bot, font=("Arial", 18, "bold"),
+                              text=f"Time before activation : {str(buff.delay)} (seconds)")
+        label2.grid(row=2, column=2, sticky="w")
+        slider2 = ctk.CTkSlider(self.frame_bot_bot,
+                                from_=0, to=1000,
+                                command=lambda value: Utils.on_slider_buff_change(value, slider2, label2, False)
+                                )
+        slider2.set(buff.delay or 0)
+        slider2.grid(row=2, column=1, sticky=ctk.W, padx=10)
+
+        [min_value, max_value] = Utils.max_min_input_value_buff(f"{buff.skill_name}{buff.buff_type}")
+
+        entry = ctk.CTkEntry(
+            self.frame_bot_bot,
+            placeholder_text="Enter value...",
+            width=70,
+            font=("Arial", 16, "bold"),
+            justify="center"
+        )
+        entry.bind("<KeyRelease>", lambda event: self.get_entry_value(event, min_value, max_value))
+        entry.insert(0, str(buff.value))
+        entry.grid(row=3, column=1, padx=10, pady=5, sticky="ew")
+
+        entry_label = ctk.CTkLabel(
+            self.frame_bot_bot, text=f"value : {buff.value} ({min_value} / {max_value})", font=("Arial", 15, "bold"))
+        entry_label.grid(row=3, column=2, sticky=ctk.W, padx=10)
+
+        if min_value == 0 and max_value == 0:
+            entry_label.configure(text="always 0 do not touch this number")
+            entry.configure(state="disabled")
+
+        validate_button = ctk.CTkButton(
+            self.frame_bot_bot,
+            text="Validate",
+            fg_color="green",
+            command=lambda: self.apply_buff(slider, slider2, entry, name, buff)
+        )
+        validate_button.grid(row=5, column=0, columnspan=2, padx=5, pady=50)
+        reset_button = ctk.CTkButton(
+            self.frame_bot_bot,
+            text="Reset",
+            fg_color="red",
+            command=lambda: self.reset_buff(name, buff)
+        )
         reset_button.grid(row=5, column=1, columnspan=2, padx=5, pady=5)
+        self.appender_button.append(entry)
+        self.appender_button.append(entry_label)
+        self.appender_button.append(validate_button)
+        self.appender_button.append(reset_button)
+
+    def apply_buff(self, slider, slider2, entry, name, buff):
+        if Utils.check_before_apply_buff(slider, slider2, entry, buff):
+            Utils.save_buff_values(slider, slider2, entry, name, buff)
+        self.buff_button_press(name)
+
+    def reset_buff(self, name, buff):
+        Utils.reset_buff_in_mod(name, buff)
+        self.buff_button_press(name)
+
+    def get_entry_value(self, event, min_value, max_value):
+        input_text = self.appender_button[0].get()
+        try:
+            numeric_value = int(input_text)
+        except ValueError:
+            try:
+                numeric_value = float(input_text)
+            except ValueError:
+                Utils.error_number_prompt(self.appender_button)
+                self.logger.log("warning", "Number please ...")
+                self.block_system_error_detect = True
+                self.appender_button[1].configure(text="Number please ...")
+                self.appender_button[2].configure(state="disabled", fg_color="red")
+
+                return
+
+        if isinstance(numeric_value, (int, float)):
+            if not Utils.is_value_outside_limits(numeric_value, min_value, max_value):
+                if self.block_system_error_detect:
+                    self.appender_button[2].configure(state="normal", fg_color="green")
+                    self.appender_button[1].configure(text=f"value : {str(numeric_value)} ({min_value} / {max_value})",
+                                                      text_color="white")
+                    self.block_system_error_detect = False
+            else:
+                self.block_system_error_detect = True
+                self.appender_button[1].configure(text=f"Out of limite ... ({min_value}  / {max_value})")
+                self.appender_button[2].configure(state="disabled", fg_color="red")
 
     def on_click_result_bag(self, result):
         Utils.clear_frame(self.main_frame_bot)
         Utils.clear_config_row_col(self.main_frame_bot)
-        self.create_frame_bot_find_weapon()
+        self.create_two_frame_on_bot()
         Utils.create_grid_row_col_config(self.frame_bot_top, 1, 1)
         Utils.create_grid_row_col_config(self.frame_bot_bot, 4, 3)
         data_load = False
@@ -909,7 +1384,7 @@ class ModSelectionWindow:
 
         else:
             data = JsonUtils.load_bag_mod(result)
-            self.logger.log("info","Bag save load")
+            self.logger.log("info", "Bag save load")
             data_load = True
 
         category_data = data.get(result)
@@ -962,7 +1437,7 @@ class ModSelectionWindow:
         label4 = ctk.CTkLabel(self.frame_bot_bot, text=f"Improve size BackPack on + %:")
         label4.grid(row=3, column=0, sticky="nsew")
         label5 = ctk.CTkLabel(self.frame_bot_bot, font=("Arial", 18, "bold"), text=f"+{str(size)}%")
-        label5.grid(row=3, column=2,sticky="w")
+        label5.grid(row=3, column=2, sticky="w")
         [min_value, max_value] = Utils.max_min_slider_bag(result)
         slider = ctk.CTkSlider(self.frame_bot_bot,
                                from_=min_value, to=max_value,
@@ -975,7 +1450,7 @@ class ModSelectionWindow:
             self.frame_bot_bot,
             text="Validate",
             fg_color="green",
-            command=lambda: self.apply_bag( result, switch_var, switch_var2,  slider)
+            command=lambda: self.apply_bag(result, switch_var, switch_var2, slider)
         )
         validate_button.grid(row=4, column=0, columnspan=2, padx=5, pady=50)
         reset_button = ctk.CTkButton(
@@ -987,7 +1462,7 @@ class ModSelectionWindow:
         reset_button.grid(row=4, column=1, columnspan=2, padx=5, pady=5)
 
     def apply_bag(self, result, switch_var, switch_var2, slider):
-        Utils.apply_bag_value(  result, switch_var,switch_var2, slider)
+        Utils.apply_bag_value(result, switch_var, switch_var2, slider)
         self.bag_button_press()
 
     def reset_bag(self, result, data_load):
@@ -1005,8 +1480,7 @@ class ModSelectionWindow:
         self.mag_button_press()
 
     def reset_mag(self, result, data):
-        counts = Utils.slider_start(result)
-        Utils.reset_mag(result, counts, data)
+        Utils.reset_mag(result, data)
         self.mag_button_press()
 
     def mag_window(self):
@@ -1016,6 +1490,10 @@ class ModSelectionWindow:
     def bag_window(self):
         WindowUtils.lock_choice_frame("mag", self.frames_buttons)
         self.generate_list_button(WindowType.MAG)
+
+    def buff_window(self):
+        WindowUtils.lock_choice_frame("buff", self.frames_buttons)
+        self.generate_list_button(WindowType.BUFF)
 
     def ammo_button_press(self, caliber_select, choice_window):
         if not self.data_json_from_load_all_ammo:
@@ -1036,10 +1514,9 @@ class ModSelectionWindow:
                 if root.item.props.get_value_by_label("Caliber") == caliber_select
             ]
         self.list_ammo_select = filtered_roots
-        self.generate_bot_frame_weapon_and_ammo(choice_window)
+        self.generate_bot_frame_weapon_ammo_medic(choice_window)
 
     def medic_button_press(self, parent, choice_window):
-
         if not self.data_json_from_load_all_medic:
             (self.data_json_from_load_all_medic,
              self.file_path_from_load_all_medic) = JsonUtils.load_all_json_medic()
@@ -1050,7 +1527,7 @@ class ModSelectionWindow:
             if root.item.parent == parent
         ]
         self.list_medic_select = filtered_roots
-        self.generate_bot_frame_weapon_and_ammo(choice_window)
+        self.generate_bot_frame_weapon_ammo_medic(choice_window)
 
     def clear_recherche_frame(self):
         for frame in self.framesBotRecherche:

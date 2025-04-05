@@ -7,7 +7,7 @@ from Entity.EnumEffect import EnumEffect
 from Entity.EnumMedic import EnumMedic
 from Entity.WindowType import WindowType
 from config import JSON_FILES_DIR_WEAPONS, JSON_FILES_DIR_CALIBER, JSON_FILES_DIR_PMC, JSON_FILES_DIR_AMMO, \
-    JSON_FILES_DIR_MEDIC, JSON_FILES_DIR_MAG, JSON_FILES_DIR_BAG
+    JSON_FILES_DIR_MEDIC, JSON_FILES_DIR_MAG, JSON_FILES_DIR_BAG, JSON_FILES_DIR_BUFF, JSON_FILES_DIR_FAST
 
 
 class JsonUtils:
@@ -20,6 +20,11 @@ class JsonUtils:
     @staticmethod
     def bag_exist(result):
         path = os.path.join(JSON_FILES_DIR_BAG, f'{result}_mod.json')
+        return os.path.exists(path)
+
+    @staticmethod
+    def buff_mod_exist():
+        path = os.path.join(JSON_FILES_DIR_BUFF, 'Buff_mod.json')
         return os.path.exists(path)
 
     @staticmethod
@@ -43,6 +48,19 @@ class JsonUtils:
             return json.load(f)
 
     @staticmethod
+    def load_fast():
+        path = os.path.join(JSON_FILES_DIR_FAST, "Fast.json")
+        with open( path, "r", encoding="utf-8") as f:
+            return json.load(f)
+
+    @staticmethod
+    def save_fast(data, manage):
+        path = os.path.join(JSON_FILES_DIR_FAST, "Fast.json")
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2)
+        print(f"Fast setting {manage}")
+
+    @staticmethod
     def load_bag(result):
         path = os.path.join(JSON_FILES_DIR_BAG, f'{result}.json')
         with open( path, "r", encoding="utf-8") as f:
@@ -51,6 +69,24 @@ class JsonUtils:
     @staticmethod
     def load_bag_mod(result):
         path = os.path.join(JSON_FILES_DIR_BAG, f'{result}_mod.json')
+        with open( path, "r", encoding="utf-8") as f:
+            return json.load(f)
+
+    @staticmethod
+    def load_buff_mod():
+        path = os.path.join(JSON_FILES_DIR_BUFF, 'Buff_mod.json')
+        with open( path, "r", encoding="utf-8") as f:
+            return json.load(f)
+
+    @staticmethod
+    def load_buff():
+        path = os.path.join(JSON_FILES_DIR_BUFF, 'Buff.json')
+        with open( path, "r", encoding="utf-8") as f:
+            return json.load(f)
+
+    @staticmethod
+    def load_add_buff():
+        path = os.path.join(JSON_FILES_DIR_BUFF, 'Buff_add.json')
         with open( path, "r", encoding="utf-8") as f:
             return json.load(f)
 
@@ -453,6 +489,21 @@ class JsonUtils:
         print(f" file delete : {name}")
 
     @staticmethod
+    def delete_all_bag_mod():
+        for file_name in os.listdir(JSON_FILES_DIR_BAG):
+            if file_name.endswith('mod.json'):
+                file_path = os.path.join(JSON_FILES_DIR_BAG, file_name)
+                JsonUtils.delete_file(file_path)
+                print(f" file delete : {file_name}")
+
+    @staticmethod
+    def delete_buff_mod():
+        path_mod = os.path.join(JSON_FILES_DIR_BUFF, 'Buff_mod.json')
+        if JsonUtils.file_exist(path_mod):
+            os.remove(path_mod)
+            print(f" file delete : Buff_mod.json")
+
+    @staticmethod
     def delete_file_mod_if_exists(file_path):
         json_file_path_mod = file_path.replace(".json", "_mod.json")
         if os.path.exists(json_file_path_mod):
@@ -470,6 +521,17 @@ class JsonUtils:
 
         print(f" file save : {new_file_path}")
         return new_file_path
+
+    @staticmethod
+    def save_buff_mod(data):
+        path = os.path.join(JSON_FILES_DIR_BUFF, 'Buff_mod.json')
+
+        JsonUtils.delete_file_if_exists(path)
+
+        with open(path, "w", encoding="utf-8") as new_file:
+            json.dump(data, new_file, indent=4)
+
+        print(f" file save : {path}")
 
     @staticmethod
     def return_list_json_path(name_json):
@@ -527,10 +589,17 @@ class JsonUtils:
                     file_path = os.path.join(JSON_FILES_DIR_WEAPONS, file_name)
                     JsonUtils.delete_file(file_path)
         elif window_type == WindowType.MEDIC:
+            JsonUtils.delete_buff_mod()
             for file_name in os.listdir(JSON_FILES_DIR_MEDIC):
                 if file_name.endswith('_mod.json'):
                     file_path = os.path.join(JSON_FILES_DIR_MEDIC, file_name)
                     JsonUtils.delete_file(file_path)
+
+
+    @staticmethod
+    def delete_all_medic(window_type: WindowType, parent):
+        print("")
+
 
     @staticmethod
     def create_mod_bag(data, name):

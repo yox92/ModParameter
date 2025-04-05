@@ -1,10 +1,14 @@
 import copy
 
 import customtkinter as ctk
+from CTkMessagebox import CTkMessagebox
 
 from Entity import EnumProps, EnumAiming, EnumAmmo, ItemManager
 from Entity.Bag import Bag
+from Entity.Buff import Buff
+from Entity.BuffGroup import BuffGroup
 from Entity.EnumBagSize import EnumBagSize
+from Entity.EnumBuffTypeSkillName import EnumBuffTypeSkillName
 from Entity.EnumEffect import EnumEffect
 from Entity.EnumEffectName import EnumEffectName
 from Entity.EnumMagSize import EnumMagSize
@@ -47,6 +51,8 @@ class Utils:
         total_buttons: int
         if choice_window == WindowType.AMMO:
             total_buttons = 24
+        elif choice_window == WindowType.BUFF:
+            total_buttons = 21
         else:
             total_buttons = 22
         count = 0
@@ -60,12 +66,12 @@ class Utils:
                 count += 1
 
     @staticmethod
-    def create_1x4_bottom(frame1, frame2):
+    def create_1x5_bottom(frame1, frame2):
         frame1.clear()
         total_buttons: int
-        total_buttons = 4
+        total_buttons = 5
         count = 0
-        for y in range(4):
+        for y in range(5):
             if count >= total_buttons:
                 return
             button = ctk.CTkFrame(frame2, fg_color="transparent")
@@ -553,34 +559,7 @@ class Utils:
                         EnumMagSize.CAT_80_89.value,
                         EnumMagSize.CAT_90_100.value,
                         EnumMagSize.CAT_GT_100):
-            return "Resize 3 slots to 2 slots"
-
-    @staticmethod
-    def slider_start(result):
-        if result == EnumMagSize.CAT_01_09.value:
-            return 1
-        elif result == EnumMagSize.CAT_10_19.value:
-            return 10
-        elif result == EnumMagSize.CAT_20_29.value:
-            return 20
-        elif result == EnumMagSize.CAT_30_39.value:
-            return 30
-        elif result == EnumMagSize.CAT_40_49.value:
-            return 40
-        elif result == EnumMagSize.CAT_50_59.value:
-            return 50
-        elif result == EnumMagSize.CAT_60_69.value:
-            return 60
-        elif result == EnumMagSize.CAT_70_79.value:
-            return 70
-        elif result == EnumMagSize.CAT_80_89.value:
-            return 80
-        elif result == EnumMagSize.CAT_90_100.value:
-            return 90
-        elif result == EnumMagSize.CAT_GT_100.value:
-            return 100
-        else:
-            return 1
+            return "Resize 3/(4) slots to 2 slots"
 
     @staticmethod
     def save_mag_values(data, result, switch_var, switch_var2, switch_var3, slider):
@@ -592,13 +571,55 @@ class Utils:
         JsonUtils.save_mag_preset(data, result)
 
     @staticmethod
-    def reset_mag(result, count, data):
+    def save_buff_values(slider, slider2, entry, name, buff):
+        from Utils.JsonUtils import JsonUtils
+
+        if JsonUtils.buff_mod_exist():
+            data = JsonUtils.load_buff_mod()
+        else:
+            data = JsonUtils.load_buff()
+
+        new_duration = int(slider.get())
+        new_delay = int(slider2.get())
+        new_value = entry.get()
+
+        buff_group = data.get("Buffs", {}).get(name, [])
+
+        for b in buff_group:
+            if b["BuffType"] == buff.buff_type and b["SkillName"] == buff.skill_name:
+                b["Duration"] = new_duration
+                b["Delay"] = new_delay
+                b["Value"] = new_value
+                if b.get("add") is None:
+                    b["change"] = True
+                    continue
+                if b.get("change") is None:
+                    continue
+                break
+
+        JsonUtils.save_buff_mod(data)
+
+        print(f" Buff '{buff.buff_type}' update on '{name}' et save.")
+
+    @staticmethod
+    def reset_mag(result, data):
         from Utils.JsonUtils import JsonUtils
         data[result]["penality"] = False
         data[result]["resize"] = False
         data[result]["fastLoad"] = False
-        data[result]["counts"] = count
+        data[result]["counts"] = 0
         JsonUtils.save_mag_preset(data, result)
+
+    @staticmethod
+    def reset_all_mag():
+        from Utils.JsonUtils import JsonUtils
+        data = JsonUtils.load_mag()
+        for result in EnumMagSize.list_values():
+            data[result]["penality"] = False
+            data[result]["resize"] = False
+            data[result]["fastLoad"] = False
+            data[result]["counts"] =  0
+            JsonUtils.save_mag_preset(data, result)
 
     @staticmethod
     def apply_bag_value(result, switch_var, switch_var2, slider):
@@ -659,3 +680,283 @@ class Utils:
                                                 EnumMagSize.CAT_90_100,
                                                 EnumMagSize.CAT_GT_100):
             return 1, 200
+
+    @staticmethod
+    def get_buffs_by_group_name(buff_groups: list[BuffGroup], name: str) -> list[Buff]:
+        for group in buff_groups:
+            if group.name.value == name:
+                return group.buffs
+        return []
+
+    @staticmethod
+    def error_number_prompt(appender: []):
+        appender[1].configure(text="Error ! : Valide number please ", text_color="red")
+        appender[2].configure(fg_color="red", state="disabled")
+
+    @staticmethod
+    def is_value_outside_limits(value, min_value, max_value):
+        return value > max_value or value < min_value
+
+    @staticmethod
+    def reset_buff_in_mod(name: str, buff):
+        from Utils.JsonUtils import JsonUtils
+
+        if not JsonUtils.buff_mod_exist():
+            print("ℹ️ Aucun fichier Buff_mod.json à réinitialiser.")
+            return
+
+        original_data = JsonUtils.load_buff()
+        mod_data = JsonUtils.load_buff_mod()
+
+        original_group = original_data.get("Buffs", {}).get(name, [])
+        mod_group = mod_data.get("Buffs", {}).get(name, [])
+
+        original_buff = next(
+            (b for b in original_group if b["BuffType"] == buff.buff_type and b["SkillName"] == buff.skill_name),
+            None
+        )
+
+        if original_buff is None:
+            print(f"❌ Buff original introuvable pour '{buff.buff_type}' / '{buff.skill_name}'")
+            return
+
+        for b in mod_group:
+            if b["BuffType"] == buff.buff_type and b["SkillName"] == buff.skill_name:
+                b["Duration"] = original_buff["Duration"]
+                b["Delay"] = original_buff["Delay"]
+                b["Value"] = original_buff["Value"]
+                b["change"] = False
+                break
+
+        all_buffs = [
+            b for group in mod_data.get("Buffs", {}).values()
+            for b in group
+        ]
+
+        if all(not b.get("change", False) for b in all_buffs):
+            JsonUtils.delete_buff_mod()
+            print("Tous les buffs modifiés ont été réinitialisés. Buff_mod.json supprimé.")
+        else:
+            JsonUtils.save_buff_mod(mod_data)
+            print(f" Buff '{buff.buff_type}' remis à zéro dans Buff_mod.json.")
+
+    @staticmethod
+    def add_buff(buff: Buff, name: str):
+        from Utils.JsonUtils import JsonUtils
+        if JsonUtils.buff_mod_exist():
+            data = JsonUtils.load_buff_mod()
+        else:
+            data = JsonUtils.load_buff()
+
+        data["Buffs"][name].append(Utils.to_dict(buff))
+        JsonUtils.save_buff_mod(data)
+
+    @staticmethod
+    def to_dict(buff: Buff):
+        return {
+            "AbsoluteValue": buff.absolute_value,
+            "BuffType": buff.buff_type,
+            "Chance": buff.chance,
+            "Delay": buff.delay,
+            "Duration": buff.duration,
+            "SkillName": buff.skill_name,
+            "Value": buff.value,
+            "add": True
+        }
+
+    @staticmethod
+    def is_duplicate(buff1: Buff, buff2: Buff) -> bool:
+        return buff1.buff_type == buff2.buff_type and buff1.skill_name == buff2.skill_name
+
+    @staticmethod
+    def remove_buff_from_list(buff: Buff, name: str):
+        from Utils.JsonUtils import JsonUtils
+        data = JsonUtils.load_buff_mod() if JsonUtils.buff_mod_exist() else JsonUtils.load_buff()
+        if name not in data.get("Buffs", {}):
+            print(f"Error : No buff find on {name}")
+            return
+
+        buff_list = data["Buffs"][name]
+        data["Buffs"][name] = [
+            b for b in buff_list
+            if not (b.get("BuffType") == buff.buff_type and b.get("SkillName") == buff.skill_name)
+        ]
+
+        JsonUtils.save_buff_mod(data)
+
+    @staticmethod
+    def on_reset_buff(name: str):
+        from Utils.JsonUtils import JsonUtils
+        data = JsonUtils.load_buff()
+        if name not in data.get("Buffs", {}):
+            print(f"Error : No buff find on {name}")
+            return
+
+        original = data["Buffs"][name]
+        if not JsonUtils.buff_mod_exist():
+            return
+        mod_data = JsonUtils.load_buff_mod() if JsonUtils.buff_mod_exist() else {"Buffs": {}}
+        mod_data["Buffs"][name] = original
+        JsonUtils.save_buff_mod(mod_data)
+
+    @staticmethod
+    def buff_group_has_changes(name: str, current_buffs: list["Buff"]) -> bool:
+        from Utils.JsonUtils import JsonUtils
+        from Entity.BuffGroup import BuffGroup
+
+        original_data = JsonUtils.load_buff()
+        original_buffs_data = original_data.get("Buffs", {}).get(name, [])
+        original_group = BuffGroup.from_data(name, original_buffs_data)
+
+        current_group = BuffGroup(name=original_group.name, buffs=current_buffs)
+
+        if len(original_group.buffs) != len(current_group.buffs):
+            return True
+
+        return any(
+            buff.change is True or getattr(buff, "add", None) is not None
+            for buff in current_group.buffs
+        )
+
+    @staticmethod
+    def check_before_apply_buff(slider, slider2, entry, buff) -> bool:
+        new_duration = int(slider.get())
+        new_delay = int(slider2.get())
+        try:
+            new_value = float(entry.get())
+        except ValueError:
+            return False
+
+        if new_duration == buff.duration and new_delay == buff.delay and float(buff.value) == new_value:
+            print("No change buff")
+            return False
+        else:
+            print("change buff")
+            return True
+
+    @staticmethod
+    def max_min_input_value_buff(value: str):
+        if "SkillRate" in value or "MaxStamina" in value:
+            return -30, 50
+        elif value in (EnumBuffTypeSkillName.HydrationRate.value,
+                       EnumBuffTypeSkillName.EnergyRate.value):
+            return -2.0, 2.0
+        elif value in (EnumBuffTypeSkillName.Contusion.value,
+                       EnumBuffTypeSkillName.HandsTremor.value,
+                       EnumBuffTypeSkillName.QuantumTunnelling.value,
+                       EnumBuffTypeSkillName.RemoveAllBloodLosses.value,
+                       EnumBuffTypeSkillName.Antidote.value,
+                       EnumBuffTypeSkillName.UnknownToxin.value):
+            return 0, 0
+        elif value in EnumBuffTypeSkillName.StaminaRate.value:
+            return -2, 3
+        elif value in EnumBuffTypeSkillName.WeightLimit.value:
+            return 0.01, 1.0
+        elif value in EnumBuffTypeSkillName.DamageModifier.value:
+            return 0.01, 10.0
+        elif value in EnumBuffTypeSkillName.BodyTemperature.value:
+            return -4, 6
+        elif value in EnumBuffTypeSkillName.HealthRate.value:
+            return -600, 50
+        else:
+            print(value)
+        return -100, 100
+
+    @staticmethod
+    def delete_mod(window_type: WindowType):
+        from Utils.JsonUtils import JsonUtils
+        if window_type == WindowType.BUFF:
+            msg_choice = CTkMessagebox(title="remove all Buff ?",
+                                       message="Are you sure to DELETE all Buffs modifications ? ",
+                                       icon="warning", option_1="No", option_2="Yes")
+            response = msg_choice.get()
+            if response == "Yes":
+                if JsonUtils.buff_mod_exist():
+                    JsonUtils.delete_buff_mod()
+            elif response == "No":
+                print("No delete")
+
+        if window_type == WindowType.MAG:
+            msg_choice = CTkMessagebox(title="remove all Magazines ?",
+                                       message="Are you sure to DELETE all Magazines modifications ? ",
+                                       icon="warning", option_1="No", option_2="Yes")
+            response = msg_choice.get()
+            if response == "Yes":
+                Utils.reset_all_mag()
+            elif response == "No":
+                print("No delete")
+
+        if window_type == WindowType.BAG:
+            msg_choice = CTkMessagebox(title="remove all Bag ?",
+                                       message="Are you sure to DELETE all BackPack modifications ? ",
+                                       icon="warning", option_1="No", option_2="Yes")
+            response = msg_choice.get()
+            if response == "Yes":
+                JsonUtils.delete_all_bag_mod()
+            elif response == "No":
+                print("No delete")
+
+    @staticmethod
+    def apply_fast(slider1, slider2, slider3, slider4, switch1, switch2, switch3):
+        from Utils.JsonUtils import JsonUtils
+        fastload = bool(switch1.get())
+        ammoTracer = bool(switch2.get())
+        slotMag = bool(switch3.get())
+        sizeMag = int(slider1.get())
+        sizeBag = int(slider2.get())
+        stimNumber = int(slider3.get())
+        moreHealHp = int(slider4.get())
+        data = {
+            "fastload": fastload,
+            "slotMag": slotMag,
+            "sizeBag": sizeBag,
+            "sizeMag": sizeMag,
+            "stimNumber": stimNumber,
+            "moreHealHp": moreHealHp,
+            "ammoTracer": ammoTracer
+        }
+        JsonUtils.save_fast(data, "save")
+
+    @staticmethod
+    def reset_fast():
+        from Utils.JsonUtils import JsonUtils
+        data = {
+            "fastload": False,
+            "slotMag": False,
+            "sizeBag": 0,
+            "sizeMag": 0,
+            "stimNumber": 1,
+            "moreHealHp": 0,
+            "ammoTracer": False
+        }
+        JsonUtils.save_fast(data, "reset")
+
+    @staticmethod
+    def check_magazine_already_touched(slider,label5, switch_speed,label3, switch_size,label2):
+        from Utils.JsonUtils import JsonUtils
+        data = JsonUtils.load_fast()
+        if data["sizeMag"] != 0:
+            slider.configure(state="disabled")
+            label5.configure(text="Capacity : already define on Fast setting", text_color="red")
+        if data["slotMag"]:
+            switch_speed.configure(state="disabled")
+            label3.configure(text="Fast load : already define on Fast setting", text_color="red")
+        if data["fastload"]:
+            switch_size.configure(state="disabled")
+            label2.configure(text="Resize slot : already define on Fast setting", text_color="red")
+
+    @staticmethod
+    def on_slider_buff_change(value, slider, label, fromDuration):
+        value = int(value)
+        if value <= 60:
+            adjusted = value
+        elif value <= 200:
+            adjusted = round(value / 10) * 10
+        else:
+            adjusted = round(value / 50) * 50
+
+        slider.set(adjusted)
+        if fromDuration:
+            label.configure(text=f"Duration effect : {adjusted} (seconds)")
+        else:
+            label.configure(text=f"Time before activation : {adjusted} (seconds)")

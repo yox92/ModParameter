@@ -37,6 +37,7 @@ class ModParameter implements IPostDBLoadMod, PreSptModLoader, IPostSptLoadMod {
 
         const pmcService = new PmcService(logger, dataService);
 
+        itemService.fast_setting();
         itemService.allTracer();
         itemService.cloneItems();
         itemService.apply_mod_item();

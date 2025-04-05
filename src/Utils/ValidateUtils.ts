@@ -2,7 +2,7 @@ import {IAiming, IStamina} from "@spt/models/eft/common/IGlobals";
 import {Aiming} from "../Entity/Aiming";
 import {Stamina} from "../Entity/Stamina";
 import {ITemplates} from "@spt/models/spt/templates/ITemplates";
-import {ITemplateItem} from "@spt/models/eft/common/tables/ITemplateItem";
+import {IGrid, IGridProps, ITemplateItem} from "@spt/models/eft/common/tables/ITemplateItem";
 import {DatabaseService} from "@spt/services/DatabaseService";
 import {ILogger} from "@spt/models/spt/utils/ILogger";
 
@@ -342,5 +342,25 @@ export class ValidateUtils {
         return items;
     }
 
+    public resizeGrid(iGridProps: IGridProps, percent: number): { cellsH: number; cellsV: number } {
+        const currentSize = iGridProps.cellsH * iGridProps.cellsV;
+
+        if (currentSize === 0) {
+            return {cellsH: 1, cellsV: 1};
+        }
+
+        const targetSize = Math.round(currentSize * (1 + percent / 100));
+        const scale = Math.sqrt(targetSize / currentSize);
+
+        let newH = Math.max(1, Math.round(iGridProps.cellsH * scale));
+        let newV = Math.max(1, Math.round(iGridProps.cellsV * scale));
+
+        if (newH > 7) {
+            newH = 7;
+            newV = Math.max(1, Math.round(targetSize / newH));
+        }
+
+        return {cellsH: newH, cellsV: newV};
+    }
 
 }

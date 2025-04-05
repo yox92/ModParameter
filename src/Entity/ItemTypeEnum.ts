@@ -5,5 +5,7 @@ export enum ItemTypeEnum {
     Tracer = "Tracer",
     Medic = "Medic",
     Mag = "Mag",
-    Bag = "Bag"
+    Bag = "Bag",
+    Buff = "Buff",
+    Fast = "Fast"
 }

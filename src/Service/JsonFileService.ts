@@ -12,6 +12,8 @@ export class JsonFileService {
     private readonly jsonMedicFolderPath: string;
     private readonly jsonMagFolderPath: string;
     private readonly jsonBagFolderPath: string;
+    private readonly jsonBuffFolderPath: string;
+    private readonly jsonFastFolderPath: string;
     private readonly logger: ILogger;
 
     constructor(logger: ILogger) {
@@ -21,6 +23,8 @@ export class JsonFileService {
         this.jsonMedicFolderPath = config.jsonMedicFolderPath;
         this.jsonMagFolderPath = config.jsonMagFolderPath;
         this.jsonBagFolderPath = config.jsonBagFolderPath;
+        this.jsonBuffFolderPath = config.jsonBuffFolderPath;
+        this.jsonFastFolderPath = config.jsonFastFolderPath;
         this.logger = logger;
     }
 
@@ -87,6 +91,10 @@ export class JsonFileService {
             folderPath = this.jsonMagFolderPath
         } else if (itemType === ItemTypeEnum.Bag) {
             folderPath = this.jsonBagFolderPath
+        } else if (itemType === ItemTypeEnum.Buff) {
+            folderPath = this.jsonBuffFolderPath
+        } else if (itemType === ItemTypeEnum.Fast) {
+            folderPath = this.jsonFastFolderPath
         } else {
             return [];
         }
@@ -103,12 +111,14 @@ export class JsonFileService {
                 jsonFiles = files.filter(file => file.includes("tracer.json"));
             } else if (itemType === ItemTypeEnum.Mag) {
                 jsonFiles = files.filter(file => file.includes("Mag.json"));
+             } else if (itemType === ItemTypeEnum.Fast) {
+                jsonFiles = files.filter(file => file.includes("Fast.json"));
             } else {
                 jsonFiles = files.filter(file => file.endsWith("mod.json"));
             }
 
             if (jsonFiles.length === 0) {
-                this.logger.debug("[ModParameter] No JSON files found");
+                this.logger.debug(`"[ModParameter] No JSON files found for ${itemType}"`);
                 return [];
             }
 

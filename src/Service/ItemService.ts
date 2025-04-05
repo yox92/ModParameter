@@ -14,7 +14,9 @@ import {DatabaseService} from "@spt/services/DatabaseService";
 import {creatTracer, Tracer} from "../Entity/Tracer";
 import {createMedic, Medic} from "../Entity/Medic";
 import {Mag, MagJsonFile} from "../Entity/Mag";
-import {Bag, BagCat} from "../Entity/Bag";
+import {BagCat} from "../Entity/Bag";
+import {BuffsJsonFile} from "../Entity/Buff";
+import {createFast, Fast} from "../Entity/Fast";
 
 export class ItemService {
     private readonly logger: ILogger;
@@ -255,6 +257,28 @@ export class ItemService {
         }
     }
 
+    private caseBuff(jsonFiles: Array<{ fileName: string; json: BuffsJsonFile }>) {
+        for (const {fileName, json} of jsonFiles) {
+            if (!json?.Buffs || typeof json.Buffs !== "object") {
+                this.logger.debug(`[ModParameter] Skipping invalid or malformed Buff JSON in: ${fileName}`);
+                return;
+            }
+            this.itemUpdaterService.applyBuffMod(json.Buffs);
+        }
+    }
+
+    private caseFast(jsonFiles: Array<{ fileName: string; json: any }>) {
+        for (const {fileName, json} of jsonFiles) {
+            if (!json) {
+                this.logger.debug(`[ModParameter] Skipping fast setting`);
+            } else {
+                const fast: Fast = createFast(json);
+                this.itemUpdaterService.applyFast(fast);
+            }
+
+        }
+    }
+
     /**
      * clone Items : First Weapons because new ammo need compatibility with new weapon ofc
      */
@@ -267,6 +291,11 @@ export class ItemService {
     public apply_mod_item(): void {
         this.caseMag(this.loadJsonFiles(ItemTypeEnum.Mag));
         this.caseBag(this.loadJsonFiles(ItemTypeEnum.Bag));
+        this.caseBuff(this.loadJsonFiles(ItemTypeEnum.Buff));
+    }
+
+    public fast_setting(): void {
+        this.caseFast(this.loadJsonFiles(ItemTypeEnum.Fast));
     }
 
     private loadJsonFiles<T>(itemType: ItemTypeEnum): Array<{ fileName: string; json: T }> {

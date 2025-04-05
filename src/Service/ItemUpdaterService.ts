@@ -1,7 +1,7 @@
 import {ItemProps} from "../Entity/ItemProps";
 import {ILogger} from "@spt/models/spt/utils/ILogger";
 import {Ammo} from "../Entity/Ammo";
-import {IGrid, IGridFilter, IProps, ITemplateItem} from "@spt/models/eft/common/tables/ITemplateItem";
+import {IGrid, IGridFilter, IProps, ISlot, ITemplateItem} from "@spt/models/eft/common/tables/ITemplateItem";
 import {ValidateUtils} from "../Utils/ValidateUtils";
 import {DatabaseService} from "@spt/services/DatabaseService";
 import {Tracer} from "../Entity/Tracer";
@@ -9,8 +9,10 @@ import {Baseclass} from "../Entity/Baseclass";
 import {ItemHelper} from "@spt/helpers/ItemHelper";
 import {IEffectDamageProps, Medic} from "../Entity/Medic";
 import {Mag} from "../Entity/Mag";
-import {EnumagCount} from "../Entity/EnumagCount";
 import {Bag, BagCat} from "../Entity/Bag";
+import {Buff, IBuffJson} from "../Entity/Buff";
+import {IBuffs, IGlobals} from "@spt/models/eft/common/IGlobals";
+import {Fast} from "../Entity/Fast";
 
 
 export class ItemUpdaterService {
@@ -44,7 +46,7 @@ export class ItemUpdaterService {
 
         const items: ITemplateItem[] = validateUtils.checkTemplateItems(this.dataService, this.logger)
 
-        const ammos: ITemplateItem[] = items.filter(item =>
+        const ammos: ITemplateItem[] = items.filter((item: ITemplateItem) =>
             item?._id && this.itemHelper.isOfBaseclass(item._id, Baseclass.AMMO)
         );
 
@@ -61,6 +63,132 @@ export class ItemUpdaterService {
             ammo._props.Tracer = tracer.Tracer;
             ammo._props.TracerColor = validateUtils.validateTracerColor(tracer.TracerColor);
         }
+    }
+
+    public applyFast(fast: Fast): void {
+        const validateUtils = new ValidateUtils();
+        const items: ITemplateItem[] = validateUtils.checkTemplateItems(this.dataService, this.logger);
+
+        if (fast.fastload || fast.sizeMag > 0 || fast.slotMag) {
+            this.applyFastToMagazines(fast, items);
+        }
+
+        if (fast.sizeBag > 0) {
+            this.applyFastBackpacks(fast, items, validateUtils);
+        }
+
+        if (fast.moreHealHp !== 0 || fast.stimNumber !== 1) {
+            this.applyFastHeal(fast, items);
+        }
+    }
+
+    private applyFastToMagazines(fast: Fast, items: ITemplateItem[]): void {
+        const magazines: ITemplateItem[] = Object.values(items).filter(
+            (item: ITemplateItem): item is ITemplateItem =>
+                !!item?._id && this.itemHelper.isOfBaseclass(item._id, Baseclass.MAGAZINE)
+        );
+        let countFastLoad = 0;
+        let countSizeMag = 0;
+        let countSlotMag = 0;
+
+        magazines.forEach((magazine) => {
+            const props = magazine._props;
+            const name = magazine._name ?? magazine._id;
+
+            if (!props || !props.Cartridges || !Array.isArray(props.Cartridges) || props.Cartridges.length === 0) {
+                this.logger.debug(`[ModParameter] Warning: Magazine '${name}' has invalid properties.`);
+                return;
+            }
+
+            const firstCartridge: ISlot = props.Cartridges[0];
+
+            if (fast.fastload) {
+                countFastLoad = countFastLoad + this.applyMagFastLoad(props, name);
+            }
+            if (fast.slotMag) {
+                countSlotMag = countSlotMag + this.applyMagResize(props, name, firstCartridge)
+            }
+            if (fast.sizeMag > 0) {
+                const originalValue = firstCartridge._max_count;
+                firstCartridge._max_count = Math.round(originalValue * (1 + fast.sizeMag / 100));
+                countSizeMag++
+            }
+
+        });
+        this.logger.debug(`[ModParameter] Finished: ${countFastLoad} magazine(s) modified with fast(Un)load`);
+        this.logger.debug(`[ModParameter] Finished: ${countSizeMag} magazine(s) modified ammo count containing`);
+        this.logger.debug(`[ModParameter] Finished: ${countSlotMag} magazine(s) modified slot`);
+    }
+
+    private applyFastBackpacks(fast: Fast, items: ITemplateItem[], validateUtils: ValidateUtils): void {
+        const backPacks = Object.values(items).filter(
+            (item): item is ITemplateItem =>
+                !!item?._id && this.itemHelper.isOfBaseclass(item._id, Baseclass.BACKPACK)
+        );
+        let totalModified = 0;
+        backPacks.forEach((backPack) => {
+            const props = backPack._props;
+            const name = backPack._name ?? backPack._id;
+
+            if (!props?.Grids || !Array.isArray(props.Grids)) {
+                this.logger.debug(`[ModParameter] Warning: Backpack '${name}' has no grids.`);
+                return;
+            }
+
+            if (props.Grids.length > 1) {
+                this.logger.debug(`[ModParameter] Skipping resize for '${name}' — multiple grids.`);
+                return;
+            }
+            let modified = false;
+            props.Grids.forEach((grid: IGrid) => {
+                if (!grid._props) return;
+
+                const resizeBag: {
+                    cellsH: number;
+                    cellsV: number
+                } = validateUtils.resizeGrid(grid._props, fast.sizeBag)
+
+                grid._props.cellsH = resizeBag.cellsH
+                grid._props.cellsV = resizeBag.cellsV
+                modified = true;
+            });
+            if (modified) {
+                totalModified++;
+            }
+        });
+        this.logger.debug(`[ModParameter] ${totalModified} backpack(s) resized.`);
+    }
+
+    private applyFastHeal(fast: Fast, items: ITemplateItem[]): void {
+        const healItems = Object.values(items).filter(
+            (item): item is ITemplateItem =>
+                !!item?._id && (
+                    this.itemHelper.isOfBaseclass(item._id, Baseclass.MEDKIT) ||
+                    this.itemHelper.isOfBaseclass(item._id, Baseclass.MEDICAL) ||
+                    this.itemHelper.isOfBaseclass(item._id, Baseclass.STIMULATOR)
+                )
+        );
+
+        healItems.forEach((healItem) => {
+            const props = healItem._props;
+            const name = healItem._name ?? healItem._id;
+
+            if (!props || typeof props.MaxHpResource !== "number") {
+                this.logger.debug(`[ModParameter] Warning: Heal item '${name}' has invalid or missing MaxHpResource.`);
+                return;
+            }
+
+            if (fast.moreHealHp !== 0 && props.MaxHpResource > 0) {
+                const original = props.MaxHpResource;
+                props.MaxHpResource = Math.round(original * (fast.moreHealHp / 100));
+                this.logger.debug(`[ModParameter] Heal '${name}' usage scaled: ${original} → ${props.MaxHpResource}`);
+            } else if (fast.stimNumber !== 1 &&
+                props.MaxHpResource === 0 &&
+                this.itemHelper.isOfBaseclass(healItem._id, Baseclass.STIMULATOR)) {
+                props.MaxHpResource = fast.stimNumber;
+                this.logger.debug(`[ModParameter] Stim '${name}' usage set to ${fast.stimNumber}`);
+            }
+        });
     }
 
     /**
@@ -306,15 +434,14 @@ export class ItemUpdaterService {
     }
 
     public applyMagMod(mag: Mag): void {
-        const validateutils = new ValidateUtils();
-        const defaultValue: number = EnumagCount[mag.name];
+        const validateUtils = new ValidateUtils();
         let warning_info = false;
 
-        if (!mag.fastLoad && !mag.resize && !mag.penality && mag.counts === defaultValue) {
+        if (!mag.fastLoad && !mag.resize && !mag.penality && mag.counts === 0) {
             this.logger.debug(`[ModParameter] skip magazines : ` + mag.name);
         }
 
-        const items = validateutils.getTemplateItems(this.dataService, this.logger);
+        const items = validateUtils.getTemplateItems(this.dataService, this.logger);
 
         const magazines: ITemplateItem[] = Object.values(items).filter(
             item =>
@@ -331,26 +458,24 @@ export class ItemUpdaterService {
             }
             const props: IProps = magazine._props;
             const name: string = magazine._name;
-            const firstCartridge = props?.Cartridges?.[0];
+            const firstCartridge: ISlot = props?.Cartridges?.[0];
 
             if (mag.fastLoad) {
                 this.applyMagFastLoad(props, name);
             }
 
             if (mag.resize) {
-                warning_info = this.applyMagResize(props, name, mag.name);
+                this.applyMagResize(props, name, firstCartridge);
             }
 
             if (mag.penality) {
                 this.applyMagPenality(props, name);
             }
 
-            if (mag.penality) {
-                this.applyMagPenality(props, name);
-            }
+            if (mag.counts !== 0 && firstCartridge?._max_count !== null && firstCartridge?._max_count !== undefined) {
+                const originalValue = firstCartridge._max_count;
+                firstCartridge._max_count = Math.round(originalValue * (1 + mag.counts / 100));
 
-            if (mag.counts !== defaultValue && firstCartridge?._max_count !== null && firstCartridge?._max_count !== undefined) {
-                firstCartridge._max_count = mag.counts;
             }
         }
         if (warning_info) {
@@ -358,18 +483,16 @@ export class ItemUpdaterService {
         }
     }
 
-    private applyMagFastLoad(props: IProps, name: string): void {
+    private applyMagFastLoad(props: IProps, name: string): number {
         if (props?.LoadUnloadModifier !== null && props?.LoadUnloadModifier !== undefined) {
             props.LoadUnloadModifier = -60;
-            this.logger.debug(`[ModParameter] modify ${name} Load, Unload speed`);
+            return +1
+        } else {
+            return 0
         }
     }
 
-    private applyMagResize(props: IProps, name: string, mag_name: string): boolean {
-        let warning_info = false;
-        const XS_CATEGORIES = ["01-09", "10-19", "20-29"];
-        let categories_XS: boolean = XS_CATEGORIES.includes(mag_name);
-
+    private applyMagResize(props: IProps, name: string, firstCartridge: ISlot): number {
         if (props?.Height !== null &&
             props?.Height !== undefined &&
             props?.Width !== null &&
@@ -380,31 +503,27 @@ export class ItemUpdaterService {
             if (props.Height === 3 && props.Width === 1) {
                 props.Height = 2;
                 props.ExtraSizeDown = 1;
-                this.logger.debug(`[ModParameter] modify ${name} slot 3 To 2`);
+                return +1
             } else if (props.Height === 2 && props.Width === 2) {
                 props.Height = 2;
                 props.Width = 1;
-                warning_info = true;
-            } else if (props.Height === 2 && props.Width === 1 && categories_XS) {
+                return +1
+            } else if (props.Height === 2 && props.Width === 1 && firstCartridge && firstCartridge._max_count < 29) {
                 props.Height = 1;
                 props.ExtraSizeDown = 0;
-                this.logger.debug(`[ModParameter] modify ${name} slot 2 to slot 1 `);
+                return +1
             }
         }
-        return warning_info;
     }
 
     private applyMagPenality(props: IProps, name: string): void {
         if (props?.Ergonomics !== null && props?.Ergonomics !== undefined && props.Ergonomics < 0) {
-            this.logger.debug(`[ModParameter] modify ${name} Ergonomics`);
             props.Ergonomics = 0
         }
         if (props?.MalfunctionChance !== null && props?.MalfunctionChance !== undefined && props?.MalfunctionChance > 0.03) {
-            this.logger.debug(`[ModParameter] modify ${name} MalfunctionChance`);
             props.MalfunctionChance = 0.03
         }
         if (props?.CheckTimeModifier !== null && props?.CheckTimeModifier !== undefined && props?.CheckTimeModifier > 0) {
-            this.logger.debug(`[ModParameter] modify ${name} CheckTimeModifier`);
             props.CheckTimeModifier = 0
         }
     }
@@ -444,6 +563,74 @@ export class ItemUpdaterService {
                     this.applyBagResize(backPackProps, backPackId, bagCat, backPack._name, validateutils);
                 }
             }
+        }
+    }
+
+    public applyBuffMod(jsonBuff: Record<string, IBuffJson[]>): void {
+        const globals: IGlobals = this.dataService.getGlobals();
+        const buffs: IBuffs = globals?.config?.Health?.Effects?.Stimulator?.Buffs;
+
+        if (!buffs) {
+            this.logger.debug(`[ModParameter] Impossible de récupérer les buffs depuis Globals.`);
+            return;
+        }
+
+
+
+        const makeBuffKey = (buffType: string, skillName: string | null | undefined): string =>
+            `${buffType}|${skillName || ''}`;
+
+        for (const [groupName, modifiedBuffs] of Object.entries(jsonBuff)) {
+             let totalBuffsModified = 0;
+            let totalBuffsAdded = 0;
+            let totalBuffsRemoved = 0;
+            let totalGroupsTouched = 0;
+
+            const removed: number = this.syncBuffGroup(groupName, modifiedBuffs, buffs);
+
+            if (removed > 0) {
+                totalBuffsRemoved += removed;
+                totalGroupsTouched++;
+            }
+
+            const group = buffs[groupName as keyof IBuffs];
+            if (!group || !Array.isArray(group)) {
+                continue;
+            }
+
+            for (const buffData of modifiedBuffs) {
+                const modBuff = new Buff(buffData);
+                const key = makeBuffKey(modBuff.buffType, modBuff.skillName);
+
+                const targetBuff = group.find(b =>
+                    makeBuffKey(b.BuffType, b.SkillName) === key
+                );
+
+                if (modBuff.change && targetBuff) {
+                    targetBuff.Delay = modBuff.delay;
+                    targetBuff.Duration = modBuff.duration;
+                    targetBuff.Value = modBuff.value;
+
+                    totalBuffsModified++;
+                    totalGroupsTouched++;
+                }
+
+                if (modBuff.add && !targetBuff) {
+                    group.push({
+                        AbsoluteValue: modBuff.absoluteValue,
+                        BuffType: modBuff.buffType,
+                        Chance: modBuff.chance,
+                        Delay: modBuff.delay,
+                        Duration: modBuff.duration,
+                        SkillName: modBuff.skillName,
+                        Value: modBuff.value,
+                    });
+
+                    totalBuffsAdded++;
+                    totalGroupsTouched++;
+                }
+            }
+            this.logger.debug(`[ModParameter] Résumé : ${totalBuffsModified} modifié(s), ${totalBuffsAdded} ajouté(s), ${totalBuffsRemoved} supprimé(s) dans ${groupName}`);
         }
     }
 
@@ -518,6 +705,47 @@ export class ItemUpdaterService {
         }
 
     }
+
+    public syncBuffGroup(
+        groupName: string,
+        modifiedBuffs: IBuffJson[],
+        buffs: IBuffs
+    ): number {
+        const makeBuffKey = (buffType: string, skillName: string | null | undefined): string =>
+            `${buffType}|${skillName || ''}`;
+
+        const originalGroup = buffs[groupName];
+        if (!originalGroup || !Array.isArray(originalGroup)) {
+            this.logger.debug(`[ModParameter] No find ${groupName} in SPT DB.`);
+            return 0;
+        }
+
+        const jsonKeys = new Set<string>();
+        for (const [i, b] of modifiedBuffs.entries()) {
+            const buffType = (b as any).BuffType;
+            const skillName = (b as any).SkillName;
+
+            if (!buffType) {
+                continue;
+            }
+
+            jsonKeys.add(makeBuffKey(buffType, skillName));
+        }
+
+        const bddKeys = new Set(originalGroup.map(b => makeBuffKey(b.BuffType, b.SkillName)));
+
+        const missingInJson = [...bddKeys].filter(k => !jsonKeys.has(k));
+
+        if (missingInJson.length > 0) {
+
+            buffs[groupName] = originalGroup.filter(
+                b => jsonKeys.has(makeBuffKey(b.BuffType, b.SkillName))
+            );
+
+            return missingInJson.length;
+        }
+        return 0
+    };
 
 
 }

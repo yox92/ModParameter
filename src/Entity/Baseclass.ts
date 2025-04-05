@@ -16,5 +16,8 @@ export enum Baseclass {
     MACHINE_GUN = "5447bed64bdc2d97278b4568",
     SPECIAL_WEAPON = "5447bee84bdc2dc3278b4569",
     GRENADE_LAUNCHER = "5447bedf4bdc2d87278b4568",
-    UBGL = "55818b014bdc2ddc698b456b"
+    MEDKIT = "5448f39d4bdc2d0a728b4568",
+    DRUGS = "5448f3a14bdc2d27728b4569",
+    STIMULATOR = "5448f3a64bdc2d60728b456a",
+    MEDICAL = "5448f3ac4bdc2dce718b4569"
 }
