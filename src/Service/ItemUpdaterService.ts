@@ -4,15 +4,14 @@ import {Ammo} from "../Entity/Ammo";
 import {IGrid, IGridFilter, IProps, ISlot, ITemplateItem} from "@spt/models/eft/common/tables/ITemplateItem";
 import {ValidateUtils} from "../Utils/ValidateUtils";
 import {DatabaseService} from "@spt/services/DatabaseService";
-import {creatTracer, Tracer} from "../Entity/Tracer";
+import {Tracer} from "../Entity/Tracer";
 import {Baseclass} from "../Entity/Baseclass";
 import {ItemHelper} from "@spt/helpers/ItemHelper";
 import {IEffectDamageProps, Medic} from "../Entity/Medic";
 import {Mag} from "../Entity/Mag";
-import {EnumagCount} from "../Entity/EnumagCount";
 import {Bag, BagCat} from "../Entity/Bag";
 import {Buff, IBuffJson} from "../Entity/Buff";
-import {IBuff, IBuffs, IGlobals} from "@spt/models/eft/common/IGlobals";
+import {IBuffs, IGlobals} from "@spt/models/eft/common/IGlobals";
 import {Fast} from "../Entity/Fast";
 
 
@@ -47,7 +46,7 @@ export class ItemUpdaterService {
 
         const items: ITemplateItem[] = validateUtils.checkTemplateItems(this.dataService, this.logger)
 
-        const ammos: ITemplateItem[] = items.filter((item:ITemplateItem) =>
+        const ammos: ITemplateItem[] = items.filter((item: ITemplateItem) =>
             item?._id && this.itemHelper.isOfBaseclass(item._id, Baseclass.AMMO)
         );
 
@@ -84,8 +83,8 @@ export class ItemUpdaterService {
     }
 
     private applyFastToMagazines(fast: Fast, items: ITemplateItem[]): void {
-        const magazines:ITemplateItem[] = Object.values(items).filter(
-            (item:ITemplateItem): item is ITemplateItem =>
+        const magazines: ITemplateItem[] = Object.values(items).filter(
+            (item: ITemplateItem): item is ITemplateItem =>
                 !!item?._id && this.itemHelper.isOfBaseclass(item._id, Baseclass.MAGAZINE)
         );
         let countFastLoad = 0;
@@ -101,7 +100,7 @@ export class ItemUpdaterService {
                 return;
             }
 
-            const firstCartridge:ISlot = props.Cartridges[0];
+            const firstCartridge: ISlot = props.Cartridges[0];
 
             if (fast.fastload) {
                 countFastLoad = countFastLoad + this.applyMagFastLoad(props, name);
@@ -144,7 +143,10 @@ export class ItemUpdaterService {
             props.Grids.forEach((grid: IGrid) => {
                 if (!grid._props) return;
 
-                const resizeBag :{ cellsH: number; cellsV: number } = validateUtils.resizeGrid(grid._props, fast.sizeBag)
+                const resizeBag: {
+                    cellsH: number;
+                    cellsV: number
+                } = validateUtils.resizeGrid(grid._props, fast.sizeBag)
 
                 grid._props.cellsH = resizeBag.cellsH
                 grid._props.cellsV = resizeBag.cellsV
@@ -471,8 +473,9 @@ export class ItemUpdaterService {
             }
 
             if (mag.counts !== 0 && firstCartridge?._max_count !== null && firstCartridge?._max_count !== undefined) {
-                 const originalValue = firstCartridge._max_count;
+                const originalValue = firstCartridge._max_count;
                 firstCartridge._max_count = Math.round(originalValue * (1 + mag.counts / 100));
+
             }
         }
         if (warning_info) {
@@ -515,15 +518,12 @@ export class ItemUpdaterService {
 
     private applyMagPenality(props: IProps, name: string): void {
         if (props?.Ergonomics !== null && props?.Ergonomics !== undefined && props.Ergonomics < 0) {
-            this.logger.debug(`[ModParameter] modify ${name} Ergonomics`);
             props.Ergonomics = 0
         }
         if (props?.MalfunctionChance !== null && props?.MalfunctionChance !== undefined && props?.MalfunctionChance > 0.03) {
-            this.logger.debug(`[ModParameter] modify ${name} MalfunctionChance`);
             props.MalfunctionChance = 0.03
         }
         if (props?.CheckTimeModifier !== null && props?.CheckTimeModifier !== undefined && props?.CheckTimeModifier > 0) {
-            this.logger.debug(`[ModParameter] modify ${name} CheckTimeModifier`);
             props.CheckTimeModifier = 0
         }
     }
@@ -568,34 +568,42 @@ export class ItemUpdaterService {
 
     public applyBuffMod(jsonBuff: Record<string, IBuffJson[]>): void {
         const globals: IGlobals = this.dataService.getGlobals();
-        const buffs: IBuffs = globals?.config?.Health.Effects?.Stimulator?.Buffs;
+        const buffs: IBuffs = globals?.config?.Health?.Effects?.Stimulator?.Buffs;
 
         if (!buffs) {
-            console.debug(`[ModParameter] Impossible de récupérer les buffs depuis Globals.`);
+            this.logger.debug(`[ModParameter] Impossible de récupérer les buffs depuis Globals.`);
             return;
         }
 
-        let totalBuffsModified = 0;
-        let totalBuffsAdded = 0;
-        let totalGroupsTouched = 0;
+
+
+        const makeBuffKey = (buffType: string, skillName: string | null | undefined): string =>
+            `${buffType}|${skillName || ''}`;
 
         for (const [groupName, modifiedBuffs] of Object.entries(jsonBuff)) {
-            const originalGroup: IBuff[] = buffs[groupName as keyof IBuffs];
+             let totalBuffsModified = 0;
+            let totalBuffsAdded = 0;
+            let totalBuffsRemoved = 0;
+            let totalGroupsTouched = 0;
 
-            if (!originalGroup || !Array.isArray(originalGroup)) {
-                console.debug(`[ModParameter] Groupe introuvable dans IBuffs : ${groupName}`);
+            const removed: number = this.syncBuffGroup(groupName, modifiedBuffs, buffs);
+
+            if (removed > 0) {
+                totalBuffsRemoved += removed;
+                totalGroupsTouched++;
+            }
+
+            const group = buffs[groupName as keyof IBuffs];
+            if (!group || !Array.isArray(group)) {
                 continue;
             }
 
-            let groupTouched: boolean = false;
-
             for (const buffData of modifiedBuffs) {
                 const modBuff = new Buff(buffData);
+                const key = makeBuffKey(modBuff.buffType, modBuff.skillName);
 
-                if (!modBuff.change && (modBuff.add == null || !modBuff.add)) continue;
-
-                const targetBuff = originalGroup.find(
-                    b => b.BuffType === modBuff.buffType && b.SkillName === modBuff.skillName
+                const targetBuff = group.find(b =>
+                    makeBuffKey(b.BuffType, b.SkillName) === key
                 );
 
                 if (modBuff.change && targetBuff) {
@@ -604,11 +612,11 @@ export class ItemUpdaterService {
                     targetBuff.Value = modBuff.value;
 
                     totalBuffsModified++;
-                    groupTouched = true;
+                    totalGroupsTouched++;
                 }
 
                 if (modBuff.add && !targetBuff) {
-                    originalGroup.push({
+                    group.push({
                         AbsoluteValue: modBuff.absoluteValue,
                         BuffType: modBuff.buffType,
                         Chance: modBuff.chance,
@@ -619,17 +627,11 @@ export class ItemUpdaterService {
                     });
 
                     totalBuffsAdded++;
-                    groupTouched = true;
+                    totalGroupsTouched++;
                 }
             }
-
-            if (groupTouched) {
-                totalGroupsTouched++;
-            }
+            this.logger.debug(`[ModParameter] Résumé : ${totalBuffsModified} modifié(s), ${totalBuffsAdded} ajouté(s), ${totalBuffsRemoved} supprimé(s) dans ${groupName}`);
         }
-
-        console.debug(`[ModParameter] Resume : ${totalBuffsModified} buff(s) modify, ${totalBuffsAdded} add(s), on ${totalGroupsTouched} group(s).`);
-
     }
 
     private clearExcludedFilters(backPackProps: IProps, name: string): void {
@@ -703,5 +705,47 @@ export class ItemUpdaterService {
         }
 
     }
+
+    public syncBuffGroup(
+        groupName: string,
+        modifiedBuffs: IBuffJson[],
+        buffs: IBuffs
+    ): number {
+        const makeBuffKey = (buffType: string, skillName: string | null | undefined): string =>
+            `${buffType}|${skillName || ''}`;
+
+        const originalGroup = buffs[groupName];
+        if (!originalGroup || !Array.isArray(originalGroup)) {
+            this.logger.debug(`[ModParameter] No find ${groupName} in SPT DB.`);
+            return 0;
+        }
+
+        const jsonKeys = new Set<string>();
+        for (const [i, b] of modifiedBuffs.entries()) {
+            const buffType = (b as any).BuffType;
+            const skillName = (b as any).SkillName;
+
+            if (!buffType) {
+                continue;
+            }
+
+            jsonKeys.add(makeBuffKey(buffType, skillName));
+        }
+
+        const bddKeys = new Set(originalGroup.map(b => makeBuffKey(b.BuffType, b.SkillName)));
+
+        const missingInJson = [...bddKeys].filter(k => !jsonKeys.has(k));
+
+        if (missingInJson.length > 0) {
+
+            buffs[groupName] = originalGroup.filter(
+                b => jsonKeys.has(makeBuffKey(b.BuffType, b.SkillName))
+            );
+
+            return missingInJson.length;
+        }
+        return 0
+    };
+
 
 }

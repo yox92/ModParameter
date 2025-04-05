@@ -618,7 +618,7 @@ class Utils:
             data[result]["penality"] = False
             data[result]["resize"] = False
             data[result]["fastLoad"] = False
-            data[result]["counts"] =  Utils.slider_start(result)
+            data[result]["counts"] =  0
             JsonUtils.save_mag_preset(data, result)
 
     @staticmethod
@@ -946,7 +946,7 @@ class Utils:
             label2.configure(text="Resize slot : already define on Fast setting", text_color="red")
 
     @staticmethod
-    def on_slider_buff_change(value, slider, label):
+    def on_slider_buff_change(value, slider, label, fromDuration):
         value = int(value)
         if value <= 60:
             adjusted = value
@@ -956,4 +956,7 @@ class Utils:
             adjusted = round(value / 50) * 50
 
         slider.set(adjusted)
-        label.configure(text=f"Duration effect : {adjusted} (seconds)")
+        if fromDuration:
+            label.configure(text=f"Duration effect : {adjusted} (seconds)")
+        else:
+            label.configure(text=f"Time before activation : {adjusted} (seconds)")

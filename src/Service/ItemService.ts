@@ -263,10 +263,6 @@ export class ItemService {
                 this.logger.debug(`[ModParameter] Skipping invalid or malformed Buff JSON in: ${fileName}`);
                 return;
             }
-            if (json.Buffs.areAllBuffsUnchanged) {
-                this.logger.debug(`[ModParameter] Skipping Buff no change: ${fileName}`);
-                return;
-            }
             this.itemUpdaterService.applyBuffMod(json.Buffs);
         }
     }

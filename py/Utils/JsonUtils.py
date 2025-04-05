@@ -499,8 +499,9 @@ class JsonUtils:
     @staticmethod
     def delete_buff_mod():
         path_mod = os.path.join(JSON_FILES_DIR_BUFF, 'Buff_mod.json')
-        os.remove(path_mod)
-        print(f" file delete : Buff_mod.json")
+        if JsonUtils.file_exist(path_mod):
+            os.remove(path_mod)
+            print(f" file delete : Buff_mod.json")
 
     @staticmethod
     def delete_file_mod_if_exists(file_path):

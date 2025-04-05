@@ -1280,7 +1280,7 @@ class ModSelectionWindow:
         label1.grid(row=1, column=2, sticky="w")
         slider = ctk.CTkSlider(self.frame_bot_bot,
                                from_=0, to=1000,
-                               command=lambda value: Utils.on_slider_buff_change(value, slider, label1)
+                               command=lambda value: Utils.on_slider_buff_change(value, slider, label1, True)
                                )
         slider.set(buff.duration or 0)
         slider.grid(row=1, column=1, sticky=ctk.W, padx=10)
@@ -1289,9 +1289,9 @@ class ModSelectionWindow:
                               text=f"Time before activation : {str(buff.delay)} (seconds)")
         label2.grid(row=2, column=2, sticky="w")
         slider2 = ctk.CTkSlider(self.frame_bot_bot,
-                                from_=0, to=300,
-                                command=lambda value1: label2.configure(
-                                    text=f"Time before activation : {int(value1)} (seconds)"))
+                                from_=0, to=1000,
+                                command=lambda value: Utils.on_slider_buff_change(value, slider2, label2, False)
+                                )
         slider2.set(buff.delay or 0)
         slider2.grid(row=2, column=1, sticky=ctk.W, padx=10)
 
